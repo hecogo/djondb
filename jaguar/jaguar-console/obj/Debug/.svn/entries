@@ -1,34 +1,0 @@
-8
-
-dir
-248
-http://svn.assembla.com/svn/jaguar2/jaguar/jaguar-console/obj/Debug
-http://svn.assembla.com/svn/jaguar2
-
-
-
-2008-11-05T05:46:38.906575Z
-203
-crossley
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-e0e46c49-be69-4f5a-ad62-21024a331aea
-
-network
-dir
-
-util
-dir
-
