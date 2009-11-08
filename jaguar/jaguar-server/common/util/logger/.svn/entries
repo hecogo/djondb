@@ -1,0 +1,40 @@
+8
+
+dir
+248
+http://svn.assembla.com/svn/jaguar2/jaguar/jaguar-server/common/util/logger
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-12-14T18:32:30.721862Z
+247
+crossley
+
+
+svn:special svn:externals svn:needs-lock
+
+logger.cpp
+file
+
+
+
+
+2008-11-25T03:52:48.000000Z
+6e6b6e314d9db7a38480a48158b5b06a
+2008-12-14T18:32:30.721862Z
+247
+crossley
+
+logger.h
+file
+
+
+
+
+2008-11-25T03:52:48.000000Z
+878e433f4870b903ab5916c350573618
+2008-12-14T18:32:30.721862Z
+247
+crossley
+

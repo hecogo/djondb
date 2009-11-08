@@ -1,0 +1,6 @@
+
+class NetworkService {
+    void start() {
+
+    }
+};

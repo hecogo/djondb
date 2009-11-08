@@ -1,0 +1,29 @@
+8
+
+dir
+188
+http://svn.assembla.com/svn/jaguar2/jaguar-designer/jgraphx/release/modules/ext
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-10-14T03:19:01.267623Z
+179
+crossley
+
+
+svn:special svn:externals svn:needs-lock
+
+jgraphx.jar
+file
+
+
+
+
+2008-10-12T17:45:55.000000Z
+076e48f6438fc19173d1dbf378bb98ce
+2008-10-14T03:19:01.267623Z
+179
+crossley
+has-props
+

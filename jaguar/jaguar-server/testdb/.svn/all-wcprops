@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/jaguar2/!svn/ver/254/jaguar/jaguar-server/testdb
+END
+testdb.layout
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaguar2/!svn/ver/257/jaguar/jaguar-server/testdb/testdb.layout
+END
+testdb.depend
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaguar2/!svn/ver/256/jaguar/jaguar-server/testdb/testdb.depend
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/jaguar2/!svn/ver/256/jaguar/jaguar-server/testdb/main.cpp
+END
+testdb.cbp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/jaguar2/!svn/ver/254/jaguar/jaguar-server/testdb/testdb.cbp
+END

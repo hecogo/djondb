@@ -1,0 +1,88 @@
+8
+
+dir
+248
+http://svn.assembla.com/svn/jaguar2/jaguar/jaguar-server-lib
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-11-21T19:25:29.415167Z
+228
+crossley
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+e0e46c49-be69-4f5a-ad62-21024a331aea
+
+jaguar-server-lib.depend
+file
+
+
+
+
+2008-11-06T04:48:33.000000Z
+d04d1ae16ab566adbecb6a4f6a5eb564
+2008-11-06T05:06:26.058322Z
+207
+crossley
+
+jaguar-server-lib.cbp
+file
+
+
+
+
+2008-11-06T04:59:12.000000Z
+8ffc5be477e91be9a66d967a9bde8e50
+2008-11-06T05:06:26.058322Z
+207
+crossley
+
+main.c
+file
+
+
+
+
+2008-11-06T05:05:09.000000Z
+0d2fbdf73ba509e5bfecb303822b7e3a
+2008-11-05T05:46:38.906575Z
+203
+crossley
+
+bin
+dir
+
+network
+dir
+
+obj
+dir
+
+util
+dir
+
+jaguar-server-lib.layout
+file
+
+
+
+
+2008-11-06T05:01:54.000000Z
+a46083838b6134707878077fed1ffeb3
+2008-11-06T05:06:26.058322Z
+207
+crossley
+

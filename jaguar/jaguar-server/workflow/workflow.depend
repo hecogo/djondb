@@ -1,0 +1,66 @@
+# depslib dependency file v1.0
+1229278337 source:/home/cross/workspace/jaguar/jaguar-server/workflow/engine/wfengine.cpp
+	"wfruntime.h"
+
+1230526562 /home/cross/workspace/jaguar/jaguar-server/workflow/engine/wfruntime.h
+	"../metadata/metadata.h"
+	<list>
+
+1230526086 /home/cross/workspace/jaguar/jaguar-server/workflow/metadata/metadata.h
+	<vector>
+	"../wfcommon.h"
+	"dbjaguar.h"
+	"util/util.h"
+
+1229279139 /home/cross/workspace/jaguar/jaguar-server/workflow/wfcommon.h
+	<exception>
+	<string>
+
+1230007368 /home/cross/workspace/jaguar/jaguar-server/dbjaguar/dbjaguar.h
+	<exception>
+	<string>
+
+1227066400 /home/cross/workspace/jaguar/jaguar-server/common/util/cache.h
+	<vector>
+	<map>
+	<string>
+	<ctime>
+
+1229276707 source:/home/cross/workspace/jaguar/jaguar-server/workflow/engine/wfruntime.cpp
+	"wfruntime.h"
+
+1230351722 source:/home/cross/workspace/jaguar/jaguar-server/workflow/workflowcontroller.cpp
+	"networkcommon.h"
+	"util/util.h"
+
+1230323706 /home/cross/workspace/jaguar/jaguar-server/networkcommon/networkcommon.h
+	<string>
+	<map>
+	<vector>
+
+1230352137 source:/home/cross/workspace/jaguar/jaguar-server/workflow/metadata/metadata.cpp
+	"metadata.h"
+	<typeinfo>
+	<fstream>
+	<dirent.h>
+
+1257689460 /home/cross/workspace/jaguar/jaguar-server/common/util/util.h
+	<string>
+	<sstream>
+	<dirent.h>
+	<vector>
+	"logger/logger.h"
+	"cache.h"
+	"threads.h"
+	"timerecord.h"
+	<typeinfo>
+
+1227585168 /home/cross/workspace/jaguar/jaguar-server/common/util/logger/logger.h
+	<string>
+
+1227585168 /home/cross/workspace/jaguar/jaguar-server/common/util/threads.h
+	<pthread.h>
+
+1225863358 /home/cross/workspace/jaguar/jaguar-server/common/util/timerecord.h
+	<ctime>
+

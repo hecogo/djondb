@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="45">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="network" displayName="network" projectFiles="true">
+        <itemPath>network/networkservice.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="persistence" projectFiles="true">
+        <itemPath>persistence.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="util" displayName="util" projectFiles="true">
+        <logicalFolder name="logger" displayName="logger" projectFiles="true">
+          <itemPath>util/logger/logger.h</itemPath>
+        </logicalFolder>
+        <itemPath>util/cache.h</itemPath>
+        <itemPath>util/threads.h</itemPath>
+        <itemPath>util/timerecord.h</itemPath>
+        <itemPath>util/util.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="workflow" projectFiles="true">
+        <itemPath>workflow/metadata.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="network" displayName="network" projectFiles="true">
+        <itemPath>network/networkservice.cpp</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="persistence" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="util" displayName="util" projectFiles="true">
+        <logicalFolder name="logger" displayName="logger" projectFiles="true">
+          <itemPath>util/logger/logger.cpp</itemPath>
+        </logicalFolder>
+        <itemPath>util/cache.cpp</itemPath>
+        <itemPath>util/threads.cpp</itemPath>
+        <itemPath>util/timerecord.cpp</itemPath>
+        <itemPath>util/util.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceEncoding>UTF-8</sourceEncoding>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <linkerTool>
+          <linkerLibItems>
+          </linkerLibItems>
+          <commandLine>-lpthread</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="main.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="network/networkservice.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="network/networkservice.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="persistence.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/cache.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/cache.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/logger/logger.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/logger/logger.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/threads.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/threads.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/timerecord.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/timerecord.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/util.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/util.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="workflow/metadata.h">
+        <itemTool>3</itemTool>
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <cCompilerTool>
+          <developmentMode>5</developmentMode>
+        </cCompilerTool>
+        <ccCompilerTool>
+          <developmentMode>5</developmentMode>
+        </ccCompilerTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <linkerTool>
+          <linkerLibItems>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="main.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="network/networkservice.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="network/networkservice.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="persistence.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/cache.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/cache.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/logger/logger.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/logger/logger.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/threads.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/threads.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/timerecord.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/timerecord.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="util/util.cpp">
+        <itemTool>1</itemTool>
+      </item>
+      <item path="util/util.h">
+        <itemTool>3</itemTool>
+      </item>
+      <item path="workflow/metadata.h">
+        <itemTool>3</itemTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

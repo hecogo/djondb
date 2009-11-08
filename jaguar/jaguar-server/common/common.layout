@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="util/cache.cpp" open="0" top="0" tabpos="8">
+		<Cursor position="104" topLine="0" />
+	</File>
+	<File name="util/cache.h" open="0" top="0" tabpos="9">
+		<Cursor position="213" topLine="0" />
+	</File>
+	<File name="util/logger/logger.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="17" topLine="0" />
+	</File>
+	<File name="util/logger/logger.h" open="0" top="0" tabpos="11">
+		<Cursor position="41" topLine="0" />
+	</File>
+	<File name="util/threads.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="125" topLine="0" />
+	</File>
+	<File name="util/timerecord.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="31" topLine="0" />
+	</File>
+	<File name="util/util.cpp" open="0" top="0" tabpos="1">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="util/util.h" open="1" top="0" tabpos="5">
+		<Cursor position="348" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>

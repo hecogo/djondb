@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/jaguar2/!svn/ver/184/testprocess/src
+END
+sample1.xml
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/jaguar2/!svn/ver/125/testprocess/src/sample1.xml
+END
+resources.properties
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/jaguar2/!svn/ver/184/testprocess/src/resources.properties
+END
+processdefinition.xml
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/jaguar2/!svn/ver/184/testprocess/src/processdefinition.xml
+END

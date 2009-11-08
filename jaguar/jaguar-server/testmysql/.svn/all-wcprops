@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/jaguar2/!svn/ver/252/jaguar/jaguar-server/testmysql
+END
+testmysql.layout
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaguar2/!svn/ver/255/jaguar/jaguar-server/testmysql/testmysql.layout
+END
+testmysql.depend
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/jaguar2/!svn/ver/255/jaguar/jaguar-server/testmysql/testmysql.depend
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/jaguar2/!svn/ver/253/jaguar/jaguar-server/testmysql/main.cpp
+END
+testmysql.cbp
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaguar2/!svn/ver/252/jaguar/jaguar-server/testmysql/testmysql.cbp
+END

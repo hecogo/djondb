@@ -1,0 +1,74 @@
+# depslib dependency file v1.0
+1230350939 source:/home/cross/workspace/jaguar/jaguar-server/Tester/main.cpp
+	"cpptest.h"
+	<stdlib.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<netinet/in.h>
+	<string.h>
+	<iostream>
+	<netdb.h>
+	"util/util.h"
+	"dbjaguar.h"
+
+1230227161 /usr/local/include/cpptest.h
+	"cpptest-assert.h"
+	"cpptest-source.h"
+	"cpptest-suite.h"
+	"cpptest-time.h"
+	"cpptest-compileroutput.h"
+	"cpptest-htmloutput.h"
+	"cpptest-textoutput.h"
+
+1230227161 /usr/local/include/cpptest-assert.h
+
+1230227161 /usr/local/include/cpptest-source.h
+	<string>
+
+1230227161 /usr/local/include/cpptest-suite.h
+	<list>
+	<memory>
+	<string>
+	"cpptest-time.h"
+
+1230227161 /usr/local/include/cpptest-time.h
+	<iostream>
+	<string>
+
+1230227161 /usr/local/include/cpptest-compileroutput.h
+	<iostream>
+	<stdexcept>
+	"cpptest-output.h"
+
+1230227161 /usr/local/include/cpptest-output.h
+	<string>
+
+1230227161 /usr/local/include/cpptest-htmloutput.h
+	<iostream>
+	<string>
+	"cpptest-collectoroutput.h"
+
+1230227161 /usr/local/include/cpptest-collectoroutput.h
+	<list>
+	<string>
+	<vector>
+	"cpptest-output.h"
+	"cpptest-source.h"
+	"cpptest-time.h"
+
+1230227161 /usr/local/include/cpptest-textoutput.h
+	<iostream>
+	<list>
+	"cpptest-source.h"
+	"cpptest-output.h"
+
+1230312973 /home/cross/workspace/jaguar/jaguar-server/common/util/util.h
+	<string>
+	<sstream>
+	<dirent.h>
+	<vector>
+
+1230007368 /home/cross/workspace/jaguar/jaguar-server/dbjaguar/dbjaguar.h
+	<exception>
+	<string>
+

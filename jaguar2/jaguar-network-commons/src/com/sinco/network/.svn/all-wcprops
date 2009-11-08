@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/jaguar2/!svn/ver/91/jaguar-network-commons/src/com/sinco/network
+END
+AbstractNetworkRequest.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaguar2/!svn/ver/59/jaguar-network-commons/src/com/sinco/network/AbstractNetworkRequest.java
+END
+DefaultNetworkRequest.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaguar2/!svn/ver/59/jaguar-network-commons/src/com/sinco/network/DefaultNetworkRequest.java
+END
+NetworkClient.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaguar2/!svn/ver/91/jaguar-network-commons/src/com/sinco/network/NetworkClient.java
+END
+NetworkException.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaguar2/!svn/ver/66/jaguar-network-commons/src/com/sinco/network/NetworkException.java
+END
+AbstractNetworkResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaguar2/!svn/ver/59/jaguar-network-commons/src/com/sinco/network/AbstractNetworkResponse.java
+END
+DefaultNetworkResponse.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaguar2/!svn/ver/59/jaguar-network-commons/src/com/sinco/network/DefaultNetworkResponse.java
+END
+NetworkController.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaguar2/!svn/ver/91/jaguar-network-commons/src/com/sinco/network/NetworkController.java
+END

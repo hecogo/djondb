@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/jaguar2/!svn/ver/247/jaguar/jaguar-server/common/util/logger
+END
+logger.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaguar2/!svn/ver/247/jaguar/jaguar-server/common/util/logger/logger.cpp
+END
+logger.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaguar2/!svn/ver/247/jaguar/jaguar-server/common/util/logger/logger.h
+END

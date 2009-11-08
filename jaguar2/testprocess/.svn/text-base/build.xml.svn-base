@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<project name="testproject" default="default" basedir=".">
+    <target name="default" depends="build">
+    </target>
+        
+    <target name="init">
+        <copy todir="build">
+            <fileset dir="src">
+                <include name="**/**" />
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="clean" depends="init">
+        <delete dir="dist" />
+    </target>
+    
+    <target name="build" depends="init">
+        <mkdir dir="dist" />
+        <jar basedir="src" destfile="dist/testprocess.jar">
+            <fileset dir="src">
+                <exclude name="**/.svn/**" />
+                <include name="**/**" />
+            </fileset>
+        </jar>
+    </target>
+</project>

@@ -1,0 +1,76 @@
+8
+
+dir
+188
+http://svn.assembla.com/svn/jaguar2/jaguar-designer/nbproject
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-10-14T03:16:54.218145Z
+178
+crossley
+has-props
+has-prop-mods
+svn:special svn:externals svn:needs-lock
+
+platform.properties
+file
+
+
+
+
+2008-10-12T16:50:03.000000Z
+180925c646870c04080a6e61f87690e1
+2008-10-14T03:16:54.218145Z
+178
+crossley
+
+project.properties
+file
+
+
+
+
+2008-10-12T22:01:21.000000Z
+5e027ea0330c7c60c61f3276e7f61a85
+2008-10-14T03:16:54.218145Z
+178
+crossley
+
+project.xml
+file
+
+
+
+
+2008-10-12T16:00:47.000000Z
+47f4d55210d911fda1efa6a4825a99a9
+2008-10-14T03:16:54.218145Z
+178
+crossley
+
+genfiles.properties
+file
+
+
+
+
+2008-10-12T16:00:50.000000Z
+47d3e0a034775054da2beab5001eb42c
+2008-10-14T03:16:54.218145Z
+178
+crossley
+
+build-impl.xml
+file
+
+
+
+
+2008-10-12T16:00:50.000000Z
+9d091a61634fa1c66ebee19d73712974
+2008-10-14T03:16:54.218145Z
+178
+crossley
+

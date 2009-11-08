@@ -1,0 +1,33 @@
+K 26
+svn:wc:ra_dav:activity-url
+V 22
+/svn/jaguar2/!svn/act/
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/jaguar2/!svn/ver/246/jaguar/jaguar-server/jaguar
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/jaguar2/!svn/ver/257/jaguar/jaguar-server/jaguar/main.cpp
+END
+jaguar.layout
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaguar2/!svn/ver/258/jaguar/jaguar-server/jaguar/jaguar.layout
+END
+persistence.h
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/jaguar2/!svn/ver/229/jaguar/jaguar-server/jaguar/persistence.h
+END
+jaguar.cbp
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/jaguar2/!svn/ver/255/jaguar/jaguar-server/jaguar/jaguar.cbp
+END

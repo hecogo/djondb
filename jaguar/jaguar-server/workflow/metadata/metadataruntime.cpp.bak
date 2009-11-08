@@ -1,0 +1,26 @@
+#include "metadata.h"
+#include "util/cache.h"
+
+using namespace cache;
+using namespace dbjaguar;
+
+void loadProcessDefinitions(Connection* con) {
+    ResultSet* rs = con->executeQuery("SELECT id, defname, processType, masterent FROM processdef");
+
+    while (rs++) {
+        int id = *((int*)rs->get(0));
+        string defname = *((string*)rs->get(1));
+        int processType = *((int*)rs->get(2));
+        string masterent = *((string*)rs->get(3));
+        ProcessDefinition* def = new ProcessDefinition();
+        def->setProcessType((ProcessType*)&processType);
+        //def->setProperties(vector<Property*>* _properties);
+        //def->setPools(vector<Pool*>* _pools);
+        def->setDefinitionName(&defname);
+        //void setTasks(vector<ActivityCommon*>* _tasks);
+        def->setId(id) {
+        //def->setEvents(vector<CommonEvent*>* _events);
+        def->setMasterEntity(&masterent);
+    }
+    rs->close();
+}

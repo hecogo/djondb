@@ -1,0 +1,227 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaguar2/!svn/ver/29/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata
+END
+Expression.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaguar2/!svn/ver/29/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Expression.java
+END
+ManualTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaguar2/!svn/ver/14/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ManualTask.java
+END
+ActivityStatus.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ActivityStatus.java
+END
+AssignTime.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/AssignTime.java
+END
+TaskType.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/TaskType.java
+END
+ActivityCommon.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaguar2/!svn/ver/14/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ActivityCommon.java
+END
+Assignment.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Assignment.java
+END
+Pool.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Pool.java
+END
+Entity.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Entity.java
+END
+Lane.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Lane.java
+END
+ParticipantType.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ParticipantType.java
+END
+ReferenceTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ReferenceTask.java
+END
+ServiceTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaguar2/!svn/ver/29/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ServiceTask.java
+END
+Property.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Property.java
+END
+ConnectorTargetable.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ConnectorTargetable.java
+END
+ScriptTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ScriptTask.java
+END
+ProcessDefinition.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaguar2/!svn/ver/14/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ProcessDefinition.java
+END
+CommonEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaguar2/!svn/ver/14/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/CommonEvent.java
+END
+StartEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaguar2/!svn/ver/14/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/StartEvent.java
+END
+ConnectorSourceable.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ConnectorSourceable.java
+END
+SequenceFlow.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaguar2/!svn/ver/14/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/SequenceFlow.java
+END
+Role.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Role.java
+END
+UserTask.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/UserTask.java
+END
+Task.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Task.java
+END
+Trigger.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Trigger.java
+END
+EventFacade.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaguar2/!svn/ver/16/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/EventFacade.java
+END
+EndEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaguar2/!svn/ver/29/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/EndEvent.java
+END
+ProcessDefinitionFacade.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/jaguar2/!svn/ver/191/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ProcessDefinitionFacade.java
+END
+LoopType.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/LoopType.java
+END
+Participant.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/Participant.java
+END
+ProcessType.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ProcessType.java
+END
+EventType.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/EventType.java
+END
+CommonConector.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaguar2/!svn/ver/14/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/CommonConector.java
+END
+PropertyType.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/PropertyType.java
+END
+TaskFacade.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaguar2/!svn/ver/16/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/TaskFacade.java
+END
+ConditionType.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ConditionType.java
+END
+ActivityType.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/workflow/metadata/ActivityType.java
+END

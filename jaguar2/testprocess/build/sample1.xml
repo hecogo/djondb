@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="ProcessTest" > <!-- masterEntity="Customer" -->
+    <events>
+        <event id="1" name="Start" type="start">
+            <sequenceflow id="1">
+                <targets>
+                    <target taskId="1" />
+                </targets>
+            </sequenceflow>
+        </event>
+        
+        <event id="2" name="End" type="end"/>
+    </events>
+    <tasks>
+        <task id="1" name="Test1" type="manual" form="1">
+            <sequenceflow id="2">
+                <targets>
+                    <target taskId="2" />
+                </targets>
+            </sequenceflow>
+        </task>
+        <task id="2" name="Test2" type="service">
+            <sequenceflow id="3">
+                <targets>
+                    <target taskId="3" />
+                </targets>
+            </sequenceflow>
+        </task>
+        <task id="3" name="Test3" type="service">
+            <sequenceflow id="4">
+                <targets>
+                    <target taskId="4" />
+                </targets>
+            </sequenceflow>
+        </task>
+        <task id="4" name="Test4" type="manual" form="1">
+            <sequenceflow id="5">
+                <targets>
+                    <target eventId="2" />
+                </targets>
+            </sequenceflow>
+        </task>
+    </tasks>
+    <forms>
+        <form id="1" description="${resources.form1Description}" readonly="false">
+            <field id="1" path="${masterEntity.firstName}" readonly="false" label="${resources.firstName}" />
+            <field id="2" path="${masterEntity.lastName}"  readonly="false" label="${resources.lastName}" />
+        </form>
+    </forms>
+    
+</process>

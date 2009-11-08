@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaguar2/!svn/ver/187/jaguar-client-common/src/com/sinco/client/metadata
+END
+SwingFormGenerator.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaguar2/!svn/ver/174/jaguar-client-common/src/com/sinco/client/metadata/SwingFormGenerator.java
+END
+Field.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaguar2/!svn/ver/130/jaguar-client-common/src/com/sinco/client/metadata/Field.java
+END
+Form.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaguar2/!svn/ver/130/jaguar-client-common/src/com/sinco/client/metadata/Form.java
+END
+DigesterUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaguar2/!svn/ver/153/jaguar-client-common/src/com/sinco/client/metadata/DigesterUtil.java
+END
+UIGenerator.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaguar2/!svn/ver/174/jaguar-client-common/src/com/sinco/client/metadata/UIGenerator.java
+END
+swingformtemplate.txt
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaguar2/!svn/ver/158/jaguar-client-common/src/com/sinco/client/metadata/swingformtemplate.txt
+END
+UIGeneratorType.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/jaguar2/!svn/ver/153/jaguar-client-common/src/com/sinco/client/metadata/UIGeneratorType.java
+END
+FormGenerator.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaguar2/!svn/ver/174/jaguar-client-common/src/com/sinco/client/metadata/FormGenerator.java
+END
+Test.properties
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaguar2/!svn/ver/157/jaguar-client-common/src/com/sinco/client/metadata/Test.properties
+END
+SwingUIGenerator.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaguar2/!svn/ver/187/jaguar-client-common/src/com/sinco/client/metadata/SwingUIGenerator.java
+END
+UIGeneratorFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/jaguar2/!svn/ver/187/jaguar-client-common/src/com/sinco/client/metadata/UIGeneratorFactory.java
+END

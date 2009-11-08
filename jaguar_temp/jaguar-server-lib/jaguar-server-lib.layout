@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="network/networkservice.cpp" open="0" top="0" tabpos="3">
+		<Cursor position="19" topLine="0" />
+	</File>
+	<File name="util/logger/logger.cpp" open="1" top="0" tabpos="2">
+		<Cursor position="118" topLine="0" />
+	</File>
+	<File name="util/logger/logger.h" open="0" top="0" tabpos="0">
+		<Cursor position="244" topLine="0" />
+	</File>
+	<File name="util/timerecord.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="117" topLine="0" />
+	</File>
+	<File name="util/timerecord.h" open="0" top="0" tabpos="4">
+		<Cursor position="133" topLine="0" />
+	</File>
+	<File name="util/util.cpp" open="0" top="0" tabpos="0">
+		<Cursor position="38" topLine="0" />
+	</File>
+	<File name="util/util.h" open="0" top="0" tabpos="0">
+		<Cursor position="85" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>

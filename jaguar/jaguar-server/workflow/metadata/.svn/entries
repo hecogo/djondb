@@ -1,0 +1,52 @@
+8
+
+dir
+248
+http://svn.assembla.com/svn/jaguar2/jaguar/jaguar-server/workflow/metadata
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-12-14T18:31:46.320380Z
+246
+crossley
+
+
+svn:special svn:externals svn:needs-lock
+
+metadata.cpp
+file
+257
+
+
+
+2008-12-27T04:28:57.000000Z
+ea4e1bafd931991dd7fbe074faf402f4
+2008-12-27T04:31:30.448332Z
+257
+crossley
+
+metadataruntime.cpp
+file
+257
+
+
+
+2008-12-25T17:30:30.000000Z
+5de607e22561f8824da5fdf9a50e4abf
+2008-12-27T04:31:30.448332Z
+257
+crossley
+
+metadata.h
+file
+259
+
+
+
+2008-12-29T04:48:06.000000Z
+1e1764b6a025e49a4694c901978fa06f
+2008-12-29T04:57:22.920188Z
+259
+crossley
+

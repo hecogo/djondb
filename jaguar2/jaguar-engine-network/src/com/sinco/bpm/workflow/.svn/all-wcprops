@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaguar2/!svn/ver/171/jaguar-engine-network/src/com/sinco/bpm/workflow
+END
+DeploymentPlugin.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/jaguar2/!svn/ver/171/jaguar-engine-network/src/com/sinco/bpm/workflow/DeploymentPlugin.java
+END
+DeploymentController.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaguar2/!svn/ver/92/jaguar-engine-network/src/com/sinco/bpm/workflow/DeploymentController.java
+END
+WorkflowNetworkController.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/jaguar2/!svn/ver/171/jaguar-engine-network/src/com/sinco/bpm/workflow/WorkflowNetworkController.java
+END
+WorkflowPlugin.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/jaguar2/!svn/ver/171/jaguar-engine-network/src/com/sinco/bpm/workflow/WorkflowPlugin.java
+END

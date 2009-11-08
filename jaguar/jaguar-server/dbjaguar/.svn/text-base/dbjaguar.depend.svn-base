@@ -1,0 +1,45 @@
+# depslib dependency file v1.0
+1229801705 source:/home/cross/workspace/jaguar/jaguar-server/dbjaguar/dbjaguar.cpp
+	"mysql/mysql.h"
+
+1229801887 /home/cross/workspace/jaguar/jaguar-server/dbjaguar/mysql/mysql.h
+	"../dbjaguar.h"
+	<mysql.h>
+
+1230007368 /home/cross/workspace/jaguar/jaguar-server/dbjaguar/dbjaguar.h
+	<exception>
+	<string>
+
+1210354266 /usr/include/mysql/mysql.h
+	<standards.h>
+	<sys/types.h>
+	<winsock.h>
+	"mysql_version.h"
+	"mysql_com.h"
+	"mysql_time.h"
+	"typelib.h"
+	"my_list.h"
+	"my_alloc.h"
+
+1210354267 /usr/include/mysql/mysql_version.h
+	<custom_conf.h>
+
+1210354266 /usr/include/mysql/mysql_com.h
+
+1210354266 /usr/include/mysql/mysql_time.h
+
+1210354266 /usr/include/mysql/typelib.h
+	"my_alloc.h"
+
+1210354266 /usr/include/mysql/my_alloc.h
+
+1210354266 /usr/include/mysql/my_list.h
+
+1230007390 source:/home/cross/workspace/jaguar/jaguar-server/dbjaguar/mysql/connection.cpp
+	"mysql.h"
+	<iostream>
+
+1230229424 source:/home/cross/workspace/jaguar/jaguar-server/dbjaguar/mysql/resulset.cpp
+	"mysql.h"
+	<sstream>
+

@@ -1,0 +1,79 @@
+8
+
+dir
+250
+http://svn.assembla.com/svn/jaguar2/jaguar/jaguar-server/dbjaguar
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-12-15T04:45:17.577419Z
+250
+crossley
+has-props
+
+svn:special svn:externals svn:needs-lock
+
+dbjaguar.cpp
+file
+254
+
+
+
+2008-12-20T19:35:05.000000Z
+d90e69e0a45f8e593ebe1a2d2522563f
+2008-12-20T21:47:12.931472Z
+254
+crossley
+
+dbjaguar.cbp
+file
+
+
+
+
+2008-12-15T04:43:51.000000Z
+5cdf1e8a1fa00130c3a82a4a15378767
+2008-12-15T04:45:17.577419Z
+250
+crossley
+
+mysql
+dir
+
+dbjaguar.h
+file
+255
+
+
+
+2008-12-23T04:42:48.000000Z
+3178b5af177e4bb8ddccb1de1f063412
+2008-12-23T05:10:25.947425Z
+255
+crossley
+
+dbjaguar.layout
+file
+258
+
+
+
+2008-12-28T04:35:32.000000Z
+4f31d78c6b5e25c2d841306ab7fe5423
+2008-12-29T04:36:59.723608Z
+258
+crossley
+
+dbjaguar.depend
+file
+257
+
+
+
+2008-12-26T17:53:04.000000Z
+689057c39df89caa631859b222d8ae57
+2008-12-27T04:31:30.448332Z
+257
+crossley
+

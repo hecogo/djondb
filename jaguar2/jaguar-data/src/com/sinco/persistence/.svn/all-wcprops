@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/jaguar2/!svn/ver/186/jaguar-data/src/com/sinco/persistence
+END
+EntityManagerFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaguar2/!svn/ver/191/jaguar-data/src/com/sinco/persistence/EntityManagerFactory.java
+END
+DataEntityManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaguar2/!svn/ver/191/jaguar-data/src/com/sinco/persistence/DataEntityManager.java
+END
+PersistenceException.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaguar2/!svn/ver/10/jaguar-data/src/com/sinco/persistence/PersistenceException.java
+END
+IdGenerator.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaguar2/!svn/ver/13/jaguar-data/src/com/sinco/persistence/IdGenerator.java
+END
+Query.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaguar2/!svn/ver/9/jaguar-data/src/com/sinco/persistence/Query.java
+END
+EntityManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/jaguar2/!svn/ver/174/jaguar-data/src/com/sinco/persistence/EntityManager.java
+END
+EntityNotFoundException.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/jaguar2/!svn/ver/15/jaguar-data/src/com/sinco/persistence/EntityNotFoundException.java
+END
+EntityManagerType.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaguar2/!svn/ver/191/jaguar-data/src/com/sinco/persistence/EntityManagerType.java
+END
+ReflectorUtility.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaguar2/!svn/ver/30/jaguar-data/src/com/sinco/persistence/ReflectorUtility.java
+END
+HashEntityManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaguar2/!svn/ver/174/jaguar-data/src/com/sinco/persistence/HashEntityManager.java
+END
+EntityRecord.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/jaguar2/!svn/ver/20/jaguar-data/src/com/sinco/persistence/EntityRecord.java
+END
+Entity.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaguar2/!svn/ver/13/jaguar-data/src/com/sinco/persistence/Entity.java
+END
+FieldRecord.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaguar2/!svn/ver/20/jaguar-data/src/com/sinco/persistence/FieldRecord.java
+END
+PersistenceStatus.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/jaguar2/!svn/ver/28/jaguar-data/src/com/sinco/persistence/PersistenceStatus.java
+END
+Id.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/jaguar2/!svn/ver/13/jaguar-data/src/com/sinco/persistence/Id.java
+END

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/jaguar2/!svn/ver/224/jaguar/jaguar-server/PersistenceTests
+END
+classdef.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/jaguar2/!svn/ver/224/jaguar/jaguar-server/PersistenceTests/classdef.cpp
+END
+main.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaguar2/!svn/ver/224/jaguar/jaguar-server/PersistenceTests/main.cpp
+END
+classdef.h
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaguar2/!svn/ver/224/jaguar/jaguar-server/PersistenceTests/classdef.h
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/jaguar2/!svn/ver/224/jaguar/jaguar-server/PersistenceTests/Makefile
+END

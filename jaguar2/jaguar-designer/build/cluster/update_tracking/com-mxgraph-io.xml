@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="com.mxgraph.io">
+    <module_version install_time="1223915807257" last="true" origin="installer" specification_version="1.0">
+        <file crc="4248026062" name="config/Modules/com-mxgraph-io.xml"/>
+        <file crc="2335336974" name="modules/com-mxgraph-io.jar"/>
+        <file crc="1383598936" name="modules/ext/jgraphx.jar"/>
+    </module_version>
+</module>

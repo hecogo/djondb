@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/jaguar2/!svn/ver/174/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment
+END
+SequenceFlow.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment/SequenceFlow.java
+END
+Event.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaguar2/!svn/ver/14/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment/Event.java
+END
+Task.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaguar2/!svn/ver/174/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment/Task.java
+END
+Field.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/jaguar2/!svn/ver/115/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment/Field.java
+END
+Form.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaguar2/!svn/ver/115/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment/Form.java
+END
+DeploymentFacade.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/jaguar2/!svn/ver/191/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment/DeploymentFacade.java
+END
+DigesterUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/jaguar2/!svn/ver/115/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment/DigesterUtil.java
+END
+Target.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/jaguar2/!svn/ver/4/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment/Target.java
+END
+Process.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaguar2/!svn/ver/14/Jaguar-Engine/src/com/sinco/bpm/metadata/deployment/Process.java
+END

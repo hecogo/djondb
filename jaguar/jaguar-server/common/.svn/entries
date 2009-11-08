@@ -1,0 +1,67 @@
+8
+
+dir
+248
+http://svn.assembla.com/svn/jaguar2/jaguar/jaguar-server/common
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-12-14T18:32:30.721862Z
+247
+crossley
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+e0e46c49-be69-4f5a-ad62-21024a331aea
+
+common.layout
+file
+259
+
+
+
+2008-12-29T04:57:05.000000Z
+2231bf9c253b82f816c1cdcdd53d28fd
+2008-12-29T04:57:22.920188Z
+259
+crossley
+
+common.depend
+file
+257
+
+
+
+2008-12-26T17:37:00.000000Z
+81ed669875489d67095c3424c610b47e
+2008-12-27T04:31:30.448332Z
+257
+crossley
+
+common.cbp
+file
+
+
+
+
+2008-12-13T19:32:54.000000Z
+109a5d1a9211b5498825718c6bc9f9fa
+2008-12-14T18:31:46.320380Z
+246
+crossley
+
+util
+dir
+

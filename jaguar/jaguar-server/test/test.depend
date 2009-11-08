@@ -1,0 +1,4 @@
+# depslib dependency file v1.0
+1228277152 source:/home/cross/workspace/jaguar/jaguar-server/test/main.cpp
+	<iostream>
+

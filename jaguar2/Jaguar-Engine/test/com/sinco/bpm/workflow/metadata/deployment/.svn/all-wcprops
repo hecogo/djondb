@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/jaguar2/!svn/ver/21/Jaguar-Engine/test/com/sinco/bpm/workflow/metadata/deployment
+END
+sample1.xml
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/jaguar2/!svn/ver/21/Jaguar-Engine/test/com/sinco/bpm/workflow/metadata/deployment/sample1.xml
+END
+DeploymentFacadeTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaguar2/!svn/ver/12/Jaguar-Engine/test/com/sinco/bpm/workflow/metadata/deployment/DeploymentFacadeTest.java
+END
+DigesterUtilTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/jaguar2/!svn/ver/5/Jaguar-Engine/test/com/sinco/bpm/workflow/metadata/deployment/DigesterUtilTest.java
+END

@@ -1,0 +1,3 @@
+class RequestProcessor
+!!!129821.cpp!!!	processRequest(in requestType : long, inout request : char) : void
+

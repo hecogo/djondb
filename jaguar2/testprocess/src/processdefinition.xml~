@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="ProcessTest" > <!-- masterEntity="Customer" -->
+    <events>
+        <event id="1" name="Start" type="start">
+            <sequenceflow id="1">
+                <targets>
+                    <target taskId="1" />
+                </targets>
+            </sequenceflow>
+        </event>
+        
+        <event id="2" name="End" type="end"/>
+    </events>
+    <tasks>
+        <task id="1" name="Test1" type="manual" form="1">
+            <sequenceflow id="2">
+                <targets>
+                    <target taskId="2" />
+                </targets>
+            </sequenceflow>
+        </task>
+        <task id="2" name="Test2" type="service">
+            <sequenceflow id="3">
+                <targets>
+                    <target taskId="3" />
+                </targets>
+            </sequenceflow>
+        </task>
+        <task id="3" name="Test3" type="service">
+            <sequenceflow id="4">
+                <targets>
+                    <target taskId="4" />
+                </targets>
+            </sequenceflow>
+        </task>
+        <task id="4" name="Test4" type="manual" form="2">
+            <sequenceflow id="5">
+                <targets>
+                    <target eventId="2" />
+                </targets>
+            </sequenceflow>
+        </task>
+        <task id="5" name="Test5" type="manual" form="3">
+            <sequenceflow id="6">
+                <targets>
+                    <target taskId="6" />
+                </targets>
+            </sequenceflow>
+        </task>
+        <task id="6" name="Test6" type="manual" form="4">
+            <sequenceflow id="7">
+                <targets>
+                    <target eventId="2" />
+                </targets>
+            </sequenceflow>
+        </task>
+    </tasks>
+    
+</process>

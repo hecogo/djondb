@@ -1,0 +1,28 @@
+8
+
+dir
+248
+http://svn.assembla.com/svn/jaguar2/jaguar/jaguar-server/PersistenceTests/persistence
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-11-21T04:34:27.233685Z
+224
+crossley
+
+
+svn:special svn:externals svn:needs-lock
+
+persistence.h
+file
+
+
+
+
+2008-11-21T03:58:24.000000Z
+3d47f38959c5fcee8d29d0427c27f946
+2008-11-21T04:34:27.233685Z
+224
+crossley
+

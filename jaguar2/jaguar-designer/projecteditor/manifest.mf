@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.sinco.designer.projecteditor
+OpenIDE-Module-Layer: com/sinco/designer/projecteditor/layer.xml
+OpenIDE-Module-Localizing-Bundle: com/sinco/designer/projecteditor/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
+Name: com/sinco/designer/projecteditor/JaguarProjectDataLoader.class
+OpenIDE-Module-Class: Loader
+

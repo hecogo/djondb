@@ -1,0 +1,41 @@
+8
+
+dir
+248
+http://svn.assembla.com/svn/jaguar2/jaguar/jaguar-server-lib/bin/Debug
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-11-06T05:06:26.058322Z
+207
+crossley
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+e0e46c49-be69-4f5a-ad62-21024a331aea
+
+libjaguar-server-lib.so
+file
+
+
+
+
+2008-11-06T04:48:34.000000Z
+e18c363ff2b793d2882dac00fb3abad8
+2008-11-06T05:06:26.058322Z
+207
+crossley
+has-props
+

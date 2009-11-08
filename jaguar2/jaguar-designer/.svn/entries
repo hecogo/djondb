@@ -1,0 +1,68 @@
+8
+
+dir
+188
+http://svn.assembla.com/svn/jaguar2/jaguar-designer
+http://svn.assembla.com/svn/jaguar2
+
+
+
+2008-10-15T05:06:43.609097Z
+183
+crossley
+has-props
+has-prop-mods
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+e0e46c49-be69-4f5a-ad62-21024a331aea
+
+jgraphx
+dir
+
+branding
+dir
+
+images
+dir
+
+nbproject
+dir
+
+JavaLibrary3
+dir
+
+editor-library-module
+dir
+
+svn-commit
+file
+0
+
+
+add
+
+projecteditor
+dir
+
+build.xml
+file
+
+
+
+
+2008-10-12T16:00:50.000000Z
+f6abfb6ce58809c8bf8e299cae0f62ad
+2008-10-14T03:16:54.218145Z
+178
+crossley
+

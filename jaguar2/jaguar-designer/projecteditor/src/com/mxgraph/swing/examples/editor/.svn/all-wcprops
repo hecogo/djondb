@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor
+END
+EditorPopupMenu.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor/EditorPopupMenu.java
+END
+EditorMenuBar.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor/EditorMenuBar.java
+END
+EditorRuler.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor/EditorRuler.java
+END
+ShadowBorder.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor/ShadowBorder.java
+END
+EditorPalette.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor/EditorPalette.java
+END
+EditorActions.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor/EditorActions.java
+END
+EditorToolBar.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor/EditorToolBar.java
+END
+DefaultFileFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor/DefaultFileFilter.java
+END
+EditorAboutFrame.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/jaguar2/!svn/ver/180/jaguar-designer/projecteditor/src/com/mxgraph/swing/examples/editor/EditorAboutFrame.java
+END

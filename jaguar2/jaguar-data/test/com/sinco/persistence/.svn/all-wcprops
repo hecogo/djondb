@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/jaguar2/!svn/ver/25/jaguar-data/test/com/sinco/persistence
+END
+TestChildEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaguar2/!svn/ver/20/jaguar-data/test/com/sinco/persistence/TestChildEntity.java
+END
+ParentEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/jaguar2/!svn/ver/20/jaguar-data/test/com/sinco/persistence/ParentEntity.java
+END
+InheritedEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/jaguar2/!svn/ver/20/jaguar-data/test/com/sinco/persistence/InheritedEntity.java
+END
+ReflectorUtilityTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/jaguar2/!svn/ver/20/jaguar-data/test/com/sinco/persistence/ReflectorUtilityTest.java
+END
+HashEntityManagerTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaguar2/!svn/ver/25/jaguar-data/test/com/sinco/persistence/HashEntityManagerTest.java
+END
+TestEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/jaguar2/!svn/ver/19/jaguar-data/test/com/sinco/persistence/TestEntity.java
+END

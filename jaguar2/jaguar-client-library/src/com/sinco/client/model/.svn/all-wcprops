@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/jaguar2/!svn/ver/174/jaguar-client-library/src/com/sinco/client/model
+END
+ProcessModel.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/jaguar2/!svn/ver/174/jaguar-client-library/src/com/sinco/client/model/ProcessModel.java
+END
+Deployment.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/jaguar2/!svn/ver/104/jaguar-client-library/src/com/sinco/client/model/Deployment.java
+END
+MetadataModel.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaguar2/!svn/ver/174/jaguar-client-library/src/com/sinco/client/model/MetadataModel.java
+END
+ProcessStatus.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/jaguar2/!svn/ver/104/jaguar-client-library/src/com/sinco/client/model/ProcessStatus.java
+END

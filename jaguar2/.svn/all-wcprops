@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 26
+/svn/jaguar2/!svn/ver/188/
+END
+start-client.sh
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/jaguar2/!svn/ver/189/start-client.sh
+END
+start-server.sh
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/svn/jaguar2/!svn/ver/190/start-server.sh
+END

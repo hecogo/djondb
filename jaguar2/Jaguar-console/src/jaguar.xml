@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : jaguar.xml
+    Created on : August 29, 2008, 1:32 PM
+    Author     : cross
+    Description:
+        General configuration
+-->
+
+<jaguar>
+    <workDir>/home/cross/test/workdir</workDir>
+</jaguar>

@@ -1,0 +1,43 @@
+
+#include <iostream>
+#include <stdio.h>
+#include "util/timerecord.h"
+#include "util/logger/logger.h"
+#include "util/util.h"
+#include "network/networkservice.h"
+
+using namespace std;
+
+int main() {
+    Logger* log = getLogger(NULL);
+    try {
+        TimeRecord* record = getTimeRecord();
+
+<<<<<<< .mine
+    NetworkService* service = new NetworkService();
+    service->start();
+    log->info("Server started up: " + toString(record->getTimeInMillis()));
+
+    cout << "Press any key to stop it" << endl;
+
+    getchar();
+
+    int i;
+    cin >> i;
+    service->stop();
+=======
+        NetworkService* service = new NetworkService();
+        service->start();
+        log->info("Server started up: " + toString(record->getTimeInMillis()));
+
+        cout << "Press any key to stop it" << endl;
+        
+        getchar();
+
+        service->stop();
+    } catch (NetworkException e) {
+        log->error(e);
+    }
+>>>>>>> .r228
+    exit(0);
+}
