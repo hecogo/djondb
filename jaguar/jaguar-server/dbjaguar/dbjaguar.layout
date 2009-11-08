@@ -4,16 +4,16 @@
 	<File name="dbjaguar.cpp" open="0" top="0" tabpos="11">
 		<Cursor position="383" topLine="0" />
 	</File>
-	<File name="dbjaguar.h" open="1" top="0" tabpos="9">
+	<File name="dbjaguar.h" open="1" top="0" tabpos="3">
 		<Cursor position="39" topLine="0" />
 	</File>
-	<File name="mysql/connection.cpp" open="1" top="0" tabpos="7">
+	<File name="mysql/connection.cpp" open="1" top="0" tabpos="1">
 		<Cursor position="98" topLine="0" />
 	</File>
-	<File name="mysql/mysql.h" open="1" top="0" tabpos="8">
+	<File name="mysql/mysql.h" open="1" top="0" tabpos="2">
 		<Cursor position="19" topLine="0" />
 	</File>
-	<File name="mysql/resulset.cpp" open="1" top="0" tabpos="10">
+	<File name="mysql/resulset.cpp" open="1" top="0" tabpos="4">
 		<Cursor position="58" topLine="1" />
 	</File>
 </CodeBlocks_layout_file>
