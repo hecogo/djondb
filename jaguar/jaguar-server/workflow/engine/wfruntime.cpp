@@ -107,11 +107,11 @@ void Token::setProcessInstance(ProcessInstance* _processInstance) {
     processInstance = _processInstance;
 };
 
-TokenStatus* Token::getStatus() {
+TokenStatus Token::getStatus() {
     return status;
 };
 
-void Token::setStatus(TokenStatus* _status) {
+void Token::setStatus(TokenStatus _status) {
     status = _status;
 };
 

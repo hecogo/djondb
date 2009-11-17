@@ -1,5 +1,6 @@
 #include "networkcommon.h"
 #include "util/util.h"
+#include <stdlib.h>
 
 class WorkflowController : public Controller {
 private:

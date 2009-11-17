@@ -51,21 +51,6 @@ ProcessDefinition* getProcessDefinition(long id) throw (WorkflowException) {
     return def;
 }
 
-void CommonConector::setSource(ConnectorSourceable* _source)
-{
-
-    if (typeid(_source) == typeid(Task))
-    {
-        setTaskSource((Task*)_source);
-        setEventSource(NULL);
-    }
-    else
-    {
-        setTaskSource(NULL);
-        setEventSource((CommonEvent*)_source);
-    }
-}
-
 void deserialize(string fileName, void** readed) {
     ifstream file;
     file.open(fileName.c_str(), ios::binary);

@@ -1,0 +1,6 @@
+class RequestProcessor
+!!!138498.cpp!!!	processRequest(inout request : Request) : Response
+    Controller* controller = m_controllers.find(request->getType())->second;
+    Response* response = controller->processRequest(request);
+
+    return response;

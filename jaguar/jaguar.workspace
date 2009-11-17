@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="Workspace">
-		<Project filename="jaguar-console/jaguar-console.cbp" active="1">
+		<Project filename="jaguar-console/jaguar-console.cbp">
 			<Depends filename="jaguar-server/common/common.cbp" />
 			<Depends filename="jaguar-server/dbjaguar/dbjaguar.cbp" />
 			<Depends filename="jaguar-server/jaguar/jaguar.cbp" />
@@ -12,9 +12,8 @@
 		<Project filename="jaguar-server/dbjaguar/dbjaguar.cbp">
 			<Depends filename="jaguar-server/common/common.cbp" />
 		</Project>
-		<Project filename="jaguar-server/jaguar/jaguar.cbp" />
+		<Project filename="jaguar-server/jaguar/jaguar.cbp" active="1" />
 		<Project filename="jaguar-server/networkcommon/networkcommon.cbp" />
-		<Project filename="jaguar-server/test/test.cbp" />
 		<Project filename="jaguar-server/testdb/testdb.cbp" />
 		<Project filename="jaguar-server/Tester/Tester.cbp" />
 		<Project filename="jaguar-server/testmysql/testmysql.cbp" />

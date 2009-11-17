@@ -1,0 +1,9 @@
+class Controller
+!!!138626.cpp!!!	Controller(in _requestType : int)
+    requestType = _requestType;
+!!!138754.cpp!!!	getRequestType() : int
+    return requestType;
+!!!138882.cpp!!!	processRequest(inout request : Request) : Response
+    return NULL;
+!!!139010.cpp!!!	selfRegister() : void
+    m_controllers.insert(pair<int, Controller*>(requestType, this));

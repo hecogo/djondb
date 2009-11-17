@@ -1,0 +1,7 @@
+class TimeRecord
+!!!130178.cpp!!!	TimeRecord()
+    start = time(NULL);
+!!!130306.cpp!!!	getTimeInMillis() : int
+    time_t end = time(NULL);
+
+    return end - start;

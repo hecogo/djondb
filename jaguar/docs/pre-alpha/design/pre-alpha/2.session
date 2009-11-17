@@ -1,0 +1,10 @@
+window_sizes 1278 718 300 972 534 112
+show_stereotypes
+selected usecasediagram_ref 129181 // case of use
+open
+  usecaseview_ref 129181 // use case view
+  
+package_ref 129181 // network
+  classview_ref 128770 // networkcommon
+end
+end

@@ -1,0 +1,7 @@
+class Thread
+!!!129794.cpp!!!	Thread(inout run : void *(*)(void* arg))
+    runFunction = run;
+!!!129922.cpp!!!	start(inout arg : void) : void
+    threadId = pthread_create(&internal, NULL, runFunction, arg);
+!!!130050.cpp!!!	join() : void
+    pthread_join(internal, NULL);

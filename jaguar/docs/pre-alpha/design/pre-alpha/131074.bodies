@@ -1,0 +1,31 @@
+class NetworkService
+!!!139138.cpp!!!	NetworkService()
+    log = getLogger(NULL);
+!!!139266.cpp!!!	start() : void
+    if (running) {
+        throw NetworkException(new string("The network service is already active. Try stopping it first"));
+    }
+    if (log->isInfo()) log->info("Starting network service");
+
+    registerControllers();
+    initializeDatabase();
+    initializeProcessDefinitions();
+
+    Thread* thread = new Thread(&startSocketListener);
+    thread->start(NULL);
+
+!!!139394.cpp!!!	stop() : void
+
+    log->info("Shutting down the network service");
+    if (!running) {
+        throw NetworkException(new string("The network service is not running. Try starting it first"));
+    }
+    running = false;
+    while (accepting) {
+        sleep(1);
+    }
+    int res = close(sock);
+    m_con->close();
+    if (res != 0) {
+        log->error("The close method returned: " + toString(res));
+    }

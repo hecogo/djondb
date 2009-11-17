@@ -1,0 +1,22 @@
+class Logger
+!!!130434.cpp!!!	Logger(inout clazz : void)
+    m_clazz = clazz;
+    m_debug = true;
+    m_info = true;
+    m_warn = true;
+!!!130562.cpp!!!	isDebug() : bool
+    return m_debug;
+!!!130690.cpp!!!	isInfo() : bool
+    return m_info;
+!!!130818.cpp!!!	isWarn() : bool
+    return m_warn;
+!!!130946.cpp!!!	debug(in message : string) : void
+    PRINT("DEBUG", m_clazz, message);
+!!!131074.cpp!!!	error(in message : string) : void
+    cout << m_clazz << ":" << message << endl;
+!!!131202.cpp!!!	error(in ex : exception) : void
+    cout << m_clazz << ":" << ex.what() << endl;
+!!!131330.cpp!!!	info(in message : string) : void
+    PRINT("INFO", m_clazz, message);
+!!!131458.cpp!!!	warn(in message : string) : void
+    PRINT("WARN", m_clazz, message);

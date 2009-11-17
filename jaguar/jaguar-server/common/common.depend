@@ -1,1 +1,41 @@
 # depslib dependency file v1.0
+1227585168 source:/home/cross/workspace/jaguar/jaguar/jaguar-server/common/util/logger/logger.cpp
+	"logger.h"
+	<iostream>
+
+1227585168 /home/cross/workspace/jaguar/jaguar/jaguar-server/common/util/logger/logger.h
+	<string>
+
+1230351866 source:/home/cross/workspace/jaguar/jaguar/jaguar-server/common/util/threads.cpp
+	"util.h"
+
+1257689460 /home/cross/workspace/jaguar/jaguar/jaguar-server/common/util/util.h
+	<string>
+	<sstream>
+	<dirent.h>
+	<vector>
+	"logger/logger.h"
+	"cache.h"
+	"threads.h"
+	"timerecord.h"
+	<typeinfo>
+
+1227066400 /home/cross/workspace/jaguar/jaguar/jaguar-server/common/util/cache.h
+	<vector>
+	<map>
+	<string>
+	<ctime>
+
+1227585168 /home/cross/workspace/jaguar/jaguar/jaguar-server/common/util/threads.h
+	<pthread.h>
+
+1225863358 /home/cross/workspace/jaguar/jaguar/jaguar-server/common/util/timerecord.h
+	<ctime>
+
+1230351872 source:/home/cross/workspace/jaguar/jaguar/jaguar-server/common/util/timerecord.cpp
+	<ctime>
+	"util.h"
+
+1230313009 source:/home/cross/workspace/jaguar/jaguar/jaguar-server/common/util/util.cpp
+	"util.h"
+

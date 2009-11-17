@@ -1,0 +1,13 @@
+class CommonConector
+!!!148226.cpp!!!	setSource(inout _source : ConnectorSourceable) : void
+
+    if (typeid(_source) == typeid(Task))
+    {
+        setTaskSource((Task*)_source);
+        setEventSource(NULL);
+    }
+    else
+    {
+        setTaskSource(NULL);
+        setEventSource((CommonEvent*)_source);
+    }

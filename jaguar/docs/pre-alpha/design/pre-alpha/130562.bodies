@@ -1,0 +1,13 @@
+class Response
+!!!137474.cpp!!!	Response(inout _data : string)
+    data = _data;
+!!!137602.cpp!!!	getData() : string
+    return data;
+!!!137730.cpp!!!	addParameter(inout name : char, inout contents : void, in size : int) : void
+    if (strlen(name) > 4) {
+        throw NetworkException(new string("The codename cannot be larger than 4 bytes"));
+    }
+    if (!data) {
+        data = new string();
+    }
+    data->append(name, (char*)contents);

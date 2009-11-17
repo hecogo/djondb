@@ -79,10 +79,13 @@ namespace cache {
 //        for (it = groups.begin(); it != groups.end(); it++) {
 //            cout << (*it).first << ":" << (*it).second << endl;
 //        }
-        CacheGroup* group = groups.find(key)->second;
-        if (!group) {
+        map<string, CacheGroup*>:: iterator it = groups.find(key);
+        CacheGroup* group;
+        if (it == groups.end()) {
             group = new CacheGroup();
             groups.insert(pair<string, CacheGroup* > (key, group));
+        } else {
+            group = it->second;
         }
         return *group;
     }

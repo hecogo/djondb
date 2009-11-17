@@ -1,0 +1,7 @@
+class ConnectionPool
+!!!131970.cpp!!!	ConnectionPool()
+    initializeConnectionPool();
+!!!132098.cpp!!!	getConnection(in _connectionDef : char, in username : char, in password : char) : Connection
+    Connection* connection = new MySQLConnection();
+    connection->open(_connectionDef, username, password);
+    return connection;

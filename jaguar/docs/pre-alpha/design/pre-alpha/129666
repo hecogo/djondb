@@ -1,0 +1,3542 @@
+format 66
+"metadata" // jaguar::jaguar-server::workflow::metadata
+  revision 1
+  modified_by 2 "cross"
+  // class settings
+  //class diagram settings
+  draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_infonote default shadow default show_stereotype_properties default
+  //use case diagram settings
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default class_drawing_mode default shadow default show_stereotype_properties default
+  //sequence diagram settings
+  show_full_operations_definition default write_horizontally default class_drawing_mode default drawing_language default draw_all_relations default shadow default show_stereotype_properties default
+  //collaboration diagram settings
+  show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default show_stereotype_properties default
+  //object diagram settings
+   write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default show_stereotype_properties default
+  //component diagram settings
+  package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default show_stereotype_properties default
+  //deployment diagram settings
+  package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
+  draw_component_as_icon default show_component_req_prov default show_component_rea default show_stereotype_properties default
+  //state diagram settings
+  package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
+  show_activities default region_horizontally default drawing_language default show_stereotype_properties default
+  //activity diagram settings
+  package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+  show_infonote default drawing_language default show_stereotype_properties default
+  
+  classview 129282 "metadata"
+    //class diagram settings
+    draw_all_relations default hide_attributes default hide_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_infonote default shadow default show_stereotype_properties default
+    //collaboration diagram settings
+    show_full_operations_definition default show_hierarchical_rank default write_horizontally default drawing_language default package_name_in_tab default show_context default draw_all_relations default shadow default show_stereotype_properties default
+    //object diagram settings
+     write_horizontally default package_name_in_tab default show_context default auto_label_position default draw_all_relations default shadow default show_stereotype_properties default
+    //sequence diagram settings
+    show_full_operations_definition default write_horizontally default class_drawing_mode default drawing_language default draw_all_relations default shadow default show_stereotype_properties default
+    //state diagram settings
+    package_name_in_tab default show_context default auto_label_position default write_trans_label_horizontally default show_trans_definition default draw_all_relations default shadow default
+    show_activities default region_horizontally default drawing_language default show_stereotype_properties default
+    //class settings
+    //activity diagram settings
+    package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
+    show_infonote default drawing_language default show_stereotype_properties default
+    class 131970 "ProcessDefinition"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 141442 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 141570 "definitionName"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 132226 // processType (<unidirectional association>)
+	relation 132226 --->
+	  a role_name "processType" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 132226 // processType (<unidirectional association>)
+	  b parent class_ref 133250 // ProcessType
+      end
+
+      attribute 141698 "properties"
+	private explicit_type "Property*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 141826 "events"
+	private explicit_type "CommonEvent*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 141954 "pools"
+	private explicit_type "Pool*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 142082 "tasks"
+	private explicit_type "ActivityCommon*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 142210 "masterEntity"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 151554 "getProcessType"
+	cpp_inline public return_type class_ref 133250 // ProcessType
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return processType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 151682 "setProcessType"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_processType" type class_ref 133250 // ProcessType
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        processType = _processType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 151810 "getProperties"
+	cpp_inline public explicit_return_type "vector<Property*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return properties;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 151938 "setProperties"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_properties" explicit_type "vector<Property*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        properties = _properties;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 152066 "getPools"
+	cpp_inline public explicit_return_type "vector<Pool*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return pools;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 152194 "setPools"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_pools" explicit_type "vector<Pool*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        pools = _pools;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 152322 "getDefinitionName"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return definitionName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 152450 "setDefinitionName"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_definitionName" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        definitionName = _definitionName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 152578 "getTasks"
+	cpp_inline public explicit_return_type "vector<ActivityCommon*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return tasks;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 152706 "setTasks"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_tasks" explicit_type "vector<ActivityCommon*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        tasks = _tasks;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 152834 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 152962 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 153090 "getEvents"
+	cpp_inline public explicit_return_type "vector<CommonEvent*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return events;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 153218 "setEvents"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_events" explicit_type "vector<CommonEvent*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        events = _events;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 153346 "getMasterEntity"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return masterEntity;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 153474 "setMasterEntity"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_masterEntity" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        masterEntity = _masterEntity;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 132226 "Task"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 133378 // <generalisation>
+	relation 133378 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 133378 // <generalisation>
+	  b parent class_ref 134402 // ConnectorSourceable
+      end
+
+      classrelation 133506 // <generalisation>
+	relation 133506 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 133506 // <generalisation>
+	  b parent class_ref 134530 // ConnectorTargetable
+      end
+
+      classrelation 133634 // <generalisation>
+	relation 133634 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 133634 // <generalisation>
+	  b parent class_ref 133762 // ActivityCommon
+      end
+
+      attribute 143490 "sequenceFlows"
+	private explicit_type "CommonConector*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 133762 // taskType (<unidirectional association>)
+	relation 133762 --->
+	  a role_name "taskType" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 133762 // taskType (<unidirectional association>)
+	  b parent class_ref 133506 // TaskType
+      end
+
+      attribute 143618 "taskName"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 157698 "getTaskType"
+	cpp_inline public return_type class_ref 133506 // TaskType
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return taskType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 157826 "setTaskType"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_taskType" type class_ref 133506 // TaskType
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        taskType = _taskType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 157954 "getSequenceFlows"
+	cpp_inline public explicit_return_type "vector<CommonConector*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return sequenceFlows;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 158082 "setSequenceFlows"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_sequenceFlows" explicit_type "vector<CommonConector*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        sequenceFlows = _sequenceFlows;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 158210 "getTaskName"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return taskName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 158338 "setTaskName"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_taskName" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        taskName = _taskName;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 132354 "ActivityStatus"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 134146 "NONE_ACTIVITYSTATUS"
+	public type class_ref 132354 // ActivityStatus
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 134274 "READY_ACTIVITYSTATUS"
+	public type class_ref 132354 // ActivityStatus
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 134402 "ACTIVE_ACTIVITYSTATUS"
+	public type class_ref 132354 // ActivityStatus
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 134530 "CANCELLED_ACTIVITYSTATUS"
+	public type class_ref 132354 // ActivityStatus
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 134658 "ABORTING_ACTIVITYSTATUS"
+	public type class_ref 132354 // ActivityStatus
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 134786 "ABORTED_ACTIVITYSTATUS"
+	public type class_ref 132354 // ActivityStatus
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 134914 "COMPLETING_ACTIVITYSTATUS"
+	public type class_ref 132354 // ActivityStatus
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 135042 "COMPLETED_ACTIVITYSTATUS"
+	public type class_ref 132354 // ActivityStatus
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 132482 "ActivityType"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 135170 "TASK_ACTIVITYTYPE"
+	public type class_ref 132482 // ActivityType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 135298 "SUBPROCESS_ACTIVITYTYPE"
+	public type class_ref 132482 // ActivityType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 132610 "AssignTime"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 135426 "START_ASSIGNTIME"
+	public type class_ref 132610 // AssignTime
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 135554 "END_ASSIGNTIME"
+	public type class_ref 132610 // AssignTime
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 132738 "ConditionType"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 135682 "NONE_CONDITIONTYPE"
+	public type class_ref 132738 // ConditionType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 135810 "EXPRESSION_CONDITIONTYPE"
+	public type class_ref 132738 // ConditionType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 135938 "DEFAULT_CONDITIONTYPE"
+	public type class_ref 132738 // ConditionType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 132866 "EventType"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 136066 "START_EVENTTYPE"
+	public type class_ref 132866 // EventType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 136194 "END_EVENTTYPE"
+	public type class_ref 132866 // EventType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 136322 "INTERMEDIATE_EVENTTYPE"
+	public type class_ref 132866 // EventType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 132994 "LoopType"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 136450 "NONE_LOOPTYPE"
+	public type class_ref 132994 // LoopType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 136578 "STANDARD_LOOPTYPE"
+	public type class_ref 132994 // LoopType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 136706 "MULTIINSTANCE_LOOPTYPE"
+	public type class_ref 132994 // LoopType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 133122 "ParticipantType"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 136834 "ROLE_PARTICIPANTTYPE"
+	public type class_ref 133122 // ParticipantType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 136962 "ENTITY_PARTICIPANTTYPE"
+	public type class_ref 133122 // ParticipantType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 133250 "ProcessType"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 137090 "NONE_PROCESSTYPE"
+	public type class_ref 133250 // ProcessType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 137218 "PRIVATE_PROCESSTYPE"
+	public type class_ref 133250 // ProcessType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 137346 "ABSTRACT_PROCESSTYPE"
+	public type class_ref 133250 // ProcessType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 137474 "COLLABORATION_PROCESSTYPE"
+	public type class_ref 133250 // ProcessType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 133378 "PropertyType"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 137602 "INT_PROPERTYTYPE"
+	public type class_ref 133378 // PropertyType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 137730 "STRING_PROPERTYTYPE"
+	public type class_ref 133378 // PropertyType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 137858 "SET_PROPERTYTYPE"
+	public type class_ref 133378 // PropertyType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 133506 "TaskType"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 137986 "SERVICE_TASKTYPE"
+	public type class_ref 133506 // TaskType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 138114 "RECEIVE_TASKTYPE"
+	public type class_ref 133506 // TaskType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 138242 "SEND_TASKTYPE"
+	public type class_ref 133506 // TaskType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 138370 "USER_TASKTYPE"
+	public type class_ref 133506 // TaskType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 138498 "SCRIPT_TASKTYPE"
+	public type class_ref 133506 // TaskType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 138626 "MANUAL_TASKTYPE"
+	public type class_ref 133506 // TaskType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 138754 "REFERENCE_TASKTYPE"
+	public type class_ref 133506 // TaskType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 138882 "NONE_TASKTYPE"
+	public type class_ref 133506 // TaskType
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 133634 "Trigger"
+      visibility package stereotype "enum"
+      cpp_decl "${comment}enum ${name} {
+${items}
+};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 139010 "NONE_TRIGGER"
+	public type class_ref 133634 // Trigger
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 139138 "MESSAGE_TRIGGER"
+	public type class_ref 133634 // Trigger
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 139266 "TIMER_TRIGGER"
+	public type class_ref 133634 // Trigger
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 139394 "RULE_TRIGGER"
+	public type class_ref 133634 // Trigger
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 139522 "LINK_TRIGGER"
+	public type class_ref 133634 // Trigger
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 139650 "MULTIPLE_TRIGGER"
+	public type class_ref 133634 // Trigger
+	cpp_decl "  ${name}${value},${comment}"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+    end
+
+    class 133762 "ActivityCommon"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 139778 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 129666 // activityType (<unidirectional association>)
+	relation 129666 --->
+	  a role_name "activityType" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129666 // activityType (<unidirectional association>)
+	  b parent class_ref 132482 // ActivityType
+      end
+
+      classrelation 129794 // status (<unidirectional association>)
+	relation 129794 --->
+	  a role_name "status" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129794 // status (<unidirectional association>)
+	  b parent class_ref 132354 // ActivityStatus
+      end
+
+      attribute 139906 "startQuantity"
+	private explicit_type "int"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+	comment " Number of tokens required to start the activity"
+      end
+
+      classrelation 129922 // loopType (<unidirectional association>)
+	relation 129922 --->
+	  a role_name "loopType" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 129922 // loopType (<unidirectional association>)
+	  b parent class_ref 132994 // LoopType
+      end
+
+      classrelation 130050 // processDefinition (<unidirectional association>)
+	relation 130050 --->
+	  a role_name "processDefinition" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 130050 // processDefinition (<unidirectional association>)
+	  b parent class_ref 131970 // ProcessDefinition
+      end
+
+      operation 143362 "ActivityCommon"
+	cpp_inline public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw} {
+        startQuantity = 1;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 143490 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 143618 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 143746 "getActivityType"
+	cpp_inline public return_type class_ref 132482 // ActivityType
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return activityType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 143874 "setActivityType"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_activityType" type class_ref 132482 // ActivityType
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        activityType = _activityType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 144002 "getStatus"
+	cpp_inline public return_type class_ref 132354 // ActivityStatus
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return status;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 144130 "setStatus"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_status" type class_ref 132354 // ActivityStatus
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        status = _status;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 144258 "getStartQuantity"
+	cpp_inline public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return startQuantity;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 144386 "setStartQuantity"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_startQuantity" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        startQuantity = _startQuantity;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 144514 "getLoopType"
+	cpp_inline public return_type class_ref 132994 // LoopType
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return loopType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 144642 "setLoopType"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_loopType" type class_ref 132994 // LoopType
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        loopType = _loopType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 144770 "getProcessDefinition"
+	cpp_inline public return_type class_ref 131970 // ProcessDefinition
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return processDefinition;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 144898 "setProcessDefinition"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_processDefinition" type class_ref 131970 // ProcessDefinition
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        processDefinition = _processDefinition;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 133890 "Assignment"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 140034 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 130178 // assignmentTo (<unidirectional association>)
+	relation 130178 --->
+	  a role_name "assignmentTo" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 130178 // assignmentTo (<unidirectional association>)
+	  b parent class_ref 134018 // Property
+      end
+
+      classrelation 130306 // assignmentFrom (<unidirectional association>)
+	relation 130306 --->
+	  a role_name "assignmentFrom" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 130306 // assignmentFrom (<unidirectional association>)
+	  b parent class_ref 134146 // Expression
+      end
+
+      classrelation 130434 // assignTime (<unidirectional association>)
+	relation 130434 --->
+	  a role_name "assignTime" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 130434 // assignTime (<unidirectional association>)
+	  b parent class_ref 132610 // AssignTime
+      end
+
+      classrelation 130562 // expression (<unidirectional association>)
+	relation 130562 --->
+	  a role_name "expression" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 130562 // expression (<unidirectional association>)
+	  b parent class_ref 134146 // Expression
+      end
+
+      classrelation 130690 // event (<unidirectional association>)
+	relation 130690 --->
+	  a role_name "event" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 130690 // event (<unidirectional association>)
+	  b parent class_ref 134274 // CommonEvent
+      end
+
+      operation 145026 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 145154 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 145282 "getAssignmentTo"
+	cpp_inline public return_type class_ref 134018 // Property
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return assignmentTo;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 145410 "setAssignmentTo"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_assignmentTo" type class_ref 134018 // Property
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        assignmentTo = _assignmentTo;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 145538 "getAssignmentFrom"
+	cpp_inline public return_type class_ref 134146 // Expression
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return assignmentFrom;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 145666 "setAssignmentFrom"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_assignmentFrom" type class_ref 134146 // Expression
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        assignmentFrom = _assignmentFrom;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 145794 "getAssignTime"
+	cpp_inline public return_type class_ref 132610 // AssignTime
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return assignTime;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 145922 "setAssignTime"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_assignTime" type class_ref 132610 // AssignTime
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        assignTime = _assignTime;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 146050 "getExpression"
+	cpp_inline public return_type class_ref 134146 // Expression
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return expression;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 146178 "setExpression"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_expression" type class_ref 134146 // Expression
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        expression = _expression;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 146306 "getEvent"
+	cpp_inline public return_type class_ref 134274 // CommonEvent
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return event;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 146434 "setEvent"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_event" type class_ref 134274 // CommonEvent
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        event = _event;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 134018 "Property"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 142338 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 142466 "propertyName"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 132354 // propertyType (<unidirectional association>)
+	relation 132354 --->
+	  a role_name "propertyType" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 132354 // propertyType (<unidirectional association>)
+	  b parent class_ref 133378 // PropertyType
+      end
+
+      classrelation 132482 // processDefinition (<unidirectional association>)
+	relation 132482 --->
+	  a role_name "processDefinition" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 132482 // processDefinition (<unidirectional association>)
+	  b parent class_ref 131970 // ProcessDefinition
+      end
+
+      operation 153602 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 153730 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 153858 "getPropertyName"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return propertyName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 153986 "setPropertyName"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_propertyName" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        propertyName = _propertyName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 154114 "getPropertyType"
+	cpp_inline public return_type class_ref 133378 // PropertyType
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return propertyType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 154242 "setPropertyType"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_propertyType" type class_ref 133378 // PropertyType
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        propertyType = _propertyType;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 134146 "Expression"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 141186 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 141314 "expression"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 151042 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 151170 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 151298 "getExpression"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return expression;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 151426 "setExpression"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_expression" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        expression = _expression;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 134274 "CommonEvent"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 131330 // <generalisation>
+	relation 131330 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 131330 // <generalisation>
+	  b parent class_ref 134402 // ConnectorSourceable
+      end
+
+      classrelation 131458 // <generalisation>
+	relation 131458 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 131458 // <generalisation>
+	  b parent class_ref 134530 // ConnectorTargetable
+      end
+
+      attribute 140418 "sequenceFlows"
+	private explicit_type "CommonConector*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 140546 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 131586 // eventType (<unidirectional association>)
+	relation 131586 --->
+	  a role_name "eventType" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 131586 // eventType (<unidirectional association>)
+	  b parent class_ref 132866 // EventType
+      end
+
+      attribute 140674 "assigments"
+	private explicit_type "Assignment*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 131714 // pool (<unidirectional association>)
+	relation 131714 --->
+	  a role_name "pool" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 131714 // pool (<unidirectional association>)
+	  b parent class_ref 134786 // Pool
+      end
+
+      classrelation 131842 // processDefinition (<unidirectional association>)
+	relation 131842 --->
+	  a role_name "processDefinition" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 131842 // processDefinition (<unidirectional association>)
+	  b parent class_ref 131970 // ProcessDefinition
+      end
+
+      operation 148610 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 148738 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 148866 "getEventType"
+	cpp_inline public return_type class_ref 132866 // EventType
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return eventType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 148994 "setEventType"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_eventType" type class_ref 132866 // EventType
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        eventType = _eventType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 149122 "getPool"
+	cpp_inline public return_type class_ref 134786 // Pool
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return pool;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 149250 "setPool"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_pool" type class_ref 134786 // Pool
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        pool = _pool;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 149378 "getSequenceFlows"
+	cpp_inline public explicit_return_type "vector<CommonConector*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return sequenceFlows;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 149506 "setSequenceFlows"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_sequenceFlows" explicit_type "vector<CommonConector*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        sequenceFlows = _sequenceFlows;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 149634 "getAssigments"
+	cpp_inline public explicit_return_type "vector<Assignment*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return assigments;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 149762 "setAssigments"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_assigments" explicit_type "vector<Assignment*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        assigments = _assigments;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 149890 "getProcessDefinition"
+	cpp_inline public return_type class_ref 131970 // ProcessDefinition
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return processDefinition;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 150018 "setProcessDefinition"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_processDefinition" type class_ref 131970 // ProcessDefinition
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        processDefinition = _processDefinition;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 134402 "ConnectorSourceable"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 134530 "ConnectorTargetable"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 134658 "CommonConector"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 140162 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 140290 "connectorName"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 130818 // taskSource (<unidirectional association>)
+	relation 130818 --->
+	  a role_name "taskSource" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 130818 // taskSource (<unidirectional association>)
+	  b parent class_ref 132226 // Task
+      end
+
+      classrelation 130946 // taskTarget (<unidirectional association>)
+	relation 130946 --->
+	  a role_name "taskTarget" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 130946 // taskTarget (<unidirectional association>)
+	  b parent class_ref 132226 // Task
+      end
+
+      classrelation 131074 // eventSource (<unidirectional association>)
+	relation 131074 --->
+	  a role_name "eventSource" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 131074 // eventSource (<unidirectional association>)
+	  b parent class_ref 134274 // CommonEvent
+      end
+
+      classrelation 131202 // eventTarget (<unidirectional association>)
+	relation 131202 --->
+	  a role_name "eventTarget" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 131202 // eventTarget (<unidirectional association>)
+	  b parent class_ref 134274 // CommonEvent
+      end
+
+      operation 146562 "getTaskSource"
+	cpp_inline protected return_type class_ref 132226 // Task
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return taskSource;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 146690 "setTaskSource"
+	cpp_inline protected explicit_return_type "void"
+	nparams 1
+	  param inout name "_taskSource" type class_ref 132226 // Task
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        taskSource = _taskSource;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 146818 "getTaskTarget"
+	cpp_inline protected return_type class_ref 132226 // Task
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return taskTarget;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 146946 "setTaskTarget"
+	cpp_inline protected explicit_return_type "void"
+	nparams 1
+	  param inout name "_taskTarget" type class_ref 132226 // Task
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        taskTarget = _taskTarget;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 147074 "getEventSource"
+	cpp_inline protected return_type class_ref 134274 // CommonEvent
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return eventSource;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 147202 "setEventSource"
+	cpp_inline protected explicit_return_type "void"
+	nparams 1
+	  param inout name "_eventSource" type class_ref 134274 // CommonEvent
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        eventSource = _eventSource;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 147330 "getEventTarget"
+	cpp_inline protected return_type class_ref 134274 // CommonEvent
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return eventTarget;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 147458 "setEventTarget"
+	cpp_inline protected explicit_return_type "void"
+	nparams 1
+	  param inout name "_eventTarget" type class_ref 134274 // CommonEvent
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        eventTarget = _eventTarget;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 147586 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 147714 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 147842 "getConnectorName"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return connectorName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 147970 "setConnectorName"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_connectorName" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        connectorName = _connectorName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 148098 "getSource"
+	cpp_inline public return_type class_ref 134402 // ConnectorSourceable
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        if (taskSource) {
+            return (ConnectorSourceable*) taskSource;
+        } else {
+            return (ConnectorSourceable*)eventSource;
+        }
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 148226 "setSource"
+	preserve_cpp_body_indent public explicit_return_type "void"
+	nparams 1
+	  param inout name "_source" type class_ref 134402 // ConnectorSourceable
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 148354 "getTarget"
+	public return_type class_ref 134530 // ConnectorTargetable
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 148482 "setTarget"
+	public explicit_return_type "void"
+	nparams 1
+	  param inout name "target" type class_ref 134530 // ConnectorTargetable
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}${type} ${class}::${name}${(}${t0} * ${p0}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 134786 "Pool"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 142722 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 142850 "poolName"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 142978 "lanes"
+	private explicit_type "Lane*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 132738 // participant (<unidirectional association>)
+	relation 132738 --->
+	  a role_name "participant" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 132738 // participant (<unidirectional association>)
+	  b parent class_ref 135554 // Participant
+      end
+
+      classrelation 132866 // processDefinition (<unidirectional association>)
+	relation 132866 --->
+	  a role_name "processDefinition" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 132866 // processDefinition (<unidirectional association>)
+	  b parent class_ref 131970 // ProcessDefinition
+      end
+
+      operation 154882 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 155010 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 155138 "getPoolName"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return poolName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 155266 "setPoolName"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_poolName" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        poolName = _poolName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 155394 "getLanes"
+	cpp_inline public explicit_return_type "vector<Lane*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return lanes;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 155522 "setLanes"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_lanes" explicit_type "vector<Lane*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        lanes = _lanes;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 155650 "getParticipant"
+	cpp_inline public return_type class_ref 135554 // Participant
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return participant;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 155778 "setParticipant"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_participant" type class_ref 135554 // Participant
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        participant = _participant;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 155906 "getProcessDefinition"
+	cpp_inline public return_type class_ref 131970 // ProcessDefinition
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return processDefinition;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 156034 "setProcessDefinition"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_processDefinition" type class_ref 131970 // ProcessDefinition
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        processDefinition = _processDefinition;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 134914 "EndEvent"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 131970 // <generalisation>
+	relation 131970 ---|>
+	  a private
+	    cpp default "${type}"
+	    classrelation_ref 131970 // <generalisation>
+	  b parent class_ref 134274 // CommonEvent
+      end
+
+      operation 150146 "EndEvent"
+	cpp_inline public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw} {};
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 135042 "Entity"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 140802 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 140930 "entityName"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 150274 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 150402 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 150530 "getEntityName"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return entityName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 150658 "setEntityName"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_entityName" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        entityName = _entityName;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 135170 "EntityNotFoundException"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 132098 // <generalisation>
+	relation 132098 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 132098 // <generalisation>
+	  b parent class_ref 135298 // typedef4
+      end
+
+      attribute 141058 "message"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 150786 "EntityNotFoundException"
+	public explicit_return_type ""
+	nparams 1
+	  param inout name "_message" explicit_type "string"
+	cpp_decl "    ${comment}${inline}${name}${(}${t0} * ${p0}${v0}${)}${volatile}${throw};
+"
+	cpp_def "${comment}${inline}${class}::${name}${(}${t0} * ${p0}${)}${throw}{
+${body}}
+"
+	
+	
+	
+	
+      end
+
+      operation 150914 "what"
+	preserve_cpp_body_indent const cpp_virtual public explicit_return_type "char"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}const ${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract};
+"
+	cpp_def "${comment}${inline}const ${type} * ${class}::${name}${(}${)}${const}${volatile}${throw}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 135298 "typedef4"
+      visibility package stereotype "typedef" explicit_base_type "exception"
+      cpp_decl "${comment}typedef ${type} ${name};
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+    end
+
+    class 135426 "Lane"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 142594 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 132610 // parentPool (<unidirectional association>)
+	relation 132610 --->
+	  a role_name "parentPool" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 132610 // parentPool (<unidirectional association>)
+	  b parent class_ref 134786 // Pool
+      end
+
+      operation 154370 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 154498 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 154626 "getParentPool"
+	cpp_inline public return_type class_ref 134786 // Pool
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return parentPool;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 154754 "setParentPool"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_parentPool" type class_ref 134786 // Pool
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        parentPool = _parentPool;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 135554 "Participant"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 143106 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      classrelation 132994 // participantType (<unidirectional association>)
+	relation 132994 --->
+	  a role_name "participantType" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 132994 // participantType (<unidirectional association>)
+	  b parent class_ref 133122 // ParticipantType
+      end
+
+      classrelation 133122 // participantRole (<unidirectional association>)
+	relation 133122 --->
+	  a role_name "participantRole" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 133122 // participantRole (<unidirectional association>)
+	  b parent class_ref 135682 // Role
+      end
+
+      classrelation 133250 // entity (<unidirectional association>)
+	relation 133250 --->
+	  a role_name "entity" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 133250 // entity (<unidirectional association>)
+	  b parent class_ref 135042 // Entity
+      end
+
+      operation 156162 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 156290 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 156418 "getParticipantType"
+	cpp_inline public return_type class_ref 133122 // ParticipantType
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return participantType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 156546 "setParticipantType"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_participantType" type class_ref 133122 // ParticipantType
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        participantType = _participantType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 156674 "getParticipantRole"
+	cpp_inline public return_type class_ref 135682 // Role
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return participantRole;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 156802 "setParticipantRole"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_participantRole" type class_ref 135682 // Role
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        participantRole = _participantRole;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 156930 "getEntity"
+	cpp_inline public return_type class_ref 135042 // Entity
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return entity;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 157058 "setEntity"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_entity" type class_ref 135042 // Entity
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        entity = _entity;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 135682 "Role"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      attribute 143234 "id"
+	private explicit_type "long"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 143362 "roleName"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 157186 "getId"
+	cpp_inline public explicit_return_type "long"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 157314 "setId"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_id" explicit_type "long"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        id = _id;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 157442 "getRoleName"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return roleName;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 157570 "setRoleName"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_roleName" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        roleName = _roleName;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 135810 "ManualTask"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 133890 // <generalisation>
+	relation 133890 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 133890 // <generalisation>
+	  b parent class_ref 132226 // Task
+      end
+
+      attribute 143746 "performers"
+	private explicit_type "void*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 158466 "getPerformers"
+	cpp_inline public explicit_return_type "vector<void*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return performers;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 158594 "setPerformers"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_performers" explicit_type "vector<void*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        performers = _performers;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 135938 "ReferenceTask"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 134018 // <generalisation>
+	relation 134018 ---|>
+	  a private
+	    cpp default "${type}"
+	    classrelation_ref 134018 // <generalisation>
+	  b parent class_ref 132226 // Task
+      end
+
+      classrelation 134146 // taskRef (<unidirectional association>)
+	relation 134146 --->
+	  a role_name "taskRef" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 134146 // taskRef (<unidirectional association>)
+	  b parent class_ref 132226 // Task
+      end
+
+      operation 158722 "getTaskRef"
+	cpp_inline public return_type class_ref 132226 // Task
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return taskRef;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 158850 "setTaskRef"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_taskRef" type class_ref 132226 // Task
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        taskRef = _taskRef;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 136066 "ScriptTask"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 134274 // <generalisation>
+	relation 134274 ---|>
+	  a private
+	    cpp default "${type}"
+	    classrelation_ref 134274 // <generalisation>
+	  b parent class_ref 132226 // Task
+      end
+
+      attribute 143874 "script"
+	private explicit_type "string"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 158978 "getScript"
+	cpp_inline public explicit_return_type "string"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return script;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 159106 "setScript"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_script" explicit_type "string"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        script = _script;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 136194 "SequenceFlow"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 134402 // <generalisation>
+	relation 134402 ---|>
+	  a private
+	    cpp default "${type}"
+	    classrelation_ref 134402 // <generalisation>
+	  b parent class_ref 134658 // CommonConector
+      end
+
+      classrelation 134530 // conditionType (<unidirectional association>)
+	relation 134530 --->
+	  a role_name "conditionType" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 134530 // conditionType (<unidirectional association>)
+	  b parent class_ref 132738 // ConditionType
+      end
+
+      classrelation 134658 // conditionExpression (<unidirectional association>)
+	relation 134658 --->
+	  a role_name "conditionExpression" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 134658 // conditionExpression (<unidirectional association>)
+	  b parent class_ref 134146 // Expression
+      end
+
+      attribute 144002 "quantity"
+	private explicit_type "int"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${type} ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 159234 "getConditionType"
+	cpp_inline public return_type class_ref 132738 // ConditionType
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return conditionType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 159362 "setConditionType"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_conditionType" type class_ref 132738 // ConditionType
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        conditionType = _conditionType;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 159490 "getConditionExpression"
+	cpp_inline public return_type class_ref 134146 // Expression
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return conditionExpression;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 159618 "setConditionExpression"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_conditionExpression" type class_ref 134146 // Expression
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        conditionExpression = _conditionExpression;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 159746 "getQuantity"
+	cpp_inline public explicit_return_type "int"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return quantity;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 159874 "setQuantity"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param in name "_quantity" explicit_type "int"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        quantity = _quantity;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 136322 "ServiceTask"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 134786 // <generalisation>
+	relation 134786 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 134786 // <generalisation>
+	  b parent class_ref 132226 // Task
+      end
+    end
+
+    class 136450 "StartEvent"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 134914 // <generalisation>
+	relation 134914 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 134914 // <generalisation>
+	  b parent class_ref 134274 // CommonEvent
+      end
+
+      classrelation 135042 // startTrigger (<unidirectional association>)
+	relation 135042 --->
+	  a role_name "startTrigger" private
+	    cpp default "    ${comment}${static}${mutable}${volatile}${const}${type} * ${name}${value};
+"
+	    classrelation_ref 135042 // startTrigger (<unidirectional association>)
+	  b parent class_ref 133634 // Trigger
+      end
+
+      operation 160002 "StartEvent"
+	cpp_inline public explicit_return_type ""
+	nparams 0
+	cpp_decl "    ${comment}${inline}${name}${(}${)}${volatile}${throw} {};
+"
+	
+	
+	
+	
+      end
+
+      operation 160130 "getStartTrigger"
+	cpp_inline public return_type class_ref 133634 // Trigger
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return startTrigger;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 160258 "setStartTrigger"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_startTrigger" type class_ref 133634 // Trigger
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        startTrigger = _startTrigger;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+
+    class 136578 "UserTask"
+      visibility package 
+      cpp_decl "${comment}${template}class ${name}${inherit} {
+${members}};
+${inlines}
+"
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      classrelation 135170 // <generalisation>
+	relation 135170 ---|>
+	  a public
+	    cpp default "${type}"
+	    classrelation_ref 135170 // <generalisation>
+	  b parent class_ref 132226 // Task
+      end
+
+      attribute 144130 "performers"
+	private explicit_type "void*"
+	stereotype "vector"
+	cpp_decl "    ${comment}${static}${mutable}${volatile}${const}${stereotype}<${type}> * ${name}${value};
+"
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 160386 "getPerformers"
+	cpp_inline public explicit_return_type "vector<void*>"
+	nparams 0
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} * ${name}${(}${)}${const}${volatile}${throw}${abstract} {
+        return performers;
+    };
+"
+	
+	
+	
+	
+      end
+
+      operation 160514 "setPerformers"
+	cpp_inline public explicit_return_type "void"
+	nparams 1
+	  param inout name "_performers" explicit_type "vector<void*>"
+	cpp_decl "    ${comment}${friend}${static}${inline}${virtual}${type} ${name}${(}${t0} * ${p0}${v0}${)}${const}${volatile}${throw}${abstract} {
+        performers = _performers;
+    };
+"
+	
+	
+	
+	
+      end
+    end
+  end
+
+  deploymentview 129282 "metadata"
+    //deployment diagram settings
+    package_name_in_tab default show_context default write_horizontally default auto_label_position default draw_all_relations default shadow default
+    draw_component_as_icon default show_component_req_prov default show_component_rea default show_stereotype_properties default
+    artifact 129538 "metadata"
+      stereotype "source"
+      cpp_h "#ifndef ${NAMESPACE}_${NAME}_H
+#define ${NAMESPACE}_${NAME}_H
+
+${comment}
+${includes}
+${declarations}
+${namespace_start}
+${definition}
+${namespace_end}
+#endif
+"
+      cpp_src "${comment}
+${includes}
+${namespace_start}
+${members}
+${namespace_end}"
+      associated_classes
+	class_ref 132354 // ActivityStatus
+	class_ref 132482 // ActivityType
+	class_ref 132610 // AssignTime
+	class_ref 132738 // ConditionType
+	class_ref 132866 // EventType
+	class_ref 132994 // LoopType
+	class_ref 133122 // ParticipantType
+	class_ref 133250 // ProcessType
+	class_ref 133378 // PropertyType
+	class_ref 133506 // TaskType
+	class_ref 133634 // Trigger
+	class_ref 133762 // ActivityCommon
+	class_ref 133890 // Assignment
+	class_ref 134402 // ConnectorSourceable
+	class_ref 134530 // ConnectorTargetable
+	class_ref 134658 // CommonConector
+	class_ref 134274 // CommonEvent
+	class_ref 134914 // EndEvent
+	class_ref 135042 // Entity
+	class_ref 135298 // typedef4
+	class_ref 135170 // EntityNotFoundException
+	class_ref 134146 // Expression
+	class_ref 131970 // ProcessDefinition
+	class_ref 134018 // Property
+	class_ref 135426 // Lane
+	class_ref 134786 // Pool
+	class_ref 135554 // Participant
+	class_ref 135682 // Role
+	class_ref 132226 // Task
+	class_ref 135810 // ManualTask
+	class_ref 135938 // ReferenceTask
+	class_ref 136066 // ScriptTask
+	class_ref 136194 // SequenceFlow
+	class_ref 136322 // ServiceTask
+	class_ref 136450 // StartEvent
+	class_ref 136578 // UserTask
+      end
+    end
+  end
+end

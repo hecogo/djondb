@@ -5,6 +5,12 @@ using namespace cache;
 class TokenFacade {
 public:
     list<Token*>* processToken(ProcessInstance* processInstance, Token* token) {
+        Task* currentTask = token->getTask();
+        return NULL;
+    }
+
+    Token* findBy(TokenVO token) {
+        return NULL;
     }
 };
 
@@ -38,8 +44,8 @@ ProcessInstance* processEvent(ProcessInstance* processInstance, StartEvent* evt)
     for (vector<CommonConector*>::iterator connector = sequenceFlows->begin();
             connector != sequenceFlows->end(); connector++)
     {
-        ConnectorTargetable* target = (*connector)->getTarget();
-        if (typeid(target) == typeid(Task))
+        ConnectorTargetable* target = (*connector)->getTaskTarget();
+        if (target)
         {
             Token* token = new Token();
             Task* task = (Task*) target;
@@ -57,28 +63,33 @@ ProcessInstance* processEvent(ProcessInstance* processInstance, StartEvent* evt)
     return processInstance;
 }
 
-vector<Token*>* processToken(ProcessInstance* instance, TokenVO* tokenVO)
+list<Token*>* processToken(ProcessInstance* instance, TokenVO* tokenVO)
 {
     try
     {
         TokenFacade* tokenFacade = new TokenFacade();
-        Token* token = tokenFacade->findBy(tokenVO);
+        Token* token = tokenFacade->findBy(*tokenVO);
         return tokenFacade->processToken(instance, token);
     }
     catch (EntityNotFoundException ex)
     {
         stringstream smessage;
         smessage << "Wrong token definition. The token id: " << tokenVO->getId() << " was not found." << endl;
-        throw new smessage.str();
+        throw smessage.str();
     }
 };
+
+ProcessInstance* persist(ProcessInstance* processInstance) {
+    // TODO To be implemented
+    return processInstance;
+}
 
 // creates a new instance from the process definition
 ProcessInstance* createProcessInstance(long definition)
 {
     ProcessInstance* processInstance = new ProcessInstance();
     ProcessDefinition* def = getProcessDefinition(definition);
-    processInstance.setProcessDefinition(def);
+    processInstance->setProcessDefinition(def);
     //MasterEntity master = getMasterEntity(def);
     //processInstance.setMasterEntity(master);
     vector<StartEvent*>* startEvents = getStartEvents(def);
@@ -86,7 +97,7 @@ ProcessInstance* createProcessInstance(long definition)
     {
         processInstance = processEvent(processInstance, *evt);
     }
-    processInstance = (ProcessInstance) persist(processInstance);
+    processInstance = persist(processInstance);
 
     return processInstance;
 };

@@ -245,7 +245,23 @@ private:
     CommonEvent* eventSource;
     CommonEvent* eventTarget;
 
-protected:
+public:
+    long getId() {
+        return id;
+    }
+
+    void setId(long _id) {
+        id = _id;
+    }
+
+    string* getConnectorName() {
+        return connectorName;
+    }
+
+    void setConnectorName(string* _connectorName) {
+        connectorName = _connectorName;
+    }
+
     Task* getTaskSource() {
         return taskSource;
     }
@@ -277,36 +293,6 @@ protected:
     void setEventTarget(CommonEvent* _eventTarget) {
         eventTarget = _eventTarget;
     }
-
-public:
-    long getId() {
-        return id;
-    }
-
-    void setId(long _id) {
-        id = _id;
-    }
-
-    string* getConnectorName() {
-        return connectorName;
-    }
-
-    void setConnectorName(string* _connectorName) {
-        connectorName = _connectorName;
-    }
-
-    ConnectorSourceable* getSource() {
-        if (taskSource) {
-            return (ConnectorSourceable*) taskSource;
-        } else {
-            return (ConnectorSourceable*)eventSource;
-        }
-    }
-
-    void setSource(ConnectorSourceable* _source);
-
-    ConnectorTargetable* getTarget();
-    void setTarget(ConnectorTargetable* target);
 };
 
 class CommonEvent : public ConnectorSourceable , public ConnectorTargetable {
