@@ -16,6 +16,7 @@
 #include <netdb.h>
 #include "util/util.h"
 #include "dbjaguar.h"
+#include <stdio.h>
 
 
 #define error(T) \
