@@ -1,4 +1,7 @@
 #include "wfruntime.h"
+#include "../metadata/startevent.h"
+#include "../metadata/commonconnector.h"
+#include "../metadata/entitynotfoundexception.h"
 
 using namespace cache;
 

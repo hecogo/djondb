@@ -64,16 +64,20 @@
 1225863358 /home/cross/workspace/jaguar/jaguar-server/common/util/timerecord.h
 	<ctime>
 
-1258426494 source:/home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/engine/wfengine.cpp
+1258519013 source:/home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/engine/wfengine.cpp
 	"wfruntime.h"
+	"../metadata/startevent.h"
+	"../metadata/commonconnector.h"
+	"../metadata/entitynotfoundexception.h"
 
-1258425475 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/engine/wfruntime.h
+1258518951 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/engine/wfruntime.h
 	"../metadata/metadata.h"
 	<list>
+	"../metadata/task.h"
 
-1258426449 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/metadata.h
-	<vector>
+1258518766 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/metadata.h
 	"../wfcommon.h"
+	"processdefinition.h"
 	"dbjaguar.h"
 	"util/util.h"
 
@@ -129,4 +133,41 @@
 	<string>
 	<map>
 	<vector>
+
+1258518360 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/processdefinition.h
+	<vector>
+	<string>
+	"defs.h"
+	"property.h"
+	"commonevent.h"
+	"pool.h"
+	"activitycommon.h"
+
+1258517831 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/defs.h
+
+1258518392 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/property.h
+	"processdefinition.h"
+
+1258518592 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/commonevent.h
+	<vector>
+	"defs.h"
+	"connectorsourceable.h"
+	"connectortargetable.h"
+
+1258517760 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/connectorsourceable.h
+
+1258517789 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/connectortargetable.h
+
+1258518611 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/pool.h
+	<vector>
+
+1258517695 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/activitycommon.h
+
+1258517254 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/task.h
+
+1258517072 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/startevent.h
+
+1258518466 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/commonconnector.h
+
+1258517527 /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/metadata/entitynotfoundexception.h
 

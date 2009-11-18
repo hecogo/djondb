@@ -1,6 +1,8 @@
 #include "../metadata/metadata.h"
 #include <list>
 
+#include "../metadata/task.h"
+
 enum InstanceStatus
 {
     RUNNING,
