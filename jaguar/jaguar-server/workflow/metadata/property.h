@@ -2,6 +2,9 @@
 #define PROPERTY_H_INCLUDED
 
 #include "processdefinition.h"
+#include <string>
+
+using namespace std;
 
 class ProcessDefinition;
 

@@ -1,6 +1,8 @@
 #ifndef ACTIVITYCOMMON_H_INCLUDED
 #define ACTIVITYCOMMON_H_INCLUDED
 
+#include "processdefinition.h"
+
 class ActivityCommon {
 private:
     long id;

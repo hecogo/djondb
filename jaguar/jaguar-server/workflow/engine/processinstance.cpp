@@ -1,4 +1,5 @@
-#include "wfruntime.h"
+#include "processinstance.h"
+
 //**************************************************************************************************
 // This file contains simple objects for runtime, this simple objects does not contain complex
 // assignation rutines, process or some other stuff. They're just plain objects.
@@ -81,37 +82,4 @@ void ProcessInstance::setMasterEntity(MasterEntity* _masterEntity)
 {
     masterEntity = _masterEntity;
 }
-
-long Token::getId() {
-    return id;
-};
-
-void Token::setId(long _id) {
-    id = _id;
-};
-
-Task* Token::getTask() {
-    return task;
-};
-
-void Token::setTask(Task* _task) {
-    task = _task;
-};
-
-ProcessInstance* Token::getProcessInstance() {
-    return processInstance;
-};
-
-
-void Token::setProcessInstance(ProcessInstance* _processInstance) {
-    processInstance = _processInstance;
-};
-
-TokenStatus Token::getStatus() {
-    return status;
-};
-
-void Token::setStatus(TokenStatus _status) {
-    status = _status;
-};
 

@@ -2,20 +2,10 @@
 #include "../metadata/startevent.h"
 #include "../metadata/commonconnector.h"
 #include "../metadata/entitynotfoundexception.h"
+#include "tokenfacade.h"
 
 using namespace cache;
 
-class TokenFacade {
-public:
-    list<Token*>* processToken(ProcessInstance* processInstance, Token* token) {
-        Task* currentTask = token->getTask();
-        return NULL;
-    }
-
-    Token* findBy(TokenVO token) {
-        return NULL;
-    }
-};
 
 vector<StartEvent*>* getStartEvents(ProcessDefinition* def)
 {

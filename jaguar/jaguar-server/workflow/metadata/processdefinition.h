@@ -8,9 +8,10 @@
 #include "property.h"
 #include "commonevent.h"
 #include "pool.h"
-#include "activitycommon.h"
 
 using namespace std;
+
+class ActivityCommon;
 
 class ProcessDefinition {
 private:

@@ -1,6 +1,17 @@
 #ifndef TASK_H_INCLUDED
 #define TASK_H_INCLUDED
 
+#include <vector>
+#include <string>
+
+#include "defs.h"
+#include "connectorsourceable.h"
+#include "connectortargetable.h"
+#include "activitycommon.h"
+
+using namespace std;
+
+
 class Task : public ConnectorSourceable, public ConnectorTargetable, public ActivityCommon {
 private:
     vector<CommonConector*>* sequenceFlows;
