@@ -5,8 +5,8 @@
  * Created on November 22, 2008, 11:54 PM
  */
 
-#include "../wfcommon.h"
-#include "processdefinition.h"
+#include "wfcommon.h"
+#include "metadata/processdefinition.h"
 
 #include "dbjaguar.h"
 #include "util/util.h"

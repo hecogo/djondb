@@ -3,8 +3,7 @@
 
 #include "../metadata/task.h"
 #include "defs.h"
-
-class ProcessInstance;
+#include "processinstance.h"
 
 class Token {
 private:
@@ -20,7 +19,7 @@ public:
     ProcessInstance* getProcessInstance();
     void setProcessInstance(ProcessInstance* processInstance);
     TokenStatus getStatus();
-    void setStatus(TokenStatus status);
+    void setStatus(TokenStatus _status);
 };
 
 

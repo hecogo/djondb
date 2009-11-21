@@ -12,6 +12,8 @@ private:
     Task* taskTarget;
     CommonEvent* eventSource;
     CommonEvent* eventTarget;
+    ConnectorType sourceType;
+    ConnectorType targetType;
 
 public:
     long getId() {
@@ -36,6 +38,7 @@ public:
 
     void setTaskSource(Task* _taskSource) {
         taskSource = _taskSource;
+        sourceType = TASK;
     }
 
     Task* getTaskTarget() {
@@ -44,6 +47,7 @@ public:
 
     void setTaskTarget(Task* _taskTarget) {
         taskTarget = _taskTarget;
+        targetType = TASK;
     }
 
     CommonEvent* getEventSource() {
@@ -52,6 +56,7 @@ public:
 
     void setEventSource(CommonEvent* _eventSource) {
         eventSource = _eventSource;
+        sourceType = EVENT;
     }
 
     CommonEvent* getEventTarget() {
@@ -60,6 +65,15 @@ public:
 
     void setEventTarget(CommonEvent* _eventTarget) {
         eventTarget = _eventTarget;
+        targetType = EVENT;
+    }
+
+    ConnectorType getSourceType() {
+        return sourceType;
+    }
+
+    ConnectorType getTargetType() {
+        return targetType;
     }
 };
 

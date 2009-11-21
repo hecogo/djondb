@@ -1,8 +1,8 @@
 #include "wfruntime.h"
-#include "../metadata/startevent.h"
-#include "../metadata/commonconnector.h"
-#include "../metadata/entitynotfoundexception.h"
-#include "tokenfacade.h"
+#include "metadata/startevent.h"
+#include "metadata/commonconnector.h"
+#include "metadata/entitynotfoundexception.h"
+#include "engine/tokenfacade.h"
 
 using namespace cache;
 

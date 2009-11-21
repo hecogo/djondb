@@ -1,5 +1,5 @@
-#ifndef DEFS_H_INCLUDED
-#define DEFS_H_INCLUDED
+#ifndef METADATA_DEFS_H_INCLUDED
+#define METADATA_DEFS_H_INCLUDED
 
 enum ActivityStatus {
     NONE_ACTIVITYSTATUS,
@@ -58,6 +58,11 @@ enum PropertyType {
     SET_PROPERTYTYPE
 };
 
+enum ConnectorType {
+    TASK,
+    EVENT
+};
+
 enum TaskType {
     SERVICE_TASKTYPE,
     RECEIVE_TASKTYPE,
@@ -78,4 +83,4 @@ enum Trigger {
     MULTIPLE_TRIGGER
 };
 
-#endif // DEFS_H_INCLUDED
+#endif // METADATA_DEFS_H_INCLUDED

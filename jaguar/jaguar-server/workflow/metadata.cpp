@@ -2,7 +2,7 @@
 #include <typeinfo>
 #include <fstream>
 #include <dirent.h>
-#include "entitynotfoundexception.h"
+#include "metadata/entitynotfoundexception.h"
 
 using namespace std;
 using namespace dbjaguar;

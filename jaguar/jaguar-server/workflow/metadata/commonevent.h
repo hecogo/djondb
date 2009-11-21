@@ -6,9 +6,8 @@
 #include "defs.h"
 #include "connectorsourceable.h"
 #include "connectortargetable.h"
+#include "commonconnector.h"
 
-class ConnectorTargetable;
-class CommonConector;
 class Assignment;
 class Pool;
 class ProcessDefinition;

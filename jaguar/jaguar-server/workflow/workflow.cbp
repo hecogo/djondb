@@ -56,9 +56,8 @@
 		<Unit filename="engine/tokenfacade.cpp" />
 		<Unit filename="engine/tokenfacade.h" />
 		<Unit filename="engine/tokenvo.h" />
-		<Unit filename="engine/wfengine.cpp" />
-		<Unit filename="engine/wfengine.h" />
-		<Unit filename="engine/wfruntime.h" />
+		<Unit filename="metadata.cpp" />
+		<Unit filename="metadata.h" />
 		<Unit filename="metadata/activitycommon.h" />
 		<Unit filename="metadata/assignment.h" />
 		<Unit filename="metadata/commonconnector.h" />
@@ -74,8 +73,6 @@
 		<Unit filename="metadata/manualtask.h" />
 		<Unit filename="metadata/masterentity.cpp" />
 		<Unit filename="metadata/masterentity.h" />
-		<Unit filename="metadata/metadata.cpp" />
-		<Unit filename="metadata/metadata.h" />
 		<Unit filename="metadata/participant.h" />
 		<Unit filename="metadata/pool.h" />
 		<Unit filename="metadata/processdefinition.h" />
@@ -92,6 +89,8 @@
 			<Option target="Release" />
 		</Unit>
 		<Unit filename="wfcommon.h" />
+		<Unit filename="wfruntime.cpp" />
+		<Unit filename="wfruntime.h" />
 		<Unit filename="workflowcontroller.cpp" />
 		<Extensions>
 			<code_completion />

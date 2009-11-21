@@ -5,8 +5,9 @@
 
 #include "../metadata/processdefinition.h"
 #include "defs.h"
-#include "token.h"
+
 #include "../metadata/masterentity.h"
+class Token;
 
 class ProcessInstance
 {
