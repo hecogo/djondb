@@ -15,10 +15,14 @@
 					<Add option="-g" />
 					<Add directory="/usr/local/include" />
 					<Add directory="../dbjaguar" />
+					<Add directory="../workflow" />
+					<Add directory="../networkcommon" />
 				</Compiler>
 				<Linker>
 					<Add option="-lcpptest -lpthread -mysqlclient -lz" />
 					<Add library="../dbjaguar/bin/Debug/libdbjaguar.so" />
+					<Add library="../workflow/bin/Debug/libworkflow.so" />
+					<Add library="../networkcommon/bin/Debug/networkcommon.so" />
 				</Linker>
 			</Target>
 			<Target title="Release">

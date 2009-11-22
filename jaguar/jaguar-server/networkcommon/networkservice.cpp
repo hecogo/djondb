@@ -155,8 +155,10 @@ void *processRequest(void *arg) {
 
         readed = recv(clientSocket, buffer, 255, 0);
         if (readed < 0) {
+            if (log->isDebug()) log->debug("Readed: " + toString(readed));
             int result = select(clientSocket+1, &read, NULL, NULL, &val);
 
+            if (log->isDebug()) log->debug("result: " + toString(result));
             if (result < 0) {
                 log->info("Timeout");
                 close(clientSocket);

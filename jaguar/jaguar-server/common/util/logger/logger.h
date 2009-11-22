@@ -1,3 +1,6 @@
+#ifndef LOGGER_H_INCLUDED
+#define LOGGER_H_INCLUDED
+
 #include <string>
 
 using namespace std;
@@ -22,3 +25,5 @@ class Logger {
 };
 
 Logger* getLogger(void* clazz);
+
+#endif

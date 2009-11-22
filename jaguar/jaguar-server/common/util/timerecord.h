@@ -1,14 +1,20 @@
+#ifndef TIMERECORD_H_INCLUDED
+#define TIMERECORD_H_INCLUDED
+
 #include <ctime>
 
 using namespace std;
 
-    class TimeRecord {
-        public:
-            time_t start;
+class TimeRecord
+{
+public:
+    time_t start;
 
-            TimeRecord();
+    TimeRecord();
 
-            int getTimeInMillis();
-    };
+    int getTimeInMillis();
+};
 
-    TimeRecord* getTimeRecord();
+TimeRecord* getTimeRecord();
+
+#endif

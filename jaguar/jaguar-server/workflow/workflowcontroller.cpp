@@ -1,6 +1,7 @@
 #include "networkcommon.h"
 #include "util/util.h"
 #include <stdlib.h>
+#include "wfruntime.h"
 
 class WorkflowController : public Controller {
 private:
@@ -16,7 +17,7 @@ public:
             if (log->isDebug()) log->debug("Request NEW received.");
             int procDef = atoi(request->getParameter("DEFI")->c_str());
             if (log->isDebug()) log->debug("process id: " + toString(procDef));
-
+            createProcessInstance(procDef);
         } else if (action->compare("PROC")) {
         }
         Response* response = new Response(new string("Testing from workflow controller"));

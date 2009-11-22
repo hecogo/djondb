@@ -5,8 +5,6 @@
  * Created on November 19, 2008, 12:25 AM
  */
 
-#include "cpptest.h"
-
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -16,8 +14,10 @@
 #include <netdb.h>
 #include "util/util.h"
 #include "dbjaguar.h"
-#include <stdio.h>
 
+#include "cpptest.h"
+#include <stdio.h>
+#include "time.h"
 
 #define error(T) \
     cout << T << endl;
@@ -253,8 +253,9 @@ int main(int argc, char** argv)
         // Demonstrates the ability to use multiple test suites
         //
         Test::Suite ts;
-        ts.add(auto_ptr<Test::Suite>(new CommonTestSuite));
-        ts.add(auto_ptr<Test::Suite>(new TestDB));
+//        ts.add(auto_ptr<Test::Suite>(new CommonTestSuite));
+//        ts.add(auto_ptr<Test::Suite>(new TestDB));
+//        ts.add(auto_ptr<Test::Suite>(new WorkflowTestSuite));
         ts.add(auto_ptr<Test::Suite>(new NetworkTestSuite));
 
         // Run the tests

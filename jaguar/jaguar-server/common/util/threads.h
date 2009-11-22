@@ -5,6 +5,9 @@
  * Created on November 18, 2008, 9:42 PM
  */
 
+#ifndef THREADS_H_INCLUDED
+#define THREADS_H_INCLUDED
+
 #include <pthread.h>
 
 class Thread {
@@ -21,3 +24,5 @@ public:
 
     void join();
 };
+
+#endif

@@ -80,6 +80,8 @@ ProcessInstance* persist(ProcessInstance* processInstance) {
 // creates a new instance from the process definition
 ProcessInstance* createProcessInstance(long definition)
 {
+    Logger* log = getLogger(NULL);
+    if (log->isDebug()) log->debug("createProcessInstance: "+ toString(definition));
     ProcessInstance* processInstance = new ProcessInstance();
     ProcessDefinition* def = getProcessDefinition(definition);
     processInstance->setProcessDefinition(def);

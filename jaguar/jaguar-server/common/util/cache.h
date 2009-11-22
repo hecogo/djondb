@@ -1,3 +1,6 @@
+#ifndef CACHE_H_INCLUDED
+#define CACHE_H_INCLUDED
+
 #include <vector>
 #include <map>
 #include <string>
@@ -30,13 +33,13 @@ namespace cache {
 
     public:
         CacheGroup();
-        
+
         void add(string key, void* value);
 
         void* get(string key);
 
         void remove(string key);
-        
+
         int size();
     };
 
@@ -52,3 +55,5 @@ namespace cache {
 
     CacheGroup* getRuntimeCache();
 }
+
+#endif
