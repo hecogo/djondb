@@ -1,11 +1,14 @@
 #include "mysql.h"
 #include <sstream>
 #include <stdlib.h>
+#include <map>
+#include <iostream>
 
 using namespace dbjaguar;
 
 MYSQL_FIELD** m_res_fields;
 int m_res_numfields;
+map<string, int> m_res_fieldsByName;
 
 MySQLResultSet::MySQLResultSet(MYSQL_RES* res, const char* query)
 {
@@ -18,6 +21,7 @@ MySQLResultSet::MySQLResultSet(MYSQL_RES* res, const char* query)
     {
         MYSQL_FIELD* field = mysql_fetch_field(res);
         m_res_fields[i] = field;
+        m_res_fieldsByName.insert(pair<string, int>(string(field->name), i));
     }
 };
 
@@ -120,6 +124,11 @@ void* MySQLResultSet::get(int col) throw (DBException)
 
 void* MySQLResultSet::get(const char* colname) throw (DBException)
 {
-    return NULL;
+    map<string, int>::iterator it = m_res_fieldsByName.find(string(colname));
+    if (it == m_res_fieldsByName.end()) {
+        return NULL;
+    } else {
+        return get(it->second);
+    }
 }
 

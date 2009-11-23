@@ -94,8 +94,12 @@ void *startSocketListener(void* arg) {
     addr->sin_family = AF_INET;
     addr->sin_port = htons(port); // the port should be converted to network byte order
     addr->sin_addr.s_addr = INADDR_ANY; // Server address, any to take the current ip address of the host
-
-    if (bind(sock, (sockaddr *) addr, sizeof(*addr) ) < 0) {
+    int reuse = 1;
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *) &reuse, sizeof(reuse)) < 0) {
+        log->error("Setting SO_REUSEADDR error");
+    }
+    
+    if (bind(sock, (sockaddr *) addr, sizeof (*addr)) < 0) {
         log->error("Error binding");
     }
     listen(sock, 5);
@@ -110,22 +114,22 @@ void *startSocketListener(void* arg) {
     while (running) {
         sockaddr_in cliaddr;
         socklen_t clilen = sizeof (cliaddr);
-        int newsocket = accept(sock, (sockaddr *)&cliaddr, &clilen);
+        int newsocket = accept(sock, (sockaddr *) & cliaddr, &clilen);
         fd_set read;
-        FD_ZERO (&read);
-        FD_SET (sock, &read);
+        FD_ZERO(&read);
+        FD_SET(sock, &read);
         timeval val;
         val.tv_sec = 1;
         val.tv_usec = 0;
 
-        newsocket = select(sock+1, &read, NULL, NULL, &val);
+        newsocket = select(sock + 1, &read, NULL, NULL, &val);
 
         if (newsocket > 0) {
-            newsocket = accept(sock, (sockaddr *)&cliaddr, &clilen);
+            newsocket = accept(sock, (sockaddr *) & cliaddr, &clilen);
             log->debug("Accepted");
             processRequest(&newsocket);
-//            Thread* thread = new Thread(&processRequest);
-//            thread->start((void*)&newsocket);
+            //            Thread* thread = new Thread(&processRequest);
+            //            thread->start((void*)&newsocket);
         }
     }
     accepting = false;
@@ -133,9 +137,8 @@ void *startSocketListener(void* arg) {
     return NULL;
 };
 
-
 void *processRequest(void *arg) {
-    int clientSocket = *((int*)arg);
+    int clientSocket = *((int*) arg);
     if (log->isDebug()) log->debug("Receiving request");
 
     int readed;
@@ -146,10 +149,10 @@ void *processRequest(void *arg) {
 
     bool reachEnd = false;
     // Reads the socket data until the socket sends the end signal 'FFFF'
-    while ( !reachEnd) {
+    while (!reachEnd) {
         fd_set read;
-        FD_ZERO (&read);
-        FD_SET (sock, &read);
+        FD_ZERO(&read);
+        FD_SET(sock, &read);
         timeval val;
         val.tv_sec = 10;
         val.tv_usec = 0;
@@ -157,7 +160,7 @@ void *processRequest(void *arg) {
         readed = recv(clientSocket, buffer, 255, 0);
         if (readed < 0) {
             if (log->isDebug()) log->debug("Readed: " + toString(readed));
-            int result = select(clientSocket+1, &read, NULL, NULL, &val);
+            int result = select(clientSocket + 1, &read, NULL, NULL, &val);
 
             if (log->isDebug()) log->debug("result: " + toString(result));
             if (result < 0) {
