@@ -1,2 +1,6 @@
 *.so
 *.o
+*.tmp
+.svn
+build
+bin
