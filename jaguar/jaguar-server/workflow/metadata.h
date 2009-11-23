@@ -9,7 +9,7 @@
 #include "metadata/processdefinition.h"
 
 #include "dbjaguar.h"
-#include "util/util.h"
+#include "util.h"
 
 using namespace dbjaguar;
 // Forward declarations

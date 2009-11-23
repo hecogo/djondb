@@ -1,4 +1,4 @@
-8
+10
 
 dir
 250
@@ -11,8 +11,7 @@ http://svn.assembla.com/svn/jaguar2
 250
 crossley
 has-props
-
-svn:special svn:externals svn:needs-lock
+has-prop-mods
 
 dbjaguar.cpp
 file

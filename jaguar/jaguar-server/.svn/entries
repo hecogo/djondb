@@ -1,4 +1,4 @@
-8
+10
 
 dir
 248
@@ -12,7 +12,7 @@ http://svn.assembla.com/svn/jaguar2
 crossley
 
 
-svn:special svn:externals svn:needs-lock
+
 
 
 
@@ -55,6 +55,10 @@ dir
 
 jaguar
 dir
+
+
+
+delete
 
 TestThreads
 dir

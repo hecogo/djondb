@@ -1,4 +1,4 @@
-#include "util.h"
+#include "../util.h"
 
 
 Thread::Thread(void *(*run)(void* arg)) {

@@ -12,7 +12,7 @@
 #include <string.h>
 #include <iostream>
 #include <netdb.h>
-#include "util/util.h"
+#include "util.h"
 #include "dbjaguar.h"
 
 #include "cpptest.h"
@@ -62,7 +62,8 @@ private:
 //    n = write(sockfd, (char*)&type, sizeof(type));
 //
         char buffer[] = "0001ACT 03NEWDEFI011FFFF";
-        n = write(sockfd, buffer, strlen(buffer));
+        n = write(sockfd, buffer, sizeof(buffer));
+//        n = write(sockfd, buffer, strlen(buffer));
         if (n < 0)
             TEST_FAIL("ERROR writing to socket");
         char rec[256];
@@ -84,9 +85,20 @@ public:
     {
         TEST_ADD(CommonTestSuite::testStrtrim);
         TEST_ADD(CommonTestSuite::testStringTrim);
+        TEST_ADD(CommonTestSuite::testCache);
     }
 
 private:
+    void testCache() {
+        cache::CacheGroup* group = cache::getGlobalCache("test");
+        char* val = "valor";
+        group->add("test", val);
+
+        char* res = (char*)group->get("test");
+
+        TEST_ASSERT(res == val);
+    }
+    
     void testStrtrim()
     {
         char* s1 = "test ";
@@ -253,8 +265,8 @@ int main(int argc, char** argv)
         // Demonstrates the ability to use multiple test suites
         //
         Test::Suite ts;
-//        ts.add(auto_ptr<Test::Suite>(new CommonTestSuite));
-//        ts.add(auto_ptr<Test::Suite>(new TestDB));
+        ts.add(auto_ptr<Test::Suite>(new CommonTestSuite));
+        ts.add(auto_ptr<Test::Suite>(new TestDB));
 //        ts.add(auto_ptr<Test::Suite>(new WorkflowTestSuite));
         ts.add(auto_ptr<Test::Suite>(new NetworkTestSuite));
 

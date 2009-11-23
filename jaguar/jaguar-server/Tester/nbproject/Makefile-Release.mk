@@ -1,5 +1,5 @@
 #
-# Gererated Makefile - do not edit!
+# Generated Makefile - do not edit!
 #
 # Edit the Makefile in the project folder instead (../Makefile). Each target
 # has a -pre and a -post target defined where you can add customized code.
@@ -16,12 +16,18 @@ CC=gcc
 CCC=g++
 CXX=g++
 FC=
+AS=as
+
+# Macros
+CND_PLATFORM=GNU-Linux-x86
+CND_CONF=Release
+CND_DISTDIR=dist
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/Release/GNU-Linux-x86
+OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
@@ -37,19 +43,24 @@ CXXFLAGS=
 # Fortran Compiler Flags
 FFLAGS=
 
+# Assembler Flags
+ASFLAGS=
+
 # Link Libraries and Options
 LDLIBSOPTIONS=
 
 # Build Targets
-.build-conf: ${BUILD_SUBPROJECTS} dist/Release/GNU-Linux-x86/tester
+.build-conf: ${BUILD_SUBPROJECTS}
+	${MAKE}  -f nbproject/Makefile-Release.mk dist/Release/GNU-Linux-x86/tester
 
 dist/Release/GNU-Linux-x86/tester: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
-	${LINK.cc} -o dist/Release/GNU-Linux-x86/tester ${OBJECTFILES} ${LDLIBSOPTIONS} 
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/tester ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/main.o: main.cpp 
+${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
-	$(COMPILE.cc) -O2 -o ${OBJECTDIR}/main.o main.cpp
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -61,3 +72,8 @@ ${OBJECTDIR}/main.o: main.cpp
 
 # Subprojects
 .clean-subprojects:
+
+# Enable dependency checking
+.dep.inc: .depcheck-impl
+
+include .dep.inc

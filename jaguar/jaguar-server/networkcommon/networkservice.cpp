@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "util/util.h"
+#include "util.h"
 #include "networkservice.h"
 #include "sys/types.h"
 #include "sys/socket.h"
@@ -123,8 +123,9 @@ void *startSocketListener(void* arg) {
         if (newsocket > 0) {
             newsocket = accept(sock, (sockaddr *)&cliaddr, &clilen);
             log->debug("Accepted");
-            Thread* thread = new Thread(&processRequest);
-            thread->start((void*)&newsocket);
+            processRequest(&newsocket);
+//            Thread* thread = new Thread(&processRequest);
+//            thread->start((void*)&newsocket);
         }
     }
     accepting = false;

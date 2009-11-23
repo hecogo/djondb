@@ -5,7 +5,7 @@
  * Created on November 8, 2008, 2:37 PM
  */
 
-#include "util.h"
+#include "../util.h"
 #include <pthread.h>
 #include <iostream>
 
@@ -57,10 +57,11 @@ namespace cache {
     }
 
     void* CacheGroup::get(string key) {
-        CacheItem* item = items.find(key)->second;
-        if (!item) {
+        map<string, CacheItem*>::iterator it = items.find(key);
+        if (it == items.end()) {
             return NULL;
         } else {
+            CacheItem* item = it->second;
             item->updateLastTimeUsed();
             return item->getValue();
         }
@@ -74,11 +75,7 @@ namespace cache {
         return items.size();
     }
 
-    CacheGroup Cache::get(string key) {
-//        map<string,CacheGroup*>::iterator it;
-//        for (it = groups.begin(); it != groups.end(); it++) {
-//            cout << (*it).first << ":" << (*it).second << endl;
-//        }
+    CacheGroup* Cache::get(string key) {
         map<string, CacheGroup*>:: iterator it = groups.find(key);
         CacheGroup* group;
         if (it == groups.end()) {
@@ -87,14 +84,14 @@ namespace cache {
         } else {
             group = it->second;
         }
-        return *group;
+        return group;
     }
 
-    CacheGroup getGlobalCache(string group) {
+    CacheGroup* getGlobalCache(string group) {
         if (!globalCache) {
             globalCache = new Cache();
         }
-        CacheGroup cachegroup = globalCache->get(group);
+        CacheGroup* cachegroup = globalCache->get(group);
         return cachegroup;
     }
 

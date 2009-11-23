@@ -1,27 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="45">
+<configurationDescriptor version="62">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="network" displayName="network" projectFiles="true">
-        <itemPath>network/networkservice.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f1" displayName="persistence" projectFiles="true">
-        <itemPath>persistence.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="util" displayName="util" projectFiles="true">
-        <logicalFolder name="logger" displayName="logger" projectFiles="true">
-          <itemPath>util/logger/logger.h</itemPath>
-        </logicalFolder>
-        <itemPath>util/cache.h</itemPath>
-        <itemPath>util/threads.h</itemPath>
-        <itemPath>util/timerecord.h</itemPath>
-        <itemPath>util/util.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f2" displayName="workflow" projectFiles="true">
-        <itemPath>workflow/metadata.h</itemPath>
-      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -30,20 +12,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="network" displayName="network" projectFiles="true">
-        <itemPath>network/networkservice.cpp</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f1" displayName="persistence" projectFiles="true">
-      </logicalFolder>
-      <logicalFolder name="util" displayName="util" projectFiles="true">
-        <logicalFolder name="logger" displayName="logger" projectFiles="true">
-          <itemPath>util/logger/logger.cpp</itemPath>
-        </logicalFolder>
-        <itemPath>util/cache.cpp</itemPath>
-        <itemPath>util/threads.cpp</itemPath>
-        <itemPath>util/timerecord.cpp</itemPath>
-        <itemPath>util/util.cpp</itemPath>
-      </logicalFolder>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -52,79 +20,131 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
-  <sourceEncoding>UTF-8</sourceEncoding>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="Debug" type="1">
       <toolsSet>
+        <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
         <platform>2</platform>
       </toolsSet>
       <compileType>
+        <ccTool>
+          <incDir>
+            <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-server/common</pElem>
+            <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon</pElem>
+          </incDir>
+        </ccTool>
         <linkerTool>
           <linkerLibItems>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-server/common"
+                            CT="2"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/common"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="dist/Debug/GNU-Linux-x86/libcommon.so">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon"
+                            CT="2"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="dist/Debug/GNU-Linux-x86/libnetworkcommon.so">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar"
+                            CT="2"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="dist/Debug/GNU-Linux-x86/libdbjaguar.so">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-server/workflow"
+                            CT="2"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/workflow"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="dist/Debug/GNU-Linux-x86/libworkflow.so">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
-          <commandLine>-lpthread</commandLine>
+          <commandLine>-lmysqlclient -lz</commandLine>
         </linkerTool>
+        <requiredProjects>
+          <makeArtifact PL="../common"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="false"
+                        WD="../common"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libcommon.so">
+          </makeArtifact>
+          <makeArtifact PL="../dbjaguar"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="false"
+                        WD="../dbjaguar"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libdbjaguar.so">
+          </makeArtifact>
+          <makeArtifact PL="../networkcommon"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="false"
+                        WD="../networkcommon"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libnetworkcommon.so">
+          </makeArtifact>
+          <makeArtifact PL="../workflow"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="false"
+                        WD="../workflow"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libworkflow.so">
+          </makeArtifact>
+        </requiredProjects>
       </compileType>
-      <item path="main.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="network/networkservice.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="network/networkservice.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="persistence.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/cache.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/cache.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/logger/logger.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/logger/logger.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/threads.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/threads.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/timerecord.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/timerecord.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/util.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/util.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="workflow/metadata.h">
-        <itemTool>3</itemTool>
-      </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
+        <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
         <platform>2</platform>
       </toolsSet>
       <compileType>
-        <cCompilerTool>
+        <cTool>
           <developmentMode>5</developmentMode>
-        </cCompilerTool>
-        <ccCompilerTool>
+        </cTool>
+        <ccTool>
           <developmentMode>5</developmentMode>
-        </ccCompilerTool>
+        </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
         </fortranCompilerTool>
@@ -133,51 +153,6 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
-      <item path="main.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="network/networkservice.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="network/networkservice.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="persistence.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/cache.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/cache.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/logger/logger.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/logger/logger.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/threads.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/threads.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/timerecord.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/timerecord.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="util/util.cpp">
-        <itemTool>1</itemTool>
-      </item>
-      <item path="util/util.h">
-        <itemTool>3</itemTool>
-      </item>
-      <item path="workflow/metadata.h">
-        <itemTool>3</itemTool>
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>

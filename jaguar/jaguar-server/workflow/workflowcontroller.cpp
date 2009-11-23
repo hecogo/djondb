@@ -1,5 +1,5 @@
 #include "networkcommon.h"
-#include "util/util.h"
+#include "util.h"
 #include <stdlib.h>
 #include "wfruntime.h"
 

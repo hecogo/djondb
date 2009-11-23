@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="62">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="util" displayName="util" projectFiles="true">
+        <logicalFolder name="logger" displayName="logger" projectFiles="true">
+          <itemPath>util/logger/logger.h</itemPath>
+        </logicalFolder>
+        <itemPath>util/cache.h</itemPath>
+        <itemPath>util/threads.h</itemPath>
+        <itemPath>util/timerecord.h</itemPath>
+      </logicalFolder>
+      <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/common/util.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="util" displayName="util" projectFiles="true">
+        <logicalFolder name="logger" displayName="logger" projectFiles="true">
+          <itemPath>util/logger/logger.cpp</itemPath>
+        </logicalFolder>
+        <itemPath>util/cache.cpp</itemPath>
+        <itemPath>util/threads.cpp</itemPath>
+        <itemPath>util/timerecord.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/common/util.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>util</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="2">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <linkerTool>
+          <linkerLibItems>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+    </conf>
+    <conf name="Release" type="2">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <linkerTool>
+          <linkerLibItems>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+    </conf>
+  </confs>
+</configurationDescriptor>

@@ -48,10 +48,10 @@ namespace cache {
         map<string, CacheGroup*> groups;
 
     public:
-        CacheGroup get(string key);
+        CacheGroup* get(string key);
     };
 
-    CacheGroup getGlobalCache(string group);
+    CacheGroup* getGlobalCache(string group);
 
     CacheGroup* getRuntimeCache();
 }

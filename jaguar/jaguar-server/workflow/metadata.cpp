@@ -13,7 +13,7 @@ void loadProcessDefinitions(Connection* con) {
 
     if (log->isInfo()) log->info("Loading process definitions");
 
-    CacheGroup cache = getGlobalCache("METADATA");
+    CacheGroup* cache = getGlobalCache("METADATA");
     ResultSet* rs = con->executeQuery("SELECT id, defname, processType, masterent FROM processdef");
 
     map<long, ProcessDefinition*>* mapDefinitions = new map<long, ProcessDefinition*>();
@@ -34,14 +34,14 @@ void loadProcessDefinitions(Connection* con) {
         if (log->isDebug()) log->debug("Adding process definition: " + *defname);
         mapDefinitions->insert(pair<long, ProcessDefinition*>(*id, def));
     }
-    cache.add("PROCESSDEFINITIONS", mapDefinitions);
+    cache->add("PROCESSDEFINITIONS", mapDefinitions);
 
     rs->close();
 }
 
 ProcessDefinition* getProcessDefinition(long id) throw (WorkflowException) {
-    cache::CacheGroup group = cache::getGlobalCache("METADATA");
-    map<long, ProcessDefinition*>* definitions = (map<long, ProcessDefinition*>*)group.get("PROCESSDEFINITIONS");
+    CacheGroup* group = getGlobalCache("METADATA");
+    map<long, ProcessDefinition*>* definitions = (map<long, ProcessDefinition*>*)group->get("PROCESSDEFINITIONS");
     if (!definitions) {
         throw new WorkflowException("The process definition does not exist");
     }
