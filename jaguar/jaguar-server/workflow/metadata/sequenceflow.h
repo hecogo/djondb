@@ -1,7 +1,9 @@
 #ifndef SEQUENCEFLOW_H_INCLUDED
 #define SEQUENCEFLOW_H_INCLUDED
 
-class SequenceFlow : CommonConector {
+#include "expression.h"
+
+class SequenceFlow : public CommonConector {
 private:
     ConditionType* conditionType;
     Expression* conditionExpression;

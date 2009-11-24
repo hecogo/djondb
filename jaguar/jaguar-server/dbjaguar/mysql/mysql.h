@@ -1,5 +1,6 @@
 #include "../dbjaguar.h"
 #include <mysql.h>
+#include <map>
 
 using namespace dbjaguar;
 
@@ -9,6 +10,9 @@ class MySQLResultSet;
 class MySQLResultSet : public ResultSet
 {
 private:
+    MYSQL_FIELD** m_res_fields;
+    int m_res_numfields;
+    map<string, int> m_res_fieldsByName;
     MYSQL_RES* m_res;
     const char* m_query;
     MYSQL_ROW m_currentRow;

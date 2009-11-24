@@ -13,7 +13,9 @@ vector<StartEvent*>* getStartEvents(ProcessDefinition* def)
     vector<StartEvent*>* startEvents = new vector<StartEvent*>();
     for (vector<CommonEvent*>::iterator com = commonEvents->begin(); com != commonEvents->end(); com++)
     {
-        if (typeid(*com) == typeid(StartEvent))
+        CommonEvent* event = *com;
+        EventType type = *(event->getEventType());
+        if (type == START_EVENTTYPE)
         {
             startEvents->push_back((StartEvent*)*com);
         }
@@ -90,7 +92,8 @@ ProcessInstance* createProcessInstance(long definition)
     vector<StartEvent*>* startEvents = getStartEvents(def);
     for (vector<StartEvent*>::iterator evt = startEvents->begin(); evt != startEvents->end(); evt++)
     {
-        processInstance = processEvent(processInstance, *evt);
+        StartEvent* event = *evt;
+        processInstance = processEvent(processInstance, event);
     }
     processInstance = persist(processInstance);
 

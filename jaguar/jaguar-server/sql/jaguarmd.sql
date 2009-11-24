@@ -47,6 +47,54 @@ UNLOCK TABLES;
 
 
 --
+-- Definition of table `jaguarmd`.`events`
+--
+
+DROP TABLE IF EXISTS `jaguarmd`.`events`;
+CREATE TABLE  `jaguarmd`.`events` (
+  `id` int(11) NOT NULL,
+  `eventtype` int(11) NOT NULL,
+  `idpool` int(11) NOT NULL,
+  `idprocessdef` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `jaguarmd`.`events`
+--
+
+/*!40000 ALTER TABLE `events` DISABLE KEYS */;
+LOCK TABLES `events` WRITE;
+INSERT INTO `jaguarmd`.`events` VALUES  (1,0,1,1);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `events` ENABLE KEYS */;
+
+
+--
+-- Definition of table `jaguarmd`.`pools`
+--
+
+DROP TABLE IF EXISTS `jaguarmd`.`pools`;
+CREATE TABLE  `jaguarmd`.`pools` (
+  `id` int(11) NOT NULL,
+  `poolname` varchar(20) NOT NULL,
+  `idparticipant` int(11) DEFAULT NULL,
+  `idprocessdef` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `jaguarmd`.`pools`
+--
+
+/*!40000 ALTER TABLE `pools` DISABLE KEYS */;
+LOCK TABLES `pools` WRITE;
+INSERT INTO `jaguarmd`.`pools` VALUES  (1,'users',NULL,1);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `pools` ENABLE KEYS */;
+
+
+--
 -- Definition of table `jaguarmd`.`processdef`
 --
 
@@ -73,6 +121,38 @@ INSERT INTO `jaguarmd`.`processdef` VALUES  (1,'def1',1,'temp'),
  (6,'def6',1,'temp');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `processdef` ENABLE KEYS */;
+
+
+--
+-- Definition of table `jaguarmd`.`sequenceflows`
+--
+
+DROP TABLE IF EXISTS `jaguarmd`.`sequenceflows`;
+CREATE TABLE  `jaguarmd`.`sequenceflows` (
+  `id` int(11) NOT NULL,
+  `connectorname` varchar(20) NOT NULL,
+  `idtasksource` int(11) DEFAULT NULL,
+  `idtasktarget` int(11) DEFAULT NULL,
+  `ideventsource` int(11) DEFAULT NULL,
+  `ideventtarget` int(11) DEFAULT NULL,
+  `sourcetype` int(11) NOT NULL,
+  `targettype` int(11) NOT NULL,
+  `conditiontype` int(11) NOT NULL,
+  `expression` int(11) DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `idprocessdef` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `jaguarmd`.`sequenceflows`
+--
+
+/*!40000 ALTER TABLE `sequenceflows` DISABLE KEYS */;
+LOCK TABLES `sequenceflows` WRITE;
+INSERT INTO `jaguarmd`.`sequenceflows` VALUES  (1,'',NULL,1,1,NULL,1,0,0,NULL,1,1);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `sequenceflows` ENABLE KEYS */;
 
 
 --

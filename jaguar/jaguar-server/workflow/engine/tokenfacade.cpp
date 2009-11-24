@@ -43,7 +43,7 @@ list<Token*>* getNextTokens(ProcessInstance* processInstance, Token* token)
     list<Token*>* result = new list<Token*>();
     for (vector<CommonConector*>::iterator it = sequenceFlows->begin(); it != sequenceFlows->end(); it++) {
         CommonConector* connector = *it;
-        if (connector->getTargetType() == TASK)
+        if (connector->getTargetType() == TASK_CTTYPE)
         {
             Task* task = connector->getTaskTarget();
             Token* newToken;

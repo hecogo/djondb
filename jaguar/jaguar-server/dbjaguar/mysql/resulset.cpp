@@ -1,14 +1,9 @@
 #include "mysql.h"
 #include <sstream>
 #include <stdlib.h>
-#include <map>
 #include <iostream>
 
 using namespace dbjaguar;
-
-MYSQL_FIELD** m_res_fields;
-int m_res_numfields;
-map<string, int> m_res_fieldsByName;
 
 MySQLResultSet::MySQLResultSet(MYSQL_RES* res, const char* query)
 {

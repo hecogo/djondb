@@ -1,7 +1,7 @@
 #ifndef ACTIVITYCOMMON_H_INCLUDED
 #define ACTIVITYCOMMON_H_INCLUDED
 
-#include "processdefinition.h"
+class ProcessDefinition;
 
 class ActivityCommon {
 private:
@@ -11,6 +11,7 @@ private:
     int startQuantity; // Number of tokens required to start the activity
     LoopType* loopType;
     ProcessDefinition* processDefinition;
+
 
 public:
     ActivityCommon() {

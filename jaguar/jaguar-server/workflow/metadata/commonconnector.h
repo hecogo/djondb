@@ -1,8 +1,13 @@
 #ifndef COMMONCONNECTOR_H_INCLUDED
 #define COMMONCONNECTOR_H_INCLUDED
 
+#include "defs.h"
+#include <string>
+
 class Task;
 class CommonEvent;
+
+using namespace std;
 
 class CommonConector {
 private:
@@ -38,7 +43,7 @@ public:
 
     void setTaskSource(Task* _taskSource) {
         taskSource = _taskSource;
-        sourceType = TASK;
+        sourceType = TASK_CTTYPE;
     }
 
     Task* getTaskTarget() {
@@ -47,7 +52,7 @@ public:
 
     void setTaskTarget(Task* _taskTarget) {
         taskTarget = _taskTarget;
-        targetType = TASK;
+        targetType = TASK_CTTYPE;
     }
 
     CommonEvent* getEventSource() {
@@ -56,7 +61,7 @@ public:
 
     void setEventSource(CommonEvent* _eventSource) {
         eventSource = _eventSource;
-        sourceType = EVENT;
+        sourceType = EVENT_CTTYPE;
     }
 
     CommonEvent* getEventTarget() {
@@ -65,7 +70,7 @@ public:
 
     void setEventTarget(CommonEvent* _eventTarget) {
         eventTarget = _eventTarget;
-        targetType = EVENT;
+        targetType = EVENT_CTTYPE;
     }
 
     ConnectorType getSourceType() {

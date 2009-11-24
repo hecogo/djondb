@@ -22,6 +22,10 @@ private:
     ProcessDefinition* processDefinition;
 
 public:
+    CommonEvent() {
+        sequenceFlows = new vector<CommonConector*>();
+    }
+    
     long getId() {
         return id;
     }

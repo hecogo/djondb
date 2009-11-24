@@ -8,6 +8,7 @@
 #include "connectorsourceable.h"
 #include "connectortargetable.h"
 #include "activitycommon.h"
+#include "commonconnector.h"
 
 using namespace std;
 

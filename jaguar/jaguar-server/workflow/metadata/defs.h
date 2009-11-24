@@ -59,8 +59,8 @@ enum PropertyType {
 };
 
 enum ConnectorType {
-    TASK,
-    EVENT
+    TASK_CTTYPE,
+    EVENT_CTTYPE
 };
 
 enum TaskType {

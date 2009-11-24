@@ -62,7 +62,7 @@ ResultSet* MySQLConnection::executeQuery(const char* query) throw (DBException)
     int queryres = mysql_real_query(m_mysql, query, strlen(query));
     if (queryres == 0)
     {
-        MYSQL_RES *res = mysql_use_result(m_mysql);
+        MYSQL_RES *res = mysql_store_result(m_mysql);
         if (res)
         {
             MySQLResultSet* resultset = new MySQLResultSet(res, query);

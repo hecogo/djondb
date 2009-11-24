@@ -8,10 +8,9 @@
 #include "property.h"
 #include "commonevent.h"
 #include "pool.h"
+#include "activitycommon.h"
 
 using namespace std;
-
-class ActivityCommon;
 
 class ProcessDefinition {
 private:
@@ -21,7 +20,7 @@ private:
     vector<Property*>* properties;
     vector<CommonEvent*>* events;
     vector<Pool*>* pools;
-    vector<ActivityCommon*>* tasks;
+    vector<ActivityCommon*>* activities;
     string* masterEntity;
 public:
     ProcessType* getProcessType() {
@@ -56,12 +55,21 @@ public:
         definitionName = _definitionName;
     }
 
-    vector<ActivityCommon*>* getTasks() {
-        return tasks;
+    vector<ActivityCommon*>* getActivities() {
+        return activities;
     }
 
-    void setTasks(vector<ActivityCommon*>* _tasks) {
-        tasks = _tasks;
+    void setActivities(vector<ActivityCommon*>* _activities) {
+        activities = _activities;
+    }
+
+    ActivityCommon* getActivity(long idActivity) {
+        for (vector<ActivityCommon*>::iterator iter = activities->begin(); iter != activities->end(); iter++) {
+            if (((ActivityCommon*)(*iter))->getId() == idActivity) {
+                return *iter;
+            }
+        }
+        return NULL;
     }
 
     long getId() {
@@ -80,6 +88,15 @@ public:
         events = _events;
     }
 
+    CommonEvent* getEvent(long idEvent) {
+        for (vector<CommonEvent*>::iterator iter = events->begin(); iter != events->end(); iter++) {
+            if (((CommonEvent*)(*iter))->getId() == idEvent) {
+                return *iter;
+            }
+        }
+        return NULL;
+    }
+    
     string* getMasterEntity() {
         return masterEntity;
     }
