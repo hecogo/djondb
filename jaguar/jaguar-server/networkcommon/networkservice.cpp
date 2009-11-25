@@ -1,15 +1,19 @@
 #include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <iostream>
+#include <sstream>
+#include <map>
+#include <fcntl.h>
 
 #include "util.h"
 #include "networkservice.h"
-#include "sys/types.h"
-#include "sys/socket.h"
-#include "netinet/in.h"
-#include "iostream"
-#include "sstream"
-#include <map>
-#include <fcntl.h>
 #include "dbjaguar.h"
+#include "net/request.h"
+#include "net/response.h"
+#include "net/requestprocessor.h"
+#include "net/controller.h"
 
 using namespace dbjaguar;
 
@@ -22,7 +26,9 @@ bool running;
 bool accepting;
 // id listening socket
 int sock;
-
+pthread_mutex_t requests_lock = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t  request_cv =   PTHREAD_COND_INITIALIZER;
+map<int, Controller*> m_controllers;
 
 Connection* m_con;
 
@@ -95,10 +101,10 @@ void *startSocketListener(void* arg) {
     addr->sin_port = htons(port); // the port should be converted to network byte order
     addr->sin_addr.s_addr = INADDR_ANY; // Server address, any to take the current ip address of the host
     int reuse = 1;
-    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *) &reuse, sizeof(reuse)) < 0) {
+    if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *) & reuse, sizeof (reuse)) < 0) {
         log->error("Setting SO_REUSEADDR error");
     }
-    
+
     if (bind(sock, (sockaddr *) addr, sizeof (*addr)) < 0) {
         log->error("Error binding");
     }
@@ -110,7 +116,7 @@ void *startSocketListener(void* arg) {
     currentFlag = currentFlag | O_NONBLOCK;
     fcntl(sock, F_SETFL, currentFlag);
 
-    accepting = true;
+    accepting = false;
     while (running) {
         sockaddr_in cliaddr;
         socklen_t clilen = sizeof (cliaddr);
@@ -125,11 +131,13 @@ void *startSocketListener(void* arg) {
         newsocket = select(sock + 1, &read, NULL, NULL, &val);
 
         if (newsocket > 0) {
-            newsocket = accept(sock, (sockaddr *) & cliaddr, &clilen);
-            log->debug("Accepted");
-            processRequest(&newsocket);
-            //            Thread* thread = new Thread(&processRequest);
-            //            thread->start((void*)&newsocket);
+            accepting = true;
+            pthread_mutex_lock(&requests_lock);
+            //processRequest((void*)&sock);
+            Thread* thread = new Thread(&processRequest);
+            thread->start((void*) &sock);
+            pthread_cond_wait(&request_cv, &requests_lock);
+            pthread_mutex_unlock(&requests_lock);
         }
     }
     accepting = false;
@@ -138,7 +146,16 @@ void *startSocketListener(void* arg) {
 };
 
 void *processRequest(void *arg) {
-    int clientSocket = *((int*) arg);
+    int sock = *((int*) arg);
+    sockaddr_in cliaddr;
+    socklen_t clilen = sizeof (cliaddr);
+    int clientSocket = accept(sock, (sockaddr *) & cliaddr, &clilen);
+    log->debug("Accepted");
+
+    pthread_mutex_lock(&requests_lock);
+    int rescond = pthread_cond_signal(&request_cv);
+    pthread_mutex_unlock(&requests_lock);
+    
     if (log->isDebug()) log->debug("Receiving request");
 
     int readed;

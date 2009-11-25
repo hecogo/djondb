@@ -1,16 +1,15 @@
-#include "networkcommon.h"
-#include "util.h"
-#include <stdlib.h>
+/* 
+ * File:   Request.cpp
+ * Author: cross
+ * 
+ * Created on November 24, 2009, 8:23 PM
+ */
+
 #include <string.h>
-
-map<int, Controller*> m_controllers;
-
-Response* RequestProcessor::processRequest(Request* request) {
-    Controller* controller = m_controllers.find(request->getType())->second;
-    Response* response = controller->processRequest(request);
-
-    return response;
-};
+#include <stdlib.h>
+#include <string>
+#include "request.h"
+#include "util.h"
 
 const char* getData(const char* data, int offset, int size) {
 //    char *result = (char*)malloc(size*sizeof(char));
@@ -75,37 +74,6 @@ vector<string>* Request::getCodeNames() {
     return result;
 };
 
-Response::Response(string* _data) {
-    data = _data;
-};
-
-string* Response::getData() {
-    return data;
-};
-
-void Response::addParameter(char* name, void* contents, int size) {
-    if (strlen(name) > 4) {
-        throw NetworkException(new string("The codename cannot be larger than 4 bytes"));
-    }
-    if (!data) {
-        data = new string();
-    }
-    data->append(name, (char*)contents);
+Request::~Request() {
 }
-
-Controller::Controller(int _requestType) {
-    requestType = _requestType;
-};
-
-int Controller::getRequestType() {
-    return requestType;
-};
-
-Response* Controller::processRequest(Request* request) {
-    return NULL;
-}
-
-void Controller::selfRegister() {
-    m_controllers.insert(pair<int, Controller*>(requestType, this));
-};
 

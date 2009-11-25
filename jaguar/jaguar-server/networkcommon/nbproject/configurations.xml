@@ -4,8 +4,14 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkcommon.h</itemPath>
-      <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkservice.h</itemPath>
+      <logicalFolder name="f1" displayName="net" projectFiles="true">
+        <itemPath>net/controller.h</itemPath>
+        <itemPath>net/defs.h</itemPath>
+        <itemPath>net/request.h</itemPath>
+        <itemPath>net/requestprocessor.h</itemPath>
+        <itemPath>net/response.h</itemPath>
+      </logicalFolder>
+      <itemPath>networkservice.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -14,8 +20,13 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkcommon.cpp</itemPath>
-      <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkservice.cpp</itemPath>
+      <logicalFolder name="f1" displayName="net" projectFiles="true">
+        <itemPath>net/controller.cpp</itemPath>
+        <itemPath>net/request.cpp</itemPath>
+        <itemPath>net/requestprocessor.cpp</itemPath>
+        <itemPath>net/response.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>networkservice.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

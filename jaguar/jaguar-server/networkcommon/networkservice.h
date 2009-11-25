@@ -5,14 +5,8 @@
  *
  * Created on November 13, 2008, 5:48 PM
  */
-#include <sys/socket.h>
-#include <string>
-#include <map>
-#include <vector>
-#include "networkcommon.h"
 
-using namespace std;
-
+#include "net/defs.h"
 class NetworkService {
 public:
     NetworkService();

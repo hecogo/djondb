@@ -6,7 +6,6 @@
 
 using namespace cache;
 
-
 vector<StartEvent*>* getStartEvents(ProcessDefinition* def)
 {
     vector<CommonEvent*>* commonEvents = def->getEvents();
@@ -43,6 +42,7 @@ ProcessInstance* processEvent(ProcessInstance* processInstance, StartEvent* evt)
         if (target)
         {
             Token* token = new Token();
+            token->setId(getNextKey("token"));
             Task* task = (Task*) target;
             token->setTask(task);
             token->setProcessInstance(processInstance);
@@ -76,6 +76,7 @@ list<Token*>* processToken(ProcessInstance* instance, TokenVO* tokenVO)
 
 ProcessInstance* persist(ProcessInstance* processInstance) {
     // TODO To be implemented
+    processInstance->setId(getNextKey(string("processinstance")));
     return processInstance;
 }
 

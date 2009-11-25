@@ -3,6 +3,7 @@
 #include "../metadata/task.h"
 #include "defs.h"
 #include "../metadata/defs.h"
+#include "dbjaguar.h"
 
 void executePostUser(Token* token)
 {
@@ -54,6 +55,7 @@ list<Token*>* getNextTokens(ProcessInstance* processInstance, Token* token)
             else
             {
                 newToken = new Token();
+                newToken->setId(getNextKey("token"));
             }
             newToken->setProcessInstance(processInstance);
             newToken->setStatus(NONE);

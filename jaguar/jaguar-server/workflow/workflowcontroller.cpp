@@ -1,7 +1,28 @@
-#include "networkcommon.h"
 #include "util.h"
 #include <stdlib.h>
 #include "wfruntime.h"
+#include "engine/token.h"
+#include "engine/processinstance.h"
+#include "net/response.h"
+#include "net/request.h"
+#include "net/controller.h"
+
+Response* createResponse(ProcessInstance* instance) {
+    string *s = new string();
+    s->append("PROC:{" + toString(instance->getId()) + ";");
+    list<Token*>* currentTokens = instance->getCurrentTokens();
+    s->append("TOKENS:{");
+    for (list<Token*>::iterator iter = currentTokens->begin(); iter != currentTokens->end(); iter++) {
+        Token* token = *iter;
+        s->append("TOKEN:");
+        s->append(toString(token->getId()) + ";");
+        s->append(*token->getTask()->getTaskName() + ";");
+    }
+    s->append("}");
+    s->append("}");
+    Response *response = new Response(s);
+    return response;
+}
 
 class WorkflowController : public Controller {
 private:
@@ -17,7 +38,9 @@ public:
             if (log->isDebug()) log->debug("Request NEW received.");
             int procDef = atoi(request->getParameter("DEFI")->c_str());
             if (log->isDebug()) log->debug("process id: " + toString(procDef));
-            createProcessInstance(procDef);
+            ProcessInstance* instance = createProcessInstance(procDef);
+            
+            return createResponse(instance);
         } else if (action->compare("PROC")) {
         }
         Response* response = new Response(new string("Testing from workflow controller"));

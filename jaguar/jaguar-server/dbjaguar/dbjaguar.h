@@ -3,6 +3,11 @@
 
 using namespace std;
 
+// **********************************************************************
+// Public functions
+int getNextKey(string table);
+// **********************************************************************
+
 namespace dbjaguar
 {
     class Connection;
@@ -64,5 +69,6 @@ namespace dbjaguar
         virtual ResultSet* executeQuery(const char* query) throw (DBException) { return NULL; };
         virtual int executeUpdate(const char* query) throw (DBException) { return 0; };
     };
+
 
 }

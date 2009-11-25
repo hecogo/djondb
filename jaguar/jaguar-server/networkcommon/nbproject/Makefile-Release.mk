@@ -31,8 +31,11 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkservice.o \
-	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkcommon.o
+	${OBJECTDIR}/networkservice.o \
+	${OBJECTDIR}/net/response.o \
+	${OBJECTDIR}/net/requestprocessor.o \
+	${OBJECTDIR}/net/controller.o \
+	${OBJECTDIR}/net/request.o
 
 # C Compiler Flags
 CFLAGS=
@@ -58,15 +61,30 @@ dist/Release/GNU-Linux-x86/libnetworkcommon.so: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
 	${LINK.cc} -shared -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnetworkcommon.so -fPIC ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkservice.o: nbproject/Makefile-${CND_CONF}.mk /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkservice.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon
+${OBJECTDIR}/networkservice.o: nbproject/Makefile-${CND_CONF}.mk networkservice.cpp 
+	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkservice.o /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkservice.cpp
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/networkservice.o networkservice.cpp
 
-${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkcommon.o: nbproject/Makefile-${CND_CONF}.mk /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkcommon.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon
+${OBJECTDIR}/net/response.o: nbproject/Makefile-${CND_CONF}.mk net/response.cpp 
+	${MKDIR} -p ${OBJECTDIR}/net
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkcommon.o /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/networkcommon.cpp
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/response.o net/response.cpp
+
+${OBJECTDIR}/net/requestprocessor.o: nbproject/Makefile-${CND_CONF}.mk net/requestprocessor.cpp 
+	${MKDIR} -p ${OBJECTDIR}/net
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/requestprocessor.o net/requestprocessor.cpp
+
+${OBJECTDIR}/net/controller.o: nbproject/Makefile-${CND_CONF}.mk net/controller.cpp 
+	${MKDIR} -p ${OBJECTDIR}/net
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/controller.o net/controller.cpp
+
+${OBJECTDIR}/net/request.o: nbproject/Makefile-${CND_CONF}.mk net/request.cpp 
+	${MKDIR} -p ${OBJECTDIR}/net
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/request.o net/request.cpp
 
 # Subprojects
 .build-subprojects:

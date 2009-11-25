@@ -9,6 +9,7 @@
 #include "metadata/startevent.h"
 #include "metadata/endevent.h"
 #include "metadata/sequenceflow.h"
+#include "metadata/manualtask.h"
 
 using namespace std;
 using namespace dbjaguar;
@@ -131,6 +132,9 @@ vector<ActivityCommon*>* loadTasks(Connection* con, ProcessDefinition* def) {
             switch ((*taskType)) {
                 case SERVICE_TASKTYPE:
                     task = new ServiceTask();
+                    break;
+                case MANUAL_TASKTYPE:
+                    task = new ManualTask();
                     break;
             }
             task->setId(*id);

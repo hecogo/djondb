@@ -6,6 +6,7 @@
 //**************************************************************************************************
 ProcessInstance::ProcessInstance()
 {
+    currentTokens = new list<Token*>();
 }
 
 void ProcessInstance::addCurrentToken(Token* token)
