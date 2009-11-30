@@ -31,9 +31,11 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/mysql/resulset.o \
-	${OBJECTDIR}/dbjaguar.o \
-	${OBJECTDIR}/mysql/connection.o
+	${OBJECTDIR}/mysql/mysqlcommon.o \
+	${OBJECTDIR}/mysql/mysqlresulset.o \
+	${OBJECTDIR}/mysql/mysqlstatement.o \
+	${OBJECTDIR}/mysql/mysqlconnection.o \
+	${OBJECTDIR}/dbjaguar.o
 
 # C Compiler Flags
 CFLAGS=
@@ -59,20 +61,30 @@ dist/Debug/GNU-Linux-x86/libdbjaguar.so: ${OBJECTFILES}
 	${MKDIR} -p dist/Debug/GNU-Linux-x86
 	${LINK.cc} -shared -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libdbjaguar.so -fPIC ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/mysql/resulset.o: nbproject/Makefile-${CND_CONF}.mk mysql/resulset.cpp 
+${OBJECTDIR}/mysql/mysqlcommon.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysqlcommon.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mysql
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/resulset.o mysql/resulset.cpp
+	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlcommon.o mysql/mysqlcommon.cpp
+
+${OBJECTDIR}/mysql/mysqlresulset.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysqlresulset.cpp 
+	${MKDIR} -p ${OBJECTDIR}/mysql
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlresulset.o mysql/mysqlresulset.cpp
+
+${OBJECTDIR}/mysql/mysqlstatement.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysqlstatement.cpp 
+	${MKDIR} -p ${OBJECTDIR}/mysql
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlstatement.o mysql/mysqlstatement.cpp
+
+${OBJECTDIR}/mysql/mysqlconnection.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysqlconnection.cpp 
+	${MKDIR} -p ${OBJECTDIR}/mysql
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlconnection.o mysql/mysqlconnection.cpp
 
 ${OBJECTDIR}/dbjaguar.o: nbproject/Makefile-${CND_CONF}.mk dbjaguar.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/dbjaguar.o dbjaguar.cpp
-
-${OBJECTDIR}/mysql/connection.o: nbproject/Makefile-${CND_CONF}.mk mysql/connection.cpp 
-	${MKDIR} -p ${OBJECTDIR}/mysql
-	${RM} $@.d
-	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/connection.o mysql/connection.cpp
 
 # Subprojects
 .build-subprojects:

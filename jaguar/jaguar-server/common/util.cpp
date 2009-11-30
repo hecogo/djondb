@@ -1,4 +1,9 @@
+#include <string.h>
+
 #include "util.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <cstdarg>
 
 string toString(float value) {
     stringstream ss;
@@ -32,4 +37,19 @@ const char* strtrim(char* str) {
 
 void trim(string* str) {
     str->erase(str->find_last_not_of(" ") + 1);
+}
+
+string* format(char* s, ...) {
+    int len = strlen(s) * 2;
+    char* buffer = (char*)malloc(len);
+    memset(buffer, 0, len);
+
+    va_list ap;
+    va_start(ap, &s);
+    int lenbuf = vsprintf(buffer, s, ap);
+    va_end(ap);
+
+    string* res = new string(buffer, lenbuf);
+    free(buffer);
+    return res;
 }

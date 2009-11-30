@@ -5,10 +5,10 @@ using namespace std;
 
 class WorkflowException : public exception {
 private:
-    char* message;
+    const char* message;
 public:
 
-    WorkflowException(char* _message) {
+    WorkflowException(const char* _message) {
         message = _message;
     }
 

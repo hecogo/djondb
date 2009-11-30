@@ -86,6 +86,7 @@ public:
         TEST_ADD(CommonTestSuite::testStrtrim);
         TEST_ADD(CommonTestSuite::testStringTrim);
         TEST_ADD(CommonTestSuite::testCache);
+        TEST_ADD(CommonTestSuite::testFormat);
     }
 
 private:
@@ -130,6 +131,16 @@ private:
         TEST_ASSERT(s2.compare(se2) == 0);
 
     }
+
+    void testFormat() {
+        char* s1 = "prueba 1 valor %d";
+        string* res = format(s1, 10);
+        TEST_ASSERT(res->compare("prueba 1 valor 10"));
+
+        char* s2 = "prueba 2 valor %d %s";
+        string* res2 = format(s2, 10, "test de texto");
+        TEST_ASSERT(res2->compare("prueba 1 valor 10 test de texto"));
+    }
 };
 
 class TestDB : public Test::Suite
@@ -140,14 +151,38 @@ public:
         TEST_ADD(TestDB::testConnection);
         TEST_ADD(TestDB::testResultSet);
         TEST_ADD(TestDB::testUpdate);
+        TEST_ADD(TestDB::testStatement);
     }
 private:
+    void testStatement() {
+        ConnectionPool* pool = new ConnectionPool();
+        Connection* con = pool->getConnection("mysql;localhost;3304;jaguarmd", "root", "cross2000");
+        Statement* stam1 = con->createStatement("CREATE TABLE test ( name int, t varchar(10))");
+        stam1->executeUpdate();
+
+        Statement* stam2 =  con->createStatement("INSERT INTO test (name, t) values (1, 'sta')");
+        stam2->executeUpdate();
+
+        Statement* stam3 = con->createStatement("INSERT INTO test (name, t) values (?, ?)");
+        int* i = new int(1);
+        stam3->setParameter(0, DBTYPE_LONG, i);
+
+        char* t = "test char";
+        stam3->setParameter(1, DBTYPE_STRING, t);
+        stam3->executeUpdate();
+
+        Statement* stam4 = con->createStatement("DROP TABLE test");
+        stam4->executeUpdate();
+
+        con->close();
+    }
+    
     void testConnection()
     {
         ConnectionPool* pool = new ConnectionPool();
         try
         {
-            Connection* con = pool->getConnection("mysql;localhost;3304;mangos", "root", "cross2000");
+            Connection* con = pool->getConnection("mysql;localhost;3304;jaguarmd", "root", "cross2000");
             con->close();
         }
         catch (DBException e)
@@ -163,19 +198,17 @@ private:
         ResultSet* rs = NULL;
         try
         {
-            con = pool->getConnection("mysql;localhost;3304;mangos", "root", "cross2000");
-            rs = con->executeQuery("SELECT name, modelid_A, minlevel, speed, scriptname FROM creature_template limit 0, 10");
-            // char, medium int, tiny, float, smallint,integer,null
+            con = pool->getConnection("mysql;localhost;3304;jaguarmd", "root", "cross2000");
+            rs = con->executeQuery("select * from processdef");
             int x = 0;
-            cout << "Name\t\t\tmodelid\tminlevel\tspeed\tscriptname" << endl;
+            cout << "id\tdefname\t\tprocesstype\tmasterent" << endl;
             while ((*rs)++)
             {
-                string* name = (string*)rs->get(0);
-                int* modelid_A = (int*)rs->get(1);
-                int* minlevel = (int*)rs->get(2);
-                float* speed = (float*)rs->get(3);
-                string* scriptname = (string*)rs->get(4);
-                cout << *((string*)name) << "\t\t\t" << *modelid_A << "\t" << *minlevel << "\t" << *speed << "\t" << *scriptname << endl;
+                int* id = (int*)rs->get(0);
+                string* defname = (string*)rs->get(1);
+                int* processtype = (int*)rs->get(2);
+                string* masterent = (string*)rs->get(3);
+                cout << *id <<  *defname << "\t\t" << *processtype << "\t" << *masterent << endl;
             }
         }
         catch (DBException e)
@@ -193,7 +226,7 @@ private:
         ConnectionPool* pool = new ConnectionPool();
         try
         {
-            Connection* con = pool->getConnection("mysql;localhost;3304;mangos", "root", "cross2000");
+            Connection* con = pool->getConnection("mysql;localhost;3304;jaguarmd", "root", "cross2000");
             con->executeUpdate("CREATE TABLE test ( name int)");
             con->executeUpdate("INSERT INTO test (name) values ('test')");
             con->executeUpdate("DROP TABLE test");

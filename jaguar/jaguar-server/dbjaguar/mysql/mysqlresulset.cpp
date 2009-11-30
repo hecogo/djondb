@@ -1,9 +1,7 @@
-#include "mysql.h"
+#include "mysqlresultset.h"
 #include <sstream>
 #include <stdlib.h>
 #include <iostream>
-
-using namespace dbjaguar;
 
 MySQLResultSet::MySQLResultSet(MYSQL_RES* res, const char* query)
 {

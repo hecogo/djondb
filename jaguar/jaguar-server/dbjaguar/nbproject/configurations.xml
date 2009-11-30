@@ -5,7 +5,10 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="mysql" displayName="mysql" projectFiles="true">
-        <itemPath>mysql/mysql.h</itemPath>
+        <itemPath>mysql/mysqlcommon.h</itemPath>
+        <itemPath>mysql/mysqlconnection.h</itemPath>
+        <itemPath>mysql/mysqlresultset.h</itemPath>
+        <itemPath>mysql/mysqlstatement.h</itemPath>
       </logicalFolder>
       <itemPath>dbjaguar.h</itemPath>
     </logicalFolder>
@@ -17,8 +20,10 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="mysql" displayName="mysql" projectFiles="true">
-        <itemPath>mysql/connection.cpp</itemPath>
-        <itemPath>mysql/resulset.cpp</itemPath>
+        <itemPath>mysql/mysqlcommon.cpp</itemPath>
+        <itemPath>mysql/mysqlconnection.cpp</itemPath>
+        <itemPath>mysql/mysqlresulset.cpp</itemPath>
+        <itemPath>mysql/mysqlstatement.cpp</itemPath>
       </logicalFolder>
       <itemPath>dbjaguar.cpp</itemPath>
     </logicalFolder>

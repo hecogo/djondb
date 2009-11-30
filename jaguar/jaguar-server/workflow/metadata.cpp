@@ -202,11 +202,11 @@ ProcessDefinition* getProcessDefinition(long id) throw (WorkflowException) {
     CacheGroup* group = getGlobalCache("METADATA");
     map<long, ProcessDefinition*>* definitions = (map<long, ProcessDefinition*>*)group->get("PROCESSDEFINITIONS");
     if (!definitions) {
-        throw new WorkflowException("The process definition does not exist");
+        throw new WorkflowException(string("The process definition does not exist").c_str());
     }
     ProcessDefinition* def = definitions->find(id)->second;
     if (!def) {
-        throw new WorkflowException("The process definition does not exist");
+        throw new WorkflowException(string("The process definition does not exist").c_str());
     }
     return def;
 }

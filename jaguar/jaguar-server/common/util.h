@@ -17,3 +17,5 @@ vector<string*>* listDir(string dir, string ext);
 const char* strtrim(char* str);
 
 void trim(string* str);
+
+string* format(char* s, ...);

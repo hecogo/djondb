@@ -1,9 +1,15 @@
 #include "processinstance.h"
+#include "tokenfacade.h"
+
+#include "dbjaguar.h"
 
 //**************************************************************************************************
 // This file contains simple objects for runtime, this simple objects does not contain complex
 // assignation rutines, process or some other stuff. They're just plain objects.
 //**************************************************************************************************
+
+using namespace dbjaguar;
+
 ProcessInstance::ProcessInstance()
 {
     currentTokens = new list<Token*>();
@@ -84,3 +90,25 @@ void ProcessInstance::setMasterEntity(MasterEntity* _masterEntity)
     masterEntity = _masterEntity;
 }
 
+void ProcessInstance::persist() {
+    Connection* con = getDefaultDataConnection();
+    string sql;
+    if (PERSISTENCE_NEW_STATUS(this)) {
+        sql = "INSERT INTO PROCESSINSTANCE (id, idprocessdef, status, idmasterent) VALUES (?, ?, ?, ?);";
+        Statement* stmt = con->createStatement(sql.c_str());
+        stmt->setParameter(0, DBTYPE_INT24, new int(getId()));
+        stmt->setParameter(1, DBTYPE_LONG, new long(getProcessDefinition()->getId()));
+        stmt->setParameter(2, DBTYPE_INT24, (int*)getStatus());
+        int idMasterEnt = 1;
+        stmt->setParameter(3, DBTYPE_INT24, new int(idMasterEnt));
+        stmt->executeUpdate();
+    } else {
+        sql = "UPDATE PROCESSINSTANCE SET status = ?, idmasterent = ? WHERE id = ?";
+        Statement* stmt = con->createStatement(sql.c_str());
+        stmt->setParameter(0, DBTYPE_INT24, (int*)getStatus());
+        int idMasterEnt = 1;
+        stmt->setParameter(1, DBTYPE_INT24, new int(idMasterEnt));
+        stmt->setParameter(2, DBTYPE_INT24, new int(getId()));
+        stmt->executeUpdate();
+    }
+}

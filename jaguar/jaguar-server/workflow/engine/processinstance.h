@@ -5,8 +5,9 @@
 
 #include "../metadata/processdefinition.h"
 #include "defs.h"
-
 #include "../metadata/masterentity.h"
+#include "dbjaguar.h"
+
 class Token;
 
 class ProcessInstance
@@ -19,6 +20,7 @@ private:
     list<void*>* propertyValues;
     list<Token*>* currentTokens;
     MasterEntity* masterEntity;
+    PERSISTENCE_FIELDS;
 public:
     ProcessInstance();
     void addCurrentToken(Token* token);
@@ -36,6 +38,7 @@ public:
     list<Token*>* getCurrentTokens();
     MasterEntity* getMasterEntity();
     void setMasterEntity(MasterEntity* masterEntity);
+    void persist();
 };
 
 #endif // PROCESSINSTANCE_H_INCLUDED

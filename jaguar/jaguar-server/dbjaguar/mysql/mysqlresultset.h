@@ -1,11 +1,12 @@
-#include "../dbjaguar.h"
-#include <mysql.h>
+#ifndef _MYSQLRESULTSET_H
+#define	_MYSQLRESULTSET_H
+
 #include <map>
+#include <mysql.h>
+#include "../dbjaguar.h"
 
+using namespace std;
 using namespace dbjaguar;
-
-class MySQLConnection;
-class MySQLResultSet;
 
 class MySQLResultSet : public ResultSet
 {
@@ -25,15 +26,5 @@ public:
     void* get(const char* colname) throw (DBException);
 };
 
-class MySQLConnection : public Connection
-{
-private:
-    MYSQL* m_mysql;
+#endif	/* _MYSQLRESULTSET_H */
 
-public:
-    void open(const char* _connectiondef, const char* username, const char* password) throw (DBException);
-    void close() throw (DBException);
-    ResultSet* executeQuery(const char* query) throw (DBException);
-    int executeUpdate(const char* query) throw (DBException);
-
-};

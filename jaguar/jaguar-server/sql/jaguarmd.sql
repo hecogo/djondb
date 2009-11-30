@@ -174,7 +174,7 @@ CREATE TABLE  `jaguarmd`.`task` (
 
 /*!40000 ALTER TABLE `task` DISABLE KEYS */;
 LOCK TABLES `task` WRITE;
-INSERT INTO `jaguarmd`.`task` VALUES  (1,1,'test',0);
+INSERT INTO `jaguarmd`.`task` VALUES  (1,1,'test',5);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `task` ENABLE KEYS */;
 

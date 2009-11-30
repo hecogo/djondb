@@ -76,7 +76,9 @@ list<Token*>* processToken(ProcessInstance* instance, TokenVO* tokenVO)
 
 ProcessInstance* persist(ProcessInstance* processInstance) {
     // TODO To be implemented
-    processInstance->setId(getNextKey(string("processinstance")));
+    //processInstance->setId(getNextKey(string("processinstance")));
+    //return processInstance;
+    processInstance->persist();
     return processInstance;
 }
 
