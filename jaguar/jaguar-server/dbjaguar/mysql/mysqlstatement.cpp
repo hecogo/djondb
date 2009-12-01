@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
 
 #define THROWERROR_STMT() \
     string* connerror = new string("DBException: "); \
@@ -20,6 +21,7 @@ MySQLStatement::MySQLStatement(MYSQL* _mysql, const char* query) : Statement(_my
         param_count= mysql_stmt_param_count(m_stmt);
         if (param_count > 0) {
             m_bind = (MYSQL_BIND*)malloc(sizeof(MYSQL_BIND)*param_count);
+            memset(m_bind, 0, sizeof(MYSQL_BIND)*param_count);
         }
     } else {
         throw DBException(new string("mysql_stmt_init(), out of memory"));
@@ -37,7 +39,7 @@ int MySQLStatement::executeUpdate() {
     }
     int res = mysql_stmt_execute(m_stmt);
     if (res != 0) {
-        printf(mysql_stmt_error(m_stmt));
+        cout << mysql_stmt_error(m_stmt) << endl;
     }
 }
 
@@ -60,3 +62,6 @@ void MySQLStatement::setParameter(int param, DBFIELD_TYPE type, void* value) {
     }
 };
 
+void MySQLStatement::close() {
+    mysql_stmt_close(m_stmt);
+}

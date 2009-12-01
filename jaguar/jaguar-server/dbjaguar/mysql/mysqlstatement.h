@@ -29,6 +29,7 @@ public:
     ~MySQLStatement();
     int executeUpdate();
     void setParameter(int param, DBFIELD_TYPE type, void* value);
+    void close();
 };
 
 #endif	/* _MYSQLSTATEMENT_H */

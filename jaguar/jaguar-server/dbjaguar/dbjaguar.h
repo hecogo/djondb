@@ -32,9 +32,12 @@ void getConnectionInfo(const char* connectionDef, string* type, string* server, 
         }
 #define PERSISTENCE_SAVED_STATUS(obj) \
     obj->getDBJaguarPStatus() == PSTATUS_SAVED
+#define SETPERSISTENCE_SAVED_STATUS(obj) \
+    obj->setDBJaguarPStatus(PSTATUS_SAVED);
 #define PERSISTENCE_NEW_STATUS(obj) \
     obj->getDBJaguarPStatus() == PSTATUS_NEW
-
+#define SETPERSISTENCE_NEW_STATUS(obj) \
+    obj->setDBJaguarPStatus(PSTATUS_NEW);
 namespace dbjaguar {
     class Connection;
     class ConnectionPool;
@@ -108,6 +111,7 @@ namespace dbjaguar {
         };
         virtual int executeUpdate() = 0;
         virtual void setParameter(int paramName, DBFIELD_TYPE type, void* value) = 0;
+        virtual void close() = 0;
     };
 
     class ResultSet {

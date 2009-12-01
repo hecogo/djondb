@@ -13,6 +13,7 @@ using namespace dbjaguar;
 ProcessInstance::ProcessInstance()
 {
     currentTokens = new list<Token*>();
+    SETPERSISTENCE_NEW_STATUS(this);
 }
 
 void ProcessInstance::addCurrentToken(Token* token)
@@ -94,21 +95,27 @@ void ProcessInstance::persist() {
     Connection* con = getDefaultDataConnection();
     string sql;
     if (PERSISTENCE_NEW_STATUS(this)) {
-        sql = "INSERT INTO PROCESSINSTANCE (id, idprocessdef, status, idmasterent) VALUES (?, ?, ?, ?);";
+        sql = "INSERT INTO processinstance (id, idprocessdef, status, idmasterent) VALUES (?, ?, ?, ?);";
         Statement* stmt = con->createStatement(sql.c_str());
-        stmt->setParameter(0, DBTYPE_INT24, new int(getId()));
-        stmt->setParameter(1, DBTYPE_LONG, new long(getProcessDefinition()->getId()));
-        stmt->setParameter(2, DBTYPE_INT24, (int*)getStatus());
+        int id = getNextKey("processinstance");
+        setId(id);
+        stmt->setParameter(0, DBTYPE_LONG, &id);
+        int idProcDef = getProcessDefinition()->getId();
+        stmt->setParameter(1, DBTYPE_LONG, &idProcDef);
+        stmt->setParameter(2, DBTYPE_LONG, (int*)getStatus());
         int idMasterEnt = 1;
-        stmt->setParameter(3, DBTYPE_INT24, new int(idMasterEnt));
+        stmt->setParameter(3, DBTYPE_LONG, &idMasterEnt);
         stmt->executeUpdate();
+        stmt->close();
     } else {
-        sql = "UPDATE PROCESSINSTANCE SET status = ?, idmasterent = ? WHERE id = ?";
+        sql = "UPDATE processinstance SET status = ?, idmasterent = ? WHERE id = ?";
         Statement* stmt = con->createStatement(sql.c_str());
         stmt->setParameter(0, DBTYPE_INT24, (int*)getStatus());
         int idMasterEnt = 1;
         stmt->setParameter(1, DBTYPE_INT24, new int(idMasterEnt));
         stmt->setParameter(2, DBTYPE_INT24, new int(getId()));
         stmt->executeUpdate();
+        stmt->close();
     }
+    con->close();
 }
