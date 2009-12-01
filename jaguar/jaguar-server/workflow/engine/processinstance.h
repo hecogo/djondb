@@ -15,7 +15,7 @@ class ProcessInstance
 private:
     int id;
     ProcessDefinition* processDefinition;
-    InstanceStatus* status;
+    InstanceStatus status;
     list<void*>* assignments;
     list<void*>* propertyValues;
     list<Token*>* currentTokens;
@@ -29,8 +29,8 @@ public:
     void setId(int id);
     ProcessDefinition* getProcessDefinition();
     void setProcessDefinition(ProcessDefinition* processDefinition);
-    InstanceStatus* getStatus();
-    void setStatus(InstanceStatus* status);
+    InstanceStatus getStatus();
+    void setStatus(InstanceStatus status);
     list<void*>* getAssignments();
     void setAssignments(list<void*>* assignments);
     list<void*>* getPropertyValues();

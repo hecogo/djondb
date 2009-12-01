@@ -90,6 +90,7 @@ ProcessInstance* createProcessInstance(long definition)
     ProcessInstance* processInstance = new ProcessInstance();
     ProcessDefinition* def = getProcessDefinition(definition);
     processInstance->setProcessDefinition(def);
+    processInstance->setStatus(RUNNING);
     //MasterEntity master = getMasterEntity(def);
     //processInstance.setMasterEntity(master);
     vector<StartEvent*>* startEvents = getStartEvents(def);

@@ -1,8 +1,8 @@
+#include <iostream>
 #include "processinstance.h"
 #include "tokenfacade.h"
-
+#include "util.h"
 #include "dbjaguar.h"
-
 //**************************************************************************************************
 // This file contains simple objects for runtime, this simple objects does not contain complex
 // assignation rutines, process or some other stuff. They're just plain objects.
@@ -46,12 +46,12 @@ void ProcessInstance::setProcessDefinition(ProcessDefinition* _processDefinition
     processDefinition = _processDefinition;
 }
 
-InstanceStatus* ProcessInstance::getStatus()
+InstanceStatus ProcessInstance::getStatus()
 {
     return status;
 }
 
-void ProcessInstance::setStatus(InstanceStatus* _status)
+void ProcessInstance::setStatus(InstanceStatus _status)
 {
     status = _status;
 }
@@ -93,27 +93,31 @@ void ProcessInstance::setMasterEntity(MasterEntity* _masterEntity)
 
 void ProcessInstance::persist() {
     Connection* con = getDefaultDataConnection();
-    string sql;
+    string* sql;
     if (PERSISTENCE_NEW_STATUS(this)) {
-        sql = "INSERT INTO processinstance (id, idprocessdef, status, idmasterent) VALUES (?, ?, ?, ?);";
-        Statement* stmt = con->createStatement(sql.c_str());
+        sql = new string("INSERT INTO processinstance (id, idprocessdef, status, idmasterent) VALUES (?, ?, ?, ?);");
         int id = getNextKey("processinstance");
         setId(id);
+	cout << *sql << endl;
+        Statement* stmt = con->createStatement(sql->c_str());
         stmt->setParameter(0, DBTYPE_LONG, &id);
         int idProcDef = getProcessDefinition()->getId();
         stmt->setParameter(1, DBTYPE_LONG, &idProcDef);
-        stmt->setParameter(2, DBTYPE_LONG, (int*)getStatus());
+	int status = getStatus();
+        stmt->setParameter(2, DBTYPE_LONG, &status);
         int idMasterEnt = 1;
         stmt->setParameter(3, DBTYPE_LONG, &idMasterEnt);
         stmt->executeUpdate();
         stmt->close();
     } else {
-        sql = "UPDATE processinstance SET status = ?, idmasterent = ? WHERE id = ?";
-        Statement* stmt = con->createStatement(sql.c_str());
-        stmt->setParameter(0, DBTYPE_INT24, (int*)getStatus());
+        sql = new string("UPDATE processinstance SET status = ?, idmasterent = ? WHERE id = ?");
+        Statement* stmt = con->createStatement(sql->c_str());
+	int status = getStatus();
+        stmt->setParameter(0, DBTYPE_LONG, &status);
         int idMasterEnt = 1;
-        stmt->setParameter(1, DBTYPE_INT24, new int(idMasterEnt));
-        stmt->setParameter(2, DBTYPE_INT24, new int(getId()));
+        stmt->setParameter(1, DBTYPE_LONG, &idMasterEnt);
+	int id = getId();
+        stmt->setParameter(2, DBTYPE_LONG, &id);
         stmt->executeUpdate();
         stmt->close();
     }
