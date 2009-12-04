@@ -12,6 +12,8 @@ extern "C" {
 	#include "lualib.h"
 	#include "lauxlib.h"
 }
+#include "LuaDebugger.h"
+#include "LuaDebuggerConsole.h"
 
 int my_function(lua_State* L) {
     int argc = lua_gettop(L);
@@ -36,10 +38,17 @@ int main(int argc, char** argv) {
     L = lua_open();
     luaL_openlibs(L);
     lua_register(L, "my_function", my_function);
-    lua_sethook(L, &debug_function, LUA_MASKLINE, 5);
     //   LUA_MASKRET, LUA_MASKLINE, LUA_MASKCALL and LUA_MASKCOUNT
+    LuaDebugger d(L);
+    LuaDebuggerConsole console;
+    d.addBreakpoint(3);
+    d.addBreakpoint(6);
+    console.startConsole(&d);
+    d.startDebug();
     luaL_dofile(L, "test.lua");
     lua_close(L);
+    console.stopConsole();
+    d.stopDebug();
 
     printf("print any key");
     getchar();

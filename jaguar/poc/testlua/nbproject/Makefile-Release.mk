@@ -31,6 +31,8 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/LuaDebuggerConsole.o \
+	${OBJECTDIR}/LuaDebugger.o \
 	${OBJECTDIR}/main.o
 
 # C Compiler Flags
@@ -56,6 +58,16 @@ LDLIBSOPTIONS=
 dist/Release/GNU-Linux-x86/testlua: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/testlua ${OBJECTFILES} ${LDLIBSOPTIONS} 
+
+${OBJECTDIR}/LuaDebuggerConsole.o: nbproject/Makefile-${CND_CONF}.mk LuaDebuggerConsole.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/LuaDebuggerConsole.o LuaDebuggerConsole.cpp
+
+${OBJECTDIR}/LuaDebugger.o: nbproject/Makefile-${CND_CONF}.mk LuaDebugger.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/LuaDebugger.o LuaDebugger.cpp
 
 ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
