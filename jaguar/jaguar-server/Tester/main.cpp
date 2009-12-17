@@ -134,12 +134,16 @@ private:
 
     void testFormat() {
         char* s1 = "prueba 1 valor %d";
-        string* res = format(s1, 10);
-        TEST_ASSERT(res->compare("prueba 1 valor 10"));
+        char* res = (char*)malloc(1024);
+        memset(res, 0, 1024);
+        format(res, s1, 10);
+        TEST_ASSERT(strcmp(res, "prueba 1 valor 10") == 0);
 
         char* s2 = "prueba 2 valor %d %s";
-        string* res2 = format(s2, 10, "test de texto");
-        TEST_ASSERT(res2->compare("prueba 1 valor 10 test de texto"));
+        char* res2 = (char*)malloc(1024);
+        memset(res2, 0, 1024);
+        format(res2, s2, 10, "test de texto");
+        TEST_ASSERT(strcmp(res2, "prueba 1 valor 10 test de texto") == 0);
     }
 };
 

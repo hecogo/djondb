@@ -5,6 +5,8 @@
 #include "dbjaguar.h"
 #include "../metadata.h"
 #include "tokenfacade.h"
+#include <stdlib.h>
+#include <string.h>
 //**************************************************************************************************
 // This file contains simple objects for runtime, this simple objects does not contain complex
 // assignation rutines, process or some other stuff. They're just plain objects.
@@ -111,6 +113,7 @@ void ProcessInstance::persist() {
         stmt->setParameter(3, DBTYPE_LONG, &idMasterEnt);
         stmt->executeUpdate();
         stmt->close();
+        delete(stmt);
     } else {
         sql = new string("UPDATE processinstance SET status = ?, idmasterent = ? WHERE id = ?");
         Statement* stmt = con->createStatement(sql->c_str());
@@ -122,9 +125,13 @@ void ProcessInstance::persist() {
         stmt->setParameter(2, DBTYPE_LONG, &id);
         stmt->executeUpdate();
         stmt->close();
+        delete(stmt);
     }
+    delete(sql);
     con->close();
+    delete(con);
     persistCurrentTokens(this);
+
 }
 
 //********************************************************************************
@@ -132,10 +139,13 @@ void ProcessInstance::persist() {
 //********************************************************************************
 ProcessInstance* loadInstance(int id) {
     Connection* con = getDefaultDataConnection();
-    string* sql = format("SELECT id, idprocessdef, status, idmasterent from processinstance where id = %d", id);
-    ResultSet* rs = con->executeQuery(sql->c_str());
+    char* sql = (char*)malloc(1024);
+    memset(sql, 0, 1024);
+    format(sql, "SELECT id, idprocessdef, status, idmasterent from processinstance where id = %d", id);
+    ResultSet* rs = con->executeQuery(sql);
+    ProcessInstance* processInstance = NULL;
     if (rs->next()) {
-        ProcessInstance* processInstance = new ProcessInstance();
+        processInstance = new ProcessInstance();
         processInstance->setId(id);
         processInstance->setMasterEntity(NULL); // TODO
 
@@ -146,9 +156,11 @@ ProcessInstance* loadInstance(int id) {
         SETPERSISTENCE_SAVED_STATUS(processInstance);
         
         loadCurrentTokens(processInstance);
-        return processInstance;
-    } else {
-        return NULL;
     }
+    free(sql);
     rs->close();
+    delete(rs);
+    con->close();
+    delete(con);
+    return processInstance;
 }

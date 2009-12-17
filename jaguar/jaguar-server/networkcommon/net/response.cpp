@@ -28,5 +28,6 @@ void Response::addParameter(char* name, void* contents, int size) {
 }
 
 Response::~Response() {
+    delete(data);
 }
 

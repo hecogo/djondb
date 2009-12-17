@@ -39,7 +39,7 @@ void trim(string* str) {
     str->erase(str->find_last_not_of(" ") + 1);
 }
 
-string* format(char* s, ...) {
+void format(char* dest, char* s, ...) {
     int len = strlen(s) * 2;
     char* buffer = (char*)malloc(len);
     memset(buffer, 0, len);
@@ -49,7 +49,6 @@ string* format(char* s, ...) {
     int lenbuf = vsprintf(buffer, s, ap);
     va_end(ap);
 
-    string* res = new string(buffer, lenbuf);
+    memcpy(dest, buffer, lenbuf);
     free(buffer);
-    return res;
 }

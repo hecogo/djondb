@@ -5,6 +5,8 @@
 #include "../metadata/defs.h"
 #include "dbjaguar.h"
 #include "util.h"
+#include <stdlib.h>
+#include <string.h>
 
 using namespace dbjaguar;
 
@@ -130,8 +132,10 @@ void persistCurrentTokens(ProcessInstance* processInstance) {
     }
     for (list<Token*>::iterator iter = tokens->begin(); iter != tokens->end(); iter++) {
         Token* token = *iter;
-        string* sql = format("UPDATE tokens SET idtask = ?, status = ? WHERE id = %d", processInstance->getId());
-        Statement* stmt = con->createStatement(sql->c_str());
+        char* sql = (char*)malloc(1024);
+        memset(sql, 0, 1024);
+        format(sql, "UPDATE tokens SET idtask = ?, status = ? WHERE id = %d", processInstance->getId());
+        Statement* stmt = con->createStatement(sql);
         int idTask = token->getTask()->getId();
         stmt->setParameter(0, DBTYPE_LONG, &idTask);
         int status = token->getStatus();
@@ -139,9 +143,12 @@ void persistCurrentTokens(ProcessInstance* processInstance) {
         int id = token->getId();
         stmt->setParameter(2, DBTYPE_LONG, &id);
         int res = stmt->executeUpdate();
+        free(sql);
         stmt->close();
+        delete(stmt);
         if (res == 0) {
-            Statement* stmtInsert = con->createStatement("INSERT INTO tokens (id, idtask, idprocessinst, status) VALUES (?, ?, ?, ?)");
+            string sqlInsert("INSERT INTO tokens (id, idtask, idprocessinst, status) VALUES (?, ?, ?, ?)");
+            Statement* stmtInsert = con->createStatement(sqlInsert.c_str());
             stmtInsert->setParameter(0, DBTYPE_LONG, &id);
             stmtInsert->setParameter(1, DBTYPE_LONG, &idTask);
             int idProcessInst = token->getProcessInstance()->getId();
@@ -149,15 +156,19 @@ void persistCurrentTokens(ProcessInstance* processInstance) {
             stmtInsert->setParameter(3, DBTYPE_LONG, &status);
             stmtInsert->executeUpdate();
             stmtInsert->close();
+            delete(stmtInsert);
         }
     }
     con->close();
+    delete(con);
 }
 
 void loadCurrentTokens(ProcessInstance* processInstance) {
     Connection* con = getDefaultDataConnection();
-    string* sql = format("SELECT id, idtask, idprocessinst, status FROM tokens WHERE idprocessinst = %d", processInstance->getId());
-    ResultSet* rs = con->executeQuery(sql->c_str());
+    char* sql = (char*)malloc(1024);
+    memset(sql, 0, 1024);
+    format(sql, "SELECT id, idtask, idprocessinst, status FROM tokens WHERE idprocessinst = %d", processInstance->getId());
+    ResultSet* rs = con->executeQuery(sql);
     ProcessDefinition* def = processInstance->getProcessDefinition();
     while (rs->next()) {
         Token* token = new Token();
@@ -168,4 +179,9 @@ void loadCurrentTokens(ProcessInstance* processInstance) {
         token->setTask(getTask(*def, *(static_cast<long *>(rs->get("idtask")))));
         processInstance->addCurrentToken(token);
     }
+    free(sql);
+    rs->close();
+    delete(rs);
+    con->close();
+    delete(con);
 }

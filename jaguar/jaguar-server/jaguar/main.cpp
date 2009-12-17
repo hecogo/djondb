@@ -20,6 +20,7 @@ int main() {
         getchar();
 
         service->stop();
+        delete(service);
     } catch (NetworkException e) {
         log->error(e);
     }

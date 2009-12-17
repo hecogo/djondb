@@ -18,4 +18,4 @@ const char* strtrim(char* str);
 
 void trim(string* str);
 
-string* format(char* s, ...);
+void format(char* dest, char* s, ...);

@@ -98,12 +98,12 @@ namespace dbjaguar {
     class Statement {
     protected:
         MYSQL* m_mysql;
-        string* m_query;
+        const char* m_query;
     public:
 
         Statement(MYSQL* _mysql, const char* query) {
             m_mysql = _mysql;
-            m_query = new string(query);
+            m_query = query;
         };
 
         virtual ~Statement() {

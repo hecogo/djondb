@@ -22,6 +22,8 @@ MySQLStatement::MySQLStatement(MYSQL* _mysql, const char* query) : Statement(_my
         if (param_count > 0) {
             m_bind = (MYSQL_BIND*)malloc(sizeof(MYSQL_BIND)*param_count);
             memset(m_bind, 0, sizeof(MYSQL_BIND));
+        } else {
+            m_bind = NULL;
         }
     } else {
         throw DBException(new string("mysql_stmt_init(), out of memory"));
@@ -30,7 +32,6 @@ MySQLStatement::MySQLStatement(MYSQL* _mysql, const char* query) : Statement(_my
 }
 
 MySQLStatement::~MySQLStatement() {
-    free(m_bind);
 }
 
 int MySQLStatement::executeUpdate() {
@@ -64,4 +65,7 @@ void MySQLStatement::setParameter(int param, DBFIELD_TYPE type, void* value) {
 
 void MySQLStatement::close() {
     mysql_stmt_close(m_stmt);
+    if (m_bind) {
+        free(m_bind);
+    }
 }
