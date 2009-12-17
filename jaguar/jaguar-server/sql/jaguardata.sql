@@ -40,8 +40,47 @@ CREATE TABLE  `jaguardata`.`processinstance` (
 
 /*!40000 ALTER TABLE `processinstance` DISABLE KEYS */;
 LOCK TABLES `processinstance` WRITE;
+INSERT INTO `jaguardata`.`processinstance` VALUES  (1,1,0,1),
+ (2,1,0,1),
+ (3,1,0,1),
+ (4,1,0,1),
+ (5,1,0,1),
+ (6,1,0,1),
+ (7,1,0,1),
+ (8,1,0,1),
+ (9,1,0,1),
+ (10,1,0,1),
+ (11,1,0,1),
+ (12,1,0,1),
+ (13,1,0,1),
+ (14,1,0,1),
+ (15,1,0,1),
+ (16,1,0,1);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `processinstance` ENABLE KEYS */;
+
+
+--
+-- Definition of table `jaguardata`.`tokens`
+--
+
+DROP TABLE IF EXISTS `jaguardata`.`tokens`;
+CREATE TABLE  `jaguardata`.`tokens` (
+  `id` int(11) NOT NULL,
+  `idtask` int(11) NOT NULL,
+  `idprocessinst` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `jaguardata`.`tokens`
+--
+
+/*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
+LOCK TABLES `tokens` WRITE;
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
 
 
 
