@@ -3,6 +3,8 @@
 #include "tokenfacade.h"
 #include "util.h"
 #include "dbjaguar.h"
+#include "../metadata.h"
+#include "tokenfacade.h"
 //**************************************************************************************************
 // This file contains simple objects for runtime, this simple objects does not contain complex
 // assignation rutines, process or some other stuff. They're just plain objects.
@@ -122,4 +124,31 @@ void ProcessInstance::persist() {
         stmt->close();
     }
     con->close();
+    persistCurrentTokens(this);
+}
+
+//********************************************************************************
+// Global Functions
+//********************************************************************************
+ProcessInstance* loadInstance(int id) {
+    Connection* con = getDefaultDataConnection();
+    string* sql = format("SELECT id, idprocessdef, status, idmasterent from processinstance where id = %d", id);
+    ResultSet* rs = con->executeQuery(sql->c_str());
+    if (rs->next()) {
+        ProcessInstance* processInstance = new ProcessInstance();
+        processInstance->setId(id);
+        processInstance->setMasterEntity(NULL); // TODO
+
+        int* idProcessDef = static_cast<int *>(rs->get("idprocessdef"));
+        processInstance->setProcessDefinition(getProcessDefinition(*idProcessDef));
+        int* status = static_cast<int*>(rs->get("status"));
+        processInstance->setStatus((InstanceStatus)*status);
+        SETPERSISTENCE_SAVED_STATUS(processInstance);
+        
+        loadCurrentTokens(processInstance);
+        return processInstance;
+    } else {
+        return NULL;
+    }
+    rs->close();
 }

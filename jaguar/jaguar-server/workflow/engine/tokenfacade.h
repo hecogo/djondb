@@ -9,11 +9,9 @@ using namespace std;
 #include "tokenvo.h"
 class ProcessInstance;
 
-class TokenFacade {
-public:
-    list<Token*>* processToken(ProcessInstance* processInstance, Token* token);
-    Token* findBy(TokenVO token);
-};
-
+list<Token*>* processToken(ProcessInstance* processInstance, Token* token);
+Token* findTokenBy(TokenVO token);
+void loadCurrentTokens(ProcessInstance* processInstance);
+void persistCurrentTokens(ProcessInstance* processInstance);
 
 #endif // TOKENFACADE_H_INCLUDED

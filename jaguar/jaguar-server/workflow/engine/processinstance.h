@@ -41,4 +41,6 @@ public:
     void persist();
 };
 
+ProcessInstance* loadInstance(int id);
+
 #endif // PROCESSINSTANCE_H_INCLUDED

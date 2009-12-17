@@ -34,11 +34,11 @@ LuaDebugger::~LuaDebugger() {
 void LuaDebugger::addBreakpoint(int line) {
     if (cbreakpoints > 0) {
         int* current = breakpoints;
-        breakpoints = (int*)malloc(sizeof(int)*(cbreakpoints+1));
+        breakpoints = (int*) malloc(sizeof (int) *(cbreakpoints + 1));
         *breakpoints = *current;
         free(current);
     } else {
-        breakpoints = (int*)malloc(sizeof(int)*(cbreakpoints+1));
+        breakpoints = (int*) malloc(sizeof (int) *(cbreakpoints + 1));
     }
     breakpoints[cbreakpoints] = line;
     cbreakpoints++;
@@ -80,23 +80,55 @@ void get_upvalues(lua_State* L) {
     }
 }
 
+int listvars(lua_State *L, int level) {
+    lua_Debug ar;
+    int i;
+    const char *name;
+    if (lua_getstack(L, level, &ar) == 0)
+        return 0; /* failure: no such level in the stack */
+    i = 1;
+    while ((name = lua_getlocal(L, &ar, i++)) != NULL) {
+        printf("local %d %s\n", i - 1, name);
+        lua_pop(L, 1); /* remove variable value */
+    }
+    lua_getinfo(L, "f", &ar); /* retrieves function */
+    i = 1;
+    while ((name = lua_getupvalue(L, -1, i++)) != NULL) {
+        printf("upvalue %d %s\n", i - 1, name);
+        lua_pop(L, 1); /* remove upvalue value */
+    }
+    return 1;
+}
+
 string* LuaDebugger::getStack2(lua_Debug* debugInfo) {
+    /*
     lua_State* L = luaState;
-    lua_getstack(L, 0, debugInfo);
+    int res = lua_getstack(L, 0, debugInfo);
+    if (res != 1) {
+        return NULL;
+    }
+    const char * name = NULL;
+    int i = 1;
+    while ((name = lua_getlocal(L, debugInfo, i++)) != NULL) {
+        cout << name << endl;
+    }
     lua_getfield(L, LUA_GLOBALSINDEX, "n");
     const char* c = lua_tostring(L, -1);
     if (c) {
         cout << "getStack2: " << c << endl;
     }
     lua_pop(L, 1);
+     */
+    return NULL;
 }
 
 string* LuaDebugger::getStack(lua_Debug* debugInfo) {
+    /*
     lua_Debug debug;
     int level = 0;
 
     while (lua_getstack(luaState, level++, &debug) == 1) {
-        const char* name ;
+        const char* name;
         int i = 1;
         while ((name = lua_getlocal(luaState, &debug, i++)) != NULL) {
             cout << "local: " << name << endl;
@@ -107,4 +139,6 @@ string* LuaDebugger::getStack(lua_Debug* debugInfo) {
             get_upvalues(luaState);
         }
     }
+     */
+    listvars(luaState, 0);
 }

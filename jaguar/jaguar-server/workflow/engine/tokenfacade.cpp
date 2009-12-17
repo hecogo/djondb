@@ -4,6 +4,9 @@
 #include "defs.h"
 #include "../metadata/defs.h"
 #include "dbjaguar.h"
+#include "util.h"
+
+using namespace dbjaguar;
 
 void executePostUser(Token* token)
 {
@@ -67,7 +70,7 @@ list<Token*>* getNextTokens(ProcessInstance* processInstance, Token* token)
     return result;
 }
 
-list<Token*>* TokenFacade::processToken(ProcessInstance* processInstance, Token* token)
+list<Token*>* processToken(ProcessInstance* processInstance, Token* token)
 {
     list<Token*>* res = new list<Token*>();
     if (token->getStatus() == USER)
@@ -103,7 +106,66 @@ list<Token*>* TokenFacade::processToken(ProcessInstance* processInstance, Token*
     return res;
 }
 
-Token* TokenFacade::findBy(TokenVO token)
+Token* findTokenBy(TokenVO token)
 {
     return NULL;
+}
+
+Task* getTask(ProcessDefinition def, long idTask) {
+    vector<ActivityCommon*>* activities = def.getActivities();
+    for (vector<ActivityCommon*>::iterator iter = activities->begin(); iter != activities->end(); iter++) {
+        ActivityCommon* activity = *iter;
+        if (activity->getId() == idTask) {
+            return (Task*)activity;
+        }
+    }
+    return NULL;
+}
+
+void persistCurrentTokens(ProcessInstance* processInstance) {
+    Connection* con = getDefaultDataConnection();
+    list<Token*>* tokens = processInstance->getCurrentTokens();
+    if (!tokens) {
+        return;
+    }
+    for (list<Token*>::iterator iter = tokens->begin(); iter != tokens->end(); iter++) {
+        Token* token = *iter;
+        string* sql = format("UPDATE tokens SET idtask = ?, status = ? WHERE id = %d", processInstance->getId());
+        Statement* stmt = con->createStatement(sql->c_str());
+        int idTask = token->getTask()->getId();
+        stmt->setParameter(0, DBTYPE_LONG, &idTask);
+        int status = token->getStatus();
+        stmt->setParameter(1, DBTYPE_LONG, &status);
+        int id = token->getId();
+        stmt->setParameter(2, DBTYPE_LONG, &id);
+        int res = stmt->executeUpdate();
+        stmt->close();
+        if (res == 0) {
+            Statement* stmtInsert = con->createStatement("INSERT INTO tokens (id, idtask, idprocessinst, status) VALUES (?, ?, ?, ?)");
+            stmtInsert->setParameter(0, DBTYPE_LONG, &id);
+            stmtInsert->setParameter(1, DBTYPE_LONG, &idTask);
+            int idProcessInst = token->getProcessInstance()->getId();
+            stmtInsert->setParameter(2, DBTYPE_LONG, &idProcessInst);
+            stmtInsert->setParameter(3, DBTYPE_LONG, &status);
+            stmtInsert->executeUpdate();
+            stmtInsert->close();
+        }
+    }
+    con->close();
+}
+
+void loadCurrentTokens(ProcessInstance* processInstance) {
+    Connection* con = getDefaultDataConnection();
+    string* sql = format("SELECT id, idtask, idprocessinst, status FROM tokens WHERE idprocessinst = %d", processInstance->getId());
+    ResultSet* rs = con->executeQuery(sql->c_str());
+    ProcessDefinition* def = processInstance->getProcessDefinition();
+    while (rs->next()) {
+        Token* token = new Token();
+        token->setId(*(static_cast<int*>(rs->get("id"))));
+        token->setProcessInstance(processInstance);
+        TokenStatus status = (TokenStatus)*(static_cast<long*>(rs->get("status")));
+        token->setStatus(status);
+        token->setTask(getTask(*def, *(static_cast<long *>(rs->get("idtask")))));
+        processInstance->addCurrentToken(token);
+    }
 }

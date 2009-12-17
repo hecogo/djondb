@@ -34,7 +34,6 @@ ProcessInstance* processEvent(ProcessInstance* processInstance, StartEvent* evt)
 {
     // Every new process generates a new tokens
     vector<CommonConector*>* sequenceFlows = evt->getSequenceFlows();
-    TokenFacade* tokenFacade = new TokenFacade();
     for (vector<CommonConector*>::iterator connector = sequenceFlows->begin();
             connector != sequenceFlows->end(); connector++)
     {
@@ -47,7 +46,7 @@ ProcessInstance* processEvent(ProcessInstance* processInstance, StartEvent* evt)
             token->setTask(task);
             token->setProcessInstance(processInstance);
             token->setStatus(NONE);
-            list<Token*>* newTokens = tokenFacade->processToken(processInstance, token);
+            list<Token*>* newTokens = processToken(processInstance, token);
             if (newTokens)
             {
                 processInstance->addCurrentToken(newTokens);
@@ -62,9 +61,8 @@ list<Token*>* processToken(ProcessInstance* instance, TokenVO* tokenVO)
 {
     try
     {
-        TokenFacade* tokenFacade = new TokenFacade();
-        Token* token = tokenFacade->findBy(*tokenVO);
-        return tokenFacade->processToken(instance, token);
+        Token* token = findTokenBy(*tokenVO);
+        return processToken(instance, token);
     }
     catch (EntityNotFoundException ex)
     {
