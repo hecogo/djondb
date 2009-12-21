@@ -8,10 +8,12 @@ using namespace std;
 
 int main() {
     Logger* log = getLogger(NULL);
+    TimeRecord* record = NULL;
+    NetworkService* service = NULL;
     try {
-        TimeRecord* record = getTimeRecord();
+        record = getTimeRecord();
 
-        NetworkService* service = new NetworkService();
+        service = new NetworkService();
         service->start();
         log->info("Server started up: " + toString((float)record->getTimeInMillis()));
 
@@ -20,9 +22,11 @@ int main() {
         getchar();
 
         service->stop();
-        delete(service);
     } catch (NetworkException e) {
         log->error(e);
     }
+    delete(service);
+    delete(record);
+    delete(log);
     return 0;
 }

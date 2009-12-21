@@ -41,6 +41,8 @@ namespace cache {
         void remove(string key);
 
         int size();
+
+        void clear();
     };
 
     class Cache {
@@ -49,11 +51,15 @@ namespace cache {
 
     public:
         CacheGroup* get(string key);
+
+        void clean();
     };
 
     CacheGroup* getGlobalCache(string group);
 
     CacheGroup* getRuntimeCache();
+
+    void cleanGlobalCache();
 }
 
 #endif

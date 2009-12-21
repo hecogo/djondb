@@ -9,6 +9,7 @@
 #include "commonevent.h"
 #include "pool.h"
 #include "activitycommon.h"
+#include <iostream>
 
 using namespace std;
 
@@ -16,18 +17,32 @@ class ProcessDefinition {
 private:
     long id;
     string* definitionName;
-    ProcessType* processType;
+    ProcessType processType;
     vector<Property*>* properties;
     vector<CommonEvent*>* events;
     vector<Pool*>* pools;
     vector<ActivityCommon*>* activities;
     string* masterEntity;
 public:
-    ProcessType* getProcessType() {
+    ~ProcessDefinition() {
+        delete(definitionName);
+        delete(properties);
+        delete(events);
+        delete(pools);
+        for (vector<ActivityCommon*>::iterator iter = activities->begin(); iter != activities->end(); iter++) {
+            ActivityCommon* activity = *iter;
+            delete(activity);
+        }
+        activities->clear();
+        delete(activities);
+        delete(masterEntity);
+    }
+    
+    ProcessType getProcessType() {
         return processType;
     }
 
-    void setProcessType(ProcessType* _processType) {
+    void setProcessType(ProcessType _processType) {
         processType = _processType;
     }
 

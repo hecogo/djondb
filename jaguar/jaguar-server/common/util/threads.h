@@ -12,13 +12,15 @@
 
 class Thread {
 private:
-    int threadId;
     pthread_t internal;
+    int m_threadId;
 
 public:
     void *(*runFunction)(void* arg);
 
     Thread(void *(*run)(void* arg));
+
+    ~Thread();
 
     void start(void* arg);
 

@@ -21,7 +21,7 @@ MySQLStatement::MySQLStatement(MYSQL* _mysql, const char* query) : Statement(_my
         param_count= mysql_stmt_param_count(m_stmt);
         if (param_count > 0) {
             m_bind = (MYSQL_BIND*)malloc(sizeof(MYSQL_BIND)*param_count);
-            memset(m_bind, 0, sizeof(MYSQL_BIND));
+            memset(m_bind, 0, sizeof(MYSQL_BIND)*param_count);
         } else {
             m_bind = NULL;
         }

@@ -31,16 +31,16 @@ pthread_cond_t  request_cv =   PTHREAD_COND_INITIALIZER;
 map<int, Controller*> m_controllers;
 
 Connection* m_con;
+Thread* m_thread; // Main thread
 
 // Scripts addition
 extern void AddWorkflow();
 extern void loadProcessDefinitions(Connection* con);
+extern void unloadProcessDefinitions();
 
 void initializeDatabase() throw (DBException) {
-    if (log->isInfo()) log->info("Initializing DB. Connecting using: mysql;localhost;3304;jaguarmd");
-    ConnectionPool* pool = new ConnectionPool();
-    m_con = pool->getConnection("mysql;localhost;3304;jaguarmd", "root", "cross2000");
-    delete pool;
+    if (log->isInfo()) log->info("Initializing DB.");
+    m_con = getDefaultMDConnection();
 }
 
 void initializeProcessDefinitions() {
@@ -67,8 +67,8 @@ void NetworkService::start() throw (NetworkException) {
     initializeDatabase();
     initializeProcessDefinitions();
 
-    Thread* thread = new Thread(&startSocketListener);
-    thread->start(NULL);
+    m_thread = new Thread(&startSocketListener);
+    m_thread->start(NULL);
 
 }
 
@@ -86,6 +86,16 @@ void NetworkService::stop() throw (NetworkException) {
     if (res != 0) {
         log->error("The close method returned: " + toString(res));
     }
+    
+    unloadProcessDefinitions();
+    
+    cache::cleanGlobalCache();
+
+    for (map<int, Controller*>::iterator iter =  m_controllers.begin(); iter != m_controllers.end(); iter++) {
+        delete(iter->second);
+    }
+    m_controllers.clear();
+    delete(m_thread);
 }
 
 void *startSocketListener(void* arg) {
@@ -142,6 +152,9 @@ void *startSocketListener(void* arg) {
     }
     accepting = false;
 
+    delete(addr);
+
+    pthread_exit(arg);
     return NULL;
 };
 
@@ -215,6 +228,9 @@ void *processRequest(void *arg) {
 
     write(clientSocket, sresp->c_str(), sresp->length());
     close(clientSocket);
+
+    delete(response);
+    delete(processor);
     return NULL;
 };
 

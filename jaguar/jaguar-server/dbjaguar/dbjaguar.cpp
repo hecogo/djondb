@@ -47,10 +47,12 @@ void getConnectionInfo(const char* connectionDef, string* type, string* server, 
     int len = strlen(connectionDef);
 
     char* conndef = (char*) malloc(len);
-    strcpy(conndef, connectionDef);
+    memset(conndef, 0, len);
+    memcpy(conndef, connectionDef, len);
 
     char* ptr;
     char* delim = (char*) ";";
+
     ptr = strtok(conndef, delim);
     type->assign(ptr);
 
@@ -63,15 +65,14 @@ void getConnectionInfo(const char* connectionDef, string* type, string* server, 
     ptr = strtok(NULL, delim);
     database->assign(ptr);
 
-    delete(conndef);
-
+    free(conndef);
 }
 
 Connection* getDefaultMDConnection() {
     if (!m_pool) {
         m_pool = new ConnectionPool();
     }
-    Connection* con = m_pool->getConnection("mysql;localhost;3304;jaguarmd", "root", "cross2000");
+    Connection* con = m_pool->getConnection("mysql;localhost;3304;jaguarmd;", "root", "cross2000");
     return con;
 }
 
@@ -79,6 +80,6 @@ Connection* getDefaultDataConnection() {
     if (!m_pool) {
         m_pool = new ConnectionPool();
     }
-    Connection* con = m_pool->getConnection("mysql;localhost;3304;jaguardata", "root", "cross2000");
+    Connection* con = m_pool->getConnection("mysql;localhost;3304;jaguardata;", "root", "cross2000");
     return con;
 }

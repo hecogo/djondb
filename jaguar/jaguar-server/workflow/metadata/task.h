@@ -16,14 +16,18 @@ using namespace std;
 class Task : public ConnectorSourceable, public ConnectorTargetable, public ActivityCommon {
 private:
     vector<CommonConector*>* sequenceFlows;
-    TaskType* taskType;
-    string* taskName;
+    TaskType taskType;
+    string taskName;
 public:
-    TaskType* getTaskType() {
+    ~Task() {
+        delete(sequenceFlows);
+    }
+
+    TaskType getTaskType() {
         return taskType;
     }
 
-    void setTaskType(TaskType* _taskType) {
+    void setTaskType(TaskType _taskType) {
         taskType = _taskType;
     }
 
@@ -35,11 +39,11 @@ public:
         sequenceFlows = _sequenceFlows;
     }
 
-    string* getTaskName() {
+    string getTaskName() {
         return taskName;
     }
 
-    void setTaskName(string* _taskName) {
+    void setTaskName(string _taskName) {
         taskName = _taskName;
     }
 

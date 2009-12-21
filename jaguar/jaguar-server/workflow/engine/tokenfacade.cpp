@@ -88,7 +88,7 @@ list<Token*>* processToken(ProcessInstance* processInstance, Token* token)
             executeStart(token);
         }
         if ((token->getStatus() == STARTED)
-                && (*token->getTask()->getTaskType() == MANUAL_TASKTYPE))
+                && (token->getTask()->getTaskType() == MANUAL_TASKTYPE))
         {
             token->setStatus(USER);
             res->push_back(token);
@@ -134,7 +134,7 @@ void persistCurrentTokens(ProcessInstance* processInstance) {
         Token* token = *iter;
         char* sql = (char*)malloc(1024);
         memset(sql, 0, 1024);
-        format(sql, "UPDATE tokens SET idtask = ?, status = ? WHERE id = %d", processInstance->getId());
+        sql = "UPDATE tokens SET idtask = ?, status = ? WHERE id = ?";
         Statement* stmt = con->createStatement(sql);
         int idTask = token->getTask()->getId();
         stmt->setParameter(0, DBTYPE_LONG, &idTask);
@@ -143,7 +143,6 @@ void persistCurrentTokens(ProcessInstance* processInstance) {
         int id = token->getId();
         stmt->setParameter(2, DBTYPE_LONG, &id);
         int res = stmt->executeUpdate();
-        free(sql);
         stmt->close();
         delete(stmt);
         if (res == 0) {

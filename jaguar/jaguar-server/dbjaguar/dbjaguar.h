@@ -116,7 +116,10 @@ namespace dbjaguar {
 
     class ResultSet {
     public:
-
+        virtual ~ResultSet() {
+            
+        }
+        
         virtual bool next() throw (DBException) {
             return false;
         }
@@ -147,7 +150,10 @@ namespace dbjaguar {
 
     class Connection {
     public:
+        virtual ~Connection() {
 
+        }
+        
         virtual void open(const char* _connectiondef, const char* username, const char* password) throw (DBException) {
         };
 

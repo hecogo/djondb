@@ -6,10 +6,10 @@ class ProcessDefinition;
 class ActivityCommon {
 private:
     long id;
-    ActivityType* activityType;
-    ActivityStatus* status;
+    ActivityType activityType;
+    ActivityStatus status;
     int startQuantity; // Number of tokens required to start the activity
-    LoopType* loopType;
+    LoopType loopType;
     ProcessDefinition* processDefinition;
 
 
@@ -18,6 +18,9 @@ public:
         startQuantity = 1;
     }
 
+    ~ActivityCommon() {
+    }
+    
     long getId() {
         return id;
     }
@@ -26,19 +29,19 @@ public:
         id = _id;
     }
 
-    ActivityType* getActivityType() {
+    ActivityType getActivityType() {
         return activityType;
     }
 
-    void setActivityType(ActivityType* _activityType) {
+    void setActivityType(ActivityType _activityType) {
         activityType = _activityType;
     }
 
-    ActivityStatus* getStatus() {
+    ActivityStatus getStatus() {
         return status;
     }
 
-    void setStatus(ActivityStatus* _status) {
+    void setStatus(ActivityStatus _status) {
         status = _status;
     }
 
@@ -50,11 +53,11 @@ public:
         startQuantity = _startQuantity;
     }
 
-    LoopType* getLoopType() {
+    LoopType getLoopType() {
         return loopType;
     }
 
-    void setLoopType(LoopType* _loopType) {
+    void setLoopType(LoopType _loopType) {
         loopType = _loopType;
     }
 

@@ -16,7 +16,7 @@ Response* createResponse(ProcessInstance* instance) {
         Token* token = *iter;
         s->append("TOKEN:");
         s->append(toString(token->getId()) + ";");
-        s->append(*token->getTask()->getTaskName() + ";");
+        s->append(token->getTask()->getTaskName() + ";");
     }
     s->append("}");
     s->append("}");
@@ -32,6 +32,10 @@ public:
         log = getLogger(NULL);
     };
 
+    ~WorkflowController() {
+        delete(log);
+    }
+    
     Response* processRequest(Request* request) {
         string* action = request->getParameter("ACT");
         if (action->compare("NEW") == 0) {

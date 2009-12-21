@@ -21,6 +21,10 @@ private:
     ConnectorType targetType;
 
 public:
+    ~CommonConector() {
+        delete(connectorName);
+    }
+    
     long getId() {
         return id;
     }

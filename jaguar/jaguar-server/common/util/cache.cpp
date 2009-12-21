@@ -8,6 +8,7 @@
 #include "../util.h"
 #include <pthread.h>
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -75,6 +76,13 @@ namespace cache {
         return items.size();
     }
 
+    void CacheGroup::clear() {
+        for (map<string, CacheItem*>::iterator it = items.begin(); it != items.end(); it++) {
+            CacheItem* item = it->second;
+            delete(item);
+        }
+    }
+
     CacheGroup* Cache::get(string key) {
         map<string, CacheGroup*>:: iterator it = groups.find(key);
         CacheGroup* group;
@@ -87,6 +95,14 @@ namespace cache {
         return group;
     }
 
+    void Cache::clean() {
+        for (map<string, CacheGroup*>::iterator it = groups.begin(); it != groups.end(); it++) {
+            CacheGroup* cacheGroup = it->second;
+            delete(cacheGroup);
+        }
+        groups.clear();
+    }
+    
     CacheGroup* getGlobalCache(string group) {
         if (!globalCache) {
             globalCache = new Cache();
@@ -95,6 +111,10 @@ namespace cache {
         return cachegroup;
     }
 
+    void cleanGlobalCache() {
+        globalCache->clean();
+    }
+    
     CacheGroup* getRuntimeCache() {
         return NULL;
 /*

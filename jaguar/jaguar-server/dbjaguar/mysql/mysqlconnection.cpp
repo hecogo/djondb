@@ -25,6 +25,10 @@ void MySQLConnection::open(const char* _connectiondef, const char* username, con
     }
 }
 
+MySQLConnection::~MySQLConnection() {
+    delete(m_mysql);
+}
+
 void MySQLConnection::close() throw (DBException) {
     mysql_close(m_mysql);
 }

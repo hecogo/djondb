@@ -11,14 +11,15 @@ using namespace dbjaguar;
 class MySQLResultSet : public ResultSet
 {
 private:
-    MYSQL_FIELD** m_res_fields;
+    MYSQL_FIELD* m_res_fields;
     int m_res_numfields;
-    map<string, int> m_res_fieldsByName;
+    map<string, int>* m_res_fieldsByName;
     MYSQL_RES* m_res;
     const char* m_query;
     MYSQL_ROW m_currentRow;
 public:
     MySQLResultSet(MYSQL_RES* res, const char* query);
+    ~MySQLResultSet();
     bool next() throw (DBException);
     bool previous() throw (DBException);
     void close() throw (DBException);

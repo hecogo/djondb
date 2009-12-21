@@ -12,6 +12,7 @@ private:
     MYSQL* m_mysql;
 
 public:
+    ~MySQLConnection();
     void open(const char* _connectiondef, const char* username, const char* password) throw (DBException);
     void close() throw (DBException);
     ResultSet* executeQuery(const char* query) throw (DBException);
