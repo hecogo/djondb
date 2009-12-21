@@ -100,19 +100,8 @@ void* MySQLResultSet::get(int col) throw (DBException) {
         case MYSQL_TYPE_STRING:
         case MYSQL_TYPE_VAR_STRING:
         {
-            res = new string(value);
-            break;
-/*
-            if (value && (strlen(value) > 0)) {
-                int lenString = strlen(value);
-                char* resString = (char*) malloc(lenString);
-                memset(resString, 0, lenString);
-                memcpy(resString, value, lenString);
-                return resString;
-            } else {
-                return NULL;
-            }
-             */
+            const char* resString = value;
+            return new string(resString);
         }
         case MYSQL_TYPE_VARCHAR:
             res = value;

@@ -10,7 +10,7 @@ Thread::Thread(void *(*run)(void* arg)) {
 }
 
 void Thread::start(void* arg) {
-    int rc = pthread_create(&internal, NULL, runFunction, (void*)m_threadId);
+    int rc = pthread_create(&internal, NULL, runFunction, (void*)arg);
     if (rc) {
         cout << "Error creating the thread" << endl;
     }

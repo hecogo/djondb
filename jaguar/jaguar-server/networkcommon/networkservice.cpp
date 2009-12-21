@@ -95,6 +95,7 @@ void NetworkService::stop() throw (NetworkException) {
         delete(iter->second);
     }
     m_controllers.clear();
+    destroyPool();
     delete(m_thread);
 }
 

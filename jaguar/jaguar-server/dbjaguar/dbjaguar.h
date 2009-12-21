@@ -173,6 +173,6 @@ namespace dbjaguar {
 
 dbjaguar::Connection* getDefaultMDConnection();
 dbjaguar::Connection* getDefaultDataConnection();
-
+void destroyPool();
 
 #endif // _DBJAGUAR_H

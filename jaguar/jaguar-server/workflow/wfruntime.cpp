@@ -99,6 +99,7 @@ ProcessInstance* createProcessInstance(long definition)
     }
     processInstance = persist(processInstance);
 
+    delete(log);
     return processInstance;
 };
 

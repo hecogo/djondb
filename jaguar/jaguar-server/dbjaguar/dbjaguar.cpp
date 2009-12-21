@@ -83,3 +83,7 @@ Connection* getDefaultDataConnection() {
     Connection* con = m_pool->getConnection("mysql;localhost;3304;jaguardata;", "root", "cross2000");
     return con;
 }
+
+void destroyPool() {
+    delete(m_pool);
+}

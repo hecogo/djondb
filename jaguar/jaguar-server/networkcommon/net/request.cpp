@@ -46,10 +46,13 @@ Request::Request(const char* data) {
             if (log->isDebug()) log->debug("value: " + *(new string(value)));
             pos += size;
             addParameter(*codename, new string(value));
+            delete(codename);
         } else {
             break;
         }
     }
+
+    delete(log);
 };
 
 void Request::addParameter(string codename, string* value) {
@@ -75,5 +78,10 @@ vector<string>* Request::getCodeNames() {
 };
 
 Request::~Request() {
+    for (map<string, string*>::iterator iter = parameters->begin(); iter != parameters->end(); iter++) {
+        delete(iter->second);
+    }
+    parameters->clear();
+    delete(parameters);
 }
 
