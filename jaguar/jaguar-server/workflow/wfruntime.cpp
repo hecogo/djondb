@@ -13,7 +13,7 @@ vector<StartEvent*>* getStartEvents(ProcessDefinition* def)
     for (vector<CommonEvent*>::iterator com = commonEvents->begin(); com != commonEvents->end(); com++)
     {
         CommonEvent* event = *com;
-        EventType type = *(event->getEventType());
+        EventType type = event->getEventType();
         if (type == START_EVENTTYPE)
         {
             startEvents->push_back((StartEvent*)*com);

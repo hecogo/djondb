@@ -9,6 +9,19 @@ private:
     Expression* conditionExpression;
     int quantity;
 public:
+
+    SequenceFlow() {
+        conditionType = NULL;
+        conditionExpression = NULL;
+    }
+
+    virtual ~SequenceFlow() {
+        if (conditionType) {
+            free(conditionType);
+        }
+        delete(conditionExpression);
+    }
+
     ConditionType* getConditionType() {
         return conditionType;
     }

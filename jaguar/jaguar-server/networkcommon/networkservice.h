@@ -10,6 +10,8 @@
 class NetworkService {
 public:
     NetworkService();
+    virtual ~NetworkService();
+    
     void start() throw (NetworkException);
 
     void stop() throw (NetworkException);

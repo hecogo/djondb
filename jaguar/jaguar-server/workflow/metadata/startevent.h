@@ -1,11 +1,24 @@
 #ifndef STARTEVENT_H_INCLUDED
 #define STARTEVENT_H_INCLUDED
 
+#include "commonevent.h"
+
+
 class StartEvent : public CommonEvent {
 private:
     Trigger* startTrigger;
 public:
-    StartEvent() {};
+    StartEvent() {
+        setEventType(START_EVENTTYPE);
+        startTrigger = NULL;
+    };
+
+    virtual ~StartEvent() {
+        if (startTrigger) {
+            delete(startTrigger);
+        }
+    }
+
     Trigger* getStartTrigger() {
         return startTrigger;
     }

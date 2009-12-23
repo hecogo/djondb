@@ -16,7 +16,7 @@ class CommonEvent : public ConnectorSourceable , public ConnectorTargetable {
 private:
     vector<CommonConector*>* sequenceFlows;
     long id;
-    EventType* eventType;
+    EventType eventType;
     vector<Assignment*>* assigments;
     Pool* pool;
     ProcessDefinition* processDefinition;
@@ -24,6 +24,18 @@ private:
 public:
     CommonEvent() {
         sequenceFlows = new vector<CommonConector*>();
+        assigments = new vector<Assignment*>();
+    }
+
+    virtual ~CommonEvent() {
+        if (sequenceFlows) {
+            for (vector<CommonConector*>::iterator iter = sequenceFlows->begin(); iter != sequenceFlows->end(); iter++) {
+                CommonConector* connector = *iter;
+                delete(connector);
+            }
+            delete(sequenceFlows);
+        }
+        delete(assigments);
     }
     
     long getId() {
@@ -34,11 +46,11 @@ public:
         id = _id;
     }
 
-    EventType* getEventType() {
+    EventType getEventType() {
         return eventType;
     }
 
-    void setEventType(EventType* _eventType) {
+    void setEventType(EventType _eventType) {
         eventType = _eventType;
     }
 

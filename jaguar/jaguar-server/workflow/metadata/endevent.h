@@ -1,9 +1,17 @@
 #ifndef ENDEVENT_H_INCLUDED
 #define ENDEVENT_H_INCLUDED
 
+#include "commonevent.h"
+
+
 class EndEvent : public CommonEvent {
 public:
-    EndEvent() {}
+    EndEvent() {
+        setEventType(END_EVENTTYPE);
+    }
+
+    virtual ~EndEvent() {
+    }
 };
 
 

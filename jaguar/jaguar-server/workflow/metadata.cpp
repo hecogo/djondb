@@ -30,7 +30,8 @@ void loadConnectors(Connection* con, ProcessDefinition* def) {
             SequenceFlow* sequence = new SequenceFlow();
             long *id = (long*) rs->get("id");
             sequence->setId(*id);
-            sequence->setConnectorName((string*) rs->get("connectorname"));
+            string* connectorName = (string*) rs->get("connectorname");
+            sequence->setConnectorName(connectorName);
             //sequence->setConditionExpression((string*)rs->get("expression"));
             sequence->setConditionType(static_cast<ConditionType*>(rs->get("conditiontype")));
 
@@ -110,10 +111,10 @@ vector<CommonEvent*>* loadEvents(Connection* con, ProcessDefinition* def) {
                     break;
             }
             event->setId(*id);
-            event->setEventType(eventType);
             event->setProcessDefinition(def);
             res->push_back(event);
 
+            free(eventType);
             free(id);
         }
         delete(log);

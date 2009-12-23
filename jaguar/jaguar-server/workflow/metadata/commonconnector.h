@@ -21,7 +21,14 @@ private:
     ConnectorType targetType;
 
 public:
-    ~CommonConector() {
+    CommonConector() {
+        connectorName = NULL;
+        taskSource = NULL;
+        eventSource = NULL;
+        eventTarget = NULL;
+    }
+    
+    virtual ~CommonConector() {
         delete(connectorName);
     }
     

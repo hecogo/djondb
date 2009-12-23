@@ -24,10 +24,9 @@ private:
     vector<ActivityCommon*>* activities;
     string* masterEntity;
 public:
-    ~ProcessDefinition() {
+    virtual ~ProcessDefinition() {
         delete(definitionName);
         delete(properties);
-        delete(events);
         delete(pools);
         for (vector<ActivityCommon*>::iterator iter = activities->begin(); iter != activities->end(); iter++) {
             ActivityCommon* activity = *iter;
@@ -35,6 +34,12 @@ public:
         }
         activities->clear();
         delete(activities);
+        for (vector<CommonEvent*>::iterator iter = events->begin(); iter != events->end(); iter++) {
+            CommonEvent* evt = *iter;
+            delete(evt);
+        }
+        events->clear();
+        delete(events);
         delete(masterEntity);
     }
     

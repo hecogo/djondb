@@ -51,6 +51,10 @@ NetworkService::NetworkService() {
     log = getLogger(NULL);
 }
 
+NetworkService::~NetworkService() {
+    delete(log);
+}
+
 void registerControllers() {
     if (log->isDebug()) log->debug("Registering controllers");
 

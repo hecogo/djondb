@@ -2,6 +2,9 @@
 #define CONNECTORTARGETABLE_H_INCLUDED
 
 class ConnectorTargetable {
+public:
+    virtual ~ConnectorTargetable() {
+    }
 };
 
 #endif // CONNECTORTARGETABLE_H_INCLUDED

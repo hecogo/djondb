@@ -12,15 +12,21 @@
 
 using namespace std;
 
-
 class Task : public ConnectorSourceable, public ConnectorTargetable, public ActivityCommon {
 private:
     vector<CommonConector*>* sequenceFlows;
     TaskType taskType;
     string taskName;
 public:
-    ~Task() {
-        delete(sequenceFlows);
+
+    virtual ~Task() {
+        if (sequenceFlows) {
+            for (vector<CommonConector*>::iterator iter = sequenceFlows->begin(); iter != sequenceFlows->end(); iter++) {
+                CommonConector* connector = *iter;
+                delete(connector);
+            }
+            delete(sequenceFlows);
+        }
     }
 
     TaskType getTaskType() {

@@ -18,7 +18,7 @@ public:
         startQuantity = 1;
     }
 
-    ~ActivityCommon() {
+    virtual ~ActivityCommon() {
     }
     
     long getId() {
