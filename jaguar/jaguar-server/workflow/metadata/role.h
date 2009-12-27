@@ -4,7 +4,7 @@
 class Role {
 private:
     long id;
-    string* roleName;
+    string roleName;
 public:
     long getId() {
         return id;
@@ -14,11 +14,11 @@ public:
         id = _id;
     }
 
-    string* getRoleName() {
+    string getRoleName() {
         return roleName;
     }
 
-    void setRoleName(string* _roleName) {
+    void setRoleName(string _roleName) {
         roleName = _roleName;
     }
 };

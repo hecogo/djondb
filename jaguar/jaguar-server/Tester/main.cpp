@@ -291,6 +291,7 @@ enum TestEnum
 {
     A,B,C
 };
+
 /*
  *
  */

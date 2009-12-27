@@ -100,6 +100,7 @@ void NetworkService::stop() throw (NetworkException) {
     }
     m_controllers.clear();
     destroyPool();
+    delete(m_con);
     delete(m_thread);
 }
 
@@ -110,17 +111,17 @@ void *startSocketListener(void* arg) {
         log->error("Error creating the socked");
     }
 
-    sockaddr_in* addr = new sockaddr_in();
+    sockaddr_in addr;
     int port = 1043;
-    addr->sin_family = AF_INET;
-    addr->sin_port = htons(port); // the port should be converted to network byte order
-    addr->sin_addr.s_addr = INADDR_ANY; // Server address, any to take the current ip address of the host
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port); // the port should be converted to network byte order
+    addr.sin_addr.s_addr = INADDR_ANY; // Server address, any to take the current ip address of the host
     int reuse = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *) & reuse, sizeof (reuse)) < 0) {
         log->error("Setting SO_REUSEADDR error");
     }
 
-    if (bind(sock, (sockaddr *) addr, sizeof (*addr)) < 0) {
+    if (bind(sock, (sockaddr *) &addr, sizeof (addr)) < 0) {
         log->error("Error binding");
     }
     listen(sock, 5);
@@ -157,9 +158,7 @@ void *startSocketListener(void* arg) {
     }
     accepting = false;
 
-    delete(addr);
-
-    pthread_exit(arg);
+//    pthread_exit(arg);
     return NULL;
 };
 

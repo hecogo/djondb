@@ -17,6 +17,7 @@ ConnectionPool* m_pool;
 
 
 void ConnectionPool::initializeConnectionPool() {
+    mysql_library_init(0, NULL, NULL);
 }
 
 ConnectionPool::ConnectionPool() {
@@ -85,5 +86,6 @@ Connection* getDefaultDataConnection() {
 }
 
 void destroyPool() {
+    mysql_library_end();
     delete(m_pool);
 }

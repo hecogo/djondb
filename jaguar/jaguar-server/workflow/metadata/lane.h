@@ -4,7 +4,7 @@
 class Lane {
 private:
     long id;
-    Pool* parentPool;
+    Pool parentPool;
 public:
     long getId() {
         return id;

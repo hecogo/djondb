@@ -11,7 +11,6 @@ using namespace dbjaguar;
 // connectiondef:    type;server:port;database
 
 void MySQLConnection::open(const char* _connectiondef, const char* username, const char* password) throw (DBException) {
-    mysql_library_init(0, NULL, NULL);
     m_mysql = mysql_init(NULL);
 
     string type;

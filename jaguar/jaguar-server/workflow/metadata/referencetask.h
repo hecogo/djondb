@@ -3,13 +3,13 @@
 
 class ReferenceTask : Task {
 private:
-    Task* taskRef;
+    Task taskRef;
 public:
-    Task* getTaskRef() {
+    Task getTaskRef() {
         return taskRef;
     }
 
-    void setTaskRef(Task* _taskRef) {
+    void setTaskRef(Task _taskRef) {
         taskRef = _taskRef;
     }
 };

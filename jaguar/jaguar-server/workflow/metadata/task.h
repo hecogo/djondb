@@ -14,18 +14,15 @@ using namespace std;
 
 class Task : public ConnectorSourceable, public ConnectorTargetable, public ActivityCommon {
 private:
-    vector<CommonConector*>* sequenceFlows;
+    vector<CommonConector*> sequenceFlows;
     TaskType taskType;
     string taskName;
 public:
 
     virtual ~Task() {
-        if (sequenceFlows) {
-            for (vector<CommonConector*>::iterator iter = sequenceFlows->begin(); iter != sequenceFlows->end(); iter++) {
-                CommonConector* connector = *iter;
-                delete(connector);
-            }
-            delete(sequenceFlows);
+        for (vector<CommonConector*>::iterator iter = sequenceFlows.begin(); iter != sequenceFlows.end(); iter++) {
+            CommonConector* connector = *iter;
+            delete(connector);
         }
     }
 
@@ -37,11 +34,11 @@ public:
         taskType = _taskType;
     }
 
-    vector<CommonConector*>* getSequenceFlows() {
+    vector<CommonConector*> getSequenceFlows() {
         return sequenceFlows;
     }
 
-    void setSequenceFlows(vector<CommonConector*>* _sequenceFlows) {
+    void setSequenceFlows(vector<CommonConector*> _sequenceFlows) {
         sequenceFlows = _sequenceFlows;
     }
 

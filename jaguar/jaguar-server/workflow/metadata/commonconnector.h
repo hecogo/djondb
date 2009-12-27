@@ -12,7 +12,7 @@ using namespace std;
 class CommonConector {
 private:
     long id;
-    string* connectorName;
+    string connectorName;
     Task* taskSource;
     Task* taskTarget;
     CommonEvent* eventSource;
@@ -22,14 +22,12 @@ private:
 
 public:
     CommonConector() {
-        connectorName = NULL;
         taskSource = NULL;
         eventSource = NULL;
         eventTarget = NULL;
     }
     
     virtual ~CommonConector() {
-        delete(connectorName);
     }
     
     long getId() {
@@ -40,11 +38,11 @@ public:
         id = _id;
     }
 
-    string* getConnectorName() {
+    string getConnectorName() {
         return connectorName;
     }
 
-    void setConnectorName(string* _connectorName) {
+    void setConnectorName(string _connectorName) {
         connectorName = _connectorName;
     }
 

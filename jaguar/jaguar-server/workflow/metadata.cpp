@@ -19,7 +19,7 @@ using namespace cache;
 void loadConnectors(Connection* con, ProcessDefinition* def) {
     Logger* log = getLogger(NULL);
     try {
-        if (log->isDebug()) log->debug("Loading connectors for definition: " + *def->getDefinitionName());
+        if (log->isDebug()) log->debug("Loading connectors for definition: " + def->getDefinitionName());
 
         long iddef = def->getId();
         string sql = "SELECT id, connectorname, idtasksource, idtasktarget, ideventsource, ideventtarget, sourcetype, targettype, conditiontype, expression, quantity, idprocessdef FROM sequenceflows "
@@ -31,9 +31,10 @@ void loadConnectors(Connection* con, ProcessDefinition* def) {
             long *id = (long*) rs->get("id");
             sequence->setId(*id);
             string* connectorName = (string*) rs->get("connectorname");
-            sequence->setConnectorName(connectorName);
+            sequence->setConnectorName(*connectorName);
             //sequence->setConditionExpression((string*)rs->get("expression"));
-            sequence->setConditionType(static_cast<ConditionType*>(rs->get("conditiontype")));
+            ConditionType* conditionType = static_cast<ConditionType*>(rs->get("conditiontype"));
+            sequence->setConditionType(*conditionType);
 
             ConnectorType* sourceType = static_cast<ConnectorType*>(rs->get("sourcetype"));
             if ((*sourceType) == TASK_CTTYPE) {
@@ -42,7 +43,7 @@ void loadConnectors(Connection* con, ProcessDefinition* def) {
                 if (activity->getActivityType() == TASK_ACTIVITYTYPE) {
                     sequence->setTaskSource((Task*)activity);
                     sequence->setEventSource(NULL);
-                    ((Task*)activity)->getSequenceFlows()->push_back(sequence);
+                    ((Task*)activity)->getSequenceFlows().push_back(sequence);
                 }
                 free(idSource);
             } else {
@@ -50,7 +51,7 @@ void loadConnectors(Connection* con, ProcessDefinition* def) {
                 sequence->setTaskSource(NULL);
                 CommonEvent* event = def->getEvent(*idSource);
                 sequence->setEventSource(event);
-                event->getSequenceFlows()->push_back(sequence);
+                event->getSequenceFlows().push_back(sequence);
                 free(idSource);
             }
 
@@ -74,23 +75,27 @@ void loadConnectors(Connection* con, ProcessDefinition* def) {
             long *quantity = (long*) rs->get("quantity");
             sequence->setQuantity(*quantity);
 
+            delete(connectorName);
+            free(conditionType);
             free(quantity);
             free(targetType);
             free(sourceType);
             free(id);
         }
+        rs->close();
+        delete(rs);
     } catch (DBException e) {
         log->error(e.what());
     }
     delete(log);
 }
 
-vector<CommonEvent*>* loadEvents(Connection* con, ProcessDefinition* def) {
+vector<CommonEvent*> loadEvents(Connection* con, ProcessDefinition* def) {
     Logger* log = getLogger(NULL);
     try {
-        if (log->isDebug()) log->debug("Loading events definition for: " + *def->getDefinitionName());
+        if (log->isDebug()) log->debug("Loading events definition for: " + def->getDefinitionName());
 
-        vector<CommonEvent*>* res = new vector<CommonEvent*>();
+        vector<CommonEvent*> res;
 
         long idDef = def->getId();
         string sql = "SELECT id, eventtype, idpool, idprocessdef FROM events e "
@@ -111,13 +116,14 @@ vector<CommonEvent*>* loadEvents(Connection* con, ProcessDefinition* def) {
                     break;
             }
             event->setId(*id);
-            event->setProcessDefinition(def);
-            res->push_back(event);
+            res.push_back(event);
 
             free(eventType);
             free(id);
         }
         delete(log);
+        rs->close();
+        delete(rs);
         return res;
     } catch (DBException e) {
         log->error(e.what());
@@ -125,12 +131,12 @@ vector<CommonEvent*>* loadEvents(Connection* con, ProcessDefinition* def) {
     delete(log);
 }
 
-vector<ActivityCommon*>* loadTasks(Connection* con, ProcessDefinition* def) {
+vector<ActivityCommon*> loadTasks(Connection* con, ProcessDefinition* def) {
     Logger* log = getLogger(NULL);
     try {
-        if (log->isDebug()) log->debug("Loading tasks definition for: " + *def->getDefinitionName());
+        if (log->isDebug()) log->debug("Loading tasks definition for: " + def->getDefinitionName());
 
-        vector<ActivityCommon*>* res = new vector<ActivityCommon*>();
+        vector<ActivityCommon*> res;
 
         long idDef = def->getId();
         string sql = "SELECT t.id, t.taskname, "
@@ -158,11 +164,10 @@ vector<ActivityCommon*>* loadTasks(Connection* con, ProcessDefinition* def) {
             task->setId(*id);
             task->setActivityType(*actType);
             task->setLoopType(*loopType);
-            task->setProcessDefinition(def);
             task->setStartQuantity(*startQuantity);
             task->setTaskName(*taskName);
             task->setTaskType(*taskType);
-            res->push_back(task);
+            res.push_back(task);
 
             free(actType);
             free(loopType);
@@ -172,6 +177,8 @@ vector<ActivityCommon*>* loadTasks(Connection* con, ProcessDefinition* def) {
             free(id);
         }
         delete(log);
+        rs->close();
+        delete(rs);
         return res;
     } catch (DBException e) {
         log->error(e.what());
@@ -197,9 +204,9 @@ void loadProcessDefinitions(Connection* con) {
         def->setProcessType((ProcessType)(*processType));
         //def->setProperties(vector<Property*>* _properties);
         //def->setPools(vector<Pool*>* _pools);
-        def->setDefinitionName(defname);
+        def->setDefinitionName(*defname);
         def->setId(*id);
-        def->setMasterEntity(masterent);
+        def->setMasterEntity(*masterent);
 
         def->setActivities(loadTasks(con, def));
         def->setEvents(loadEvents(con, def));
@@ -207,13 +214,17 @@ void loadProcessDefinitions(Connection* con) {
         if (log->isDebug()) log->debug("Adding process definition: " + *defname);
         mapDefinitions->insert(pair<long, ProcessDefinition*>(*id, def));
 
+        delete(defname);
+        delete(masterent);
         free(processType);
         free(id);
     }
 
     rs->close();
 
-    cache->add("PROCESSDEFINITIONS", mapDefinitions);
+    string key = string("PROCESSDEFINITIONS");
+
+    cache->add(key, mapDefinitions);
 
     delete(rs);
     delete(log);
@@ -230,6 +241,7 @@ void unloadProcessDefinitions() {
                 }
         mapDefinitions->clear();
         cache->remove("PROCESSDEFINITIONS");
+        delete(mapDefinitions);
     }
 }
 

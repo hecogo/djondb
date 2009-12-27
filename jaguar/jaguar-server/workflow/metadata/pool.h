@@ -2,18 +2,21 @@
 #define POOL_H_INCLUDED
 
 #include <vector>
+#include <string>
+#include "participant.h"
+
+using namespace std;
 
 class Lane;
-class Participant;
 class ProcessDefinition;
 
 class Pool {
 private:
     long id;
-    string* poolName;
-    vector<Lane*>* lanes;
-    Participant* participant;
-    ProcessDefinition* processDefinition;
+    string poolName;
+    vector<Lane*> lanes;
+    Participant participant;
+
 public:
     long getId() {
         return id;
@@ -23,36 +26,28 @@ public:
         id = _id;
     }
 
-    string* getPoolName() {
+    string getPoolName() {
         return poolName;
     }
 
-    void setPoolName(string* _poolName) {
+    void setPoolName(string _poolName) {
         poolName = _poolName;
     }
 
-    vector<Lane*>* getLanes() {
+    vector<Lane*> getLanes() {
         return lanes;
     }
 
-    void setLanes(vector<Lane*>* _lanes) {
+    void setLanes(vector<Lane*> _lanes) {
         lanes = _lanes;
     }
 
-    Participant* getParticipant() {
+    Participant getParticipant() {
         return participant;
     }
 
-    void setParticipant(Participant* _participant) {
+    void setParticipant(Participant _participant) {
         participant = _participant;
-    }
-
-    ProcessDefinition* getProcessDefinition() {
-        return processDefinition;
-    }
-
-    void setProcessDefinition(ProcessDefinition* _processDefinition) {
-        processDefinition = _processDefinition;
     }
 };
 

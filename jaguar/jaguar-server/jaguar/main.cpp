@@ -8,25 +8,23 @@ using namespace std;
 
 int main() {
     Logger* log = getLogger(NULL);
-    TimeRecord* record = NULL;
-    NetworkService* service = NULL;
     try {
-        record = getTimeRecord();
+        TimeRecord* record = getTimeRecord();
 
-        service = new NetworkService();
-        service->start();
-        log->info("Server started up: " + toString((float)record->getTimeInMillis()));
+        NetworkService service;
+        service.start();
+        log->info("Server started up: " + toString((float) record->getTimeInMillis()));
 
         cout << "Press any key to stop it" << endl;
 
         getchar();
 
-        service->stop();
+        delete(record);
+        service.stop();
     } catch (NetworkException e) {
         log->error(e);
     }
-    delete(service);
-    delete(record);
+    log->info("before delete log");
     delete(log);
     return 0;
 }

@@ -1,12 +1,16 @@
 #ifndef PARTICIPANT_H_INCLUDED
 #define PARTICIPANT_H_INCLUDED
 
+class Role;
+class ParticipantType;
+class Entity;
+
 class Participant {
 private:
     long id;
-    ParticipantType* participantType;
-    Role* participantRole;
-    Entity* entity;
+    ParticipantType participantType;
+    Role participantRole;
+    Entity entity;
 public:
     long getId() {
         return id;
@@ -16,27 +20,27 @@ public:
         id = _id;
     }
 
-    ParticipantType* getParticipantType() {
+    ParticipantType getParticipantType() {
         return participantType;
     }
 
-    void setParticipantType(ParticipantType* _participantType) {
+    void setParticipantType(ParticipantType _participantType) {
         participantType = _participantType;
     }
 
-    Role* getParticipantRole() {
+    Role getParticipantRole() {
         return participantRole;
     }
 
-    void setParticipantRole(Role* _participantRole) {
+    void setParticipantRole(Role _participantRole) {
         participantRole = _participantRole;
     }
 
-    Entity* getEntity() {
+    Entity getEntity() {
         return entity;
     }
 
-    void setEntity(Entity* _entity) {
+    void setEntity(Entity _entity) {
         entity = _entity;
     }
 };

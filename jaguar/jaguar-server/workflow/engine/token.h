@@ -9,15 +9,12 @@ class Token {
 private:
     long id;
     Task* task;
-    ProcessInstance* processInstance;
     TokenStatus status;
 public:
     long getId();
     void setId(long id);
     Task* getTask();
     void setTask(Task* task);
-    ProcessInstance* getProcessInstance();
-    void setProcessInstance(ProcessInstance* processInstance);
     TokenStatus getStatus();
     void setStatus(TokenStatus _status);
 };

@@ -4,7 +4,7 @@
 class Expression {
 private:
     long id;
-    string* expression;
+    string expression;
 public:
     long getId() {
         return id;
@@ -14,11 +14,11 @@ public:
         id = _id;
     }
 
-    string* getExpression() {
+    string getExpression() {
         return expression;
     }
 
-    void setExpression(string* _expression) {
+    void setExpression(string _expression) {
         expression = _expression;
     }
 };

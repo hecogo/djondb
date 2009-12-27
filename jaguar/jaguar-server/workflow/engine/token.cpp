@@ -17,15 +17,6 @@ void Token::setTask(Task* _task) {
     task = _task;
 };
 
-ProcessInstance* Token::getProcessInstance() {
-    return processInstance;
-};
-
-
-void Token::setProcessInstance(ProcessInstance* _processInstance) {
-    processInstance = _processInstance;
-};
-
 TokenStatus Token::getStatus() {
     return status;
 };

@@ -3,13 +3,13 @@
 
 class ScriptTask : Task {
 private:
-    string* script;
+    string script;
 public:
-    string* getScript() {
+    string getScript() {
         return script;
     }
 
-    void setScript(string* _script) {
+    void setScript(string _script) {
         script = _script;
     }
 };

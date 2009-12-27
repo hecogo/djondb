@@ -9,33 +9,23 @@
 #include "commonconnector.h"
 
 class Assignment;
-class Pool;
-class ProcessDefinition;
 
 class CommonEvent : public ConnectorSourceable , public ConnectorTargetable {
 private:
-    vector<CommonConector*>* sequenceFlows;
+    vector<CommonConector*> sequenceFlows;
     long id;
     EventType eventType;
-    vector<Assignment*>* assigments;
-    Pool* pool;
-    ProcessDefinition* processDefinition;
+    vector<Assignment*> assigments;
 
 public:
     CommonEvent() {
-        sequenceFlows = new vector<CommonConector*>();
-        assigments = new vector<Assignment*>();
     }
 
     virtual ~CommonEvent() {
-        if (sequenceFlows) {
-            for (vector<CommonConector*>::iterator iter = sequenceFlows->begin(); iter != sequenceFlows->end(); iter++) {
-                CommonConector* connector = *iter;
-                delete(connector);
-            }
-            delete(sequenceFlows);
+        for (vector<CommonConector*>::iterator iter = sequenceFlows.begin(); iter != sequenceFlows.end(); iter++) {
+            CommonConector* connector = *iter;
+            delete(connector);
         }
-        delete(assigments);
     }
     
     long getId() {
@@ -54,36 +44,20 @@ public:
         eventType = _eventType;
     }
 
-    Pool* getPool() {
-        return pool;
-    }
-
-    void setPool(Pool* _pool) {
-        pool = _pool;
-    }
-
-    vector<CommonConector*>* getSequenceFlows() {
+    vector<CommonConector*> getSequenceFlows() {
         return sequenceFlows;
     }
 
-    void setSequenceFlows(vector<CommonConector*>* _sequenceFlows) {
+    void setSequenceFlows(vector<CommonConector*> _sequenceFlows) {
         sequenceFlows = _sequenceFlows;
     }
 
-    vector<Assignment*>* getAssigments() {
+    vector<Assignment*> getAssigments() {
         return assigments;
     }
 
-    void setAssigments(vector<Assignment*>* _assigments) {
+    void setAssigments(vector<Assignment*> _assigments) {
         assigments = _assigments;
-    }
-
-    ProcessDefinition* getProcessDefinition() {
-        return processDefinition;
-    }
-
-    void setProcessDefinition(ProcessDefinition* _processDefinition) {
-        processDefinition = _processDefinition;
     }
 };
 

@@ -6,14 +6,12 @@
 
 using namespace std;
 
-class ProcessDefinition;
-
 class Property {
 private:
     long id;
-    string* propertyName;
-    PropertyType* propertyType;
-    ProcessDefinition* processDefinition;
+    string propertyName;
+    PropertyType propertyType;
+
 public:
     long getId() {
         return id;
@@ -23,23 +21,21 @@ public:
         id = _id;
     }
 
-    string* getPropertyName() {
+    string getPropertyName() {
         return propertyName;
     }
 
-    void setPropertyName(string* _propertyName) {
+    void setPropertyName(string _propertyName) {
         propertyName = _propertyName;
     }
 
-    PropertyType* getPropertyType() {
+    PropertyType getPropertyType() {
         return propertyType;
     }
 
-    void setPropertyType(PropertyType* _propertyType) {
+    void setPropertyType(PropertyType _propertyType) {
         propertyType = _propertyType;
     }
 };
-
-
 
 #endif // PROPERTY_H_INCLUDED

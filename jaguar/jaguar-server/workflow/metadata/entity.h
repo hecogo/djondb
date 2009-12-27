@@ -4,7 +4,7 @@
 class Entity {
 private:
     long id;
-    string* entityName;
+    string entityName;
 public:
     long getId() {
         return id;

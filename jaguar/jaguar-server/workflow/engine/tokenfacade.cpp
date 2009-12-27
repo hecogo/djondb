@@ -45,9 +45,9 @@ void executeStart(Token* token)
 
 list<Token*>* getNextTokens(ProcessInstance* processInstance, Token* token)
 {
-    vector<CommonConector*>* sequenceFlows = token->getTask()->getSequenceFlows();
+    vector<CommonConector*> sequenceFlows = token->getTask()->getSequenceFlows();
     list<Token*>* result = new list<Token*>();
-    for (vector<CommonConector*>::iterator it = sequenceFlows->begin(); it != sequenceFlows->end(); it++) {
+    for (vector<CommonConector*>::iterator it = sequenceFlows.begin(); it != sequenceFlows.end(); it++) {
         CommonConector* connector = *it;
         if (connector->getTargetType() == TASK_CTTYPE)
         {
@@ -62,7 +62,6 @@ list<Token*>* getNextTokens(ProcessInstance* processInstance, Token* token)
                 newToken = new Token();
                 newToken->setId(getNextKey("token"));
             }
-            newToken->setProcessInstance(processInstance);
             newToken->setStatus(NONE);
             newToken->setTask(task);
             processInstance->addCurrentToken(newToken);
@@ -114,8 +113,8 @@ Token* findTokenBy(TokenVO token)
 }
 
 Task* getTask(ProcessDefinition def, long idTask) {
-    vector<ActivityCommon*>* activities = def.getActivities();
-    for (vector<ActivityCommon*>::iterator iter = activities->begin(); iter != activities->end(); iter++) {
+    vector<ActivityCommon*> activities = def.getActivities();
+    for (vector<ActivityCommon*>::iterator iter = activities.begin(); iter != activities.end(); iter++) {
         ActivityCommon* activity = *iter;
         if (activity->getId() == idTask) {
             return (Task*)activity;
@@ -150,7 +149,7 @@ void persistCurrentTokens(ProcessInstance* processInstance) {
             Statement* stmtInsert = con->createStatement(sqlInsert.c_str());
             stmtInsert->setParameter(0, DBTYPE_LONG, &id);
             stmtInsert->setParameter(1, DBTYPE_LONG, &idTask);
-            int idProcessInst = token->getProcessInstance()->getId();
+            int idProcessInst = processInstance->getId();
             stmtInsert->setParameter(2, DBTYPE_LONG, &idProcessInst);
             stmtInsert->setParameter(3, DBTYPE_LONG, &status);
             stmtInsert->executeUpdate();
@@ -172,7 +171,6 @@ void loadCurrentTokens(ProcessInstance* processInstance) {
     while (rs->next()) {
         Token* token = new Token();
         token->setId(*(static_cast<int*>(rs->get("id"))));
-        token->setProcessInstance(processInstance);
         TokenStatus status = (TokenStatus)*(static_cast<long*>(rs->get("status")));
         token->setStatus(status);
         token->setTask(getTask(*def, *(static_cast<long *>(rs->get("idtask")))));

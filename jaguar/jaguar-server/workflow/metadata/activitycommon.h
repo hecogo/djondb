@@ -10,7 +10,6 @@ private:
     ActivityStatus status;
     int startQuantity; // Number of tokens required to start the activity
     LoopType loopType;
-    ProcessDefinition* processDefinition;
 
 
 public:
@@ -59,14 +58,6 @@ public:
 
     void setLoopType(LoopType _loopType) {
         loopType = _loopType;
-    }
-
-    ProcessDefinition* getProcessDefinition() {
-        return processDefinition;
-    }
-
-    void setProcessDefinition(ProcessDefinition* _processDefinition) {
-        processDefinition = _processDefinition;
     }
 };
 

@@ -6,23 +6,23 @@
 
 using namespace cache;
 
-vector<StartEvent*>* getStartEvents(ProcessDefinition* def)
+vector<StartEvent*> getStartEvents(ProcessDefinition* def)
 {
-    vector<CommonEvent*>* commonEvents = def->getEvents();
-    vector<StartEvent*>* startEvents = new vector<StartEvent*>();
-    for (vector<CommonEvent*>::iterator com = commonEvents->begin(); com != commonEvents->end(); com++)
+    vector<CommonEvent*> commonEvents = def->getEvents();
+    vector<StartEvent*> startEvents;
+    for (vector<CommonEvent*>::iterator com = commonEvents.begin(); com != commonEvents.end(); com++)
     {
         CommonEvent* event = *com;
         EventType type = event->getEventType();
         if (type == START_EVENTTYPE)
         {
-            startEvents->push_back((StartEvent*)*com);
+            startEvents.push_back((StartEvent*)*com);
         }
     }
     // If the process definition does not contain start events the workflow
     // will create a virtual StartEvent with the tasks with no incoming
     // flow
-    if (startEvents->size() == 0)
+    if (startEvents.size() == 0)
     {
         throw "Not implemented yet";
     }
@@ -33,9 +33,9 @@ vector<StartEvent*>* getStartEvents(ProcessDefinition* def)
 ProcessInstance* processEvent(ProcessInstance* processInstance, StartEvent* evt)
 {
     // Every new process generates a new tokens
-    vector<CommonConector*>* sequenceFlows = evt->getSequenceFlows();
-    for (vector<CommonConector*>::iterator connector = sequenceFlows->begin();
-            connector != sequenceFlows->end(); connector++)
+    vector<CommonConector*> sequenceFlows = evt->getSequenceFlows();
+    for (vector<CommonConector*>::iterator connector = sequenceFlows.begin();
+            connector != sequenceFlows.end(); connector++)
     {
         ConnectorTargetable* target = (*connector)->getTaskTarget();
         if (target)
@@ -44,7 +44,6 @@ ProcessInstance* processEvent(ProcessInstance* processInstance, StartEvent* evt)
             token->setId(getNextKey("token"));
             Task* task = (Task*) target;
             token->setTask(task);
-            token->setProcessInstance(processInstance);
             token->setStatus(NONE);
             list<Token*>* newTokens = processToken(processInstance, token);
             if (newTokens)
@@ -91,8 +90,8 @@ ProcessInstance* createProcessInstance(long definition)
     processInstance->setStatus(RUNNING);
     //MasterEntity master = getMasterEntity(def);
     //processInstance.setMasterEntity(master);
-    vector<StartEvent*>* startEvents = getStartEvents(def);
-    for (vector<StartEvent*>::iterator evt = startEvents->begin(); evt != startEvents->end(); evt++)
+    vector<StartEvent*> startEvents = getStartEvents(def);
+    for (vector<StartEvent*>::iterator evt = startEvents.begin(); evt != startEvents.end(); evt++)
     {
         StartEvent* event = *evt;
         processInstance = processEvent(processInstance, event);

@@ -5,28 +5,24 @@
 
 class SequenceFlow : public CommonConector {
 private:
-    ConditionType* conditionType;
+    ConditionType conditionType;
     Expression* conditionExpression;
     int quantity;
 public:
 
     SequenceFlow() {
-        conditionType = NULL;
         conditionExpression = NULL;
     }
 
     virtual ~SequenceFlow() {
-        if (conditionType) {
-            free(conditionType);
-        }
         delete(conditionExpression);
     }
 
-    ConditionType* getConditionType() {
+    ConditionType getConditionType() {
         return conditionType;
     }
 
-    void setConditionType(ConditionType* _conditionType) {
+    void setConditionType(ConditionType _conditionType) {
         conditionType = _conditionType;
     }
 
