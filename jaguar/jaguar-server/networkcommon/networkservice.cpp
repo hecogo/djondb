@@ -91,6 +91,7 @@ void NetworkService::stop() throw (NetworkException) {
         log->error("The close method returned: " + toString(res));
     }
 
+    m_thread->join();
     unloadProcessDefinitions();
     cache::cleanGlobalCache();
 
@@ -157,6 +158,7 @@ void *startSocketListener(void* arg) {
     }
     accepting = false;
 
+    log->info("Thread stopped");
 //    pthread_exit(arg);
     return NULL;
 };
@@ -233,6 +235,7 @@ void *processRequest(void *arg) {
     close(clientSocket);
 
     delete(response);
+    delete(request);
     delete(processor);
     return NULL;
 };

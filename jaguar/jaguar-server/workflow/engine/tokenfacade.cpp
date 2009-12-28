@@ -131,10 +131,8 @@ void persistCurrentTokens(ProcessInstance* processInstance) {
     }
     for (list<Token*>::iterator iter = tokens->begin(); iter != tokens->end(); iter++) {
         Token* token = *iter;
-        char* sql = (char*)malloc(1024);
-        memset(sql, 0, 1024);
-        sql = "UPDATE tokens SET idtask = ?, status = ? WHERE id = ?";
-        Statement* stmt = con->createStatement(sql);
+        string sqlUpdate("UPDATE tokens SET idtask = ?, status = ? WHERE id = ?");
+        Statement* stmt = con->createStatement(sqlUpdate.c_str());
         int idTask = token->getTask()->getId();
         stmt->setParameter(0, DBTYPE_LONG, &idTask);
         int status = token->getStatus();

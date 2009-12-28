@@ -20,6 +20,10 @@ ProcessInstance::ProcessInstance()
     SETPERSISTENCE_NEW_STATUS(this);
 }
 
+ProcessInstance::~ProcessInstance() {
+    delete(currentTokens);
+}
+
 void ProcessInstance::addCurrentToken(Token* token)
 {
     currentTokens->push_back(token);

@@ -23,6 +23,7 @@ private:
     PERSISTENCE_FIELDS;
 public:
     ProcessInstance();
+    virtual ~ProcessInstance();
     void addCurrentToken(Token* token);
     void addCurrentToken(list<Token*>* token);
     int getId();

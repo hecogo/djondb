@@ -44,7 +44,9 @@ public:
             if (log->isDebug()) log->debug("process id: " + toString(procDef));
             ProcessInstance* instance = createProcessInstance(procDef);
             
-            return createResponse(instance);
+            Response* response = createResponse(instance);
+            delete(instance);
+            return response;
         } else if (action->compare("PROC")) {
         }
         Response* response = new Response(new string("Testing from workflow controller"));

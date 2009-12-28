@@ -22,5 +22,4 @@ void Thread::join() {
 }
 
 Thread::~Thread() {
-//    pthread_exit((void*)internal);
 }
