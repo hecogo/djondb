@@ -8,7 +8,7 @@
 #include "property.h"
 #include "commonevent.h"
 #include "activitycommon.h"
-#include <iostream>
+#include "util.h"
 
 using namespace std;
 
@@ -19,25 +19,42 @@ private:
     long id;
     string definitionName;
     ProcessType processType;
-    vector<Property*> properties;
-    vector<CommonEvent*> events;
-    vector<Pool*> pools;
-    vector<ActivityCommon*> activities;
+    vector<Property*>* properties;
+    vector<CommonEvent*>* events;
+    vector<Pool*>* pools;
+    vector<ActivityCommon*>* activities;
     string masterEntity;
 public:
-    virtual ~ProcessDefinition() {
-        for (vector<ActivityCommon*>::iterator iter = activities.begin(); iter != activities.end(); iter++) {
-            ActivityCommon* activity = *iter;
-            delete(activity);
-        }
-        activities.clear();
-        for (vector<CommonEvent*>::iterator iter = events.begin(); iter != events.end(); iter++) {
-            CommonEvent* evt = *iter;
-            delete(evt);
-        }
-        events.clear();
+
+    ProcessDefinition() {
+        properties = NULL;
+        events = NULL;
+        pools = NULL;
+        activities = NULL;
     }
-    
+
+    virtual ~ProcessDefinition() {
+        Logger* log = getLogger(NULL);
+        if (log->isDebug()) log->debug("~ProcessDefinition()");
+        if (activities) {
+            for (vector<ActivityCommon*>::iterator iter = activities->begin(); iter != activities->end(); iter++) {
+                ActivityCommon* activity = *iter;
+                delete(activity);
+            }
+            activities->clear();
+            delete(activities);
+        }
+        if (events) {
+            for (vector<CommonEvent*>::iterator iter = events->begin(); iter != events->end(); iter++) {
+                CommonEvent* evt = *iter;
+                delete(evt);
+            }
+            events->clear();
+            delete(events);
+        }
+        delete(log);
+    }
+
     ProcessType getProcessType() {
         return processType;
     }
@@ -46,19 +63,19 @@ public:
         processType = _processType;
     }
 
-    vector<Property*> getProperties() {
+    vector<Property*>* getProperties() {
         return properties;
     }
 
-    void setProperties(vector<Property*> _properties) {
+    void setProperties(vector<Property*>* _properties) {
         properties = _properties;
     }
 
-    vector<Pool*> getPools() {
+    vector<Pool*>* getPools() {
         return pools;
     }
 
-    void setPools(vector<Pool*> _pools) {
+    void setPools(vector<Pool*>* _pools) {
         pools = _pools;
     }
 
@@ -70,18 +87,20 @@ public:
         definitionName = _definitionName;
     }
 
-    vector<ActivityCommon*> getActivities() {
+    vector<ActivityCommon*>* getActivities() {
         return activities;
     }
 
-    void setActivities(vector<ActivityCommon*> _activities) {
+    void setActivities(vector<ActivityCommon*>* _activities) {
         activities = _activities;
     }
 
     ActivityCommon* getActivity(long idActivity) {
-        for (vector<ActivityCommon*>::iterator iter = activities.begin(); iter != activities.end(); iter++) {
-            if (((ActivityCommon*)(*iter))->getId() == idActivity) {
-                return *iter;
+        if (activities) {
+            for (vector<ActivityCommon*>::iterator iter = activities->begin(); iter != activities->end(); iter++) {
+                if (((ActivityCommon*) (*iter))->getId() == idActivity) {
+                    return *iter;
+                }
             }
         }
         return NULL;
@@ -95,23 +114,25 @@ public:
         id = _id;
     }
 
-    vector<CommonEvent*> getEvents() {
+    vector<CommonEvent*>* getEvents() {
         return events;
     }
 
-    void setEvents(vector<CommonEvent*> _events) {
+    void setEvents(vector<CommonEvent*>* _events) {
         events = _events;
     }
 
     CommonEvent* getEvent(long idEvent) {
-        for (vector<CommonEvent*>::iterator iter = events.begin(); iter != events.end(); iter++) {
-            if (((CommonEvent*)(*iter))->getId() == idEvent) {
-                return *iter;
+        if (events) {
+            for (vector<CommonEvent*>::iterator iter = events->begin(); iter != events->end(); iter++) {
+                if (((CommonEvent*) (*iter))->getId() == idEvent) {
+                    return *iter;
+                }
             }
         }
         return NULL;
     }
-    
+
     string getMasterEntity() {
         return masterEntity;
     }

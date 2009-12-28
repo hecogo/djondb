@@ -9,6 +9,7 @@
 #include <pthread.h>
 #include <iostream>
 #include <string>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -18,6 +19,11 @@ namespace cache {
     Cache* globalCache;
 
     CacheItem::CacheItem() {
+    }
+
+    CacheItem::~CacheItem() {
+        cout << "~CacheItem()" << endl;
+        delete(value);
     }
 
     CacheItem::CacheItem(string newkey, void* newvalue) {
@@ -52,6 +58,18 @@ namespace cache {
     CacheGroup::CacheGroup() {
     }
 
+    CacheGroup::~CacheGroup() {
+        cout << "~CacheGroup()" << endl;
+        for (map<string, CacheItem*>::iterator iter = items.begin(); iter != items.end(); iter++) {
+            CacheItem* item = iter->second;
+            delete(item);
+            string key = iter->first;
+            key.clear();
+            cout << "Borrando CacheItem" << endl;
+        }
+        items.clear();
+    }
+
     void CacheGroup::add(string key, void* value) {
         CacheItem* item = new CacheItem(key, value);
         items.insert(pair<string, CacheItem* > (key, item));
@@ -77,12 +95,22 @@ namespace cache {
     }
 
     void CacheGroup::clear() {
+        cout << "CacheGroup::clear()" << endl;
         for (map<string, CacheItem*>::iterator it = items.begin(); it != items.end(); it++) {
             CacheItem* item = it->second;
             delete(item);
         }
     }
 
+    Cache::~Cache() {
+        cout << "~Cache()" << endl;
+        for (map<string, CacheGroup*>::iterator iter = groups.begin(); iter != groups.end(); iter++) {
+            CacheGroup* group = iter->second;
+            delete(group);
+        }
+        groups.clear();
+    }
+    
     CacheGroup* Cache::get(string key) {
         map<string, CacheGroup*>:: iterator it = groups.find(key);
         CacheGroup* group;
@@ -96,6 +124,7 @@ namespace cache {
     }
 
     void Cache::clean() {
+        cout << "Cache::clean()" << endl;
         for (map<string, CacheGroup*>::iterator it = groups.begin(); it != groups.end(); it++) {
             CacheGroup* cacheGroup = it->second;
             delete(cacheGroup);
@@ -112,7 +141,6 @@ namespace cache {
     }
 
     void cleanGlobalCache() {
-        globalCache->clean();
         delete(globalCache);
     }
     

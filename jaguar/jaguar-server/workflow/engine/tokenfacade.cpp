@@ -113,7 +113,7 @@ Token* findTokenBy(TokenVO token)
 }
 
 Task* getTask(ProcessDefinition def, long idTask) {
-    vector<ActivityCommon*> activities = def.getActivities();
+    vector<ActivityCommon*> activities = *def.getActivities();
     for (vector<ActivityCommon*>::iterator iter = activities.begin(); iter != activities.end(); iter++) {
         ActivityCommon* activity = *iter;
         if (activity->getId() == idTask) {

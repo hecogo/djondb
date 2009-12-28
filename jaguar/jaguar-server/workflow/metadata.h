@@ -39,4 +39,3 @@ class Task;
 
 ProcessDefinition* getProcessDefinition(long id) throw (WorkflowException);
 void loadProcessDefinitions(Connection* con);
-void unloadProcessDefinitions();

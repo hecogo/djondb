@@ -21,14 +21,8 @@ private:
     ConnectorType targetType;
 
 public:
-    CommonConector() {
-        taskSource = NULL;
-        eventSource = NULL;
-        eventTarget = NULL;
-    }
-    
-    virtual ~CommonConector() {
-    }
+    CommonConector();
+    virtual ~CommonConector();
     
     long getId() {
         return id;

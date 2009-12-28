@@ -21,6 +21,7 @@ namespace cache {
         long getLastTimeUsed();
         CacheItem();
         CacheItem(string key, void* value);
+        virtual ~CacheItem();
         string getKey();
         void setKey(string key);
         void* getValue();
@@ -33,6 +34,7 @@ namespace cache {
 
     public:
         CacheGroup();
+        virtual ~CacheGroup();
 
         void add(string key, void* value);
 
@@ -50,6 +52,8 @@ namespace cache {
         map<string, CacheGroup*> groups;
 
     public:
+        virtual ~Cache();
+
         CacheGroup* get(string key);
 
         void clean();

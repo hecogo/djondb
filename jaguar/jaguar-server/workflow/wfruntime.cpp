@@ -8,7 +8,7 @@ using namespace cache;
 
 vector<StartEvent*> getStartEvents(ProcessDefinition* def)
 {
-    vector<CommonEvent*> commonEvents = def->getEvents();
+    vector<CommonEvent*> commonEvents = *def->getEvents();
     vector<StartEvent*> startEvents;
     for (vector<CommonEvent*>::iterator com = commonEvents.begin(); com != commonEvents.end(); com++)
     {

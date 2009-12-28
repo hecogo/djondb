@@ -60,6 +60,7 @@
         <itemPath>engine/tokenfacade.cpp</itemPath>
       </logicalFolder>
       <logicalFolder name="metadata" displayName="metadata" projectFiles="true">
+        <itemPath>metadata/commonconnector.cpp</itemPath>
         <itemPath>metadata/masterentity.cpp</itemPath>
       </logicalFolder>
       <itemPath>metadata.cpp</itemPath>

@@ -31,6 +31,7 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/metadata/commonconnector.o \
 	${OBJECTDIR}/engine/tokenfacade.o \
 	${OBJECTDIR}/metadata/masterentity.o \
 	${OBJECTDIR}/engine/processinstance.o \
@@ -62,6 +63,11 @@ LDLIBSOPTIONS=
 dist/Release/GNU-Linux-x86/libworkflow.so: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
 	${LINK.cc} -shared -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libworkflow.so -fPIC ${OBJECTFILES} ${LDLIBSOPTIONS} 
+
+${OBJECTDIR}/metadata/commonconnector.o: nbproject/Makefile-${CND_CONF}.mk metadata/commonconnector.cpp 
+	${MKDIR} -p ${OBJECTDIR}/metadata
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/metadata/commonconnector.o metadata/commonconnector.cpp
 
 ${OBJECTDIR}/engine/tokenfacade.o: nbproject/Makefile-${CND_CONF}.mk engine/tokenfacade.cpp 
 	${MKDIR} -p ${OBJECTDIR}/engine

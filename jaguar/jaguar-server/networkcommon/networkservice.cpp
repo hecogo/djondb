@@ -90,9 +90,8 @@ void NetworkService::stop() throw (NetworkException) {
     if (res != 0) {
         log->error("The close method returned: " + toString(res));
     }
-    
+
     unloadProcessDefinitions();
-    
     cache::cleanGlobalCache();
 
     for (map<int, Controller*>::iterator iter =  m_controllers.begin(); iter != m_controllers.end(); iter++) {

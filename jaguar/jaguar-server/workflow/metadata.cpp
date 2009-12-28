@@ -43,7 +43,7 @@ void loadConnectors(Connection* con, ProcessDefinition* def) {
                 if (activity->getActivityType() == TASK_ACTIVITYTYPE) {
                     sequence->setTaskSource((Task*)activity);
                     sequence->setEventSource(NULL);
-                    ((Task*)activity)->getSequenceFlows().push_back(sequence);
+                    ((Task*)activity)->addSequenceFlow(sequence);
                 }
                 free(idSource);
             } else {
@@ -51,7 +51,8 @@ void loadConnectors(Connection* con, ProcessDefinition* def) {
                 sequence->setTaskSource(NULL);
                 CommonEvent* event = def->getEvent(*idSource);
                 sequence->setEventSource(event);
-                event->getSequenceFlows().push_back(sequence);
+
+                event->addSequenceFlow(sequence);
                 free(idSource);
             }
 
@@ -90,12 +91,12 @@ void loadConnectors(Connection* con, ProcessDefinition* def) {
     delete(log);
 }
 
-vector<CommonEvent*> loadEvents(Connection* con, ProcessDefinition* def) {
+vector<CommonEvent*>* loadEvents(Connection* con, ProcessDefinition* def) {
     Logger* log = getLogger(NULL);
     try {
         if (log->isDebug()) log->debug("Loading events definition for: " + def->getDefinitionName());
 
-        vector<CommonEvent*> res;
+        vector<CommonEvent*>* res = new vector<CommonEvent*>();
 
         long idDef = def->getId();
         string sql = "SELECT id, eventtype, idpool, idprocessdef FROM events e "
@@ -116,7 +117,7 @@ vector<CommonEvent*> loadEvents(Connection* con, ProcessDefinition* def) {
                     break;
             }
             event->setId(*id);
-            res.push_back(event);
+            res->push_back(event);
 
             free(eventType);
             free(id);
@@ -131,12 +132,12 @@ vector<CommonEvent*> loadEvents(Connection* con, ProcessDefinition* def) {
     delete(log);
 }
 
-vector<ActivityCommon*> loadTasks(Connection* con, ProcessDefinition* def) {
+vector<ActivityCommon*>* loadTasks(Connection* con, ProcessDefinition* def) {
     Logger* log = getLogger(NULL);
     try {
         if (log->isDebug()) log->debug("Loading tasks definition for: " + def->getDefinitionName());
 
-        vector<ActivityCommon*> res;
+        vector<ActivityCommon*>* res = new vector<ActivityCommon*>();
 
         long idDef = def->getId();
         string sql = "SELECT t.id, t.taskname, "
@@ -167,7 +168,7 @@ vector<ActivityCommon*> loadTasks(Connection* con, ProcessDefinition* def) {
             task->setStartQuantity(*startQuantity);
             task->setTaskName(*taskName);
             task->setTaskType(*taskType);
-            res.push_back(task);
+            res->push_back(task);
 
             free(actType);
             free(loopType);
@@ -184,6 +185,16 @@ vector<ActivityCommon*> loadTasks(Connection* con, ProcessDefinition* def) {
         log->error(e.what());
     }
     delete(log);
+}
+
+void unloadProcessDefinitions() {
+    CacheGroup* cache = getGlobalCache("METADATA");
+
+    map<long, ProcessDefinition*>* defs = (map<long, ProcessDefinition*>*)cache->get(string("PROCESSDEFINITIONS"));
+    for (map<long, ProcessDefinition*>::iterator iter = defs->begin(); iter != defs->end(); iter++) {
+        delete(iter->second);
+    }
+    defs->clear();
 }
 
 void loadProcessDefinitions(Connection* con) {
@@ -222,27 +233,10 @@ void loadProcessDefinitions(Connection* con) {
 
     rs->close();
 
-    string key = string("PROCESSDEFINITIONS");
-
-    cache->add(key, mapDefinitions);
+    cache->add(string("PROCESSDEFINITIONS"), mapDefinitions);
 
     delete(rs);
     delete(log);
-}
-
-void unloadProcessDefinitions() {
-    CacheGroup* cache = getGlobalCache("METADATA");
-    map<long, ProcessDefinition*>* mapDefinitions = (map<long, ProcessDefinition*>*)cache->get("PROCESSDEFINITIONS");
-    if (mapDefinitions) {
-        for (map<long, ProcessDefinition*>::iterator iter = mapDefinitions->begin();
-                iter != mapDefinitions->end();
-                iter++) {
-                    delete(iter->second);
-                }
-        mapDefinitions->clear();
-        cache->remove("PROCESSDEFINITIONS");
-        delete(mapDefinitions);
-    }
 }
 
 ProcessDefinition* getProcessDefinition(long id) throw (WorkflowException) {

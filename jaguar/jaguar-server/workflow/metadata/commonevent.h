@@ -7,6 +7,7 @@
 #include "connectorsourceable.h"
 #include "connectortargetable.h"
 #include "commonconnector.h"
+#include "util.h"
 
 class Assignment;
 
@@ -22,10 +23,13 @@ public:
     }
 
     virtual ~CommonEvent() {
+        Logger* log = getLogger(NULL);
+        if (log->isDebug()) log->debug("~CommonEvent()");
         for (vector<CommonConector*>::iterator iter = sequenceFlows.begin(); iter != sequenceFlows.end(); iter++) {
             CommonConector* connector = *iter;
             delete(connector);
         }
+        delete(log);
     }
     
     long getId() {
@@ -48,10 +52,10 @@ public:
         return sequenceFlows;
     }
 
-    void setSequenceFlows(vector<CommonConector*> _sequenceFlows) {
-        sequenceFlows = _sequenceFlows;
+    void addSequenceFlow(CommonConector* connector) {
+        sequenceFlows.push_back(connector);
     }
-
+    
     vector<Assignment*> getAssigments() {
         return assigments;
     }
