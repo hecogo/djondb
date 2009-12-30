@@ -21,6 +21,10 @@ ProcessInstance::ProcessInstance()
 }
 
 ProcessInstance::~ProcessInstance() {
+    for (list<Token*>::iterator iter = currentTokens->begin(); iter != currentTokens->end(); iter++) {
+        delete(*iter);
+    }
+    currentTokens->clear();
     delete(currentTokens);
 }
 

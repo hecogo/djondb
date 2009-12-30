@@ -50,6 +50,7 @@ ProcessInstance* processEvent(ProcessInstance* processInstance, StartEvent* evt)
             {
                 processInstance->addCurrentToken(newTokens);
             }
+            delete(newTokens);
         }
     }
 
@@ -98,6 +99,7 @@ ProcessInstance* createProcessInstance(long definition)
     }
     processInstance = persist(processInstance);
 
+    startEvents.clear();
     delete(log);
     return processInstance;
 };

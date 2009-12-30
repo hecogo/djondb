@@ -97,6 +97,7 @@ list<Token*>* processToken(ProcessInstance* processInstance, Token* token)
         {
             executeEnd(token);
             res->remove(token);
+            delete(token);
             // Replaces the exit tokens with the new ones
             list<Token*>* tokens = getNextTokens(processInstance, token);
             for (list<Token*>::iterator it = tokens->begin(); it != tokens->end(); it++) {

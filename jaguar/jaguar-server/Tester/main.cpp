@@ -214,6 +214,7 @@ private:
                 string* masterent = (string*)rs->get(3);
                 cout << *id <<  *defname << "\t\t" << *processtype << "\t" << *masterent << endl;
             }
+            delete(rs);
         }
         catch (DBException e)
         {
@@ -235,6 +236,7 @@ private:
             con->executeUpdate("INSERT INTO test (name) values ('test')");
             con->executeUpdate("DROP TABLE test");
             con->close();
+            delete (pool);
         }
         catch (DBException& e)
         {
