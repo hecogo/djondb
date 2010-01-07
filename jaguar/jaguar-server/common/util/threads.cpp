@@ -22,4 +22,5 @@ void Thread::join() {
 }
 
 Thread::~Thread() {
+    pthread_detach(internal);
 }

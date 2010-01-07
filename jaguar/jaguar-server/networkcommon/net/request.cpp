@@ -11,15 +11,16 @@
 #include "request.h"
 #include "util.h"
 
-const char* getData(const char* data, int offset, int size) {
+char* getData(const char* data, int offset, int size) {
 //    char *result = (char*)malloc(size*sizeof(char));
 //    memset(result, 0, size);
-    string* result = new string();
-
+    char* result = (char*)malloc(size+1);
+    memset(result, 0, size+1);
+    int pos = 0;
     for (int x = offset; x < (offset + size); x++) {
-        result->push_back(data[x]);
+        result[pos++] = data[x];
     }
-    return result->c_str();
+    return result;
 }
 
 Request::Request(const char* data) {
@@ -27,9 +28,13 @@ Request::Request(const char* data) {
 
     parameters = new map<string, string*>();
 
-    const char *readed = getData(data, 0, 4);
+    log->debug(string("data: ") + data);
+    char *readed = getData(data, 0, 4);
+
     type = atoi(readed);
 
+    free(readed);
+    
     int pos = 4;
     while (true) {
         readed = getData(data, pos, 4);
@@ -38,16 +43,20 @@ Request::Request(const char* data) {
             string* codename = new string(readed);
             trim(codename);
             if (log->isDebug()) log->debug("codename: " + *codename);
-            readed = getData(data, pos, 2);
+            char* csize = getData(data, pos, 2);
             pos += 2;
-            int size = atoi(readed);
+            int size = atoi(csize);
             if (log->isDebug()) log->debug("size: " + toString(size));
-            const char* value = getData(data, pos, size);
-            if (log->isDebug()) log->debug("value: " + *(new string(value)));
+            char* cvalue = getData(data, pos, size);
+            if (log->isDebug()) log->debug("value: " + string(cvalue));
             pos += size;
-            addParameter(*codename, new string(value));
+            addParameter(*codename, new string(cvalue));
             delete(codename);
+            free(cvalue);
+            free(csize);
+            free(readed);
         } else {
+            free(readed);
             break;
         }
     }

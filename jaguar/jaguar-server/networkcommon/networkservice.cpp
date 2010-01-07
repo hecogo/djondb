@@ -29,6 +29,7 @@ int sock;
 pthread_mutex_t requests_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t  request_cv =   PTHREAD_COND_INITIALIZER;
 map<int, Controller*> m_controllers;
+vector<Thread*> m_requestThreads;
 
 Connection* m_con;
 Thread* m_thread; // Main thread
@@ -99,6 +100,12 @@ void NetworkService::stop() throw (NetworkException) {
         delete(iter->second);
     }
     m_controllers.clear();
+
+    for (vector<Thread*>::iterator iter = m_requestThreads.begin(); iter != m_requestThreads.end(); iter++) {
+        Thread* thread = *iter;
+        delete(thread);
+    }
+    m_requestThreads.clear();
     destroyPool();
     delete(m_con);
     delete(m_thread);
@@ -154,6 +161,7 @@ void *startSocketListener(void* arg) {
             thread->start((void*) &sock);
             pthread_cond_wait(&request_cv, &requests_lock);
             pthread_mutex_unlock(&requests_lock);
+            m_requestThreads.push_back(thread);
         }
     }
     accepting = false;
