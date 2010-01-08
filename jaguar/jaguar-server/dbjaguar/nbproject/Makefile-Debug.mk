@@ -33,6 +33,7 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/mysql/mysqlcommon.o \
 	${OBJECTDIR}/mysql/mysqlresulset.o \
+	${OBJECTDIR}/keys.o \
 	${OBJECTDIR}/mysql/mysqlstatement.o \
 	${OBJECTDIR}/mysql/mysqlconnection.o \
 	${OBJECTDIR}/dbjaguar.o
@@ -70,6 +71,11 @@ ${OBJECTDIR}/mysql/mysqlresulset.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysq
 	${MKDIR} -p ${OBJECTDIR}/mysql
 	${RM} $@.d
 	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlresulset.o mysql/mysqlresulset.cpp
+
+${OBJECTDIR}/keys.o: nbproject/Makefile-${CND_CONF}.mk keys.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/keys.o keys.cpp
 
 ${OBJECTDIR}/mysql/mysqlstatement.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysqlstatement.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mysql

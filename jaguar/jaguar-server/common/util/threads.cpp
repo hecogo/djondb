@@ -31,6 +31,7 @@ static void Thread::mutex_lock() {
         pthread_mutex_init(&m_mutex_t, NULL);
         m_mutexInitalized = true;
     }
+    pthread_cond_wait()
     pthread_mutex_lock(&m_mutex_t);
 }
 
