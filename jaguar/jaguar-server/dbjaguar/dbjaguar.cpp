@@ -12,7 +12,6 @@ using namespace std;
 using namespace dbjaguar;
 
 // This map will be used to retrieve the next id
-map<string, int> keys;
 ConnectionPool* m_pool;
 
 
@@ -28,20 +27,6 @@ Connection* ConnectionPool::getConnection(const char* _connectionDef, const char
     Connection* connection = new MySQLConnection();
     connection->open(_connectionDef, username, password);
     return connection;
-}
-
-int getNextKey(string table) {
-    map<string, int>::iterator iter = keys.find(table);
-    if (iter == keys.end()) {
-        pair < map<string, int>::iterator, bool> res = keys.insert(pair<string, int>(table, 0));
-        if (res.second) {
-            iter = res.first;
-        } else {
-            iter = keys.find(table);
-        }
-    }
-    int key = ++iter->second;
-    return key;
 }
 
 void getConnectionInfo(const char* connectionDef, string* type, string* server, string* port, string* database) {

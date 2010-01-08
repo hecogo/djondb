@@ -15,6 +15,9 @@ private:
     pthread_t internal;
     int m_threadId;
 
+    static bool m_mutexInitalized;
+    static pthread_mutex_t m_mutex_t;
+
 public:
     void *(*runFunction)(void* arg);
 
@@ -25,6 +28,9 @@ public:
     void start(void* arg);
 
     void join();
+
+    static void mutex_lock();
+    static void mutex_unlock();
 };
 
 #endif

@@ -24,3 +24,16 @@ void Thread::join() {
 Thread::~Thread() {
     pthread_detach(internal);
 }
+
+
+static void Thread::mutex_lock() {
+    if (!m_mutexInitalized) {
+        pthread_mutex_init(&m_mutex_t, NULL);
+        m_mutexInitalized = true;
+    }
+    pthread_mutex_lock(&m_mutex_t);
+}
+
+static void Thread::mutex_unlock() {
+    pthread_mutex_unlock(&m_mutex_t);
+}
