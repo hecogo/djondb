@@ -48,6 +48,13 @@ public:
             delete(instance);
             return response;
         } else if (action->compare("PROC")) {
+            int idProcess = atoi(request->getParameter("IDPR")->c_str());
+            int idToken = atoi(request->getParameter("TOKE")->c_str());
+            ProcessInstance* instance = processToken(idProcess, idToken);
+
+            Response* response = createResponse(instance);
+            delete(instance);
+            return response;
         }
         Response* response = new Response(new string("Testing from workflow controller"));
         return response;

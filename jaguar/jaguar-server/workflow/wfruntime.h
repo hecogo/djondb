@@ -6,5 +6,6 @@
 
 // creates a new instance from the process definition
 ProcessInstance* createProcessInstance(long definition);
+ProcessInstance* processToken(long idProcessInstance, long idToken);
 
 #endif

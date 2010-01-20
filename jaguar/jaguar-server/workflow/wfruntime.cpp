@@ -104,3 +104,19 @@ ProcessInstance* createProcessInstance(long definition)
     return processInstance;
 };
 
+ProcessInstance* processToken(long idProcessInstance, long idToken) {
+    ProcessInstance* instance = loadInstance(idProcessInstance);
+    list<Token*>* tokens = instance->getCurrentTokens();
+    for (list<Token*>::iterator iter = tokens->begin(); iter != tokens->end(); iter++) {
+        Token* token = *iter;
+        if (token->getId() == idToken) {
+            list<Token*>* newTokens = processToken(instance, token);
+             if (newTokens)
+            {
+                instance->addCurrentToken(newTokens);
+            }
+            delete(newTokens);
+       }
+    }
+    instance->persist();
+}

@@ -30,11 +30,21 @@ class NetworkTestSuite : public Test::Suite
 public:
     NetworkTestSuite()
     {
-        TEST_ADD(NetworkTestSuite::sendreceive);
+        TEST_ADD(NetworkTestSuite::testCreate);
     }
 
 private:
-    void sendreceive()
+
+    void testCreate() {
+        sendreceive("0001ACT 03NEWDEFI011FFFF");
+    }
+
+    void testProcessToken() {
+        sendreceive("0001PROC03NEWIDPR011TOKE011FFFF");
+    }
+
+    
+    void sendreceive(char[] command)
     {
         int sockfd, portno, n;
         struct sockaddr_in serv_addr;
@@ -61,7 +71,7 @@ private:
 //    long type = 2;
 //    n = write(sockfd, (char*)&type, sizeof(type));
 //
-        char buffer[] = "0001ACT 03NEWDEFI011FFFF";
+        char buffer[] = command;
         n = write(sockfd, buffer, sizeof(buffer));
 //        n = write(sockfd, buffer, strlen(buffer));
         if (n < 0)
