@@ -97,12 +97,12 @@ list<Token*>* processToken(ProcessInstance* processInstance, Token* token)
         {
             executeEnd(token);
             res->remove(token);
-            delete(token);
             // Replaces the exit tokens with the new ones
             list<Token*>* tokens = getNextTokens(processInstance, token);
             for (list<Token*>::iterator it = tokens->begin(); it != tokens->end(); it++) {
                 res->push_back(*it);
             }
+            delete(token);
         }
     }
     return res;
@@ -113,9 +113,9 @@ Token* findTokenBy(TokenVO token)
     return NULL;
 }
 
-Task* getTask(ProcessDefinition def, long idTask) {
-    vector<ActivityCommon*> activities = *def.getActivities();
-    for (vector<ActivityCommon*>::iterator iter = activities.begin(); iter != activities.end(); iter++) {
+Task* getTask(ProcessDefinition* def, long idTask) {
+    vector<ActivityCommon*>* activities = def->getActivities();
+    for (vector<ActivityCommon*>::iterator iter = activities->begin(); iter != activities->end(); iter++) {
         ActivityCommon* activity = *iter;
         if (activity->getId() == idTask) {
             return (Task*)activity;
@@ -194,7 +194,7 @@ void loadCurrentTokens(ProcessInstance* processInstance) {
         token->setId(*(static_cast<int*>(rs->get("id"))));
         TokenStatus status = (TokenStatus)*(static_cast<long*>(rs->get("status")));
         token->setStatus(status);
-        token->setTask(getTask(*def, *(static_cast<long *>(rs->get("idtask")))));
+        token->setTask(getTask(def, *(static_cast<long *>(rs->get("idtask")))));
         processInstance->addCurrentToken(token);
     }
     free(sql);
