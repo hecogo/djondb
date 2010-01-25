@@ -12,13 +12,15 @@ Response* createResponse(ProcessInstance* instance) {
     s->append("PROC:{" + toString(instance->getId()) + ";");
     list<Token*>* currentTokens = instance->getCurrentTokens();
     s->append("TOKENS:{");
-    for (list<Token*>::iterator iter = currentTokens->begin(); iter != currentTokens->end(); iter++) {
-        Token* token = *iter;
-        s->append("TOKEN:");
-        s->append(toString(token->getId()) + ";");
-        s->append(token->getTask()->getTaskName() + ";");
+    if (currentTokens) {
+        for (list<Token*>::iterator iter = currentTokens->begin(); iter != currentTokens->end(); iter++) {
+            Token* token = *iter;
+            s->append("TOKEN:");
+            s->append(toString(token->getId()) + ";");
+            s->append(token->getTask()->getTaskName() + ";");
+        }
+        s->append("}");
     }
-    s->append("}");
     s->append("}");
     Response *response = new Response(s);
     return response;
@@ -28,6 +30,7 @@ class WorkflowController : public Controller {
 private:
     Logger* log;
 public:
+
     WorkflowController(int _requestType) : Controller(_requestType) {
         log = getLogger(NULL);
     };
@@ -35,7 +38,7 @@ public:
     ~WorkflowController() {
         delete(log);
     }
-    
+
     Response* processRequest(Request* request) {
         string* action = request->getParameter("ACT");
         if (action->compare("NEW") == 0) {
@@ -43,11 +46,11 @@ public:
             int procDef = atoi(request->getParameter("DEFI")->c_str());
             if (log->isDebug()) log->debug("process id: " + toString(procDef));
             ProcessInstance* instance = createProcessInstance(procDef);
-            
+
             Response* response = createResponse(instance);
             delete(instance);
             return response;
-        } else if (action->compare("PROC")) {
+        } else if (action->compare("PROC") == 0) {
             int idProcess = atoi(request->getParameter("IDPR")->c_str());
             int idToken = atoi(request->getParameter("TOKE")->c_str());
             ProcessInstance* instance = processToken(idProcess, idToken);

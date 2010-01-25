@@ -44,7 +44,7 @@ ProcessInstance* processEvent(ProcessInstance* processInstance, StartEvent* evt)
             token->setId(getNextKey("token"));
             Task* task = (Task*) target;
             token->setTask(task);
-            token->setStatus(NONE);
+            token->setStatus(TOKENSTATUS_NONE);
             list<Token*>* newTokens = processToken(processInstance, token);
             if (newTokens)
             {
@@ -105,6 +105,9 @@ ProcessInstance* createProcessInstance(long definition)
 };
 
 ProcessInstance* processToken(long idProcessInstance, long idToken) {
+    Logger* log = getLogger(NULL);
+    if (log->isDebug()) log->debug("processToken: "+ toString(idProcessInstance));
+    
     ProcessInstance* instance = loadInstance(idProcessInstance);
     list<Token*>* tokens = instance->getCurrentTokens();
     for (list<Token*>::iterator iter = tokens->begin(); iter != tokens->end(); iter++) {
@@ -116,7 +119,13 @@ ProcessInstance* processToken(long idProcessInstance, long idToken) {
                 instance->addCurrentToken(newTokens);
             }
             delete(newTokens);
+            break;
        }
     }
     instance->persist();
+
+    log->debug("persisted");
+    delete(log);
+    
+    return instance;
 }

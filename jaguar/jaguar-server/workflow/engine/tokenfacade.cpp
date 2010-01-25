@@ -12,7 +12,7 @@ using namespace dbjaguar;
 
 void executePostUser(Token* token)
 {
-    TokenStatus s = POSTUSER;
+    TokenStatus s = TOKENSTATUS_POSTUSER;
     token->setStatus(s);
 }
 
@@ -20,11 +20,11 @@ Token* getNextStatus(list<Token*>* tokens)
 {
     for (list<Token*>::iterator it = tokens->begin(); it != tokens->end(); it++) {
         Token* token = *it;
-        if (token->getStatus() == NONE)
+        if (token->getStatus() == TOKENSTATUS_NONE)
         {
             return token;
         }
-        if (token->getStatus() == POSTUSER)
+        if (token->getStatus() == TOKENSTATUS_POSTUSER)
         {
             return token;
         }
@@ -34,12 +34,12 @@ Token* getNextStatus(list<Token*>* tokens)
 
 void executeEnd(Token* token)
 {
-    token->setStatus(ENDED);
+    token->setStatus(TOKENSTATUS_ENDED);
 }
 
 void executeStart(Token* token)
 {
-    token->setStatus(STARTED);
+    token->setStatus(TOKENSTATUS_STARTED);
 //        Task task = token.getTask();
 }
 
@@ -62,7 +62,7 @@ list<Token*>* getNextTokens(ProcessInstance* processInstance, Token* token)
                 newToken = new Token();
                 newToken->setId(getNextKey("token"));
             }
-            newToken->setStatus(NONE);
+            newToken->setStatus(TOKENSTATUS_NONE);
             newToken->setTask(task);
             processInstance->addCurrentToken(newToken);
             result->push_back(newToken);
@@ -74,7 +74,7 @@ list<Token*>* getNextTokens(ProcessInstance* processInstance, Token* token)
 list<Token*>* processToken(ProcessInstance* processInstance, Token* token)
 {
     list<Token*>* res = new list<Token*>();
-    if (token->getStatus() == USER)
+    if (token->getStatus() == TOKENSTATUS_USER)
     {
         executePostUser(token);
     }
@@ -82,18 +82,18 @@ list<Token*>* processToken(ProcessInstance* processInstance, Token* token)
     while ((token = getNextStatus(res)) != NULL)
     {
         res->remove(token);
-        if (token->getStatus() == NONE)
+        if (token->getStatus() == TOKENSTATUS_NONE)
         {
             executeStart(token);
         }
-        if ((token->getStatus() == STARTED)
+        if ((token->getStatus() == TOKENSTATUS_STARTED)
                 && (token->getTask()->getTaskType() == MANUAL_TASKTYPE))
         {
-            token->setStatus(USER);
+            token->setStatus(TOKENSTATUS_USER);
             res->push_back(token);
         }
-        if ((token->getStatus() == STARTED)
-                || (token->getStatus() == POSTUSER))
+        if ((token->getStatus() == TOKENSTATUS_STARTED)
+                || (token->getStatus() == TOKENSTATUS_POSTUSER))
         {
             executeEnd(token);
             res->remove(token);
@@ -124,12 +124,34 @@ Task* getTask(ProcessDefinition def, long idTask) {
     return NULL;
 }
 
+void closeCurrentTokens(ProcessInstance* processInstance) {
+    //TODO Implementar un metodo para hacer un solo update si el token esta cambiando
+    // y no es removido
+    Connection* con = getDefaultDataConnection();
+    // Ended all the current tokens
+    string sqlUpdate("UPDATE tokens SET status = ? WHERE idprocessinst = ?");
+    Statement* stmt = con->createStatement(sqlUpdate.c_str());
+    int idProcess = processInstance->getId();
+    int status = TOKENSTATUS_ENDED;
+    stmt->setParameter(0, DBTYPE_LONG, &status);
+    stmt->setParameter(1, DBTYPE_LONG, &idProcess);
+    stmt->executeUpdate();
+    stmt->close();
+    delete(stmt);
+
+    con->close();
+    delete(con);
+}
+
 void persistCurrentTokens(ProcessInstance* processInstance) {
+    closeCurrentTokens(processInstance);
+    
     Connection* con = getDefaultDataConnection();
     list<Token*>* tokens = processInstance->getCurrentTokens();
     if (!tokens) {
         return;
     }
+
     for (list<Token*>::iterator iter = tokens->begin(); iter != tokens->end(); iter++) {
         Token* token = *iter;
         string sqlUpdate("UPDATE tokens SET idtask = ?, status = ? WHERE id = ?");

@@ -14,92 +14,78 @@
 
 using namespace dbjaguar;
 
-ProcessInstance::ProcessInstance()
-{
+ProcessInstance::ProcessInstance() {
     currentTokens = new list<Token*>();
     SETPERSISTENCE_NEW_STATUS(this);
 }
 
 ProcessInstance::~ProcessInstance() {
-    for (list<Token*>::iterator iter = currentTokens->begin(); iter != currentTokens->end(); iter++) {
-        delete(*iter);
+    if (currentTokens) {
+        for (list<Token*>::iterator iter = currentTokens->begin(); iter != currentTokens->end(); iter++) {
+            delete(*iter);
+        }
+        currentTokens->clear();
+        delete(currentTokens);
     }
-    currentTokens->clear();
-    delete(currentTokens);
 }
 
-void ProcessInstance::addCurrentToken(Token* token)
-{
+void ProcessInstance::addCurrentToken(Token* token) {
     currentTokens->push_back(token);
 }
 
-void ProcessInstance::addCurrentToken(list<Token*>* token)
-{
+void ProcessInstance::addCurrentToken(list<Token*>* token) {
     currentTokens->assign(token->begin(), token->end());
 }
 
-int ProcessInstance::getId()
-{
+int ProcessInstance::getId() {
     return id;
 }
 
-void ProcessInstance::setId(int _id)
-{
+void ProcessInstance::setId(int _id) {
     id = _id;
 }
 
-ProcessDefinition* ProcessInstance::getProcessDefinition()
-{
+ProcessDefinition* ProcessInstance::getProcessDefinition() {
     return processDefinition;
 }
 
-void ProcessInstance::setProcessDefinition(ProcessDefinition* _processDefinition)
-{
+void ProcessInstance::setProcessDefinition(ProcessDefinition* _processDefinition) {
     processDefinition = _processDefinition;
 }
 
-InstanceStatus ProcessInstance::getStatus()
-{
+InstanceStatus ProcessInstance::getStatus() {
     return status;
 }
 
-void ProcessInstance::setStatus(InstanceStatus _status)
-{
+void ProcessInstance::setStatus(InstanceStatus _status) {
     status = _status;
 }
 
-list<void*>* ProcessInstance::getAssignments()
-{
+list<void*>* ProcessInstance::getAssignments() {
     return assignments;
 }
 
-void ProcessInstance::setAssignments(list<void*>* _assignments)
-{
+void ProcessInstance::setAssignments(list<void*>* _assignments) {
     assignments = _assignments;
 }
 
-list<void*>* ProcessInstance::getPropertyValues()
-{
+list<void*>* ProcessInstance::getPropertyValues() {
     return propertyValues;
 }
 
-void ProcessInstance::setPropertyValues(list<void*>* _propertyValues)
-{
+void ProcessInstance::setPropertyValues(list<void*>* _propertyValues) {
     propertyValues = _propertyValues;
 }
 
-list<Token*>* ProcessInstance::getCurrentTokens()
-{
+list<Token*>* ProcessInstance::getCurrentTokens() {
     return currentTokens;
 }
 
-MasterEntity* ProcessInstance::getMasterEntity()
-{
+MasterEntity* ProcessInstance::getMasterEntity() {
     return masterEntity;
 }
 
-void ProcessInstance::setMasterEntity(MasterEntity* _masterEntity)
-{
+void ProcessInstance::setMasterEntity(MasterEntity* _masterEntity) {
     masterEntity = _masterEntity;
 }
 
@@ -110,12 +96,12 @@ void ProcessInstance::persist() {
         sql = new string("INSERT INTO processinstance (id, idprocessdef, status, idmasterent) VALUES (?, ?, ?, ?);");
         int id = getNextKey("processinstance");
         setId(id);
-	cout << *sql << endl;
+        cout << *sql << endl;
         Statement* stmt = con->createStatement(sql->c_str());
         stmt->setParameter(0, DBTYPE_LONG, &id);
         int idProcDef = getProcessDefinition()->getId();
         stmt->setParameter(1, DBTYPE_LONG, &idProcDef);
-	int status = getStatus();
+        int status = getStatus();
         stmt->setParameter(2, DBTYPE_LONG, &status);
         int idMasterEnt = 1;
         stmt->setParameter(3, DBTYPE_LONG, &idMasterEnt);
@@ -125,11 +111,11 @@ void ProcessInstance::persist() {
     } else {
         sql = new string("UPDATE processinstance SET status = ?, idmasterent = ? WHERE id = ?");
         Statement* stmt = con->createStatement(sql->c_str());
-	int status = getStatus();
+        int status = getStatus();
         stmt->setParameter(0, DBTYPE_LONG, &status);
         int idMasterEnt = 1;
         stmt->setParameter(1, DBTYPE_LONG, &idMasterEnt);
-	int id = getId();
+        int id = getId();
         stmt->setParameter(2, DBTYPE_LONG, &id);
         stmt->executeUpdate();
         stmt->close();
@@ -145,9 +131,10 @@ void ProcessInstance::persist() {
 //********************************************************************************
 // Global Functions
 //********************************************************************************
+
 ProcessInstance* loadInstance(int id) {
     Connection* con = getDefaultDataConnection();
-    char* sql = (char*)malloc(1024);
+    char* sql = (char*) malloc(1024);
     memset(sql, 0, 1024);
     format(sql, "SELECT id, idprocessdef, status, idmasterent from processinstance where id = %d", id);
     ResultSet* rs = con->executeQuery(sql);
@@ -157,12 +144,12 @@ ProcessInstance* loadInstance(int id) {
         processInstance->setId(id);
         processInstance->setMasterEntity(NULL); // TODO
 
-        int* idProcessDef = static_cast<int *>(rs->get("idprocessdef"));
+        int* idProcessDef = static_cast<int *> (rs->get("idprocessdef"));
         processInstance->setProcessDefinition(getProcessDefinition(*idProcessDef));
-        int* status = static_cast<int*>(rs->get("status"));
-        processInstance->setStatus((InstanceStatus)*status);
+        int* status = static_cast<int*> (rs->get("status"));
+        processInstance->setStatus((InstanceStatus) * status);
         SETPERSISTENCE_SAVED_STATUS(processInstance);
-        
+
         loadCurrentTokens(processInstance);
     }
     free(sql);

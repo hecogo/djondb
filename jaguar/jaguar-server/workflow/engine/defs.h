@@ -9,11 +9,11 @@ enum InstanceStatus
 };
 
 enum TokenStatus {
-    NONE,
-    STARTED,
-    USER,
-    POSTUSER,
-    ENDED
+    TOKENSTATUS_NONE,
+    TOKENSTATUS_STARTED,
+    TOKENSTATUS_USER,
+    TOKENSTATUS_POSTUSER,
+    TOKENSTATUS_ENDED
 };
 
 #endif // ENGINE_DEFS_H_INCLUDED
