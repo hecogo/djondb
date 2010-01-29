@@ -41,6 +41,10 @@ int MySQLStatement::executeUpdate() {
     int res = mysql_stmt_execute(m_stmt);
     if (res != 0) {
         cout << mysql_stmt_error(m_stmt) << endl;
+        return -1;
+    } else {
+        int affected = mysql_stmt_affected_rows(m_stmt);
+        return affected;
     }
 }
 

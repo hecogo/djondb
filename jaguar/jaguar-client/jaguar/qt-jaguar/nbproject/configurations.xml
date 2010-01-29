@@ -4,14 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="mysql" displayName="mysql" projectFiles="true">
-        <itemPath>mysql/mysqlcommon.h</itemPath>
-        <itemPath>mysql/mysqlconnection.h</itemPath>
-        <itemPath>mysql/mysqlresultset.h</itemPath>
-        <itemPath>mysql/mysqlstatement.h</itemPath>
-      </logicalFolder>
-      <itemPath>dbjaguar.h</itemPath>
-      <itemPath>keys.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -20,14 +12,13 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="mysql" displayName="mysql" projectFiles="true">
-        <itemPath>mysql/mysqlcommon.cpp</itemPath>
-        <itemPath>mysql/mysqlconnection.cpp</itemPath>
-        <itemPath>mysql/mysqlresulset.cpp</itemPath>
-        <itemPath>mysql/mysqlstatement.cpp</itemPath>
-      </logicalFolder>
-      <itemPath>dbjaguar.cpp</itemPath>
-      <itemPath>keys.cpp</itemPath>
+      <itemPath>ui/components/CurrentDateTime.cpp</itemPath>
+      <itemPath>ui/components/CurrentDateTime.h</itemPath>
+      <itemPath>ui/components/CurrentDateTime.ui</itemPath>
+      <itemPath>ui/MainWindow.cpp</itemPath>
+      <itemPath>ui/MainWindow.h</itemPath>
+      <itemPath>ui/MainWindow.ui</itemPath>
+      <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -35,48 +26,34 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
-  <sourceRootList>
-    <Elem>.</Elem>
-  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="Debug" type="2">
+    <conf name="Debug" type="4">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
         <platform>2</platform>
       </toolsSet>
+      <qt>
+        <modules>core gui</modules>
+      </qt>
       <compileType>
-        <ccTool>
-          <incDir>
-            <pElem>/usr/include/mysql</pElem>
-            <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-server/common</pElem>
-          </incDir>
-        </ccTool>
         <linkerTool>
           <linkerLibItems>
-            <linkerLibProjectItem>
-              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-server/common"
-                            CT="2"
-                            CN="Debug"
-                            AC="true"
-                            BL="true"
-                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/common"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="dist/Debug/GNU-Linux-x86/libcommon.so">
-              </makeArtifact>
-            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
     </conf>
-    <conf name="Release" type="2">
+    <conf name="Release" type="4">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
         <platform>2</platform>
       </toolsSet>
+      <qt>
+        <buildMode>1</buildMode>
+        <modules>core gui</modules>
+      </qt>
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>

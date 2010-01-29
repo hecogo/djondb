@@ -186,7 +186,9 @@ void loadCurrentTokens(ProcessInstance* processInstance) {
     Connection* con = getDefaultDataConnection();
     char* sql = (char*)malloc(1024);
     memset(sql, 0, 1024);
-    format(sql, "SELECT id, idtask, idprocessinst, status FROM tokens WHERE idprocessinst = %d", processInstance->getId());
+    format(sql, "SELECT id, idtask, idprocessinst, status FROM tokens WHERE idprocessinst = %d and status <> %d",
+            processInstance->getId(),
+            TOKENSTATUS_ENDED);
     ResultSet* rs = con->executeQuery(sql);
     ProcessDefinition* def = processInstance->getProcessDefinition();
     while (rs->next()) {

@@ -52,11 +52,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-server/common/dist/Debug/GNU-Linux-x86 -L/home/cross/workspace/jaguar/jaguar/jaguar-server/common/dist/Debug/GNU-Linux-x86 -lcommon
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	${MAKE}  -f nbproject/Makefile-Debug.mk dist/Debug/GNU-Linux-x86/libdbjaguar.so
+
+dist/Debug/GNU-Linux-x86/libdbjaguar.so: /home/cross/workspace/jaguar/jaguar/jaguar-server/common/dist/Debug/GNU-Linux-x86/libcommon.so
 
 dist/Debug/GNU-Linux-x86/libdbjaguar.so: ${OBJECTFILES}
 	${MKDIR} -p dist/Debug/GNU-Linux-x86
@@ -65,43 +67,45 @@ dist/Debug/GNU-Linux-x86/libdbjaguar.so: ${OBJECTFILES}
 ${OBJECTDIR}/mysql/mysqlcommon.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysqlcommon.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mysql
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlcommon.o mysql/mysqlcommon.cpp
+	$(COMPILE.cc) -g -I/usr/include/mysql -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlcommon.o mysql/mysqlcommon.cpp
 
 ${OBJECTDIR}/mysql/mysqlresulset.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysqlresulset.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mysql
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlresulset.o mysql/mysqlresulset.cpp
+	$(COMPILE.cc) -g -I/usr/include/mysql -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlresulset.o mysql/mysqlresulset.cpp
 
 ${OBJECTDIR}/keys.o: nbproject/Makefile-${CND_CONF}.mk keys.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/keys.o keys.cpp
+	$(COMPILE.cc) -g -I/usr/include/mysql -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/keys.o keys.cpp
 
 ${OBJECTDIR}/mysql/mysqlstatement.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysqlstatement.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mysql
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlstatement.o mysql/mysqlstatement.cpp
+	$(COMPILE.cc) -g -I/usr/include/mysql -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlstatement.o mysql/mysqlstatement.cpp
 
 ${OBJECTDIR}/mysql/mysqlconnection.o: nbproject/Makefile-${CND_CONF}.mk mysql/mysqlconnection.cpp 
 	${MKDIR} -p ${OBJECTDIR}/mysql
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlconnection.o mysql/mysqlconnection.cpp
+	$(COMPILE.cc) -g -I/usr/include/mysql -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/mysql/mysqlconnection.o mysql/mysqlconnection.cpp
 
 ${OBJECTDIR}/dbjaguar.o: nbproject/Makefile-${CND_CONF}.mk dbjaguar.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/usr/include/mysql -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/dbjaguar.o dbjaguar.cpp
+	$(COMPILE.cc) -g -I/usr/include/mysql -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/dbjaguar.o dbjaguar.cpp
 
 # Subprojects
 .build-subprojects:
+	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/common && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
-.clean-conf:
+.clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r build/Debug
 	${RM} dist/Debug/GNU-Linux-x86/libdbjaguar.so
 
 # Subprojects
 .clean-subprojects:
+	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/common && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl
