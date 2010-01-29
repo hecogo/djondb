@@ -22,6 +22,29 @@ CREATE DATABASE IF NOT EXISTS jaguardata;
 USE jaguardata;
 
 --
+-- Definition of table `jaguardata`.`key_table`
+--
+
+DROP TABLE IF EXISTS `jaguardata`.`key_table`;
+CREATE TABLE  `jaguardata`.`key_table` (
+  `id` varchar(50) NOT NULL,
+  `value` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `jaguardata`.`key_table`
+--
+
+/*!40000 ALTER TABLE `key_table` DISABLE KEYS */;
+LOCK TABLES `key_table` WRITE;
+INSERT INTO `jaguardata`.`key_table` VALUES  ('token',250),
+ ('processinstance',100);
+UNLOCK TABLES;
+/*!40000 ALTER TABLE `key_table` ENABLE KEYS */;
+
+
+--
 -- Definition of table `jaguardata`.`processinstance`
 --
 
@@ -46,16 +69,8 @@ INSERT INTO `jaguardata`.`processinstance` VALUES  (1,1,0,1),
  (4,1,0,1),
  (5,1,0,1),
  (6,1,0,1),
- (7,1,0,1),
- (8,1,0,1),
- (9,1,0,1),
- (10,1,0,1),
- (11,1,0,1),
- (12,1,0,1),
- (13,1,0,1),
- (14,1,0,1),
- (15,1,0,1),
- (16,1,0,1);
+ (51,1,0,1),
+ (52,1,0,1);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `processinstance` ENABLE KEYS */;
 
@@ -79,6 +94,15 @@ CREATE TABLE  `jaguardata`.`tokens` (
 
 /*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
 LOCK TABLES `tokens` WRITE;
+INSERT INTO `jaguardata`.`tokens` VALUES  (1,1,1,4),
+ (2,1,2,2),
+ (3,1,3,2),
+ (4,1,4,2),
+ (5,1,5,2),
+ (6,1,6,2),
+ (151,1,1,2),
+ (201,1,51,2),
+ (202,1,52,2);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
 
