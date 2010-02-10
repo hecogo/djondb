@@ -25,6 +25,11 @@
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>ui_test/CrearClientes.cpp</itemPath>
+    <itemPath>ui_test/CrearClientes.h</itemPath>
+    <itemPath>ui_test/CrearClientes.ui</itemPath>
+    <itemPath>ui/MenuItem.cpp</itemPath>
+    <itemPath>ui/MenuItem.h</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
