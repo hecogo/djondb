@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>base.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -12,7 +13,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>main.cpp</itemPath>
+      <itemPath>Radicacion.cpp</itemPath>
+      <itemPath>Radicacion.h</itemPath>
+      <itemPath>base.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -22,7 +25,7 @@
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="Debug" type="4">
+    <conf name="Debug" type="5">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
@@ -35,23 +38,10 @@
         <ccTool>
           <incDir>
             <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui</pElem>
-            <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
           <linkerLibItems>
-            <linkerLibProjectItem>
-              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen"
-                            CT="5"
-                            CN="Debug"
-                            AC="true"
-                            BL="true"
-                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="dist/Debug/GNU-Linux-x86/libjclientgen.so.1.0.0">
-              </makeArtifact>
-            </linkerLibProjectItem>
             <linkerLibProjectItem>
               <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui"
                             CT="5"
@@ -68,7 +58,7 @@
         </linkerTool>
       </compileType>
     </conf>
-    <conf name="Release" type="4">
+    <conf name="Release" type="5">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>

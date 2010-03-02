@@ -1,12 +1,12 @@
-TEMPLATE = app
+TEMPLATE = lib
 DESTDIR = dist/Release/GNU-Linux-x86
-TARGET = qt-jaguar
+TARGET = jclientgen
 VERSION = 1.0.0
 CONFIG -= debug_and_release app_bundle lib_bundle
-CONFIG += release 
+CONFIG += dll release 
 QT = core gui
-SOURCES += main.cpp
-HEADERS +=
+SOURCES += Radicacion.cpp base.cpp
+HEADERS += Radicacion.h base.h
 FORMS +=
 RESOURCES +=
 TRANSLATIONS +=

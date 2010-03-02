@@ -46,7 +46,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen/dist/Debug/GNU-Linux-x86/libjclientgen.so.1.0.0 /home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0
+LDLIBSOPTIONS=/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0
 
 nbproject/qt-${CONF}.mk: nbproject/qt-${CONF}.pro FORCE
 	qmake VPATH=. -o qttmp-${CONF}.mk nbproject/qt-${CONF}.pro
@@ -56,7 +56,7 @@ FORCE:
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS} nbproject/qt-${CONF}.mk
-	${MAKE} -f nbproject/qt-${CONF}.mk dist/Debug/GNU-Linux-x86/qt-jaguar
+	${MAKE} -f nbproject/qt-${CONF}.mk dist/Debug/GNU-Linux-x86/libjclientgen.so.1.0.0
 
 # Subprojects
 .build-subprojects:

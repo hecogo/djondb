@@ -4,6 +4,14 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="ui" displayName="ui" projectFiles="true">
+        <itemPath>ui/CurrentDateTime.h</itemPath>
+        <itemPath>ui/GenericControl.h</itemPath>
+        <itemPath>ui/MenuItem.h</itemPath>
+        <itemPath>ui/TextSimple.h</itemPath>
+      </logicalFolder>
+      <itemPath>ScreenBase.h</itemPath>
+      <itemPath>jaguarui.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -12,7 +20,18 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>main.cpp</itemPath>
+      <logicalFolder name="ui" displayName="ui" projectFiles="true">
+        <itemPath>ui/CurrentDateTime.cpp</itemPath>
+        <itemPath>ui/CurrentDateTime.ui</itemPath>
+        <itemPath>ui/GenericControl.cpp</itemPath>
+        <itemPath>ui/MenuItem.cpp</itemPath>
+        <itemPath>ui/TextSimple.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>ui/MainWindow.cpp</itemPath>
+      <itemPath>ui/MainWindow.h</itemPath>
+      <itemPath>ui/MainWindow.ui</itemPath>
+      <itemPath>ScreenBase.cpp</itemPath>
+      <itemPath>jaguarui.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -20,9 +39,12 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>ui</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="Debug" type="4">
+    <conf name="Debug" type="5">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
@@ -32,43 +54,13 @@
         <modules>core gui</modules>
       </qt>
       <compileType>
-        <ccTool>
-          <incDir>
-            <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui</pElem>
-            <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen</pElem>
-          </incDir>
-        </ccTool>
         <linkerTool>
           <linkerLibItems>
-            <linkerLibProjectItem>
-              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen"
-                            CT="5"
-                            CN="Debug"
-                            AC="true"
-                            BL="true"
-                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="dist/Debug/GNU-Linux-x86/libjclientgen.so.1.0.0">
-              </makeArtifact>
-            </linkerLibProjectItem>
-            <linkerLibProjectItem>
-              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui"
-                            CT="5"
-                            CN="Debug"
-                            AC="true"
-                            BL="true"
-                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0">
-              </makeArtifact>
-            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
     </conf>
-    <conf name="Release" type="4">
+    <conf name="Release" type="5">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>

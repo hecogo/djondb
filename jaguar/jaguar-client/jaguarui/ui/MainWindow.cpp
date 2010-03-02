@@ -6,10 +6,13 @@
  */
 
 #include "MainWindow.h"
-#include "components/CurrentDateTime.h"
+#include "ui/CurrentDateTime.h"
+#include "ui/MenuItem.h"
+#include "jaguarui.h"
 #include <QStandardItemModel>
-#include "MenuItem.h"
-#include "../ui_test/CrearClientes.h"
+#include <vector>
+
+extern void registerClient();
 
 MainWindow::MainWindow() {
     widget.setupUi(this);
@@ -21,6 +24,8 @@ MainWindow::MainWindow() {
     time->setVisible(true);
     time->start(1000);
 
+    registerClient();
+    
     init();
 }
 
@@ -29,6 +34,11 @@ MainWindow::~MainWindow() {
 
 void MainWindow::init() {
     QStandardItemModel* model = new QStandardItemModel();
+    std::vector<MenuItem*> items = getMenuItems();
+    for (std::vector<MenuItem*>::iterator iter = items.begin(); iter != items.end(); iter++) {
+        model->appendRow(*iter);
+    }
+    /*
     MenuItem* item = new MenuItem("Administracion Demandas", 1);
     model->appendRow(item);
     MenuItem* sub1 = new MenuItem("Radicar demanda", 2);
@@ -38,7 +48,7 @@ void MainWindow::init() {
     MenuItem* clientes = new MenuItem("Clientes", 4);
     model->appendRow(clientes);
     clientes->appendRow(new MenuItem("Crear Cliente", 5));
-
+*/
     widget.treeView->setModel(model);
 
     connect(widget.treeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(doubleClicked(QModelIndex)));
@@ -46,18 +56,18 @@ void MainWindow::init() {
 }
 
 void MainWindow::createClient() {
-    CrearClientes* clientes = new CrearClientes();
-    widget.mdiArea->addSubWindow(clientes, Qt::SubWindow);
-    clientes->show();
+//    CrearClientes* clientes = new CrearClientes();
+//    widget.mdiArea->addSubWindow(clientes, Qt::SubWindow);
+//    clientes->show();
 }
 
 void MainWindow::doubleClicked(const QModelIndex &index) {
     QStandardItemModel* model = (QStandardItemModel*)widget.treeView->model();
     MenuItem* item = (MenuItem*)model->itemFromIndex(index);
-    switch (item->value()) {
-        case 5:
-            createClient();
-            break;
-    }
+
+    int id = item->value();
+    ScreenBase* screen = callScreenFunction(id);
+    widget.mdiArea->addSubWindow(screen, Qt::SubWindow);
+    screen->show();
     qDebug("selected %s, value: %d", item->text().toStdString().c_str(), item->value());
 }
