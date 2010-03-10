@@ -16,9 +16,14 @@ Q_OBJECT
 public:
     TextSimple();
     virtual ~TextSimple();
+    virtual bool endLine();
+    virtual void setEndLine(bool);
 
 public slots:
     bool validate();
+
+private:
+    bool m_endLine;
 };
 
 #endif	/* _TEXTSIMPLE_H */

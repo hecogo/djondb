@@ -9,9 +9,11 @@
         <itemPath>ui/GenericControl.h</itemPath>
         <itemPath>ui/MenuItem.h</itemPath>
         <itemPath>ui/TextSimple.h</itemPath>
+        <itemPath>ui/freeformlayout.h</itemPath>
       </logicalFolder>
       <itemPath>ScreenBase.h</itemPath>
       <itemPath>jaguarui.h</itemPath>
+      <itemPath>ui/label.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -26,11 +28,13 @@
         <itemPath>ui/GenericControl.cpp</itemPath>
         <itemPath>ui/MenuItem.cpp</itemPath>
         <itemPath>ui/TextSimple.cpp</itemPath>
+        <itemPath>ui/label.cpp</itemPath>
       </logicalFolder>
       <itemPath>ui/MainWindow.cpp</itemPath>
       <itemPath>ui/MainWindow.h</itemPath>
       <itemPath>ui/MainWindow.ui</itemPath>
       <itemPath>ScreenBase.cpp</itemPath>
+      <itemPath>ui/freeformlayout.cpp</itemPath>
       <itemPath>jaguarui.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"

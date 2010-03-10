@@ -8,11 +8,18 @@
 #include "Radicacion.h"
 #include "ui/TextSimple.h"
 
+TextSimple* createText(bool endLine) {
+    TextSimple* s = new TextSimple();
+    s->setEndLine(endLine);
+    return s;
+}
+
 Radicacion::Radicacion(QWidget* parent, Qt::WindowFlags flags) : ScreenBase(parent, flags) {
-    addRow("Test", new TextSimple());
-    addRow("Test2", new TextSimple());
-    addRow("Test3", new TextSimple());
-    addRow("Test4", new TextSimple());
+    addRow("Test", createText(true));
+    addRow("Test", createText(false));
+    addRow("Test", createText(true));
+    addRow("Test", createText(false));
+    addRow("Test", createText(true));
 
     addAction("Action1");
     addAction("Action2");

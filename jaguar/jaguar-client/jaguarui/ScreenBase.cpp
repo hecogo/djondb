@@ -11,7 +11,7 @@
 #include <QVBoxLayout>
 
 ScreenBase::ScreenBase(QWidget* parent, Qt::WindowFlags f) : QWidget(parent, f) {
-    m_formLayout = new QFormLayout();
+    m_formLayout = new FreeFormLayout();
     QVBoxLayout* vertical = new QVBoxLayout();
     m_toolBar = new QToolBar();
     

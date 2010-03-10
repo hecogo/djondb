@@ -12,6 +12,9 @@
 #include <QToolBar>
 #include <QFormLayout>
 
+#include "ui/freeformlayout.h"
+#include "ui/GenericControl.h"
+
 class ScreenBase : public QWidget {
     Q_OBJECT
 public:
@@ -22,7 +25,7 @@ protected:
     void addRow(QString label, QWidget* widget);
 private:
     QToolBar* m_toolBar;
-    QFormLayout* m_formLayout;
+    FreeFormLayout* m_formLayout;
 };
 
 #endif	/* _SCREENBASE_H */

@@ -6,7 +6,6 @@
 using namespace std;
 
 map<int, screenFunction> screenFunctions;
-int screenCount;
 vector<MenuItem*> items;
 
 vector<MenuItem*> getMenuItems() {
@@ -17,10 +16,9 @@ void addMenu(MenuItem* item) {
     items.push_back(item);
 }
 
-void addScreen(screenFunction function, char* menu) {
-    MenuItem* item = new MenuItem(menu, screenCount);
-    screenFunctions.insert(pair<int, screenFunction>(screenCount, function));
-    screenCount++;
+void addScreen(int idForm, screenFunction function, char* menu) {
+    MenuItem* item = new MenuItem(menu, idForm);
+    screenFunctions.insert(pair<int, screenFunction>(idForm, function));
     addMenu(item);
 }
 

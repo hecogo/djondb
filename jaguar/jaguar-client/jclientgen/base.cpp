@@ -7,5 +7,5 @@ ScreenBase* createRadicacion() {
 }
 
 void registerClient() {
-    addScreen(&createRadicacion, "Radicacion");
+    addScreen(1, &createRadicacion, "Radicacion");
 }

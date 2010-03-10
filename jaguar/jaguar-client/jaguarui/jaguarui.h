@@ -14,7 +14,7 @@
 
 typedef ScreenBase* (*screenFunction)();
 
-void addScreen(screenFunction function, char* menu);
+void addScreen(int idForm, screenFunction function, char* menu);
 
 std::vector<MenuItem*> getMenuItems();
 ScreenBase* callScreenFunction(int id);
