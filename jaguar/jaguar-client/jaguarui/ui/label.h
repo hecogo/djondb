@@ -16,11 +16,7 @@ class Label : public QLabel, public GenericControl {
 public:
     Label(const QString &text, QWidget *parent=0, Qt::WindowFlags f=0);
     virtual bool validate();
-    virtual bool endLine();
-    virtual void setEndLine(bool);
 
-private:
-    bool m_endLine;
 };
 
 #endif	/* _LABEL_H */

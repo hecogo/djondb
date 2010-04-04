@@ -12,14 +12,17 @@
 
 class GenericControl {
 
+private:
+    bool m_endLine;
+    
 public:
     GenericControl();
-    GenericControl(const GenericControl& orig);
-    ~GenericControl();
+    virtual ~GenericControl();
 
     virtual bool validate() = 0;
-    virtual bool endLine() = 0;
-    virtual void setEndLine(bool) = 0;
+    bool endLine();
+    
+    void setEndLine(bool);
 };
 
 #endif	/* _GENERICCONTROL_H */

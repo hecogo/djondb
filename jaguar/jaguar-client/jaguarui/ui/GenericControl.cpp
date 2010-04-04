@@ -6,13 +6,19 @@
  */
 
 #include "GenericControl.h"
+#include <iostream>
 
 GenericControl::GenericControl() {
-}
-
-GenericControl::GenericControl(const GenericControl& orig) {
+    m_endLine = false;
 }
 
 GenericControl::~GenericControl() {
 }
 
+bool GenericControl::endLine() {
+    return m_endLine;
+}
+
+void GenericControl::setEndLine(bool endLine) {
+    m_endLine = endLine;
+}

@@ -32,7 +32,7 @@ public:
     QRect geometry() const;
     bool isEmpty() const;
 
-    void addRow(QString label, QWidget* item, bool endLine = false);
+    void addRow(QString label, QWidget* item);
 
 private:
     int doLayout(const QRect &rect) const;

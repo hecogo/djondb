@@ -25,11 +25,12 @@ MainWindow::MainWindow() {
     time->start(1000);
 
     registerClient();
-    
+
     init();
 }
 
 MainWindow::~MainWindow() {
+    widget.mdiArea->closeAllSubWindows();
 }
 
 void MainWindow::init() {

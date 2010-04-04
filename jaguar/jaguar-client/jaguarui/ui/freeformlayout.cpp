@@ -6,6 +6,7 @@
 #include "freeformlayout.h"
 #include "GenericControl.h"
 #include "label.h"
+#include "TextSimple.h"
 #include <iostream>
 #include <qt4/QtGui/qwidget.h>
 
@@ -16,11 +17,19 @@ FreeFormLayout::FreeFormLayout(QWidget *parent) : QLayout(parent) {
 }
 
 FreeFormLayout::~FreeFormLayout() {
-
+    ItemWrapper *wrapper;
+    foreach(wrapper, itemList) {
+        QLayoutItem* item = wrapper->m_item;
+        QWidget *wid = item->widget();
+        delete(wid);
+        delete(wrapper);
+    }
 }
 
 void FreeFormLayout::addItem(QLayoutItem *item) {
-    bool endLine = ((GenericControl*)item->widget())->endLine();
+    QWidget* w = item->widget();
+    GenericControl* control = dynamic_cast<GenericControl*> (w);
+    bool endLine = control->endLine();
 
     ItemWrapper* wrapper = new ItemWrapper(item, endLine);
 
@@ -83,31 +92,31 @@ int FreeFormLayout::doLayout(const QRect &rect) const {
         if (spaceY == -1)
             spaceY = wid->style()->layoutSpacing(
                 QSizePolicy::PushButton, QSizePolicy::PushButton, Qt::Vertical);
-        int nextX = x + item->sizeHint().width() + spaceX;
-//        if (nextX - spaceX > effectiveRect.right() && lineHeight > 0) {
-        if (wrapper->m_endLine) {
-            x = effectiveRect.x();
-            y = y + lineHeight + spaceY;
-            nextX = x + item->sizeHint().width() + spaceX;
-            lineHeight = 0;
-        }
+        //        if (nextX - spaceX > effectiveRect.right() && lineHeight > 0) {
 
         item->setGeometry(QRect(QPoint(x, y), item->sizeHint()));
 
-        x = nextX;
         lineHeight = qMax(lineHeight, item->sizeHint().height());
+        
+        if (wrapper->m_endLine) {
+            x = effectiveRect.x();
+            y = y + lineHeight + spaceY;
+            lineHeight = 0;
+        } else {
+            x = x + item->sizeHint().width() + spaceX;
+        }
     }
     return y + lineHeight - rect.y() + bottom;
 }
 
-void FreeFormLayout::addRow(QString label, QWidget* item, bool endLine) {
+void FreeFormLayout::addRow(QString label, QWidget* item) {
     Label* lbl = new Label(label);
     addItem(lbl);
     addItem(item);
 }
 
 int FreeFormLayout::count() const {
-    int c =  itemList.size();
+    int c = itemList.size();
     cout << "count: " << c << endl;
     return c;
 }
@@ -125,7 +134,7 @@ Qt::Orientations FreeFormLayout::expandingDirections() const {
 }
 
 QRect FreeFormLayout::geometry() const {
-//    return QLayout::geometry();
+    //    return QLayout::geometry();
 }
 
 bool FreeFormLayout::isEmpty() const {
