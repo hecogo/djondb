@@ -11,6 +11,7 @@
         <itemPath>ui/TextSimple.h</itemPath>
         <itemPath>ui/freeformlayout.h</itemPath>
       </logicalFolder>
+      <itemPath>ui/MainWindow.h</itemPath>
       <itemPath>ScreenBase.h</itemPath>
       <itemPath>jaguarui.h</itemPath>
       <itemPath>ui/label.h</itemPath>
@@ -31,7 +32,6 @@
         <itemPath>ui/label.cpp</itemPath>
       </logicalFolder>
       <itemPath>ui/MainWindow.cpp</itemPath>
-      <itemPath>ui/MainWindow.h</itemPath>
       <itemPath>ui/MainWindow.ui</itemPath>
       <itemPath>ScreenBase.cpp</itemPath>
       <itemPath>ui/freeformlayout.cpp</itemPath>
