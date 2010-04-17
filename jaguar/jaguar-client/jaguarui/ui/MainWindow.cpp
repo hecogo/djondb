@@ -11,6 +11,8 @@
 #include "jaguarui.h"
 #include <QStandardItemModel>
 #include <vector>
+#include <qt4/QtGui/qwidget.h>
+#include <QHBoxLayout>
 
 extern void registerClient();
 
@@ -68,7 +70,13 @@ void MainWindow::doubleClicked(const QModelIndex &index) {
 
     int id = item->value();
     ScreenBase* screen = callScreenFunction(id);
-    widget.mdiArea->addSubWindow(screen, Qt::SubWindow);
-    screen->show();
+    QWidget* window = new QWidget(this);
+
+    QHBoxLayout* hLayout = new QHBoxLayout();
+    hLayout->addWidget(screen);
+    window->setLayout(hLayout);
+    
+    widget.mdiArea->addSubWindow(window, Qt::SubWindow);
+    window->show();
     qDebug("selected %s, value: %d", item->text().toStdString().c_str(), item->value());
 }

@@ -16,17 +16,21 @@ using namespace std;
 
 class Request {
 public:
-    Request();
+    Request(int type);
     virtual ~Request();
     Request(const char* data);
     void addParameter(string codename, string* value);
     int getType();
     string* getParameter(string codename);
     vector<string>* getCodeNames();
-private:
-    int type;
-    map<string, string*>* parameters;
 
+    const char* toCharArray();
+    void loadFrom(const char* data);
+private:
+    int _type;
+    map<string, string*>* _parameters;
+
+    char* getData(const char* data, int offset, int size);
 };
 
 #endif	/* _REQUEST_H */
