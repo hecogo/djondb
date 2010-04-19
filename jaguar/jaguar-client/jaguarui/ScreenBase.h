@@ -20,7 +20,7 @@ class ScreenBase : public QWidget {
 public:
     ScreenBase(QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~ScreenBase();
-    void addAction(QString action);
+    void addAction(QString action, const char *slot);
 protected:
     void addRow(QString label, QWidget* widget);
 private:

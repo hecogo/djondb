@@ -17,6 +17,8 @@ public:
     Radicacion(QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~Radicacion();
 
+public slots:
+    void action1();
 private:
 };
 

@@ -25,8 +25,12 @@ Clientes::Clientes(QWidget* parent, Qt::WindowFlags flags) : ScreenBase(parent, 
     s5->setEndLine(true);
     addRow("Phone Number", s5);
 
-    addAction("Action1");
+    addAction("Action1", SLOT(action1));
 }
 
 Clientes::~Clientes() {
+}
+
+void Clientes::action1() {
+    qDebug("Action1");
 }

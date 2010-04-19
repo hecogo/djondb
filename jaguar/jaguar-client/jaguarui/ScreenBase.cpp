@@ -9,6 +9,7 @@
 
 #include "ScreenBase.h"
 #include <QVBoxLayout>
+#include <QAction>
 
 ScreenBase::ScreenBase(QWidget* parent, Qt::WindowFlags f) : QWidget(parent, f) {
     m_formLayout = new FreeFormLayout();
@@ -25,8 +26,9 @@ ScreenBase::~ScreenBase() {
     delete(m_toolBar);
 }
 
-void ScreenBase::addAction(QString action) {
-    m_toolBar->addAction(action);
+void ScreenBase::addAction(QString action, const char *slot) {
+    QAction* qaction = m_toolBar->addAction(action);
+    connect(qaction, SIGNAL(triggered()), this, slot);
 }
 
 void ScreenBase::addRow(QString label, QWidget* widget) {

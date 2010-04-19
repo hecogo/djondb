@@ -16,6 +16,8 @@ public:
     Clientes(QWidget* parent = 0, Qt::WindowFlags flags = 0);
     virtual ~Clientes();
 
+public slots:
+    void action1();
 private:
 
 };
