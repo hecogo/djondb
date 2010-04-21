@@ -19,11 +19,35 @@
 #include <stdio.h>
 #include "time.h"
 
+#include "networkclient.h"
+#include "config.h"
+
 #define error(T) \
     cout << T << endl;
 
 using namespace std;
 using namespace dbjaguar;
+
+class NetworkClientTestSuite : public Test::Suite
+{
+public:
+    NetworkClientTestSuite()
+    {
+//        TEST_ADD(NetworkTestSuite::testCreate);
+        TEST_ADD(NetworkClientTestSuite::testCreate);
+    }
+
+private:
+
+    void testCreate() {
+        Request* req = new Request(1);
+        req->addParameter("ACT ", new string("NEW"));
+        req->addParameter("DEFI", new string("1"));
+        Response* response = sendReceive("localhost", SERVER_PORT, req);
+        string* data = response->getData();
+        cout << data << endl;
+    }
+};
 
 class NetworkTestSuite : public Test::Suite
 {
@@ -317,6 +341,7 @@ int main(int argc, char** argv)
         // Demonstrates the ability to use multiple test suites
         //
         Test::Suite ts;
+        ts.add(auto_ptr<Test::Suite>(new NetworkClientTestSuite));
         ts.add(auto_ptr<Test::Suite>(new CommonTestSuite));
         ts.add(auto_ptr<Test::Suite>(new TestDB));
 //        ts.add(auto_ptr<Test::Suite>(new WorkflowTestSuite));

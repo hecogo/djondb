@@ -11,6 +11,7 @@
         <itemPath>net/requestprocessor.h</itemPath>
         <itemPath>net/response.h</itemPath>
       </logicalFolder>
+      <itemPath>config.h</itemPath>
       <itemPath>networkclient.h</itemPath>
       <itemPath>networkservice.h</itemPath>
     </logicalFolder>

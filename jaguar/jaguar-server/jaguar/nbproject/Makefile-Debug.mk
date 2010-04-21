@@ -76,6 +76,10 @@ ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.cpp
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon && ${MAKE}  -f Makefile CONF=Debug
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar && ${MAKE}  -f Makefile CONF=Debug
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow && ${MAKE}  -f Makefile CONF=Debug
+	cd ../common && ${MAKE}  -f Makefile CONF=Debug
+	cd ../dbjaguar && ${MAKE}  -f Makefile CONF=Debug
+	cd ../networkcommon && ${MAKE}  -f Makefile CONF=Debug
+	cd ../workflow && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -88,6 +92,10 @@ ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.cpp
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon && ${MAKE}  -f Makefile CONF=Debug clean
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar && ${MAKE}  -f Makefile CONF=Debug clean
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../common && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../dbjaguar && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../networkcommon && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../workflow && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

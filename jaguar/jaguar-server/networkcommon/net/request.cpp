@@ -81,6 +81,8 @@ const char* Request::toCharArray() {
         ss << *value;
     }
 
+    ss << "FFFF"; // end signal
+
     const char* result = ss.str().c_str();
     return result;
 }

@@ -14,6 +14,7 @@
 #include "net/response.h"
 #include "net/requestprocessor.h"
 #include "net/controller.h"
+#include "config.h"
 
 using namespace dbjaguar;
 
@@ -119,7 +120,7 @@ void *startSocketListener(void* arg) {
     }
 
     sockaddr_in addr;
-    int port = 1043;
+    int port = SERVER_PORT;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port); // the port should be converted to network byte order
     addr.sin_addr.s_addr = INADDR_ANY; // Server address, any to take the current ip address of the host

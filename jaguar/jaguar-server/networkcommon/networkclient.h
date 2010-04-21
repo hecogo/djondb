@@ -11,7 +11,7 @@
 #include "net/request.h"
 #include "net/response.h"
 
-Response* sendreceive(char* host, int port, Request* req);
+Response* sendReceive(char* host, int port, Request* req);
 
 
 #endif	/* _NETWORKCLIENT_H */
