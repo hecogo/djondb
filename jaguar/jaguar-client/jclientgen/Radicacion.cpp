@@ -1,12 +1,6 @@
-/*
- * File:   Radicacion.cpp
- * Author: cross
- *
- * Created on February 24, 2010, 10:14 PM
- */
-
 #include "Radicacion.h"
 #include "ui/TextSimple.h"
+#include "networkclient.h"
 
 TextSimple* createText(bool endLine) {
     TextSimple* s = new TextSimple();
@@ -31,5 +25,10 @@ Radicacion::~Radicacion() {
 }
 
 void Radicacion::action1() {
-    qDebug("Action1");
+    Request* req = new Request(1);
+    req->addParameter("ACT ", new string("NEW"));
+    req->addParameter("DEFI", new string("1"));
+    Response* response = sendReceive("localhost", 1043, req);
+    string* data = response->getData();
+    qDebug(data->c_str());
 }

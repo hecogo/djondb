@@ -46,7 +46,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen/dist/Debug/GNU-Linux-x86/libjclientgen.so.1.0.0 /home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0
+LDLIBSOPTIONS=/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen/dist/Debug/GNU-Linux-x86/libjclientgen.so.1.0.0 /home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0 -Wl,-rpath ../../../jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86 -L../../../jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86 -lnetworkcommon -Wl,-rpath ../../../jaguar-server/common/dist/Debug/GNU-Linux-x86 -L../../../jaguar-server/common/dist/Debug/GNU-Linux-x86 -lcommon
 
 nbproject/qt-${CONF}.mk: nbproject/qt-${CONF}.pro FORCE
 	qmake VPATH=. -o qttmp-${CONF}.mk nbproject/qt-${CONF}.pro
