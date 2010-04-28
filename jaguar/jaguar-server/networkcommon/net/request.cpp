@@ -13,7 +13,6 @@
 
 #include "request.h"
 #include "util.h"
-#include "requestprocessor.h"
 
 using namespace std;
 

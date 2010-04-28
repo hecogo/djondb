@@ -18,4 +18,4 @@ QMAKE_CC = gcc
 QMAKE_CXX = g++
 DEFINES += 
 INCLUDEPATH += /home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui ../../jaguar-server/networkcommon 
-LIBS += -Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/dist/Debug/GNU-Linux-x86 /home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0 -Wl,-rpath ../../jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86 ../../jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86/libnetworkcommon.so  
+LIBS += -Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/dist/Debug/GNU-Linux-x86 /home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0 /home/cross/workspace/jaguar/jaguar/libs/libnetworkcommon.so  

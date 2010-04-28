@@ -17,6 +17,7 @@
                 <make-dep-project>/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon</make-dep-project>
                 <make-dep-project>/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar</make-dep-project>
                 <make-dep-project>../workflow</make-dep-project>
+                <make-dep-project>../networkservice</make-dep-project>
                 <make-dep-project>../dbjaguar</make-dep-project>
             </make-dep-projects>
         </data>

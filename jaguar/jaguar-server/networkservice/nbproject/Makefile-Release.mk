@@ -31,9 +31,9 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/networkclient.o \
-	${OBJECTDIR}/net/request.o \
-	${OBJECTDIR}/net/response.o
+	${OBJECTDIR}/networkservice.o \
+	${OBJECTDIR}/net/requestprocessor.o \
+	${OBJECTDIR}/net/controller.o
 
 # C Compiler Flags
 CFLAGS=
@@ -53,26 +53,26 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	${MAKE}  -f nbproject/Makefile-Release.mk dist/Release/GNU-Linux-x86/libnetworkcommon.so
+	${MAKE}  -f nbproject/Makefile-Release.mk dist/Release/GNU-Linux-x86/libnetworkservice.so
 
-dist/Release/GNU-Linux-x86/libnetworkcommon.so: ${OBJECTFILES}
+dist/Release/GNU-Linux-x86/libnetworkservice.so: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
-	${LINK.cc} -shared -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnetworkcommon.so -fPIC ${OBJECTFILES} ${LDLIBSOPTIONS} 
+	${LINK.cc} -shared -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libnetworkservice.so -fPIC ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/networkclient.o: nbproject/Makefile-${CND_CONF}.mk networkclient.cpp 
+${OBJECTDIR}/networkservice.o: nbproject/Makefile-${CND_CONF}.mk networkservice.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/networkclient.o networkclient.cpp
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/networkservice.o networkservice.cpp
 
-${OBJECTDIR}/net/request.o: nbproject/Makefile-${CND_CONF}.mk net/request.cpp 
+${OBJECTDIR}/net/requestprocessor.o: nbproject/Makefile-${CND_CONF}.mk net/requestprocessor.cpp 
 	${MKDIR} -p ${OBJECTDIR}/net
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/request.o net/request.cpp
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/requestprocessor.o net/requestprocessor.cpp
 
-${OBJECTDIR}/net/response.o: nbproject/Makefile-${CND_CONF}.mk net/response.cpp 
+${OBJECTDIR}/net/controller.o: nbproject/Makefile-${CND_CONF}.mk net/controller.cpp 
 	${MKDIR} -p ${OBJECTDIR}/net
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/response.o net/response.cpp
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/controller.o net/controller.cpp
 
 # Subprojects
 .build-subprojects:
@@ -80,7 +80,7 @@ ${OBJECTDIR}/net/response.o: nbproject/Makefile-${CND_CONF}.mk net/response.cpp
 # Clean Targets
 .clean-conf:
 	${RM} -r build/Release
-	${RM} dist/Release/GNU-Linux-x86/libnetworkcommon.so
+	${RM} dist/Release/GNU-Linux-x86/libnetworkservice.so
 
 # Subprojects
 .clean-subprojects:

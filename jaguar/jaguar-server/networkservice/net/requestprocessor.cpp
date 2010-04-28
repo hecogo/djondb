@@ -7,7 +7,7 @@
 
 #include "requestprocessor.h"
 #include "controller.h"
-#include "request.h"
+#include "net/request.h"
 
 extern map<int, Controller*> m_controllers;
 

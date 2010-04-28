@@ -91,6 +91,7 @@
             <pElem>../common</pElem>
             <pElem>../dbjaguar</pElem>
             <pElem>../networkcommon</pElem>
+            <pElem>../networkservice</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
@@ -127,6 +128,16 @@
                         BC="${MAKE}  -f Makefile CONF=Debug"
                         CC="${MAKE}  -f Makefile CONF=Debug clean"
                         OP="dist/Debug/GNU-Linux-x86/libnetworkcommon.so">
+          </makeArtifact>
+          <makeArtifact PL="../networkservice"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="true"
+                        WD="../networkservice"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libnetworkservice.so">
           </makeArtifact>
         </requiredProjects>
       </compileType>

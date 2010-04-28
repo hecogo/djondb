@@ -32,10 +32,7 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/networkclient.o \
-	${OBJECTDIR}/net/requestprocessor.o \
-	${OBJECTDIR}/net/controller.o \
 	${OBJECTDIR}/net/request.o \
-	${OBJECTDIR}/networkservice.o \
 	${OBJECTDIR}/net/response.o
 
 # C Compiler Flags
@@ -65,37 +62,21 @@ dist/Debug/GNU-Linux-x86/libnetworkcommon.so: ${OBJECTFILES}
 ${OBJECTDIR}/networkclient.o: nbproject/Makefile-${CND_CONF}.mk networkclient.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/networkclient.o networkclient.cpp
-
-${OBJECTDIR}/net/requestprocessor.o: nbproject/Makefile-${CND_CONF}.mk net/requestprocessor.cpp 
-	${MKDIR} -p ${OBJECTDIR}/net
-	${RM} $@.d
-	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/requestprocessor.o net/requestprocessor.cpp
-
-${OBJECTDIR}/net/controller.o: nbproject/Makefile-${CND_CONF}.mk net/controller.cpp 
-	${MKDIR} -p ${OBJECTDIR}/net
-	${RM} $@.d
-	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/controller.o net/controller.cpp
+	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/networkclient.o networkclient.cpp
 
 ${OBJECTDIR}/net/request.o: nbproject/Makefile-${CND_CONF}.mk net/request.cpp 
 	${MKDIR} -p ${OBJECTDIR}/net
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/request.o net/request.cpp
-
-${OBJECTDIR}/networkservice.o: nbproject/Makefile-${CND_CONF}.mk networkservice.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/networkservice.o networkservice.cpp
+	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/request.o net/request.cpp
 
 ${OBJECTDIR}/net/response.o: nbproject/Makefile-${CND_CONF}.mk net/response.cpp 
 	${MKDIR} -p ${OBJECTDIR}/net
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/response.o net/response.cpp
+	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/net/response.o net/response.cpp
 
 # Subprojects
 .build-subprojects:
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/common && ${MAKE}  -f Makefile CONF=Debug
-	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf:
@@ -105,7 +86,6 @@ ${OBJECTDIR}/net/response.o: nbproject/Makefile-${CND_CONF}.mk net/response.cpp
 # Subprojects
 .clean-subprojects:
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/common && ${MAKE}  -f Makefile CONF=Debug clean
-	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

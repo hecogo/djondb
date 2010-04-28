@@ -44,7 +44,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>ui</Elem>
+    <Elem>/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/ui</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

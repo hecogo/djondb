@@ -47,7 +47,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-server/common/dist/Debug/GNU-Linux-x86 -L/home/cross/workspace/jaguar/jaguar/jaguar-server/common/dist/Debug/GNU-Linux-x86 -lcommon -Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86 -L/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86 -lnetworkcommon -Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar/dist/Debug/GNU-Linux-x86 -L/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar/dist/Debug/GNU-Linux-x86 -ldbjaguar -Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/dist/Debug/GNU-Linux-x86 -L/home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/dist/Debug/GNU-Linux-x86 -lworkflow
+LDLIBSOPTIONS=-Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-server/common/dist/Debug/GNU-Linux-x86 -L/home/cross/workspace/jaguar/jaguar/jaguar-server/common/dist/Debug/GNU-Linux-x86 -lcommon -Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86 -L/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86 -lnetworkcommon -Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar/dist/Debug/GNU-Linux-x86 -L/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar/dist/Debug/GNU-Linux-x86 -ldbjaguar -Wl,-rpath /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/dist/Debug/GNU-Linux-x86 -L/home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/dist/Debug/GNU-Linux-x86 -lworkflow -Wl,-rpath ../networkservice/dist/Debug/GNU-Linux-x86 -L../networkservice/dist/Debug/GNU-Linux-x86 -lnetworkservice
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -61,6 +61,8 @@ dist/Debug/GNU-Linux-x86/jaguar: /home/cross/workspace/jaguar/jaguar/jaguar-serv
 
 dist/Debug/GNU-Linux-x86/jaguar: /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow/dist/Debug/GNU-Linux-x86/libworkflow.so
 
+dist/Debug/GNU-Linux-x86/jaguar: ../networkservice/dist/Debug/GNU-Linux-x86/libnetworkservice.so
+
 dist/Debug/GNU-Linux-x86/jaguar: ${OBJECTFILES}
 	${MKDIR} -p dist/Debug/GNU-Linux-x86
 	${LINK.cc} -lmysqlclient -lz -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/jaguar ${OBJECTFILES} ${LDLIBSOPTIONS} 
@@ -68,7 +70,7 @@ dist/Debug/GNU-Linux-x86/jaguar: ${OBJECTFILES}
 ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon -I../networkservice -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:
@@ -76,10 +78,12 @@ ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.cpp
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon && ${MAKE}  -f Makefile CONF=Debug
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar && ${MAKE}  -f Makefile CONF=Debug
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow && ${MAKE}  -f Makefile CONF=Debug
+	cd ../networkservice && ${MAKE}  -f Makefile CONF=Debug
 	cd ../common && ${MAKE}  -f Makefile CONF=Debug
 	cd ../dbjaguar && ${MAKE}  -f Makefile CONF=Debug
 	cd ../networkcommon && ${MAKE}  -f Makefile CONF=Debug
 	cd ../workflow && ${MAKE}  -f Makefile CONF=Debug
+	cd ../networkservice && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -92,10 +96,12 @@ ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.cpp
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon && ${MAKE}  -f Makefile CONF=Debug clean
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar && ${MAKE}  -f Makefile CONF=Debug clean
 	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/workflow && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../networkservice && ${MAKE}  -f Makefile CONF=Debug clean
 	cd ../common && ${MAKE}  -f Makefile CONF=Debug clean
 	cd ../dbjaguar && ${MAKE}  -f Makefile CONF=Debug clean
 	cd ../networkcommon && ${MAKE}  -f Makefile CONF=Debug clean
 	cd ../workflow && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../networkservice && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

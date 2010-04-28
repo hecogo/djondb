@@ -67,48 +67,49 @@ dist/Debug/GNU-Linux-x86/libworkflow.so: ${OBJECTFILES}
 ${OBJECTDIR}/metadata/commonconnector.o: nbproject/Makefile-${CND_CONF}.mk metadata/commonconnector.cpp 
 	${MKDIR} -p ${OBJECTDIR}/metadata
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/metadata/commonconnector.o metadata/commonconnector.cpp
+	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -I../networkservice -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/metadata/commonconnector.o metadata/commonconnector.cpp
 
 ${OBJECTDIR}/engine/tokenfacade.o: nbproject/Makefile-${CND_CONF}.mk engine/tokenfacade.cpp 
 	${MKDIR} -p ${OBJECTDIR}/engine
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/engine/tokenfacade.o engine/tokenfacade.cpp
+	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -I../networkservice -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/engine/tokenfacade.o engine/tokenfacade.cpp
 
 ${OBJECTDIR}/metadata/masterentity.o: nbproject/Makefile-${CND_CONF}.mk metadata/masterentity.cpp 
 	${MKDIR} -p ${OBJECTDIR}/metadata
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/metadata/masterentity.o metadata/masterentity.cpp
+	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -I../networkservice -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/metadata/masterentity.o metadata/masterentity.cpp
 
 ${OBJECTDIR}/engine/processinstance.o: nbproject/Makefile-${CND_CONF}.mk engine/processinstance.cpp 
 	${MKDIR} -p ${OBJECTDIR}/engine
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/engine/processinstance.o engine/processinstance.cpp
+	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -I../networkservice -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/engine/processinstance.o engine/processinstance.cpp
 
 ${OBJECTDIR}/engine/token.o: nbproject/Makefile-${CND_CONF}.mk engine/token.cpp 
 	${MKDIR} -p ${OBJECTDIR}/engine
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/engine/token.o engine/token.cpp
+	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -I../networkservice -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/engine/token.o engine/token.cpp
 
 ${OBJECTDIR}/workflowcontroller.o: nbproject/Makefile-${CND_CONF}.mk workflowcontroller.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/workflowcontroller.o workflowcontroller.cpp
+	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -I../networkservice -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/workflowcontroller.o workflowcontroller.cpp
 
 ${OBJECTDIR}/wfruntime.o: nbproject/Makefile-${CND_CONF}.mk wfruntime.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/wfruntime.o wfruntime.cpp
+	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -I../networkservice -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/wfruntime.o wfruntime.cpp
 
 ${OBJECTDIR}/metadata.o: nbproject/Makefile-${CND_CONF}.mk metadata.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/metadata.o metadata.cpp
+	$(COMPILE.cc) -g -I../common -I../dbjaguar -I../networkcommon -I../networkservice -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/metadata.o metadata.cpp
 
 # Subprojects
 .build-subprojects:
 	cd ../common && ${MAKE}  -f Makefile CONF=Debug
 	cd ../dbjaguar && ${MAKE}  -f Makefile CONF=Debug
 	cd ../networkcommon && ${MAKE}  -f Makefile CONF=Debug
+	cd ../networkservice && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf:
@@ -120,6 +121,7 @@ ${OBJECTDIR}/metadata.o: nbproject/Makefile-${CND_CONF}.mk metadata.cpp
 	cd ../common && ${MAKE}  -f Makefile CONF=Debug clean
 	cd ../dbjaguar && ${MAKE}  -f Makefile CONF=Debug clean
 	cd ../networkcommon && ${MAKE}  -f Makefile CONF=Debug clean
+	cd ../networkservice && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

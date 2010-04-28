@@ -46,7 +46,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen/dist/Debug/GNU-Linux-x86/libjclientgen.so.1.0.0 /home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui/dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0 -Wl,-rpath ../../../jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86 -L../../../jaguar-server/networkcommon/dist/Debug/GNU-Linux-x86 -lnetworkcommon -Wl,-rpath ../../../jaguar-server/common/dist/Debug/GNU-Linux-x86 -L../../../jaguar-server/common/dist/Debug/GNU-Linux-x86 -lcommon
+LDLIBSOPTIONS=/home/cross/workspace/jaguar/jaguar/libs/libcommon.so /home/cross/workspace/jaguar/jaguar/libs/libjaguarui.so /home/cross/workspace/jaguar/jaguar/libs/libjclientgen.so /home/cross/workspace/jaguar/jaguar/libs/libnetworkcommon.so
 
 nbproject/qt-${CONF}.mk: nbproject/qt-${CONF}.pro FORCE
 	qmake VPATH=. -o qttmp-${CONF}.mk nbproject/qt-${CONF}.pro
@@ -62,7 +62,7 @@ FORCE:
 .build-subprojects:
 
 # Clean Targets
-.clean-conf: ${CLEAN_SUBPROJECTS} nbproject/qt-Debug.mk
+.clean-conf: nbproject/qt-Debug.mk
 	$(MAKE) -f nbproject/qt-Debug.mk distclean
 
 # Subprojects

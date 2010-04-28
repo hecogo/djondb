@@ -12,6 +12,7 @@
             <make-dep-projects>
                 <make-dep-project>../networkcommon</make-dep-project>
                 <make-dep-project>../common</make-dep-project>
+                <make-dep-project>../networkservice</make-dep-project>
                 <make-dep-project>../dbjaguar</make-dep-project>
             </make-dep-projects>
         </data>

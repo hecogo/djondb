@@ -40,56 +40,34 @@
         </ccTool>
         <linkerTool>
           <linkerLibItems>
-            <linkerLibProjectItem>
-              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen"
-                            CT="5"
-                            CN="Debug"
-                            AC="true"
-                            BL="true"
-                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-client/jclientgen"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="dist/Debug/GNU-Linux-x86/libjclientgen.so.1.0.0">
-              </makeArtifact>
-            </linkerLibProjectItem>
-            <linkerLibProjectItem>
-              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui"
-                            CT="5"
-                            CN="Debug"
-                            AC="true"
-                            BL="true"
-                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0">
-              </makeArtifact>
-            </linkerLibProjectItem>
-            <linkerLibProjectItem>
-              <makeArtifact PL="../../../jaguar-server/networkcommon"
-                            CT="2"
-                            CN="Debug"
-                            AC="true"
-                            BL="true"
-                            WD="../../../jaguar-server/networkcommon"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="dist/Debug/GNU-Linux-x86/libnetworkcommon.so">
-              </makeArtifact>
-            </linkerLibProjectItem>
-            <linkerLibProjectItem>
-              <makeArtifact PL="../../../jaguar-server/common"
-                            CT="2"
-                            CN="Debug"
-                            AC="true"
-                            BL="true"
-                            WD="../../../jaguar-server/common"
-                            BC="${MAKE}  -f Makefile CONF=Debug"
-                            CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="dist/Debug/GNU-Linux-x86/libcommon.so">
-              </makeArtifact>
-            </linkerLibProjectItem>
+            <linkerLibFileItem>/home/cross/workspace/jaguar/jaguar/libs/libcommon.so</linkerLibFileItem>
+            <linkerLibFileItem>/home/cross/workspace/jaguar/jaguar/libs/libjaguarui.so</linkerLibFileItem>
+            <linkerLibFileItem>/home/cross/workspace/jaguar/jaguar/libs/libjclientgen.so</linkerLibFileItem>
+            <linkerLibFileItem>/home/cross/workspace/jaguar/jaguar/libs/libnetworkcommon.so</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
+        <requiredProjects>
+          <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-server/common"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="false"
+                        WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/common"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libcommon.so">
+          </makeArtifact>
+          <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="false"
+                        WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libnetworkcommon.so">
+          </makeArtifact>
+        </requiredProjects>
       </compileType>
     </conf>
     <conf name="Release" type="4">

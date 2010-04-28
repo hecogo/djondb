@@ -4,9 +4,12 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <itemPath>Clientes.h</itemPath>
-      <itemPath>Radicacion.h</itemPath>
-      <itemPath>base.h</itemPath>
+      <logicalFolder name="net" displayName="net" projectFiles="true">
+        <itemPath>net/controller.h</itemPath>
+        <itemPath>net/requestprocessor.h</itemPath>
+      </logicalFolder>
+      <itemPath>config.h</itemPath>
+      <itemPath>networkservice.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -15,9 +18,11 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>Clientes.cpp</itemPath>
-      <itemPath>Radicacion.cpp</itemPath>
-      <itemPath>base.cpp</itemPath>
+      <logicalFolder name="net" displayName="net" projectFiles="true">
+        <itemPath>net/controller.cpp</itemPath>
+        <itemPath>net/requestprocessor.cpp</itemPath>
+      </logicalFolder>
+      <itemPath>networkservice.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -25,65 +30,81 @@
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>net</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="Debug" type="5">
+    <conf name="Debug" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
         <platform>2</platform>
       </toolsSet>
-      <qt>
-        <modules>core gui</modules>
-      </qt>
       <compileType>
         <ccTool>
           <incDir>
-            <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui</pElem>
-            <pElem>../../jaguar-server/networkcommon</pElem>
+            <pElem>../networkcommon</pElem>
+            <pElem>../common</pElem>
+            <pElem>../dbjaguar</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
           <linkerLibItems>
             <linkerLibProjectItem>
-              <makeArtifact PL="/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui"
-                            CT="5"
+              <makeArtifact PL="../networkcommon"
+                            CT="2"
                             CN="Debug"
                             AC="true"
                             BL="true"
-                            WD="/home/cross/workspace/jaguar/jaguar/jaguar-client/jaguarui"
+                            WD="../networkcommon"
                             BC="${MAKE}  -f Makefile CONF=Debug"
                             CC="${MAKE}  -f Makefile CONF=Debug clean"
-                            OP="dist/Debug/GNU-Linux-x86/libjaguarui.so.1.0.0">
+                            OP="dist/Debug/GNU-Linux-x86/libnetworkcommon.so">
               </makeArtifact>
             </linkerLibProjectItem>
-            <linkerLibFileItem>/home/cross/workspace/jaguar/jaguar/libs/libnetworkcommon.so</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <requiredProjects>
-          <makeArtifact PL="../../jaguar-server/networkcommon"
+          <makeArtifact PL="../networkcommon"
                         CT="2"
                         CN="Debug"
                         AC="true"
-                        BL="false"
-                        WD="../../jaguar-server/networkcommon"
+                        BL="true"
+                        WD="../networkcommon"
                         BC="${MAKE}  -f Makefile CONF=Debug"
                         CC="${MAKE}  -f Makefile CONF=Debug clean"
                         OP="dist/Debug/GNU-Linux-x86/libnetworkcommon.so">
           </makeArtifact>
+          <makeArtifact PL="../common"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="true"
+                        WD="../common"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libcommon.so">
+          </makeArtifact>
+          <makeArtifact PL="../dbjaguar"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="true"
+                        WD="../dbjaguar"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libdbjaguar.so">
+          </makeArtifact>
         </requiredProjects>
       </compileType>
     </conf>
-    <conf name="Release" type="5">
+    <conf name="Release" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <compilerSet>GNU|GNU</compilerSet>
         <platform>2</platform>
       </toolsSet>
-      <qt>
-        <buildMode>1</buildMode>
-        <modules>core gui</modules>
-      </qt>
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>

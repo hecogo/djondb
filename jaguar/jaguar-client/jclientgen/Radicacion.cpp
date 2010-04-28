@@ -15,9 +15,9 @@ Radicacion::Radicacion(QWidget* parent, Qt::WindowFlags flags) : ScreenBase(pare
     addRow("Test", createText(false));
     addRow("Test", createText(true));
 
-    addAction("Action1", SLOT(action1));
-    addAction("Action2", SLOT(action1));
-    addAction("Action3", SLOT(action1));
+    addAction("Action1", SLOT(action1()));
+    addAction("Action2", SLOT(action1()));
+    addAction("Action3", SLOT(action1()));
     // 0001ACT 03NEWDEFI011FFFF
 }
 

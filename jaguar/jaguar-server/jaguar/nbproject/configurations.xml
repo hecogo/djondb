@@ -33,6 +33,7 @@
           <incDir>
             <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-server/common</pElem>
             <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-server/networkcommon</pElem>
+            <pElem>../networkservice</pElem>
           </incDir>
         </ccTool>
         <linkerTool>
@@ -85,6 +86,18 @@
                             OP="dist/Debug/GNU-Linux-x86/libworkflow.so">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../networkservice"
+                            CT="2"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../networkservice"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="dist/Debug/GNU-Linux-x86/libnetworkservice.so">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
           <commandLine>-lmysqlclient -lz</commandLine>
         </linkerTool>
@@ -128,6 +141,16 @@
                         BC="${MAKE}  -f Makefile CONF=Debug"
                         CC="${MAKE}  -f Makefile CONF=Debug clean"
                         OP="dist/Debug/GNU-Linux-x86/libworkflow.so">
+          </makeArtifact>
+          <makeArtifact PL="../networkservice"
+                        CT="2"
+                        CN="Debug"
+                        AC="true"
+                        BL="true"
+                        WD="../networkservice"
+                        BC="${MAKE}  -f Makefile CONF=Debug"
+                        CC="${MAKE}  -f Makefile CONF=Debug clean"
+                        OP="dist/Debug/GNU-Linux-x86/libnetworkservice.so">
           </makeArtifact>
         </requiredProjects>
       </compileType>
