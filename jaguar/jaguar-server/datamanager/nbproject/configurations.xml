@@ -5,6 +5,11 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="manager" projectFiles="true">
+        <logicalFolder name="f1" displayName="transaction" projectFiles="true">
+          <itemPath>manager/transaction/transaction.h</itemPath>
+          <itemPath>manager/transaction/transactionentry.h</itemPath>
+          <itemPath>manager/transaction/transactionmanager.h</itemPath>
+        </logicalFolder>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/attributeMD.h</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.h</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entityMD.h</itemPath>
@@ -19,6 +24,11 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="manager" projectFiles="true">
+        <logicalFolder name="f1" displayName="transaction" projectFiles="true">
+          <itemPath>manager/transaction/transaction.cpp</itemPath>
+          <itemPath>manager/transaction/transactionentry.cpp</itemPath>
+          <itemPath>manager/transaction/transactionmanager.cpp</itemPath>
+        </logicalFolder>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/attributeMD.cpp</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.cpp</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entityMD.cpp</itemPath>

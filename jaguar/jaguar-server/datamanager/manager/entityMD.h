@@ -24,6 +24,16 @@ public:
     EntityMD();
     EntityMD(const EntityMD& orig);
     virtual ~EntityMD();
+    void setAttributesMD(std::vector<AttributeMD>* _attributesMD);
+    std::vector<AttributeMD>* getAttributesMD() const;
+    void setTableName(std::string* _tableName);
+    std::string* getTableName() const;
+    void setEntityType(ENTITY_TYPE _entityType);
+    ENTITY_TYPE getEntityType() const;
+    void setEntityName(std::string* _entityName);
+    std::string* getEntityName() const;
+    void setIdEntity(int _idEntity);
+    int getIdEntity() const;
 
     int getId();
     

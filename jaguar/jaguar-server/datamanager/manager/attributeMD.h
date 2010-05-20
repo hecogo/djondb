@@ -22,6 +22,18 @@ public:
     AttributeMD();
     AttributeMD(const AttributeMD& orig);
     virtual ~AttributeMD();
+    void setAttributeTableName(std::string* attributeTableName);
+    std::string* getAttributeTableName() const;
+    void setAttributeLength(int attributeLength);
+    int getAttributeLength() const;
+    void setAttributeType(ATTRIBUTETYPE* attributeType);
+    ATTRIBUTETYPE* getAttributeType() const;
+    void setAttributeDisplay(std::string* attributeDisplay);
+    std::string* getAttributeDisplay() const;
+    void setAttributeName(std::string* attributeName);
+    std::string* getAttributeName() const;
+    void setIdAttribute(int idAttribute);
+    int getIdAttribute() const;
 private:
     int idAttribute;
     std::string* attributeName;

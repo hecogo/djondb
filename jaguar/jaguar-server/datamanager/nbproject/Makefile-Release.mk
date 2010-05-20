@@ -33,7 +33,10 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entityMD.o \
 	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/attributeMD.o \
-	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.o
+	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.o \
+	${OBJECTDIR}/manager/transaction/transactionmanager.o \
+	${OBJECTDIR}/manager/transaction/transaction.o \
+	${OBJECTDIR}/manager/transaction/transactionentry.o
 
 # C Compiler Flags
 CFLAGS=
@@ -73,6 +76,21 @@ ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/m
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.o /home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.cpp
+
+${OBJECTDIR}/manager/transaction/transactionmanager.o: nbproject/Makefile-${CND_CONF}.mk manager/transaction/transactionmanager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/manager/transaction
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/manager/transaction/transactionmanager.o manager/transaction/transactionmanager.cpp
+
+${OBJECTDIR}/manager/transaction/transaction.o: nbproject/Makefile-${CND_CONF}.mk manager/transaction/transaction.cpp 
+	${MKDIR} -p ${OBJECTDIR}/manager/transaction
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/manager/transaction/transaction.o manager/transaction/transaction.cpp
+
+${OBJECTDIR}/manager/transaction/transactionentry.o: nbproject/Makefile-${CND_CONF}.mk manager/transaction/transactionentry.cpp 
+	${MKDIR} -p ${OBJECTDIR}/manager/transaction
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/manager/transaction/transactionentry.o manager/transaction/transactionentry.cpp
 
 # Subprojects
 .build-subprojects:

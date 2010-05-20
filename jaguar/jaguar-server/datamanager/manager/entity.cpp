@@ -16,3 +16,12 @@ Entity::Entity(const Entity& orig) {
 Entity::~Entity() {
 }
 
+void Entity::setValue(const char* xpath, void* value) {
+}
+
+void* Entity::getValue(const char* xpath) {
+}
+
+AttributeMD* Entity::getAttributeMD(const char* xpath) {
+    return NULL;
+}
