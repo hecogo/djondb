@@ -57,6 +57,12 @@ void AttributeMD::setIdAttribute(int idAttribute) {
 int AttributeMD::getIdAttribute() const {
     return idAttribute;
 }
+void AttributeMD::setEntityRelated(EntityMD* _entityRelated) {
+    this->_entityRelated = _entityRelated;
+}
+EntityMD* AttributeMD::getEntityRelated() const {
+    return _entityRelated;
+}
 
 AttributeMD::AttributeMD(const AttributeMD& orig) {
 }

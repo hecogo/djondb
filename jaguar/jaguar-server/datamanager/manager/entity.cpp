@@ -6,6 +6,7 @@
  */
 
 #include "entity.h"
+#include "entityMD.h"
 
 Entity::Entity() {
 }
@@ -23,5 +24,10 @@ void* Entity::getValue(const char* xpath) {
 }
 
 AttributeMD* Entity::getAttributeMD(const char* xpath) {
+    _entityMd->getAttributesMD(xpath);
     return NULL;
+}
+
+void Entity::setTransaction(Transaction* transaction) {
+    _transaction = transaction;
 }

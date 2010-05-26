@@ -10,6 +10,8 @@
 
 #include <string>
 
+#include "entityMD.h"
+
 enum ATTRIBUTETYPE {
     INT,
     BOOLEAN,
@@ -34,6 +36,8 @@ public:
     std::string* getAttributeName() const;
     void setIdAttribute(int idAttribute);
     int getIdAttribute() const;
+    void setEntityRelated(EntityMD* _entityRelated);
+    EntityMD* getEntityRelated() const;
 private:
     int idAttribute;
     std::string* attributeName;
@@ -43,6 +47,7 @@ private:
     int attributeLength; // 0 by default
 
     std::string* attributeTableName;
+    EntityMD* _entityRelated;
 };
 
 #endif	/* _ATTRIBUTEMD_H */

@@ -16,7 +16,7 @@ public:
     TransactionManager(const TransactionManager& orig);
     virtual ~TransactionManager();
 
-    Transaction startTransaction();
+    Transaction* startTransaction();
 private:
 
 };

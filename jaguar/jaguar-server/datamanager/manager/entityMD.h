@@ -26,6 +26,7 @@ public:
     virtual ~EntityMD();
     void setAttributesMD(std::vector<AttributeMD>* _attributesMD);
     std::vector<AttributeMD>* getAttributesMD() const;
+    AttributeMD* getAttributeMD(const char* xpath) const;
     void setTableName(std::string* _tableName);
     std::string* getTableName() const;
     void setEntityType(ENTITY_TYPE _entityType);

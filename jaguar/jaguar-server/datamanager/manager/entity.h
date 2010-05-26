@@ -11,10 +11,13 @@
 #include <map>
 #include <string>
 
+#include "transaction/transaction.h"
+
 using namespace std;
 
 class EntityMD;
 class AttributeMD;
+class Transaction;
 
 class Entity {
 public:
@@ -24,11 +27,13 @@ public:
     void setValue(const char* xpath, void* value);
     void* getValue(const char* xpath);
     AttributeMD* getAttributeMD(const char* xpath);
+    void setTransaction(Transaction* transaction);
 
 private:
     EntityMD* _entityMd;
     int id;
     map<string, void**> _attributeValues;
+    Transaction* _transaction;
 
 };
 

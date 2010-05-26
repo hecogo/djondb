@@ -52,3 +52,55 @@ void format(char* dest, char* s, ...) {
     memcpy(dest, buffer, lenbuf);
     free(buffer);
 }
+
+char* nextProp(char* source, int &index) {
+    char* n;
+    char* prop = NULL;
+    if ((n = strchr(source, '.')) != NULL) {
+        int l = n-source;
+        n = n+1;
+        prop = (char*)malloc(l);
+        memset(prop, 0, l);
+        memcpy(prop, source, l);
+        index = l;
+    } else {
+        int l = strlen(source);
+        prop = (char*)malloc(l);
+        memset(prop, 0, l);
+        memcpy(prop, source, l);
+        index = -1;
+    }
+    return prop;
+}
+
+void setLastError(int errorCode, const char* description, ...) {
+    __errorCode = errorCode;
+
+    int len = strlen(description) * 2;
+    char* buffer = (char*)malloc(len);
+    memset(buffer, 0, len);
+
+    va_list ap;
+    va_start(ap, &s);
+    int lenbuf = vsprintf(buffer, description, ap);
+    va_end(ap);
+
+    memcpy(__errorDescription, buffer, lenbuf);
+    free(buffer);
+}
+
+void clearLastError() {
+    __errorCode = 0;
+    if (__errorDescription) {
+        free(__errorDescription);
+    }
+    __errorDescription = NULL;
+}
+
+int getLastErrorCode() {
+    return __errorCode;
+}
+
+const char* getLastErrorDescription() {
+    return __errorDescription;
+}
