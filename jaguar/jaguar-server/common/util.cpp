@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <cstdarg>
 
+int __errorCode;
+char* __errorDescription;
+
 string toString(float value) {
     stringstream ss;
     ss << value;
@@ -45,7 +48,7 @@ void format(char* dest, char* s, ...) {
     memset(buffer, 0, len);
 
     va_list ap;
-    va_start(ap, &s);
+    va_start(ap, s);
     int lenbuf = vsprintf(buffer, s, ap);
     va_end(ap);
 
@@ -53,8 +56,8 @@ void format(char* dest, char* s, ...) {
     free(buffer);
 }
 
-char* nextProp(char* source, int &index) {
-    char* n;
+char* nextProp(const char* source, int &index) {
+    const char* n;
     char* prop = NULL;
     if ((n = strchr(source, '.')) != NULL) {
         int l = n-source;
@@ -81,10 +84,12 @@ void setLastError(int errorCode, const char* description, ...) {
     memset(buffer, 0, len);
 
     va_list ap;
-    va_start(ap, &s);
+    va_start(ap, description);
     int lenbuf = vsprintf(buffer, description, ap);
     va_end(ap);
 
+    __errorDescription = (char*)malloc(lenbuf);
+    memset(__errorDescription, 0, lenbuf);
     memcpy(__errorDescription, buffer, lenbuf);
     free(buffer);
 }

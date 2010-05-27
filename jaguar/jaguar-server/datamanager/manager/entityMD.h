@@ -24,8 +24,8 @@ public:
     EntityMD();
     EntityMD(const EntityMD& orig);
     virtual ~EntityMD();
-    void setAttributesMD(std::vector<AttributeMD>* _attributesMD);
-    std::vector<AttributeMD>* getAttributesMD() const;
+    void setAttributesMD(std::vector<AttributeMD*>* _attributesMD);
+    std::vector<AttributeMD*>* getAttributesMD() const;
     AttributeMD* getAttributeMD(const char* xpath) const;
     void setTableName(std::string* _tableName);
     std::string* getTableName() const;
@@ -48,7 +48,7 @@ private:
     std::string* _tableName;
 
 // Attributes Information
-    std::vector<AttributeMD>* _attributesMD;
+    std::vector<AttributeMD*>* _attributesMD;
 
 };
 

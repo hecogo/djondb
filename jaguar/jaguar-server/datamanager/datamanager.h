@@ -8,7 +8,9 @@
 #ifndef _DATAMANAGER_H
 #define	_DATAMANAGER_H
 
-
+#include "manager/entityMD.h"
+#include "manager/attributeMD.h"
+#include "manager/entity.h"
 
 #endif	/* _DATAMANAGER_H */
 

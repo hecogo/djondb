@@ -38,7 +38,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>util</Elem>
+    <Elem>/home/cross/workspace/jaguar/jaguar/jaguar-server/common/util</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

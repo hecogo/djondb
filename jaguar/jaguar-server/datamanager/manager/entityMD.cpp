@@ -14,11 +14,11 @@
 EntityMD::EntityMD() {
 }
 
-void EntityMD::setAttributesMD(std::vector<AttributeMD>* _attributesMD) {
+void EntityMD::setAttributesMD(std::vector<AttributeMD*>* _attributesMD) {
     this->_attributesMD = _attributesMD;
 }
 
-std::vector<AttributeMD>* EntityMD::getAttributesMD() const {
+std::vector<AttributeMD*>* EntityMD::getAttributesMD() const {
     return _attributesMD;
 }
 
@@ -27,12 +27,13 @@ AttributeMD* EntityMD::getAttributeMD(const char* xpath) const {
     char* prop = nextProp(xpath, index);
     vector<AttributeMD*>::iterator iter = _attributesMD->begin();
     AttributeMD* attribute = NULL;
-    while (true) {
-        const char* attrName = iter->getAttributeName().c_str();
+    while (iter != _attributesMD->end()) {
+        const char* attrName = (*iter)->getAttributeName()->c_str();
         if (strcasecmp(prop, attrName) == 0) {
-            attribute = iter;
+            attribute = *iter;
             break;
         }
+        iter++;
     }
     if (index > -1) {
         EntityMD* relatedEntity = attribute->getEntityRelated();
@@ -41,6 +42,10 @@ AttributeMD* EntityMD::getAttributeMD(const char* xpath) const {
             return NULL;
         }
         attribute = relatedEntity->getAttributeMD(xpath + index + 1);
+    }
+    if (attribute == NULL) {
+        setLastError(1002, "The xpath: %s is not valid from the Entity: %s", xpath, getEntityName()->c_str());
+        return NULL;
     }
     return attribute;
 }

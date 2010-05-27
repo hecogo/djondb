@@ -24,8 +24,8 @@ void* Entity::getValue(const char* xpath) {
 }
 
 AttributeMD* Entity::getAttributeMD(const char* xpath) {
-    _entityMd->getAttributesMD(xpath);
-    return NULL;
+    AttributeMD* attribute = _entityMd->getAttributeMD(xpath);
+    return attribute;
 }
 
 void Entity::setTransaction(Transaction* transaction) {

@@ -1,3 +1,6 @@
+#ifndef _UTIL_H
+#define	_UTIL_H
+
 #include <string>
 #include <sstream>
 #include <dirent.h>
@@ -41,15 +44,13 @@ void format(char* dest, char* s, ...);
  * };
  *
  **/
-char* nextProp(char* source, int &index);
+char* nextProp(const char* source, int &index);
 
 /***************************************************************************/
 // Error Managment
 /***************************************************************************/
-int __errorCode;
-const char* __errorDescription;
-
 void setLastError(int errorCode, const char* description, ...);
 void clearLastError();
 int getLastErrorCode();
 const char* getLastErrorDescription();
+#endif	/* _UTIL_H */

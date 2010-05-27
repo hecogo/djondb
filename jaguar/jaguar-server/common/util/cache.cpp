@@ -23,7 +23,7 @@ namespace cache {
 
     CacheItem::~CacheItem() {
         cout << "~CacheItem()" << endl;
-        delete(value);
+        free(value);
     }
 
     CacheItem::CacheItem(string newkey, void* newvalue) {

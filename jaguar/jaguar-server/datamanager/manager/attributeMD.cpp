@@ -26,11 +26,11 @@ int AttributeMD::getAttributeLength() const {
     return attributeLength;
 }
 
-void AttributeMD::setAttributeType(ATTRIBUTETYPE* attributeType) {
+void AttributeMD::setAttributeType(ATTRIBUTETYPE attributeType) {
     this->attributeType = attributeType;
 }
 
-ATTRIBUTETYPE* AttributeMD::getAttributeType() const {
+ATTRIBUTETYPE AttributeMD::getAttributeType() const {
     return attributeType;
 }
 

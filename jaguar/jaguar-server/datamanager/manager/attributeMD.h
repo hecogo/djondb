@@ -28,8 +28,8 @@ public:
     std::string* getAttributeTableName() const;
     void setAttributeLength(int attributeLength);
     int getAttributeLength() const;
-    void setAttributeType(ATTRIBUTETYPE* attributeType);
-    ATTRIBUTETYPE* getAttributeType() const;
+    void setAttributeType(ATTRIBUTETYPE attributeType);
+    ATTRIBUTETYPE getAttributeType() const;
     void setAttributeDisplay(std::string* attributeDisplay);
     std::string* getAttributeDisplay() const;
     void setAttributeName(std::string* attributeName);
@@ -43,7 +43,7 @@ private:
     std::string* attributeName;
     std::string* attributeDisplay;
 
-    ATTRIBUTETYPE* attributeType;
+    ATTRIBUTETYPE attributeType;
     int attributeLength; // 0 by default
 
     std::string* attributeTableName;
