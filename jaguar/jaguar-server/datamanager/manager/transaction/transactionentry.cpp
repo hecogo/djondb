@@ -16,7 +16,7 @@ void TransactionEntry::setValue(void* _value) {
     this->_value = _value;
 }
 
-void* TransactionEntry::setValue() const {
+void* TransactionEntry::getValue() const {
     return _value;
 }
 
@@ -42,5 +42,13 @@ void TransactionEntry::setId(int _id) {
 
 int TransactionEntry::setId() const {
     return _id;
+}
+
+void TransactionEntry::setIdEntityKey(int _idEntityKey) {
+    this->_idEntityKey = _idEntityKey;
+}
+
+int TransactionEntry::getIdEntityKey() const {
+    return _idEntityKey;
 }
 

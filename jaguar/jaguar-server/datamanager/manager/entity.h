@@ -21,13 +21,15 @@ class Transaction;
 
 class Entity {
 public:
-    Entity();
+    Entity(EntityMD* entityMD);
     Entity(const Entity& orig);
     virtual ~Entity();
     void setValue(const char* xpath, void* value);
     void* getValue(const char* xpath);
     AttributeMD* getAttributeMD(const char* xpath);
     void setTransaction(Transaction* transaction);
+    void setId(int id);
+    int getId() const;
 
 private:
     EntityMD* _entityMd;

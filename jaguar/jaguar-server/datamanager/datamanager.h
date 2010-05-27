@@ -12,5 +12,8 @@
 #include "manager/attributeMD.h"
 #include "manager/entity.h"
 
+Entity* createEntity(int idEntity);
+EntityMD* getEntityMD(int id);
+
 #endif	/* _DATAMANAGER_H */
 

@@ -30,6 +30,7 @@
           <itemPath>manager/transaction/transactionmanager.cpp</itemPath>
         </logicalFolder>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/attributeMD.cpp</itemPath>
+        <itemPath>datamanager.cpp</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.cpp</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entityMD.cpp</itemPath>
       </logicalFolder>

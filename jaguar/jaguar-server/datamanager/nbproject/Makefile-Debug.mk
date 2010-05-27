@@ -36,7 +36,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.o \
 	${OBJECTDIR}/manager/transaction/transactionmanager.o \
 	${OBJECTDIR}/manager/transaction/transaction.o \
-	${OBJECTDIR}/manager/transaction/transactionentry.o
+	${OBJECTDIR}/manager/transaction/transactionentry.o \
+	${OBJECTDIR}/datamanager.o
 
 # C Compiler Flags
 CFLAGS=
@@ -95,6 +96,11 @@ ${OBJECTDIR}/manager/transaction/transactionentry.o: nbproject/Makefile-${CND_CO
 	${MKDIR} -p ${OBJECTDIR}/manager/transaction
 	${RM} $@.d
 	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/manager/transaction/transactionentry.o manager/transaction/transactionentry.cpp
+
+${OBJECTDIR}/datamanager.o: nbproject/Makefile-${CND_CONF}.mk datamanager.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/datamanager.o datamanager.cpp
 
 # Subprojects
 .build-subprojects:

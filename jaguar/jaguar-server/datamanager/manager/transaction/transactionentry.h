@@ -14,18 +14,21 @@ public:
     TransactionEntry(const TransactionEntry& orig);
     virtual ~TransactionEntry();
     void setValue(void* _value);
-    void* setValue() const;
+    void* getValue() const;
     void setIdAttribute(int _idAttribute);
     int setIdAttribute() const;
     void setIdEntity(int _idEntity);
     int setIdEntity() const;
     void setId(int _id);
     int setId() const;
-    
+    void setIdEntityKey(int _idEntityKey);
+    int getIdEntityKey() const;
+
 private:
     int _id;
     int _idEntity;
     int _idAttribute;
+    int _idEntityKey;
 
     void* _value;
 };
