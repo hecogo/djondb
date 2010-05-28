@@ -6,7 +6,7 @@
  */
 
 #include <string.h>
-
+#include <stdlib.h>
 #include "entityMD.h"
 #include "util.h"
 #include "attributeMD.h"
@@ -23,30 +23,37 @@ std::vector<AttributeMD*>* EntityMD::getAttributesMD() const {
 }
 
 AttributeMD* EntityMD::getAttributeMD(const char* xpath) const {
+    Logger* log = getLogger(NULL);
+    log->debug(string("logging ") + xpath);
     int index;
     char* prop = nextProp(xpath, index);
     vector<AttributeMD*>::iterator iter = _attributesMD->begin();
     AttributeMD* attribute = NULL;
     while (iter != _attributesMD->end()) {
         const char* attrName = (*iter)->getAttributeName()->c_str();
+        log->debug(string(attrName));
         if (strcasecmp(prop, attrName) == 0) {
             attribute = *iter;
             break;
         }
         iter++;
     }
+    free(prop);
     if (index > -1) {
         EntityMD* relatedEntity = attribute->getEntityRelated();
         if (relatedEntity == NULL) {
             setLastError(1001, "the property %s is not related to an entity, the xpath %s is not valid", prop, xpath);
+            delete(log);
             return NULL;
         }
         attribute = relatedEntity->getAttributeMD(xpath + index + 1);
     }
     if (attribute == NULL) {
         setLastError(1002, "The xpath: %s is not valid from the Entity: %s", xpath, getEntityName()->c_str());
+        delete(log);
         return NULL;
     }
+    delete(log);
     return attribute;
 }
 

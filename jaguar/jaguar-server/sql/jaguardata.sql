@@ -1,7 +1,7 @@
 -- MySQL Administrator dump 1.4
 --
 -- ------------------------------------------------------
--- Server version	5.1.37-1ubuntu5
+-- Server version	5.1.41-3ubuntu12.1
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -38,8 +38,8 @@ CREATE TABLE  `jaguardata`.`key_table` (
 
 /*!40000 ALTER TABLE `key_table` DISABLE KEYS */;
 LOCK TABLES `key_table` WRITE;
-INSERT INTO `jaguardata`.`key_table` VALUES  ('token',250),
- ('processinstance',100);
+INSERT INTO `jaguardata`.`key_table` VALUES  ('token',350),
+ ('processinstance',200);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `key_table` ENABLE KEYS */;
 
@@ -70,7 +70,21 @@ INSERT INTO `jaguardata`.`processinstance` VALUES  (1,1,0,1),
  (5,1,0,1),
  (6,1,0,1),
  (51,1,0,1),
- (52,1,0,1);
+ (52,1,0,1),
+ (101,1,0,1),
+ (102,1,0,1),
+ (103,1,0,1),
+ (104,1,0,1),
+ (151,1,0,1),
+ (152,1,0,1),
+ (153,1,0,1),
+ (154,1,0,1),
+ (155,1,0,1),
+ (156,1,0,1),
+ (157,1,0,1),
+ (158,1,0,1),
+ (159,1,0,1),
+ (160,1,0,1);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `processinstance` ENABLE KEYS */;
 
@@ -102,7 +116,21 @@ INSERT INTO `jaguardata`.`tokens` VALUES  (1,1,1,4),
  (6,1,6,2),
  (151,1,1,2),
  (201,1,51,2),
- (202,1,52,2);
+ (202,1,52,2),
+ (251,1,101,2),
+ (252,1,102,2),
+ (253,1,103,2),
+ (254,1,104,2),
+ (301,1,151,2),
+ (302,1,152,2),
+ (303,1,153,2),
+ (304,1,154,2),
+ (305,1,155,2),
+ (306,1,156,2),
+ (307,1,157,2),
+ (308,1,158,2),
+ (309,1,159,2),
+ (310,1,160,2);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
 

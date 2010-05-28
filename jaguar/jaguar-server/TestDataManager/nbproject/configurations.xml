@@ -33,6 +33,7 @@
           <incDir>
             <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager</pElem>
             <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-server/common</pElem>
+            <pElem>/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar</pElem>
           </incDir>
         </ccTool>
         <linkerTool>

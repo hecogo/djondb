@@ -31,6 +31,7 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/entityda.o \
 	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entityMD.o \
 	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/attributeMD.o \
 	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.o \
@@ -62,6 +63,11 @@ LDLIBSOPTIONS=
 dist/Release/GNU-Linux-x86/libdatamanager.so: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
 	${LINK.cc} -shared -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libdatamanager.so -fPIC ${OBJECTFILES} ${LDLIBSOPTIONS} 
+
+${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/entityda.o: nbproject/Makefile-${CND_CONF}.mk /home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/entityda.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/entityda.o /home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/entityda.cpp
 
 ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entityMD.o: nbproject/Makefile-${CND_CONF}.mk /home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entityMD.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager

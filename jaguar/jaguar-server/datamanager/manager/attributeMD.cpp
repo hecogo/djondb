@@ -10,14 +10,6 @@
 AttributeMD::AttributeMD() {
 }
 
-void AttributeMD::setAttributeTableName(std::string* attributeTableName) {
-    this->attributeTableName = attributeTableName;
-}
-
-std::string* AttributeMD::getAttributeTableName() const {
-    return attributeTableName;
-}
-
 void AttributeMD::setAttributeLength(int attributeLength) {
     this->attributeLength = attributeLength;
 }

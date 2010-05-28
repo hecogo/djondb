@@ -15,5 +15,7 @@
 Entity* createEntity(int idEntity);
 EntityMD* getEntityMD(int id);
 
+void loadEntitiesMD();
+
 #endif	/* _DATAMANAGER_H */
 

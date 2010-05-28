@@ -70,7 +70,7 @@ char* nextProp(const char* source, int &index) {
         int l = strlen(source);
         prop = (char*)malloc(l);
         memset(prop, 0, l);
-        memcpy(prop, source, l);
+        strcpy(prop, source);
         index = -1;
     }
     return prop;
