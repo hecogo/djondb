@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 
+#include "dbjaguar.h"
 #include "datamanager.h"
 #include "util.h"
 #include <string>
@@ -63,7 +64,11 @@ EntityMD* createEntities() {
  * 
  */
 int main(int argc, char** argv) {
-    EntityMD* root = createEntities();
+    getDefaultMDConnection();
+    int a;
+    cin >> a;
+    loadEntitiesMD();
+    EntityMD* root = getEntityMD(1);
     AttributeMD* attr = root->getAttributeMD("customer.name");
     if (attr != NULL) {
         cout << "found" << endl;

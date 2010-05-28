@@ -48,6 +48,9 @@ void MySQLResultSet::close() throw (DBException) {
 
 void* MySQLResultSet::get(int col) throw (DBException) {
     char* value = (char*) m_currentRow[col];
+    if (value == NULL) {
+        return NULL;
+    }
     MYSQL_FIELD field = m_res_fields[col];
     void* res = NULL;
     switch (field.type) {

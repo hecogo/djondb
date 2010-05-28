@@ -36,8 +36,6 @@ public:
     void setIdEntity(int _idEntity);
     int getIdEntity() const;
 
-    int getId();
-
 private:
 // Entity Metadata
     int _idEntity;

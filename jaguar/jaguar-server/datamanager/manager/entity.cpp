@@ -10,6 +10,7 @@
 #include "attributeMD.h"
 #include "util.h"
 #include "../datamanager.h"
+#include <stdlib.h>
 
 Entity::Entity(EntityMD* entityMD) {
     _entityMd = entityMD;
@@ -28,6 +29,7 @@ void Entity::setValue(const char* xpath, void* value) {
     int index;
     char* prop = nextProp(xpath, index);
     AttributeMD* attribute = _entityMd->getAttributeMD(prop);
+    free(prop);
     if (attribute == NULL) {
         // The error code is in LastError
         return;
@@ -59,6 +61,7 @@ void* Entity::getValue(const char* xpath) {
     int index;
     char* prop = nextProp(xpath, index);
     AttributeMD* attribute = _entityMd->getAttributeMD(prop);
+    free(prop);
     if (attribute == NULL) {
         // The error code is in LastError
         return NULL;
