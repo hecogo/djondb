@@ -31,7 +31,7 @@ void Entity::setValue(const char* xpath, void* value) {
     AttributeMD* attribute = _entityMd->getAttributeMD(prop);
     free(prop);
     if (attribute == NULL) {
-        // The error code is in LastError
+        setLastError(1002, "Attribute: %s not found in the entity: %s", prop, xpath);
         return;
     }
     void* currentValue = _attributeValues[*attribute->getAttributeName()];
@@ -47,7 +47,7 @@ void Entity::setValue(const char* xpath, void* value) {
         }
         Entity* entity = (Entity*) currentValue;
         if (entity == NULL) {
-            entity = createEntity(relatedEntityMD->getIdEntity());
+            entity = createEntity(relatedEntityMD->getIdEntity(), _transaction);
             entity->setTransaction(_transaction);
         }
         _transaction->addEntry(_entityMd->getIdEntity(), attribute->getIdAttribute(), getId(), entity);

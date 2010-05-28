@@ -11,8 +11,11 @@
 #include "manager/entityMD.h"
 #include "manager/attributeMD.h"
 #include "manager/entity.h"
+#include "manager/transaction/transactionmanager.h"
 
-Entity* createEntity(int idEntity);
+class Transaction;
+
+Entity* createEntity(int idEntity, Transaction* transaction);
 EntityMD* getEntityMD(int id);
 
 void loadEntitiesMD();

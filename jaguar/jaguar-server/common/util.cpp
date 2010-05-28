@@ -65,12 +65,14 @@ char* nextProp(const char* source, int &index) {
         prop = (char*)malloc(l);
         memset(prop, 0, l);
         memcpy(prop, source, l);
+        prop[l] = 0;
         index = l;
     } else {
         int l = strlen(source);
         prop = (char*)malloc(l);
         memset(prop, 0, l);
         strcpy(prop, source);
+        prop[l] = 0;
         index = -1;
     }
     return prop;

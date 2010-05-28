@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <map>
+#include <string.h>
 
 class TransactionEntry;
 
@@ -19,6 +20,7 @@ private:
     int _idAttrib;
     int _entityKey;
     const char* _globalKey;
+    int _transactionKeyType; // 0 Entity - 1 Global
 public:
     TransactionKey() {
 
@@ -34,10 +36,24 @@ public:
         _idEntity = idEntity;
         _idAttrib = idAttrib;
         _entityKey = entityKey;
+        _transactionKeyType = 0;
     }
 
     TransactionKey(const char* globalKey) {
         _globalKey = globalKey;
+        _transactionKeyType = 1;
+    }
+/*
+    bool operator==(TransactionKey& comp1, TransactionKey& comp2) {
+        return (_transactionKeyType == 0) ? ((comp._entityKey = this->_entityKey) &&
+                (comp._idAttrib == this->_idAttrib) && (comp._idEntity == this->_idEntity)) :
+            (strcmp(comp._globalKey, this->_globalKey) == 0);
+    }
+     */
+    bool operator==(const TransactionKey& comp) const {
+        return (_transactionKeyType == 0) ? ((comp._entityKey == _entityKey) &&
+                (comp._idAttrib == _idAttrib) && (comp._idEntity == _idEntity)) :
+            (strcmp(comp._globalKey, _globalKey) == 0);
     }
 
     void setEntityKey(int _entityKey) {
@@ -65,6 +81,12 @@ public:
     }
 };
 
+struct cmp_key {
+    bool operator()(const TransactionKey* a, const TransactionKey* b) {
+        return (*a == *b);
+    }
+};
+
 class Transaction {
 public:
     Transaction();
@@ -77,7 +99,7 @@ private:
     int _checkpoints;
 
     std::vector<TransactionEntry*> _entries;
-    std::map<TransactionKey*, TransactionEntry* > _entriesMap;
+    std::map<TransactionKey*, TransactionEntry*, cmp_key > _entriesMap;
     TransactionKey* getKey(int idEntity, int idAttrib, int entityKey);
     TransactionKey* getKey(const char* globalName);
 

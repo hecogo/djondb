@@ -36,8 +36,21 @@ TransactionKey* Transaction::getKey(const char* globalName) {
 
 void* Transaction::getValue(int idEntity, int idAttrib, int entityKey) {
     TransactionKey* key = getKey(idEntity, idAttrib, entityKey);
+    std::map< TransactionKey*, TransactionEntry* >::iterator iter2 = _entriesMap.begin();
+    TransactionEntry* test = NULL;
+    while (iter2 != _entriesMap.end()) {
+        TransactionKey* ikey = iter2->first;
+        TransactionEntry* entry = iter2->second;
+        if ((*ikey) == (*key)) {
+            test = entry;
+            break;
+        }
+        iter2++;
+    }
+
     std::map< TransactionKey*, TransactionEntry* >::iterator iter = _entriesMap.find(key);
     // not found
+    TransactionEntry* entry2 = iter->second;
     if (iter == _entriesMap.end()) {
         return NULL;
     } else {

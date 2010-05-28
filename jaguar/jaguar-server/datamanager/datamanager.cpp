@@ -4,6 +4,8 @@
 #include "dbjaguar.h"
 #include "util.h"
 
+class Transaction;
+
 EntityMD* getEntityMD(int idEntity) {
     cache::CacheGroup* group = cache::getGlobalCache("DATAMANAGER");
     std::map<int, EntityMD*>* entities = (std::map<int, EntityMD*>*)group->get(string("ENTITYMD"));
@@ -15,10 +17,11 @@ EntityMD* getEntityMD(int idEntity) {
     return iter->second;
 }
 
-Entity* createEntity(int idEntity) {
+Entity* createEntity(int idEntity, Transaction* transaction) {
     EntityMD* md = getEntityMD(idEntity);
     
     Entity* result = new Entity(md);
+    result->setTransaction(transaction);
     result->setId(getNextKey(*md->getTableName()));
 
     return result;

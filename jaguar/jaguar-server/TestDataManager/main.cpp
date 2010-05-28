@@ -16,6 +16,12 @@
 
 using namespace std;
 
+#define ERROR_CHECK() \
+if (getLastErrorCode() > 0) { \
+    cout << "An error ocurred: " << getLastErrorCode() << ". Description: " << getLastErrorDescription() << endl; \
+    exit(1); \
+}
+
 EntityMD* createEntities() {
     EntityMD* entityMD = new EntityMD();
     entityMD->setEntityName(new string("Solicitud"));
@@ -76,6 +82,29 @@ int main(int argc, char** argv) {
         cout << "Error: " << getLastErrorCode() << endl;
         return (EXIT_FAILURE);
     }
+    TransactionManager manager;
+    Transaction* transaction = manager.startTransaction();
+    Entity* request = createEntity(1, transaction);
+    request->setValue("value", new int(1));
+    ERROR_CHECK();
+    request->setValue("value2", new int(1));
+
+    int* value = (int*)request->getValue("value");
+    ERROR_CHECK();
+    cout << "Value " << *value << endl;
+
+    char* name = "pedro";
+    request->setValue("customer.name", name);
+    ERROR_CHECK();
+
+    name = (char*)request->getValue("customer.name");
+    ERROR_CHECK();
+    
+    cout << "name: " << name << endl;
+    delete(transaction);
+    delete(request);
+    delete(attr);
+    delete(root);
     return (EXIT_SUCCESS);
 }
 
