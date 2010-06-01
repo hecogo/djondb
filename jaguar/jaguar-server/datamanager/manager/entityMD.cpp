@@ -36,12 +36,12 @@ AttributeMD* EntityMD::getAttributeMD(const char* xpath) const {
         }
         iter++;
     }
-    free(prop);
     if (index > -1) {
         EntityMD* relatedEntity = attribute->getEntityRelated();
         if (relatedEntity == NULL) {
             setLastError(1001, "the property %s is not related to an entity, the xpath %s is not valid", prop, xpath);
             delete(log);
+            free(prop);
             return NULL;
         }
         attribute = relatedEntity->getAttributeMD(xpath + index + 1);

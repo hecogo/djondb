@@ -32,3 +32,4 @@ void loadEntitiesMD() {
     cache::CacheGroup* group = cache::getGlobalCache("DATAMANAGER");
     group->add(string("ENTITYMD"), entities);
 }
+

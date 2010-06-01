@@ -29,11 +29,12 @@ void Entity::setValue(const char* xpath, void* value) {
     int index;
     char* prop = nextProp(xpath, index);
     AttributeMD* attribute = _entityMd->getAttributeMD(prop);
-    free(prop);
     if (attribute == NULL) {
-        setLastError(1002, "Attribute: %s not found in the entity: %s", prop, xpath);
+        setLastError(1002, "The attribute '%s' was not found in the entity '%s'", prop, _entityMd->getEntityName()->c_str());
+        free(prop);
         return;
     }
+    free(prop);
     void* currentValue = _attributeValues[*attribute->getAttributeName()];
     void* transactionValue = _transaction->getValue(_entityMd->getIdEntity(), attribute->getIdAttribute(), id);
     if (transactionValue != NULL) {
