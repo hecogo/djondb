@@ -24,14 +24,12 @@ std::vector<AttributeMD*>* EntityMD::getAttributesMD() const {
 
 AttributeMD* EntityMD::getAttributeMD(const char* xpath) const {
     Logger* log = getLogger(NULL);
-    log->debug(string("logging ") + xpath);
     int index;
     char* prop = nextProp(xpath, index);
     vector<AttributeMD*>::iterator iter = _attributesMD->begin();
     AttributeMD* attribute = NULL;
     while (iter != _attributesMD->end()) {
         const char* attrName = (*iter)->getAttributeName()->c_str();
-        log->debug(string(attrName));
         if (strcasecmp(prop, attrName) == 0) {
             attribute = *iter;
             break;

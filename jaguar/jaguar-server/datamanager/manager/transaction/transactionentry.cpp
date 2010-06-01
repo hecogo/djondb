@@ -9,7 +9,7 @@ TransactionEntry::TransactionEntry(const TransactionEntry& orig) {
 }
 
 TransactionEntry::~TransactionEntry() {
-
+    delete(_value);
 }
 
 void TransactionEntry::setValue(void* _value) {

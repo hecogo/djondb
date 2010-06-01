@@ -85,22 +85,42 @@ int main(int argc, char** argv) {
     TransactionManager manager;
     Transaction* transaction = manager.startTransaction();
     Entity* request = createEntity(1, transaction);
+
+    cout << "Setting value to: " << 1 << endl;
+
     request->setValue("value", new int(1));
     ERROR_CHECK();
-    request->setValue("value2", new int(1));
 
     int* value = (int*)request->getValue("value");
     ERROR_CHECK();
-    cout << "Value " << *value << endl;
+    cout << "Retrieved Value for 'value': " << *value << endl;
 
-    char* name = "pedro";
+    string* name = new string("pedro");
+    cout << "Setting customer.name to: " << *name << endl;
     request->setValue("customer.name", name);
     ERROR_CHECK();
 
-    name = (char*)request->getValue("customer.name");
+    name = (string*)request->getValue("customer.name");
     ERROR_CHECK();
     
-    cout << "name: " << name << endl;
+    cout << "Retrieved value for 'customer.name': " << *name << endl;
+
+    name = new string("Otra cosa");
+    cout << "Changing value for: 'customer.name' to: " << *name << endl;
+    
+    request->setValue("customer.name", new string("juan"));
+    ERROR_CHECK();
+    request->setValue("customer.lastname", new string("crossley"));
+    ERROR_CHECK();
+    
+    name = (string*)request->getValue("customer.name");
+    ERROR_CHECK();
+    cout << "Retrieved value for 'customer.name': " << *name << endl;
+
+    name = (string*)request->getValue("customer.lastname");
+    ERROR_CHECK();
+    cout << "Retrieved value for 'customer.lastname': " << *name << endl;
+
     delete(transaction);
     delete(request);
     delete(attr);

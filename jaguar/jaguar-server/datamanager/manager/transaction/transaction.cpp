@@ -22,6 +22,12 @@ Transaction::Transaction(const Transaction& orig) {
 }
 
 Transaction::~Transaction() {
+    std::map<TransactionKey*, TransactionEntry*, cmp_key >::iterator iter = _entriesMap.begin();
+    while (iter != _entriesMap.end()) {
+        TransactionEntry* entry = iter->second;
+        delete(entry);
+        iter++;
+    }
 }
 
 TransactionKey* Transaction::getKey(int idEntity, int idAttrib, int entityKey) {
@@ -36,6 +42,7 @@ TransactionKey* Transaction::getKey(const char* globalName) {
 
 void* Transaction::getValue(int idEntity, int idAttrib, int entityKey) {
     TransactionKey* key = getKey(idEntity, idAttrib, entityKey);
+    /*
     std::map< TransactionKey*, TransactionEntry* >::iterator iter2 = _entriesMap.begin();
     TransactionEntry* test = NULL;
     while (iter2 != _entriesMap.end()) {
@@ -47,10 +54,9 @@ void* Transaction::getValue(int idEntity, int idAttrib, int entityKey) {
         }
         iter2++;
     }
-
+    */
     std::map< TransactionKey*, TransactionEntry* >::iterator iter = _entriesMap.find(key);
     // not found
-    TransactionEntry* entry2 = iter->second;
     if (iter == _entriesMap.end()) {
         return NULL;
     } else {
@@ -68,5 +74,9 @@ void Transaction::addEntry(int idEntity, int idAttrib, int entityKey, void* valu
 
     _entries.push_back(entry);
     TransactionKey* key = getKey(idEntity, idAttrib, entityKey);
+    std::map<TransactionKey*, TransactionEntry*, cmp_key >::iterator iter = _entriesMap.find(key);
+    if (iter != _entriesMap.end()) {
+        _entriesMap.erase(iter);
+    }
     _entriesMap.insert(std::pair<TransactionKey*, TransactionEntry*>(key, entry));
 }

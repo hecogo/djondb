@@ -41,6 +41,12 @@ void loadAttributes(EntityMD* entMD, std::map<int, EntityMD*>* entities) {
         }
         loaded->push_back(attrMD);
     }
+
+    rs->close();
+    delete(rs);
+    conn->close();
+    delete(conn);
+
     entMD->setAttributesMD(loaded);
 }
 

@@ -49,8 +49,8 @@ void Entity::setValue(const char* xpath, void* value) {
         if (entity == NULL) {
             entity = createEntity(relatedEntityMD->getIdEntity(), _transaction);
             entity->setTransaction(_transaction);
+            _transaction->addEntry(_entityMd->getIdEntity(), attribute->getIdAttribute(), getId(), entity);
         }
-        _transaction->addEntry(_entityMd->getIdEntity(), attribute->getIdAttribute(), getId(), entity);
         entity->setValue(xpath + index + 1, value);
     } else {
         _transaction->addEntry(_entityMd->getIdEntity(), attribute->getIdAttribute(), getId(), value);

@@ -49,6 +49,7 @@ public:
                 (comp._idAttrib == this->_idAttrib) && (comp._idEntity == this->_idEntity)) :
             (strcmp(comp._globalKey, this->_globalKey) == 0);
     }
+
      */
     bool operator==(const TransactionKey& comp) const {
         return (_transactionKeyType == 0) ? ((comp._entityKey == _entityKey) &&
@@ -83,7 +84,19 @@ public:
 
 struct cmp_key {
     bool operator()(const TransactionKey* a, const TransactionKey* b) {
-        return (*a == *b);
+        if (a->getIdEntity() < b->getIdEntity()) {
+            return true;
+        } else if (a->getIdEntity() > b->getIdEntity()) {
+            return false;
+        } else if (a->getIdAttrib() < b->getIdAttrib()) {
+            return true;
+        } else if (a->getIdAttrib() > b->getIdAttrib()) {
+            return false;
+        } else if (a->getEntityKey() < b->getEntityKey()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 };
 
