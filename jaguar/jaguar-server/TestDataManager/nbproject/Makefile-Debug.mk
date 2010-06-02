@@ -70,6 +70,9 @@ ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.cpp
 
 # Subprojects
 .build-subprojects:
+	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager && ${MAKE}  -f Makefile CONF=Debug
+	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/common && ${MAKE}  -f Makefile CONF=Debug
+	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar && ${MAKE}  -f Makefile CONF=Debug
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -78,6 +81,9 @@ ${OBJECTDIR}/main.o: nbproject/Makefile-${CND_CONF}.mk main.cpp
 
 # Subprojects
 .clean-subprojects:
+	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager && ${MAKE}  -f Makefile CONF=Debug clean
+	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/common && ${MAKE}  -f Makefile CONF=Debug clean
+	cd /home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar && ${MAKE}  -f Makefile CONF=Debug clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

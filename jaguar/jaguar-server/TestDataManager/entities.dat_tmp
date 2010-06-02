@@ -1,5 +1,10 @@
+// Atributos y entidades en orden por id
+//.id.entname.enttype.tablename
+//.id.atname.attype.display.-.identrelated.length
+// el .-. es porque el diplay puede tener .
 .1.request.1.request {
 .1.value.1.value.-.null.0
+.2.customer.1.customer.-.2.0
 }
 .2.customer.1.cust {
 .3.name.1.name.-.null.0

@@ -12,7 +12,8 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/TestDataManager/entities.dat</itemPath>
+      <itemPath>entities.dat</itemPath>
+      <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/TestDataManager/entities.dat_tmp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -83,7 +84,7 @@
                         CT="2"
                         CN="Debug"
                         AC="true"
-                        BL="false"
+                        BL="true"
                         WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager"
                         BC="${MAKE}  -f Makefile CONF=Debug"
                         CC="${MAKE}  -f Makefile CONF=Debug clean"
@@ -93,7 +94,7 @@
                         CT="2"
                         CN="Debug"
                         AC="true"
-                        BL="false"
+                        BL="true"
                         WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/common"
                         BC="${MAKE}  -f Makefile CONF=Debug"
                         CC="${MAKE}  -f Makefile CONF=Debug clean"
@@ -103,7 +104,7 @@
                         CT="2"
                         CN="Debug"
                         AC="true"
-                        BL="false"
+                        BL="true"
                         WD="/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar"
                         BC="${MAKE}  -f Makefile CONF=Debug"
                         CC="${MAKE}  -f Makefile CONF=Debug clean"

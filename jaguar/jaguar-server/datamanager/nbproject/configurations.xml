@@ -16,6 +16,7 @@
           <itemPath>manager/transaction/transactionmanager.h</itemPath>
         </logicalFolder>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/attributeMD.h</itemPath>
+        <itemPath>manager/entitiesdeploy.h</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.h</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entityMD.h</itemPath>
       </logicalFolder>
@@ -38,10 +39,11 @@
           <itemPath>manager/transaction/transactionmanager.cpp</itemPath>
         </logicalFolder>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/attributeMD.cpp</itemPath>
-        <itemPath>datamanager.cpp</itemPath>
+        <itemPath>manager/entitiesdeploy.cpp</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entity.cpp</itemPath>
         <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/entityMD.cpp</itemPath>
       </logicalFolder>
+      <itemPath>datamanager.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

@@ -5,6 +5,7 @@
 #include "datamanager.h"
 #include "dbjaguar.h"
 #include "util.h"
+#include "manager/entitiesdeploy.h"
 
 class Transaction;
 
@@ -35,11 +36,18 @@ void loadEntitiesMD() {
     group->add(string("ENTITYMD"), entities);
 }
 
+void deployEntities(std::string data) {
+    char* result = deployEntities(data.c_str());
+    cout << result << endl;
+}
+
 void deployEntities(std::istream *input) {
     stringbuf* ss = new stringbuf();
     while (!input->eof()) {
         (*input) >> ss;
     }
 
-    cout << ss->str() << endl;
+    string data = ss->str();
+    deployEntities(data);
+    delete(ss);
 }
