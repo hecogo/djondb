@@ -130,15 +130,18 @@ void testDeploy() {
     ifstream* f = new ifstream("entities.dat", ifstream::in);
     deployEntities((istream*)f);
     f->close();
+    delete(f);
 }
 /*
  * 
  */
 int main(int argc, char** argv) {
     testDeploy();
+    /*
     if (testLoadEntitiesMD()) {
         return (EXIT_FAILURE);
     }
+     */
     return (EXIT_SUCCESS);
 }
 
