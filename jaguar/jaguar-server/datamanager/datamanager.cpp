@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "manager/entity.h"
 #include "manager/da/entityda.h"
 #include "datamanager.h"
@@ -33,3 +35,11 @@ void loadEntitiesMD() {
     group->add(string("ENTITYMD"), entities);
 }
 
+void deployEntities(std::istream *input) {
+    stringbuf* ss = new stringbuf();
+    while (!input->eof()) {
+        (*input) >> ss;
+    }
+
+    cout << ss->str() << endl;
+}

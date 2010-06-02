@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -66,10 +67,8 @@ EntityMD* createEntities() {
 
     return entityMD;
 }
-/*
- * 
- */
-int main(int argc, char** argv) {
+
+int testLoadEntitiesMD() {
     getDefaultMDConnection();
     int a;
     cin >> a;
@@ -102,17 +101,17 @@ int main(int argc, char** argv) {
 
     name = (string*)request->getValue("customer.name");
     ERROR_CHECK();
-    
+
     cout << "Retrieved value for 'customer.name': " << *name << endl;
 
     name = new string("Otra cosa");
     cout << "Changing value for: 'customer.name' to: " << *name << endl;
-    
+
     request->setValue("customer.name", new string("juan"));
     ERROR_CHECK();
     request->setValue("customer.lastname", new string("crossley"));
     ERROR_CHECK();
-    
+
     name = (string*)request->getValue("customer.name");
     ERROR_CHECK();
     cout << "Retrieved value for 'customer.name': " << *name << endl;
@@ -125,6 +124,21 @@ int main(int argc, char** argv) {
     delete(request);
     delete(attr);
     delete(root);
+}
+
+void testDeploy() {
+    ifstream* f = new ifstream("entities.dat", ifstream::in);
+    deployEntities((istream*)f);
+    f->close();
+}
+/*
+ * 
+ */
+int main(int argc, char** argv) {
+    testDeploy();
+    if (testLoadEntitiesMD()) {
+        return (EXIT_FAILURE);
+    }
     return (EXIT_SUCCESS);
 }
 

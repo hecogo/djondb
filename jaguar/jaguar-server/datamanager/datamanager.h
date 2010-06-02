@@ -12,6 +12,7 @@
 #include "manager/attributeMD.h"
 #include "manager/entity.h"
 #include "manager/transaction/transactionmanager.h"
+#include <iostream>
 
 class Transaction;
 
@@ -20,5 +21,10 @@ EntityMD* getEntityMD(int id);
 
 void loadEntitiesMD();
 
+/******************************************************************************/
+// Studio Methods
+/******************************************************************************/
+
+void deployEntities(std::istream *input);
 #endif	/* _DATAMANAGER_H */
 

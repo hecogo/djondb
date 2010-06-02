@@ -81,9 +81,9 @@ std::map<int, EntityMD*>* loadEntities() {
 }
 
 void saveEntityMD(EntityMD* entityMD) {
-    Connection* conn = getDefaultMDConnection();
-
-    conn->createStatement()
-    conn->close();
-    delete(conn);
+//    Connection* conn = getDefaultMDConnection();
+//
+//    conn->createStatement()
+//    conn->close();
+//    delete(conn);
 }
