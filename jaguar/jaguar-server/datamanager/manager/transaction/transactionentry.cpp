@@ -1,4 +1,5 @@
 #include "transactionentry.h"
+#include <stdlib.h>
 
 TransactionEntry::TransactionEntry() {
 
@@ -9,7 +10,7 @@ TransactionEntry::TransactionEntry(const TransactionEntry& orig) {
 }
 
 TransactionEntry::~TransactionEntry() {
-    delete(_value);
+    free(_value);
 }
 
 void TransactionEntry::setValue(void* _value) {
