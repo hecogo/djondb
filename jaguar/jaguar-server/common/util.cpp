@@ -32,7 +32,7 @@ vector<string*>* listDir(string dir, string ext) {
     return res;
 }
 
-const char* strtrim(char* str) {
+const char* strtrim(const char* str) {
     string response (str);
     response.erase(response.find_last_not_of(" ") + 1);
     return response.c_str();

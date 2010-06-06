@@ -39,7 +39,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/manager/transaction/transaction.o \
 	${OBJECTDIR}/manager/entitiesdeploy.o \
 	${OBJECTDIR}/manager/transaction/transactionentry.o \
-	${OBJECTDIR}/datamanager.o
+	${OBJECTDIR}/datamanager.o \
+	${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/mysqlentitydeploy.o
 
 # C Compiler Flags
 CFLAGS=
@@ -113,6 +114,11 @@ ${OBJECTDIR}/datamanager.o: nbproject/Makefile-${CND_CONF}.mk datamanager.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/datamanager.o datamanager.cpp
+
+${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/mysqlentitydeploy.o: nbproject/Makefile-${CND_CONF}.mk /home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/mysqlentitydeploy.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da
+	${RM} $@.d
+	$(COMPILE.cc) -g -I/home/cross/workspace/jaguar/jaguar/jaguar-server/common -I/home/cross/workspace/jaguar/jaguar/jaguar-server/dbjaguar -fPIC  -MMD -MP -MF $@.d -o ${OBJECTDIR}/_ext/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/mysqlentitydeploy.o /home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/mysqlentitydeploy.cpp
 
 # Subprojects
 .build-subprojects:

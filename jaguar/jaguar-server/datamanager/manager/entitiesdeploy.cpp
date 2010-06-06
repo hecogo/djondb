@@ -1,5 +1,7 @@
 #include "entitiesdeploy.h"
+#include "da/mysqlentitydeploy.h"
 #include "entity.h"
+#include "util.h"
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -8,23 +10,6 @@
 #include <vector>
 
 using namespace std;
-
-struct SAttribute {
-    int id;
-    char* name;
-    int type;
-    char* display;
-    int idRelatedEntity;
-    int length;
-};
-
-struct SEntity {
-    int id;
-    char* name;
-    int type;
-    char* tableName;
-    vector<SAttribute*> attributes;
-};
 
 //.1.request.1.request {
 //.1.value.1.value.-.null.0
@@ -48,9 +33,11 @@ SEntity* parseEntity(char* data) {
 char* deployEntity(const char* data) {
     char* pointer = (char*) data;
     pointer = strchr(pointer, '{');
-    char* entityData = (char*) malloc(pointer - data);
-    memset(entityData, 0, pointer - data);
-    memcpy(entityData, data, pointer - data);
+    int len = pointer - data;
+    char* entityData = (char*) malloc(len + 1);
+    memset(entityData, 0, len);
+    memcpy(entityData, data, len);
+    entityData[len] = 0;
     SEntity* entity = parseEntity(entityData);
     strtok(pointer + 1, ".");
     char* id = strtok(NULL, ".");
@@ -59,9 +46,9 @@ char* deployEntity(const char* data) {
         SAttribute* attr = new SAttribute();
         attr->id = atoi(id);
         attr->name = strtok(NULL, ".");
-        attr->type = atoi(strtok(NULL, "."));
+        attr->type = static_cast<ATTRIBUTETYPE> (atoi(strtok(NULL, ".")));
         attr->display = strtok(NULL, ".");
-        char* entRelated = strtok(NULL, ".");
+        const char* entRelated = strtok(NULL, ".");
         if (strcmp(entRelated, "null") != 0) {
             attr->idRelatedEntity = atoi(entRelated);
         }
@@ -70,23 +57,25 @@ char* deployEntity(const char* data) {
         id = strtok(NULL, ".");
     }
     free(entityData);
+    return mysql_deployEntity(entity);
 }
 
 char* deployEntities(const char* data) {
     int len = strlen(data);
-    char* srcData = (char*) malloc(len);
+    char* srcData = (char*) malloc(len + 1);
     // Copy the source data
     memset(srcData, 0, len);
-    strcpy(srcData, data);
+    memcpy(srcData, data, len);
+    srcData[len] = 0;
     // pointer to the current data to analize
     const char* dataPointer = srcData;
     while (dataPointer != NULL) {
         const char* tmpData = strchr(dataPointer, '}');
         if (tmpData != NULL) {
             int tmpLen = tmpData - dataPointer + 1;
-            char* entityData = (char*) malloc(tmpLen);
+            char* entityData = (char*) malloc(tmpLen + 1);
             memset(entityData, 0, tmpLen);
-            strncpy(entityData, dataPointer, tmpLen);
+            memcpy(entityData, dataPointer, tmpLen);
             entityData[tmpLen] = 0;
             deployEntity(entityData);
 

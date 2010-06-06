@@ -17,7 +17,7 @@ string toString(float value);
 
 vector<string*>* listDir(string dir, string ext);
 
-const char* strtrim(char* str);
+const char* strtrim(const char* str);
 
 void trim(string* str);
 

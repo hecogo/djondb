@@ -13,10 +13,10 @@
 #include "entityMD.h"
 
 enum ATTRIBUTETYPE {
-    INT,
-    BOOLEAN,
-    DOUBLE,
-    VARCHAR
+    AT_INT,
+    AT_BOOLEAN,
+    AT_DOUBLE,
+    AT_VARCHAR
 };
 
 class AttributeMD {

@@ -9,6 +9,7 @@
       <logicalFolder name="f1" displayName="manager" projectFiles="true">
         <logicalFolder name="f2" displayName="da" projectFiles="true">
           <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/entityda.h</itemPath>
+          <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/mysqlentitydeploy.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="transaction" projectFiles="true">
           <itemPath>manager/transaction/transaction.h</itemPath>
@@ -32,6 +33,7 @@
       <logicalFolder name="f1" displayName="manager" projectFiles="true">
         <logicalFolder name="f2" displayName="da" projectFiles="true">
           <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/entityda.cpp</itemPath>
+          <itemPath>/home/cross/workspace/jaguar/jaguar/jaguar-server/datamanager/manager/da/mysqlentitydeploy.cpp</itemPath>
         </logicalFolder>
         <logicalFolder name="f1" displayName="transaction" projectFiles="true">
           <itemPath>manager/transaction/transaction.cpp</itemPath>

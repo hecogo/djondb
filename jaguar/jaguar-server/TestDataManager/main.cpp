@@ -38,7 +38,7 @@ EntityMD* createEntities() {
     vector<AttributeMD*>* reqAttrsCustomer = new vector<AttributeMD*>();
     AttributeMD* attr_cust1 = new AttributeMD();
     attr_cust1->setAttributeName(new string("name"));
-    attr_cust1->setAttributeType(VARCHAR);
+    attr_cust1->setAttributeType(AT_VARCHAR);
     reqAttrsCustomer->push_back(attr_cust1);
     customerMD->setAttributesMD(reqAttrsCustomer);
 
@@ -54,12 +54,12 @@ EntityMD* createEntities() {
 
     AttributeMD* attr1 = new AttributeMD();
     attr1->setAttributeName(new string("value"));
-    attr1->setAttributeType(INT);
+    attr1->setAttributeType(AT_INT);
     reqAttrs->push_back(attr1);
 
     AttributeMD* attr2 = new AttributeMD();
     attr2->setAttributeName(new string("customer"));
-    attr2->setAttributeType(INT);
+    attr2->setAttributeType(AT_INT);
     attr2->setEntityRelated(customerMD);
     reqAttrs->push_back(attr2);
 
@@ -69,9 +69,6 @@ EntityMD* createEntities() {
 }
 
 int testLoadEntitiesMD() {
-    getDefaultMDConnection();
-    int a;
-    cin >> a;
     loadEntitiesMD();
     EntityMD* root = getEntityMD(1);
     AttributeMD* attr = root->getAttributeMD("customer.name");
@@ -136,6 +133,10 @@ void testDeploy() {
  * 
  */
 int main(int argc, char** argv) {
+    getDefaultMDConnection();
+    cout << "enter a number an hit enter" << endl;
+    int a;
+    cin >> a;
     testDeploy();
     /*
     if (testLoadEntitiesMD()) {
