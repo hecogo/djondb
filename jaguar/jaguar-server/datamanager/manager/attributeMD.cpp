@@ -8,46 +8,49 @@
 #include "attributeMD.h"
 
 AttributeMD::AttributeMD() {
+    _attributeDisplay = NULL;
+    _attributeName = NULL;
+    _attributeTableName = NULL;
 }
 
 void AttributeMD::setAttributeLength(int attributeLength) {
-    this->attributeLength = attributeLength;
+    this->_attributeLength = attributeLength;
 }
 
 int AttributeMD::getAttributeLength() const {
-    return attributeLength;
+    return _attributeLength;
 }
 
 void AttributeMD::setAttributeType(ATTRIBUTETYPE attributeType) {
-    this->attributeType = attributeType;
+    this->_attributeType = attributeType;
 }
 
 ATTRIBUTETYPE AttributeMD::getAttributeType() const {
-    return attributeType;
+    return _attributeType;
 }
 
 void AttributeMD::setAttributeDisplay(std::string* attributeDisplay) {
-    this->attributeDisplay = attributeDisplay;
+    this->_attributeDisplay = attributeDisplay;
 }
 
 std::string* AttributeMD::getAttributeDisplay() const {
-    return attributeDisplay;
+    return _attributeDisplay;
 }
 
 void AttributeMD::setAttributeName(std::string* attributeName) {
-    this->attributeName = attributeName;
+    this->_attributeName = attributeName;
 }
 
 std::string* AttributeMD::getAttributeName() const {
-    return attributeName;
+    return _attributeName;
 }
 
 void AttributeMD::setIdAttribute(int idAttribute) {
-    this->idAttribute = idAttribute;
+    this->_idAttribute = idAttribute;
 }
 
 int AttributeMD::getIdAttribute() const {
-    return idAttribute;
+    return _idAttribute;
 }
 void AttributeMD::setEntityRelated(EntityMD* _entityRelated) {
     this->_entityRelated = _entityRelated;
@@ -60,5 +63,8 @@ AttributeMD::AttributeMD(const AttributeMD& orig) {
 }
 
 AttributeMD::~AttributeMD() {
+    if (_attributeDisplay) delete(_attributeDisplay);
+    if (_attributeName) delete(_attributeName);
+    if (_attributeTableName) delete(_attributeTableName);
 }
 

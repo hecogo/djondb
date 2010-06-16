@@ -10,7 +10,7 @@ TransactionEntry::TransactionEntry(const TransactionEntry& orig) {
 }
 
 TransactionEntry::~TransactionEntry() {
-    free(_value);
+    delete(_value);
 }
 
 void TransactionEntry::setValue(void* _value) {

@@ -37,14 +37,14 @@ public:
     void setEntityRelated(EntityMD* _entityRelated);
     EntityMD* getEntityRelated() const;
 private:
-    int idAttribute;
-    std::string* attributeName;
-    std::string* attributeDisplay;
+    int _idAttribute;
+    std::string* _attributeName;
+    std::string* _attributeDisplay;
 
-    ATTRIBUTETYPE attributeType;
-    int attributeLength; // 0 by default
+    ATTRIBUTETYPE _attributeType;
+    int _attributeLength; // 0 by default
 
-    std::string* attributeTableName;
+    std::string* _attributeTableName;
     EntityMD* _entityRelated;
 };
 

@@ -18,10 +18,10 @@ MySQLStatement::MySQLStatement(MYSQL* _mysql, const char* query) : Statement(_my
         if (res != 0) {
             THROWERROR_STMT();
         };
-        param_count= mysql_stmt_param_count(m_stmt);
+        param_count = mysql_stmt_param_count(m_stmt);
         if (param_count > 0) {
-            m_bind = (MYSQL_BIND*)malloc(sizeof(MYSQL_BIND)*param_count);
-            memset(m_bind, 0, sizeof(MYSQL_BIND)*param_count);
+            m_bind = (MYSQL_BIND*) malloc(sizeof (MYSQL_BIND) * param_count);
+            memset(m_bind, 0, sizeof (MYSQL_BIND) * param_count);
         } else {
             m_bind = NULL;
         }
@@ -55,21 +55,28 @@ void MySQLStatement::setParameter(int param, DBFIELD_TYPE type, void* value) {
 
     enum_field_types mysqltype = getMySQLType(type);
     m_bind[param].buffer_type = mysqltype;
-    m_bind[param].buffer= (char *)value;
-    m_bind[param].is_null= 0;
+    m_bind[param].buffer = (char *) value;
+    m_bind[param].is_null = 0;
     if ((mysqltype == MYSQL_TYPE_STRING) ||
             (mysqltype == MYSQL_TYPE_VARCHAR)) {
         long unsigned *len = new long unsigned(0);
-        *len = strlen((char*)value);
-        m_bind[param].length= len;
+        *len = strlen((char*) value);
+        m_bind[param].length = len;
     } else {
-        m_bind[param].length= 0;
+        m_bind[param].length = 0;
     }
 };
 
 void MySQLStatement::close() {
     mysql_stmt_close(m_stmt);
     if (m_bind) {
+        for (int x = 0; x < param_count; x++) {
+            enum_field_types mysqltype = m_bind[x].buffer_type;
+            if ((mysqltype == MYSQL_TYPE_STRING) ||
+                    (mysqltype == MYSQL_TYPE_VARCHAR)) {
+                delete(m_bind[x].length);
+            }
+        }
         free(m_bind);
     }
 }

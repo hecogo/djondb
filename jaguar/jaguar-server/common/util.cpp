@@ -62,14 +62,14 @@ char* nextProp(const char* source, int &index) {
     if ((n = strchr(source, '.')) != NULL) {
         int l = n-source;
         n = n+1;
-        prop = (char*)malloc(l);
+        prop = (char*)malloc(l+1);
         memset(prop, 0, l);
         memcpy(prop, source, l);
         prop[l] = 0;
         index = l;
     } else {
         int l = strlen(source);
-        prop = (char*)malloc(l);
+        prop = (char*)malloc(l+1);
         memset(prop, 0, l);
         strcpy(prop, source);
         prop[l] = 0;
@@ -110,4 +110,31 @@ int getLastErrorCode() {
 
 const char* getLastErrorDescription() {
     return __errorDescription;
+}
+
+char* lastToken;
+
+char* strtokenizer(char* str, char* delim) {
+    if (str != NULL) {
+        lastToken = str;
+    }
+    if (lastToken == NULL) {
+        return NULL;
+    }
+    char* pointer = strstr(lastToken, delim);
+    if (pointer != NULL) {
+        int len = pointer - lastToken;
+        char* result = (char*)malloc(len + 1);
+        strncpy(result, lastToken, len);
+        result[len] = 0;
+        lastToken = pointer + strlen(delim);
+        return result;
+    } else {
+        int len = strlen(lastToken);
+        char* result = (char*)malloc(len + 1);
+        strncpy(result, lastToken, len);
+        result[len] = 0;
+        lastToken = NULL;
+        return result;
+    }
 }

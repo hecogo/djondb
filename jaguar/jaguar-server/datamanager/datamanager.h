@@ -20,6 +20,7 @@ Entity* createEntity(int idEntity, Transaction* transaction);
 EntityMD* getEntityMD(int id);
 
 void loadEntitiesMD();
+void releaseEntitiesMD();
 
 /******************************************************************************/
 // Studio Methods

@@ -23,6 +23,11 @@ Entity::Entity(const Entity& orig) {
 }
 
 Entity::~Entity() {
+    for (map<string, void**>::iterator iter = _attributeValues.begin();
+            iter != _attributeValues.end();
+            iter++) {
+        free(iter->second);
+    };
 }
 
 void Entity::setValue(const char* xpath, void* value) {
@@ -38,6 +43,9 @@ void Entity::setValue(const char* xpath, void* value) {
     void* currentValue = _attributeValues[*attribute->getAttributeName()];
     void* transactionValue = _transaction->getValue(_entityMd->getIdEntity(), attribute->getIdAttribute(), id);
     if (transactionValue != NULL) {
+        if (currentValue != NULL) {
+            free(currentValue); // free the last value, this avoid a memory leak
+        }
         currentValue = transactionValue;
     }
     if (index > -1) {

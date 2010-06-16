@@ -15,18 +15,26 @@ using namespace std;
 //.1.value.1.value.-.null.0
 //}
 
-SEntity* parseEntity(char* data) {
-    char* entId = strtok(data, ".");
+SEntity* parseEntity(const char* data) {
+    int len = strlen(data);
+    char* entry = (char*) malloc(len + 1);
+    memset(entry, 0, len);
+    strcpy(entry, data);
+    entry[len] = 0;
+    char* entId = strtok(entry, ".");
     char* entName = strtok(NULL, ".");
     char* entType = strtok(NULL, ".");
-    char* tableName = strtok(NULL, ".");
+    char* tableName = strtok(NULL, ". ");
 
     SEntity* entity = new SEntity();
     entity->id = atoi(entId);
-    entity->name = entName;
+    entity->name = (char*) malloc(strlen(entName) + 1);
+    strcpy(entity->name, entName);
     entity->type = atoi(entType);
-    entity->tableName = tableName;
+    entity->tableName = (char*) malloc(strlen(tableName) + 1);
+    strcpy(entity->tableName, tableName);
 
+    free(entry);
     return entity;
 }
 
@@ -34,30 +42,39 @@ char* deployEntity(const char* data) {
     char* pointer = (char*) data;
     pointer = strchr(pointer, '{');
     int len = pointer - data;
-    char* entityData = (char*) malloc(len + 1);
+    char* entityData = (char*) malloc(sizeof (char) * (len + 1));
     memset(entityData, 0, len);
-    memcpy(entityData, data, len);
+    strncpy(entityData, data, len);
     entityData[len] = 0;
     SEntity* entity = parseEntity(entityData);
-    strtok(pointer + 1, ".");
-    char* id = strtok(NULL, ".");
+    free(entityData);
+    free(strtokenizer(pointer + 1, ".")); // release the retrieved value
+    char* id = strtokenizer(NULL, ".");
+    char* t; // temporal reader
     while (id != NULL) {
         //.1.value.1.value.-.null.0
         SAttribute* attr = new SAttribute();
         attr->id = atoi(id);
-        attr->name = strtok(NULL, ".");
-        attr->type = static_cast<ATTRIBUTETYPE> (atoi(strtok(NULL, ".")));
-        attr->display = strtok(NULL, ".");
-        const char* entRelated = strtok(NULL, ".");
+        free(id);
+        attr->name = strtokenizer(NULL, ".");
+        t = strtokenizer(NULL, ".");
+        attr->type = static_cast<ATTRIBUTETYPE> (atoi(t));
+        free(t);
+        attr->display = strtokenizer(NULL, ".-.");
+        char* entRelated = strtokenizer(NULL, ".");
         if (strcmp(entRelated, "null") != 0) {
             attr->idRelatedEntity = atoi(entRelated);
         }
-        attr->length = atoi(strtok(NULL, "."));
+        free(entRelated);
+        t = strtokenizer(NULL, ".");
+        attr->length = atoi(t);
+        free(t);
         entity->attributes.push_back(attr);
-        id = strtok(NULL, ".");
+        id = strtokenizer(NULL, ".");
     }
-    free(entityData);
-    return mysql_deployEntity(entity);
+    char* result = mysql_deployEntity(entity);
+    delete(entity);
+    return result;
 }
 
 char* deployEntities(const char* data) {
@@ -70,6 +87,9 @@ char* deployEntities(const char* data) {
     // pointer to the current data to analize
     const char* dataPointer = srcData;
     while (dataPointer != NULL) {
+        while (dataPointer[0] == '/' && dataPointer[1] == '/') {
+            dataPointer = strchr(dataPointer, '\n') + 1;
+        }
         const char* tmpData = strchr(dataPointer, '}');
         if (tmpData != NULL) {
             int tmpLen = tmpData - dataPointer + 1;
@@ -81,6 +101,9 @@ char* deployEntities(const char* data) {
 
             free(entityData);
             dataPointer = tmpData + 1;
+            while (dataPointer[0] == '\n') {
+                dataPointer++;
+            }
         } else {
             dataPointer = NULL;
         }

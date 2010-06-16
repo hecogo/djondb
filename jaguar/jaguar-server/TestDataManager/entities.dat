@@ -1,3 +1,21 @@
+// Los comentarios deben iniciar con // sin espacios!!!!
+// Atributos y entidades en orden por id
+//.id.entname.enttype.tablename
+//.id.atname.attype.display.-.identrelated.length
+// el .-. es porque el diplay puede tener .
+//    AT_INT, 0
+//    AT_BOOLEAN, 1
+//    AT_DOUBLE, 2
+//    AT_VARCHAR 3
 .1.request.1.request {
-.1.value.1.value.null.0
+.1.value.0.value.-.null.0
+.2.customer.0.customer.-.2.0
+}
+.2.customer.1.cust {
+.3.name.3.name.-.null.50
+.4.doctype.0.doctype.-.3.0
+.6.lastname.3.lastname.-.null.50
+}
+.3.doctype.1.doctype {
+.5.description.3.description.-.null.100
 }

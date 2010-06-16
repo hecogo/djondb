@@ -25,7 +25,7 @@ int getKeyFromDB(string table) {
     }
     resset->close();
     con->close();
-    delete(sql);
+    free(sql);
     delete(resset);
     delete(con);
     return key;

@@ -12,6 +12,7 @@
 #include "attributeMD.h"
 
 EntityMD::EntityMD() {
+    _attributesMD = new vector<AttributeMD*>();
 }
 
 void EntityMD::setAttributesMD(std::vector<AttributeMD*>* _attributesMD) {
@@ -49,9 +50,11 @@ AttributeMD* EntityMD::getAttributeMD(const char* xpath) const {
     if (attribute == NULL) {
         setLastError(1002, "The xpath: %s is not valid from the Entity: %s", xpath, getEntityName()->c_str());
         delete(log);
+        free(prop);
         return NULL;
     }
     delete(log);
+    free(prop);
     return attribute;
 }
 
@@ -91,5 +94,15 @@ EntityMD::EntityMD(const EntityMD& orig) {
 }
 
 EntityMD::~EntityMD() {
+    if (_entityName) delete(_entityName);
+    if (_tableName) delete(_tableName);
+    if (_attributesMD != NULL) {
+        for (vector<AttributeMD*>::iterator iter = _attributesMD->begin();
+                iter != _attributesMD->end();
+                iter++) {
+                    delete(*iter);
+        }
+    }
+    delete(_attributesMD);
 }
 

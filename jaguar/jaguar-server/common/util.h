@@ -21,6 +21,9 @@ const char* strtrim(const char* str);
 
 void trim(string* str);
 
+/* strtok with a fixed delimeter, it will use the full delim param to search */
+char* strtokenizer(char* str, char* delim);
+
 void format(char* dest, char* s, ...);
 
 /**

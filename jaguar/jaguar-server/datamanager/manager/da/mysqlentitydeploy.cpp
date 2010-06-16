@@ -3,11 +3,14 @@
 #include "../attributeMD.h"
 #include <iostream>
 #include <sstream>
+#include <stdlib.h>
+#include <string>
+#include <string.h>
 
 using namespace std;
 using namespace dbjaguar;
 
-const char* mysql_createAttribute(SAttribute* attr) {
+char* mysql_createAttribute(SAttribute* attr) {
     stringstream sql;
     sql << attr->name << " ";
     switch (attr->type) {
@@ -24,7 +27,10 @@ const char* mysql_createAttribute(SAttribute* attr) {
             sql << "VARCHAR(" << attr->length << ")";
             break;
     }
-    return sql.str().c_str();
+    string temp = sql.str();
+    char* result = (char*)malloc(temp.length()+1);
+    strcpy(result, temp.c_str());
+    return result;
 }
 
 char* mysql_deployEntity(SEntity* entity) {
@@ -35,7 +41,9 @@ char* mysql_deployEntity(SEntity* entity) {
     for (vector<SAttribute*>::iterator iter = entity->attributes.begin();
             iter != entity->attributes.end();
             iter++) {
-                sql << mysql_createAttribute(*iter) << ", " << endl;
+                char* attr = mysql_createAttribute(*iter);
+                sql << attr << ", " << endl;
+                free(attr);
     }
     sql << "PRIMARY KEY (`id`)" << endl;
     sql << ") ENGINE=MyISAM DEFAULT CHARSET=latin1;" << endl;

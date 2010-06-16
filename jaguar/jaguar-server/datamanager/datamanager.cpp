@@ -22,7 +22,7 @@ EntityMD* getEntityMD(int idEntity) {
 
 Entity* createEntity(int idEntity, Transaction* transaction) {
     EntityMD* md = getEntityMD(idEntity);
-    
+
     Entity* result = new Entity(md);
     result->setTransaction(transaction);
     result->setId(getNextKey(*md->getTableName()));
@@ -34,6 +34,18 @@ void loadEntitiesMD() {
     std::map<int, EntityMD*>* entities = loadEntities();
     cache::CacheGroup* group = cache::getGlobalCache("DATAMANAGER");
     group->add(string("ENTITYMD"), entities);
+}
+
+void releaseEntitiesMD() {
+    cache::CacheGroup* group = cache::getGlobalCache("DATAMANAGER");
+    std::map<int, EntityMD*>* entities = (std::map<int, EntityMD*>*)group->get(string("ENTITYMD"));
+    if (entities != NULL) {
+        for (std::map<int, EntityMD*>::iterator iter = entities->begin();
+                iter != entities->end(); iter++) {
+            delete(iter->second);
+        }
+        delete(entities);
+    }
 }
 
 void deployEntities(std::string data) {

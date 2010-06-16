@@ -11,22 +11,36 @@
 #include <string>
 #include <vector>
 #include "attributeMD.h"
+#include <stdlib.h>
 
 struct SAttribute {
     int id;
-    const char* name;
+    char* name;
     ATTRIBUTETYPE type;
-    const char* display;
+    char* display;
     int idRelatedEntity;
     int length;
+
+    ~SAttribute() {
+        if (name) free(name);
+        if (display) free(display);
+    }
 };
 
 struct SEntity {
     int id;
-    const char* name;
+    char* name;
     int type;
-    const char* tableName;
+    char* tableName;
     std::vector<SAttribute*> attributes;
+
+    ~SEntity() {
+        if (name) free(name);
+        if (tableName) free(tableName);
+        for (std::vector<SAttribute*>::iterator iter = attributes.begin(); iter != attributes.end(); iter++) {
+            delete(*iter);
+        }
+    }
 };
 
 char* deployEntities(const char* data);

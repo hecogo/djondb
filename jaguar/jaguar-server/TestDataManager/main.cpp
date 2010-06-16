@@ -91,18 +91,16 @@ int testLoadEntitiesMD() {
     ERROR_CHECK();
     cout << "Retrieved Value for 'value': " << *value << endl;
 
-    string* name = new string("pedro");
-    cout << "Setting customer.name to: " << *name << endl;
-    request->setValue("customer.name", name);
+    cout << "Setting customer.name to: pedro" << endl;
+    request->setValue("customer.name", new string("pedro"));
     ERROR_CHECK();
 
-    name = (string*)request->getValue("customer.name");
+    string* name = (string*)request->getValue("customer.name");
     ERROR_CHECK();
 
     cout << "Retrieved value for 'customer.name': " << *name << endl;
 
-    name = new string("Otra cosa");
-    cout << "Changing value for: 'customer.name' to: " << *name << endl;
+    cout << "Changing value for: 'customer.name' to: juan" << endl;
 
     request->setValue("customer.name", new string("juan"));
     ERROR_CHECK();
@@ -119,8 +117,7 @@ int testLoadEntitiesMD() {
 
     delete(transaction);
     delete(request);
-    delete(attr);
-    delete(root);
+    releaseEntitiesMD();
 }
 
 void testDeploy() {
@@ -138,11 +135,11 @@ int main(int argc, char** argv) {
     int a;
     cin >> a;
     testDeploy();
-    /*
-    if (testLoadEntitiesMD()) {
+    int r = testLoadEntitiesMD();
+    cache::cleanGlobalCache();
+    if (r) {
         return (EXIT_FAILURE);
     }
-     */
     return (EXIT_SUCCESS);
 }
 
