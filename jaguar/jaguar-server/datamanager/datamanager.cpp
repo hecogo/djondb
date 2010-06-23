@@ -44,7 +44,6 @@ void releaseEntitiesMD() {
                 iter != entities->end(); iter++) {
             delete(iter->second);
         }
-        delete(entities);
     }
 }
 

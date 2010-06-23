@@ -119,6 +119,7 @@ private:
 public:
     void* getValue(int idEntity, int idAttrib, int entityKey);
     void addEntry(int idEntity, int idAttrib, int entityKey, void* value);
+    void commit();
 };
 
 #endif	/* _TRANSACTION_H */

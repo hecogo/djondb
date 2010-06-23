@@ -46,7 +46,7 @@ void* Transaction::getValue(int idEntity, int idAttrib, int entityKey) {
     TransactionKey* key = getKey(idEntity, idAttrib, entityKey);
 
     std::map< TransactionKey*, TransactionEntry* >::iterator iter = _entriesMap.find(key);
-    
+
     delete(key);
     // not found
     if (iter == _entriesMap.end()) {
@@ -71,4 +71,12 @@ void Transaction::addEntry(int idEntity, int idAttrib, int entityKey, void* valu
         _entriesMap.erase(iter);
     }
     _entriesMap.insert(std::pair<TransactionKey*, TransactionEntry*>(key, entry));
+}
+
+void Transaction::commit() {
+    for (std::vector<TransactionEntry*>::iterator iter = _entries.begin();
+            iter != _entries.end();
+            iter++) {
+
+    }
 }
