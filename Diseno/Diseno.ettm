@@ -27,11 +27,11 @@
 	<!ATTLIST Irresolvable 
 		   id CDATA #IMPLIED >
 ]--><TypeManagement projectID="DCE.5E3321C0-9FC1-BF7F-B02C-3C5942D786F8">
-	<Locations nextID="0">
-	</Locations>
+	<Locations nextID="1">
+	<Location locID="T.0" href="./Diseno.etup"/></Locations>
 
    <Types>
-   </Types>
+   <Type id="DCE.C6DA69F8-960D-32F7-BF01-F0A0C97E8349" location="T.0" name="Unnamed"/></Types>
 
 	<IrresolvableTypes>
 	</IrresolvableTypes>
