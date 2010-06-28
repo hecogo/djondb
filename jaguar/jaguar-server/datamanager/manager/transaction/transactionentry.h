@@ -16,11 +16,11 @@ public:
     void setValue(void* _value);
     void* getValue() const;
     void setIdAttribute(int _idAttribute);
-    int setIdAttribute() const;
+    int getIdAttribute() const;
     void setIdEntity(int _idEntity);
-    int setIdEntity() const;
+    int getIdEntity() const;
     void setId(int _id);
-    int setId() const;
+    int getId() const;
     void setIdEntityKey(int _idEntityKey);
     int getIdEntityKey() const;
 

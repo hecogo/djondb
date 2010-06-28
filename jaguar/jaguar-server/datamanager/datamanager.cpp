@@ -62,3 +62,9 @@ void deployEntities(std::istream *input) {
     deployEntities(data);
     delete(ss);
 }
+
+void saveEntityValues(int idEntity, int key, std::vector<int> idAttributes, std::vector<void*> values) {
+    EntityMD* entMD = getEntityMD(idEntity);
+
+    saveEntityData(entMD, key, idAttributes, values);
+}

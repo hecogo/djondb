@@ -10,10 +10,12 @@
 
 #include "transaction.h"
 #include "transactionentry.h"
+#include "../../datamanager.h"
 
 #include <sstream>
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 Transaction::Transaction() {
 }
@@ -74,9 +76,36 @@ void Transaction::addEntry(int idEntity, int idAttrib, int entityKey, void* valu
 }
 
 void Transaction::commit() {
-    for (std::vector<TransactionEntry*>::iterator iter = _entries.begin();
-            iter != _entries.end();
+    int lastIdEntity = 0;
+    int lastKey = 0;
+    std::vector<int> idAttributes;
+    std::vector<void*> values;
+    for (std::map<TransactionKey*, TransactionEntry*>::iterator iter = _entriesMap.begin();
+            iter != _entriesMap.end();
             iter++) {
+        TransactionKey* key = iter->first;
+        TransactionEntry* entry = iter->second;
+        int currentIdEntity = entry->getIdEntity();
+        int currentKey = entry->getIdEntityKey();
 
+        if ((currentIdEntity != lastIdEntity)
+                && (lastKey != currentKey)) {
+            // New entity values
+            if (lastIdEntity != 0) {
+                saveEntityData(lastIdEntity, lastKey, idAttributes, values);
+            }
+            values.clear();
+            idAttributes.clear();
+        }
+        idAttributes.push_back(entry->getIdAttribute());
+        values.push_back(entry->getValue());
+        lastIdEntity = currentIdEntity;
+        lastKey = currentKey;
+    };
+
+    if (lastIdEntity > 0) {
+        saveEntityData(lastIdEntity, lastKey, idAttributes, values);
     }
+    _entries.clear();
+    _entriesMap.clear();
 }

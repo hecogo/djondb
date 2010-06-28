@@ -25,7 +25,7 @@ void TransactionEntry::setIdAttribute(int _idAttribute) {
     this->_idAttribute = _idAttribute;
 }
 
-int TransactionEntry::setIdAttribute() const {
+int TransactionEntry::getIdAttribute() const {
     return _idAttribute;
 }
 
@@ -33,7 +33,7 @@ void TransactionEntry::setIdEntity(int _idEntity) {
     this->_idEntity = _idEntity;
 }
 
-int TransactionEntry::setIdEntity() const {
+int TransactionEntry::getIdEntity() const {
     return _idEntity;
 }
 
@@ -41,7 +41,7 @@ void TransactionEntry::setId(int _id) {
     this->_id = _id;
 }
 
-int TransactionEntry::setId() const {
+int TransactionEntry::getId() const {
     return _id;
 }
 

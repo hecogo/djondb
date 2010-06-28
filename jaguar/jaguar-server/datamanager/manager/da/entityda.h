@@ -12,5 +12,6 @@
 #include "../entityMD.h"
 std::map<int, EntityMD*>* loadEntities();
 
+void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::vector<void*> values);
 #endif	/* _ENTITYDA_H */
 

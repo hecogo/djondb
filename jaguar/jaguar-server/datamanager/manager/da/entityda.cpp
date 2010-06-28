@@ -87,3 +87,26 @@ void saveEntityMD(EntityMD* entityMD) {
 //    conn->close();
 //    delete(conn);
 }
+
+void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::vector<void*> values) {
+    Logger* log = getLogger(NULL);
+
+    EntityMD* entityMD = getEntityMD(idEntity);
+    stringstream ss;
+    ss << "Entity Id: " << entityMD->getIdEntity() << ", Key: " << key;
+    log->debug(ss.str());
+
+    std::vector<int>::iterator iterAttrib = idAttributes.begin();
+    std::vector<void*>::iterator iterValues = values.begin();
+    while (iterAttrib != idAttributes.end()) {
+        int idAttrib = *iterAttrib;
+        void* value = *iterValues;
+        stringstream ss1;
+        ss1 << "IdAttrib: " << idAttrib;
+        ss1 << ", value: " << value;
+        log->debug(ss1.str());
+        iterAttrib++;
+        iterValues++;
+    }
+    delete(log);
+}

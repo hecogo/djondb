@@ -115,6 +115,7 @@ int testLoadEntitiesMD() {
     ERROR_CHECK();
     cout << "Retrieved value for 'customer.lastname': " << *name << endl;
 
+    transaction->commit();
     delete(transaction);
     delete(request);
     releaseEntitiesMD();
