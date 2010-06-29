@@ -71,6 +71,13 @@ namespace dbjaguar {
         PSTATUS_NEW,
         PSTATUS_SAVED
     };
+
+    void setLastError(int errorCode, const char* error);
+
+    const char* getLastError();
+
+    int getLastErrorCode();
+    
     class DBException : public exception {
     private:
         string* message;

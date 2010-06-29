@@ -142,7 +142,7 @@ void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::v
     Connection* con = getDefaultDataConnection();
     Statement* stm = con->createStatement(sql.c_str());
 
-    stm->setParameter(1, DBTYPE_INT24, &key);
+    stm->setParameter(0, DBTYPE_LONG, &key);
     int param = 1;
     iterAttrib = idAttributes.begin();
     for (std::vector<void*>::iterator iterValues = values.begin(); iterValues != values.end(); iterValues++) {
@@ -151,7 +151,7 @@ void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::v
         DBFIELD_TYPE type;
         switch (attrMD->getAttributeType()) {
             case AT_INT:
-                type = DBTYPE_INT24;
+                type = DBTYPE_LONG;
                 break;
             case AT_BOOLEAN:
                 type = DBTYPE_SHORT;
@@ -161,14 +161,21 @@ void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::v
                 break;
             case AT_VARCHAR:
                 type = DBTYPE_STRING;
+                if (value != NULL) {
+                    string* sval = (string*)value;
+                    value = (void*)sval->c_str();
+                }
                 break;
+        }
+        if ((attrMD->getEntityRelated() != NULL) && (value != NULL)) {
+            Entity* entRelated = (Entity*)value;
+            value = (void*)new int(entRelated->getId());
         }
         stm->setParameter(param, type, value);
         iterAttrib++;
         param++;
     }
     int rowsUpdated = stm->executeUpdate();
-
     stm->close();
     delete(stm);
     con->close();

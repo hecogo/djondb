@@ -13,7 +13,21 @@ using namespace dbjaguar;
 
 // This map will be used to retrieve the next id
 ConnectionPool* m_pool;
+int _last_errorcode;
+const char* _last_error;
 
+void dbjaguar::setLastError(int errorCode, const char* error) {
+    _last_errorcode = errorCode;
+    _last_error = error;
+}
+
+const char* dbjaguar::getLastError() {
+    return _last_error;
+}
+
+int dbjaguar::getLastErrorCode() {
+    return _last_errorcode;
+}
 
 void ConnectionPool::initializeConnectionPool() {
     mysql_library_init(0, NULL, NULL);
@@ -74,3 +88,4 @@ void destroyPool() {
     mysql_library_end();
     delete(m_pool);
 }
+
