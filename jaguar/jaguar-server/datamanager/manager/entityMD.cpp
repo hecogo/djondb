@@ -100,9 +100,21 @@ EntityMD::~EntityMD() {
         for (vector<AttributeMD*>::iterator iter = _attributesMD->begin();
                 iter != _attributesMD->end();
                 iter++) {
-                    delete(*iter);
+            delete(*iter);
         }
     }
     delete(_attributesMD);
 }
 
+AttributeMD* EntityMD::getAttributeMD(int idAttrib) const {
+    AttributeMD* attribute = NULL;
+    for (vector<AttributeMD*>::iterator iter = _attributesMD->begin();
+            iter != _attributesMD->end();
+            iter++) {
+        attribute = *iter;
+        if (attribute->getIdAttribute() == idAttrib) {
+            break;
+        }
+    };
+    return attribute;
+}

@@ -11,6 +11,7 @@
 #include "transaction.h"
 #include "transactionentry.h"
 #include "../../datamanager.h"
+#include "../da/entityda.h"
 
 #include <sstream>
 #include <iostream>
@@ -93,9 +94,9 @@ void Transaction::commit() {
             // New entity values
             if (lastIdEntity != 0) {
                 saveEntityData(lastIdEntity, lastKey, idAttributes, values);
+                values.clear();
+                idAttributes.clear();
             }
-            values.clear();
-            idAttributes.clear();
         }
         idAttributes.push_back(entry->getIdAttribute());
         values.push_back(entry->getValue());
