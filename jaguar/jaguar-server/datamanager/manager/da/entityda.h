@@ -8,10 +8,10 @@
 #ifndef _ENTITYDA_H
 #define	_ENTITYDA_H
 
-#include <map>
 #include "../entityMD.h"
 std::map<int, EntityMD*>* loadEntities();
 
-void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::vector<void*> values);
+void createEntity(int idEntity, int key, std::vector<int> idAttributes, std::vector<void*> values);
+void updateEntity(int idEntity, int key, std::vector<int> idAttributes, std::vector<void*> values);
 #endif	/* _ENTITYDA_H */
 
