@@ -17,6 +17,8 @@
 class Transaction;
 
 Entity* createEntity(int idEntity, Transaction* transaction);
+Entity* findEntity(int idEntity, int key);
+Entity* findEntity(int idEntity, int key, Transaction* transaction);
 EntityMD* getEntityMD(int id);
 
 void loadEntitiesMD();

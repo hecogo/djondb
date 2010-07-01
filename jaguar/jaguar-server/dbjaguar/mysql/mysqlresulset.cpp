@@ -141,3 +141,6 @@ void* MySQLResultSet::get(const char* colname) throw (DBException) {
     }
 }
 
+int MySQLResultSet::getColumnCount() {
+    return m_res_numfields;
+}

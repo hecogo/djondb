@@ -63,3 +63,23 @@ void deployEntities(std::istream *input) {
     delete(ss);
 }
 
+Entity* findEntity(int idEntity, int key) {
+    TransactionManager manager;
+    Transaction* trans = manager.startTransaction();
+    Entity* ent = findEntity(idEntity, key, trans);
+    trans->commit();
+    return ent;
+}
+
+Entity* findEntity(int idEntity, int key, Transaction* transaction) {
+    Entity* ent;
+    map<int, void*>* values = findEntityValues(idEntity, key);
+    if (values) {
+        EntityMD* entMD = getEntityMD(idEntity);
+        ent = new Entity(entMD, *values);
+        ent->setTransaction(transaction);
+    } else {
+        ent = NULL;
+    }
+    return ent;
+}

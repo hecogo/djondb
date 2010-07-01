@@ -160,14 +160,14 @@ void createEntity(int idEntity, int key, std::vector<int> idAttributes, std::vec
             case AT_VARCHAR:
                 type = DBTYPE_STRING;
                 if (value != NULL) {
-                    string* sval = (string*)value;
-                    value = (void*)sval->c_str();
+                    string* sval = (string*) value;
+                    value = (void*) sval->c_str();
                 }
                 break;
         }
         if ((attrMD->getEntityRelated() != NULL) && (value != NULL)) {
-            Entity* entRelated = (Entity*)value;
-            value = (void*)new int(entRelated->getId());
+            Entity* entRelated = (Entity*) value;
+            value = (void*) new int(entRelated->getId());
         }
         stm->setParameter(param, type, value);
         iterAttrib++;
@@ -256,4 +256,47 @@ void updateEntity(int idEntity, int key, std::vector<int> idAttributes, std::vec
     delete(con);
     delete(log);
      */
+}
+
+std::map<int, void*>* findEntityValues(int idEntity, int key) {
+    std::map<int, void*>* values = new std::map<int, void*>();
+
+    EntityMD* entMD = getEntityMD(idEntity);
+    Connection* con = getDefaultDataConnection();
+
+    stringstream* ss = new stringstream();
+    *ss << "SELECT ";
+    vector<AttributeMD*>::iterator iter = entMD->getAttributesMD()->begin();
+    while (true) {
+        AttributeMD* attr = *iter;
+        *ss << *attr->getAttributeName();
+        iter++;
+        if (iter != entMD->getAttributesMD()->end()) {
+            *ss << ", ";
+        } else {
+            break;
+        }
+
+    };
+    *ss << " FROM " << *entMD->getTableName();
+    *ss << " WHERE id = " << key;
+    ResultSet* rs = con->executeQuery(ss->str().c_str());
+
+    if (rs->next()) {
+        int col = 0;
+        for (vector<AttributeMD*>::iterator iter = entMD->getAttributesMD()->begin();
+                iter != entMD->getAttributesMD()->end();
+                iter++) {
+            AttributeMD* attr = *iter;
+            values->insert(pair<int, void*>(attr->getIdAttribute(), rs->get(col)));
+            col++;
+        }
+    } else {
+        values = NULL;
+    }
+    rs->close();
+    con->close();
+    delete(ss);
+    delete(con);
+    return values;
 }

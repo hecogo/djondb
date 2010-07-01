@@ -142,6 +142,7 @@ namespace cache {
 
     void cleanGlobalCache() {
         delete(globalCache);
+        globalCache = NULL;
     }
     
     CacheGroup* getRuntimeCache() {

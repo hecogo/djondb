@@ -146,6 +146,8 @@ namespace dbjaguar {
             return NULL;
         }
 
+        virtual int getColumnCount() = 0;
+
         bool operator++(int) {
             return next();
         }
