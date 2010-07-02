@@ -93,7 +93,7 @@ void Transaction::commit() {
                 && (lastKey != currentKey)) {
             // New entity values
             if (lastIdEntity != 0) {
-                saveEntityData(lastIdEntity, lastKey, idAttributes, values);
+                createEntity(lastIdEntity, lastKey, idAttributes, values);
                 values.clear();
                 idAttributes.clear();
             }
@@ -105,7 +105,7 @@ void Transaction::commit() {
     };
 
     if (lastIdEntity > 0) {
-        saveEntityData(lastIdEntity, lastKey, idAttributes, values);
+        createEntity(lastIdEntity, lastKey, idAttributes, values);
     }
     _entries.clear();
     _entriesMap.clear();

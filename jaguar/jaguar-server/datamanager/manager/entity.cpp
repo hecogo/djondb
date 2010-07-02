@@ -11,9 +11,16 @@
 #include "util.h"
 #include "../datamanager.h"
 #include <stdlib.h>
+#include <sstream>
+#include <typeinfo>
 
 Entity::Entity(EntityMD* entityMD) {
     _entityMd = entityMD;
+}
+
+Entity::Entity(EntityMD* entityMD, map<int, void*> values) {
+    _entityMd = entityMD;
+    loadValues(values);
 }
 
 Entity::Entity(const Entity& orig) {
@@ -23,23 +30,38 @@ Entity::Entity(const Entity& orig) {
 }
 
 Entity::~Entity() {
-    for (map<string, void**>::iterator iter = _attributeValues.begin();
+    for (map<string, void*>::iterator iter = _attributeValues.begin();
             iter != _attributeValues.end();
             iter++) {
-        free(iter->second);
+        void* value = iter->second;
+        if (value) {
+            free(value);
+        }
     };
 }
 
-void Entity::setValue(const char* xpath, void* value) {
+int Entity::checkType(AttributeMD* attributeMD, void* value) {
+//    stringstream ss;
+//    ss << "The value cannot be cast to " << attributeMD->getAttributeType();
+//    ss << ". Attribute: " << attributeMD->getAttributeName();
+//    setLastError(1, ss.str().c_str());
+//    cout << typeid(value).name() << endl;
+    return 0;
+}
+
+int Entity::setValue(const char* xpath, void* value) {
     int index;
     char* prop = nextProp(xpath, index);
     AttributeMD* attribute = _entityMd->getAttributeMD(prop);
     if (attribute == NULL) {
         setLastError(1002, "The attribute '%s' was not found in the entity '%s'", prop, _entityMd->getEntityName()->c_str());
         free(prop);
-        return;
+        return 1;
     }
     free(prop);
+    if (checkType(attribute, value)) {
+        return 1;
+    }
     void* currentValue = _attributeValues[*attribute->getAttributeName()];
     void* transactionValue = _transaction->getValue(_entityMd->getIdEntity(), attribute->getIdAttribute(), id);
     if (transactionValue != NULL) {
@@ -52,7 +74,7 @@ void Entity::setValue(const char* xpath, void* value) {
         EntityMD* relatedEntityMD = attribute->getEntityRelated();
         if (relatedEntityMD == NULL) {
             setLastError(1001, "the property %s is not related to an entity, the xpath %s is not valid", prop, xpath);
-            return;
+            return 1;
         }
         Entity* entity = (Entity*) currentValue;
         if (entity == NULL) {
@@ -111,4 +133,19 @@ void Entity::setId(int id) {
 
 int Entity::getId() const {
     return id;
+}
+
+void Entity::loadValues(map<int, void*> values) {
+    for (map<int, void*>::iterator iter = values.begin(); iter != values.end(); iter++) {
+        int idAttrib = iter->first;
+        void* value = iter->second;
+        AttributeMD* attrMD = _entityMd->getAttributeMD(idAttrib);
+        if (value) {
+            void* valCopy = (void*) malloc(sizeof (value));
+            memcpy(valCopy, value, sizeof (value));
+            _attributeValues.insert(pair<string, void*>(*attrMD->getAttributeName(), value));
+        } else {
+            _attributeValues.insert(pair<string, void**>(*attrMD->getAttributeName(), NULL));
+        }
+    }
 }

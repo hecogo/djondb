@@ -11,6 +11,7 @@ AttributeMD::AttributeMD() {
     _attributeDisplay = NULL;
     _attributeName = NULL;
     _attributeTableName = NULL;
+    _entityRelated = NULL;
 }
 
 void AttributeMD::setAttributeLength(int attributeLength) {

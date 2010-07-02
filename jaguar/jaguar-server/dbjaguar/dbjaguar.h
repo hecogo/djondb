@@ -71,6 +71,13 @@ namespace dbjaguar {
         PSTATUS_NEW,
         PSTATUS_SAVED
     };
+
+    void setLastError(int errorCode, const char* error);
+
+    const char* getLastError();
+
+    int getLastErrorCode();
+    
     class DBException : public exception {
     private:
         string* message;
@@ -138,6 +145,8 @@ namespace dbjaguar {
         virtual void* get(const char* colname) throw (DBException) {
             return NULL;
         }
+
+        virtual int getColumnCount() = 0;
 
         bool operator++(int) {
             return next();

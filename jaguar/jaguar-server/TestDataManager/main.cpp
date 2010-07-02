@@ -42,13 +42,13 @@ EntityMD* createEntities() {
     reqAttrsCustomer->push_back(attr_cust1);
     customerMD->setAttributesMD(reqAttrsCustomer);
 
-/*
-    EntityMD* docTypeMD = new EntityMD();
-    docTypeMD->setEntityName(new string("DocType"));
-    docTypeMD->setEntityType(BASIC);
-    docTypeMD->setIdEntity(3);
-    docTypeMD->setTableName(new string("doctype"));
-*/
+    /*
+        EntityMD* docTypeMD = new EntityMD();
+        docTypeMD->setEntityName(new string("DocType"));
+        docTypeMD->setEntityType(BASIC);
+        docTypeMD->setIdEntity(3);
+        docTypeMD->setTableName(new string("doctype"));
+     */
     // Request attributes
     vector<AttributeMD*>* reqAttrs = new vector<AttributeMD*>();
 
@@ -66,6 +66,30 @@ EntityMD* createEntities() {
     entityMD->setAttributesMD(reqAttrs);
 
     return entityMD;
+}
+
+void testLoadEntities() {
+    loadEntitiesMD();
+    TransactionManager manager;
+    Transaction* transaction = manager.startTransaction();
+
+    Entity* customer = createEntity(2, transaction);
+    customer->setValue("name", new string("peter"));
+    customer->setValue("lastname", new string("smith"));
+    transaction->commit();
+
+    Entity* entityResult = findEntity(2, customer->getId());
+
+    if (entityResult == NULL) {
+        cout << "Test error the entity should not exist" << endl;
+    } else {
+        string* name = (string*)entityResult->getValue("name");
+        cout << *name << endl;
+    }
+    delete(entityResult);
+    delete(transaction);
+    releaseEntitiesMD();
+    cache::cleanGlobalCache();
 }
 
 int testLoadEntitiesMD() {
@@ -87,7 +111,7 @@ int testLoadEntitiesMD() {
     request->setValue("value", new int(1));
     ERROR_CHECK();
 
-    int* value = (int*)request->getValue("value");
+    int* value = (int*) request->getValue("value");
     ERROR_CHECK();
     cout << "Retrieved Value for 'value': " << *value << endl;
 
@@ -95,7 +119,7 @@ int testLoadEntitiesMD() {
     request->setValue("customer.name", new string("pedro"));
     ERROR_CHECK();
 
-    string* name = (string*)request->getValue("customer.name");
+    string* name = (string*) request->getValue("customer.name");
     ERROR_CHECK();
 
     cout << "Retrieved value for 'customer.name': " << *name << endl;
@@ -107,11 +131,11 @@ int testLoadEntitiesMD() {
     request->setValue("customer.lastname", new string("crossley"));
     ERROR_CHECK();
 
-    name = (string*)request->getValue("customer.name");
+    name = (string*) request->getValue("customer.name");
     ERROR_CHECK();
     cout << "Retrieved value for 'customer.name': " << *name << endl;
 
-    name = (string*)request->getValue("customer.lastname");
+    name = (string*) request->getValue("customer.lastname");
     ERROR_CHECK();
     cout << "Retrieved value for 'customer.lastname': " << *name << endl;
 
@@ -119,13 +143,30 @@ int testLoadEntitiesMD() {
     delete(transaction);
     delete(request);
     releaseEntitiesMD();
+    cache::cleanGlobalCache();
 }
 
 void testDeploy() {
     ifstream* f = new ifstream("entities.dat", ifstream::in);
-    deployEntities((istream*)f);
+    deployEntities((istream*) f);
     f->close();
     delete(f);
+}
+
+void testTypeCheck() {
+    loadEntitiesMD();
+
+    Transaction* trans = TransactionManager().startTransaction();
+    Entity* request = createEntity(1, trans);
+
+    if (request->setValue("value", new double(20))) {
+        cout << "Error: " << getLastErrorDescription() << endl;
+    }
+
+    delete(request);
+    delete(trans);
+    releaseEntitiesMD();
+    cache::cleanGlobalCache();
 }
 /*
  * 
@@ -137,7 +178,8 @@ int main(int argc, char** argv) {
     cin >> a;
     testDeploy();
     int r = testLoadEntitiesMD();
-    cache::cleanGlobalCache();
+    testLoadEntities();
+    testTypeCheck();
     if (r) {
         return (EXIT_FAILURE);
     }

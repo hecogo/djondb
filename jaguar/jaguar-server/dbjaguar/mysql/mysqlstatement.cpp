@@ -36,11 +36,19 @@ MySQLStatement::~MySQLStatement() {
 
 int MySQLStatement::executeUpdate() {
     if (param_count > 0) {
-        mysql_stmt_bind_param(m_stmt, m_bind);
+        int res = mysql_stmt_bind_param(m_stmt, m_bind);
+        if (res != 0) {
+            setLastError(mysql_stmt_errno(m_stmt), mysql_stmt_error(m_stmt));
+            cout << getLastError() << endl;
+            return -1;
+        }
     }
+    setLastError(-1, NULL);
     int res = mysql_stmt_execute(m_stmt);
     if (res != 0) {
-        cout << mysql_stmt_error(m_stmt) << endl;
+        setLastError(mysql_stmt_errno(m_stmt), mysql_stmt_error(m_stmt));
+
+        cout << getLastError() << endl;
         return -1;
     } else {
         int affected = mysql_stmt_affected_rows(m_stmt);

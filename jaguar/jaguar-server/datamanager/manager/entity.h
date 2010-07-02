@@ -23,8 +23,9 @@ class Entity {
 public:
     Entity(EntityMD* entityMD);
     Entity(const Entity& orig);
+    Entity(EntityMD* entityMD, map<int, void*> values);
     virtual ~Entity();
-    void setValue(const char* xpath, void* value);
+    int setValue(const char* xpath, void* value);
     void* getValue(const char* xpath);
     AttributeMD* getAttributeMD(const char* xpath);
     void setTransaction(Transaction* transaction);
@@ -34,9 +35,11 @@ public:
 private:
     EntityMD* _entityMd;
     int id;
-    map<string, void**> _attributeValues;
+    map<string, void*> _attributeValues;
     Transaction* _transaction;
 
+    void loadValues(map<int, void*> values);
+    int checkType(AttributeMD* attributeMD, void* value);
 };
 
 #endif	/* _ENTITY_H */

@@ -25,6 +25,7 @@ public:
     void close() throw (DBException);
     void* get(int col) throw (DBException);
     void* get(const char* colname) throw (DBException);
+    int getColumnCount();
 };
 
 #endif	/* _MYSQLRESULTSET_H */

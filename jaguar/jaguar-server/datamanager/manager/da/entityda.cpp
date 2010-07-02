@@ -106,15 +106,13 @@ bool entityExist(EntityMD* entityMD, int key) {
     return exist;
 }
 
-void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::vector<void*> values) {
+void createEntity(int idEntity, int key, std::vector<int> idAttributes, std::vector<void*> values) {
     Logger* log = getLogger(NULL);
 
     EntityMD* entityMD = getEntityMD(idEntity);
 
-    bool exist = entityExist(entityMD, key);
-
     stringstream ss;
-    ss << "Entity Id: " << entityMD->getIdEntity() << ", Key: " << key << " exist: " << exist;
+    ss << "Entity Id: " << entityMD->getIdEntity() << ", Key: " << key;
     log->debug(ss.str());
 
     std::vector<int>::iterator iterAttrib = idAttributes.begin();
@@ -142,7 +140,7 @@ void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::v
     Connection* con = getDefaultDataConnection();
     Statement* stm = con->createStatement(sql.c_str());
 
-    stm->setParameter(1, DBTYPE_INT24, &key);
+    stm->setParameter(0, DBTYPE_LONG, &key);
     int param = 1;
     iterAttrib = idAttributes.begin();
     for (std::vector<void*>::iterator iterValues = values.begin(); iterValues != values.end(); iterValues++) {
@@ -151,7 +149,7 @@ void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::v
         DBFIELD_TYPE type;
         switch (attrMD->getAttributeType()) {
             case AT_INT:
-                type = DBTYPE_INT24;
+                type = DBTYPE_LONG;
                 break;
             case AT_BOOLEAN:
                 type = DBTYPE_SHORT;
@@ -161,17 +159,144 @@ void saveEntityData(int idEntity, int key, std::vector<int> idAttributes, std::v
                 break;
             case AT_VARCHAR:
                 type = DBTYPE_STRING;
+                if (value != NULL) {
+                    string* sval = (string*) value;
+                    value = (void*) sval->c_str();
+                }
                 break;
+        }
+        if ((attrMD->getEntityRelated() != NULL) && (value != NULL)) {
+            Entity* entRelated = (Entity*) value;
+            value = (void*) new int(entRelated->getId());
         }
         stm->setParameter(param, type, value);
         iterAttrib++;
         param++;
     }
     int rowsUpdated = stm->executeUpdate();
-
     stm->close();
     delete(stm);
     con->close();
     delete(con);
     delete(log);
+}
+
+void updateEntity(int idEntity, int key, std::vector<int> idAttributes, std::vector<void*> values) {
+    /*
+    Logger* log = getLogger(NULL);
+
+    EntityMD* entityMD = getEntityMD(idEntity);
+
+    stringstream ss;
+    ss << "Entity Id: " << entityMD->getIdEntity() << ", Key: " << key;
+    log->debug(ss.str());
+
+    std::vector<int>::iterator iterAttrib = idAttributes.begin();
+
+    stringstream insertSQLcolumns;
+    insertSQLcolumns << "INSERT INTO " << *entityMD->getTableName() << " (id, ";
+    stringstream insertSQLvalues;
+    insertSQLvalues << ") VALUES (?, ";
+    while (iterAttrib != idAttributes.end()) {
+        int idAttrib = *iterAttrib;
+        AttributeMD* attrMD = entityMD->getAttributeMD(idAttrib);
+        insertSQLcolumns << *attrMD->getAttributeName() << ", ";
+        insertSQLvalues << "?, ";
+        iterAttrib++;
+    }
+    string sql = insertSQLcolumns.str();
+    size_t pos = sql.rfind(", ");
+    sql.erase(sql.begin() + pos, sql.end());
+
+    string sqlvalues = insertSQLvalues.str();
+    pos = sqlvalues.rfind(", ");
+    sql.append(sqlvalues.begin(), sqlvalues.begin() + pos);
+    sql.append(")");
+
+    Connection* con = getDefaultDataConnection();
+    Statement* stm = con->createStatement(sql.c_str());
+
+    stm->setParameter(0, DBTYPE_LONG, &key);
+    int param = 1;
+    iterAttrib = idAttributes.begin();
+    for (std::vector<void*>::iterator iterValues = values.begin(); iterValues != values.end(); iterValues++) {
+        void* value = *iterValues;
+        AttributeMD* attrMD = entityMD->getAttributeMD(*iterAttrib);
+        DBFIELD_TYPE type;
+        switch (attrMD->getAttributeType()) {
+            case AT_INT:
+                type = DBTYPE_LONG;
+                break;
+            case AT_BOOLEAN:
+                type = DBTYPE_SHORT;
+                break;
+            case AT_DOUBLE:
+                type = DBTYPE_DOUBLE;
+                break;
+            case AT_VARCHAR:
+                type = DBTYPE_STRING;
+                if (value != NULL) {
+                    string* sval = (string*)value;
+                    value = (void*)sval->c_str();
+                }
+                break;
+        }
+        if ((attrMD->getEntityRelated() != NULL) && (value != NULL)) {
+            Entity* entRelated = (Entity*)value;
+            value = (void*)new int(entRelated->getId());
+        }
+        stm->setParameter(param, type, value);
+        iterAttrib++;
+        param++;
+    }
+    int rowsUpdated = stm->executeUpdate();
+    stm->close();
+    delete(stm);
+    con->close();
+    delete(con);
+    delete(log);
+     */
+}
+
+std::map<int, void*>* findEntityValues(int idEntity, int key) {
+    std::map<int, void*>* values = new std::map<int, void*>();
+
+    EntityMD* entMD = getEntityMD(idEntity);
+    Connection* con = getDefaultDataConnection();
+
+    stringstream* ss = new stringstream();
+    *ss << "SELECT ";
+    vector<AttributeMD*>::iterator iter = entMD->getAttributesMD()->begin();
+    while (true) {
+        AttributeMD* attr = *iter;
+        *ss << *attr->getAttributeName();
+        iter++;
+        if (iter != entMD->getAttributesMD()->end()) {
+            *ss << ", ";
+        } else {
+            break;
+        }
+
+    };
+    *ss << " FROM " << *entMD->getTableName();
+    *ss << " WHERE id = " << key;
+    ResultSet* rs = con->executeQuery(ss->str().c_str());
+
+    if (rs->next()) {
+        int col = 0;
+        for (vector<AttributeMD*>::iterator iter = entMD->getAttributesMD()->begin();
+                iter != entMD->getAttributesMD()->end();
+                iter++) {
+            AttributeMD* attr = *iter;
+            values->insert(pair<int, void*>(attr->getIdAttribute(), rs->get(col)));
+            col++;
+        }
+    } else {
+        values = NULL;
+    }
+    rs->close();
+    con->close();
+    delete(ss);
+    delete(con);
+    return values;
 }
