@@ -58,6 +58,8 @@ public:
             Response* response = createResponse(instance);
             delete(instance);
             return response;
+        } else if (action->compare("NENT") == 0) {
+            // New Entity Action
         }
         Response* response = new Response(new string("Testing from workflow controller"));
         return response;

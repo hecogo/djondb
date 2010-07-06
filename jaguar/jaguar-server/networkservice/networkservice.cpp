@@ -39,6 +39,8 @@ Thread* m_thread; // Main thread
 extern void AddWorkflow();
 extern void loadProcessDefinitions(Connection* con);
 extern void unloadProcessDefinitions();
+extern void loadEntitiesMD();
+extern void releaseEntitiesMD();
 
 void initializeDatabase() throw (DBException) {
     if (log->isInfo()) log->info("Initializing DB.");
@@ -72,6 +74,7 @@ void NetworkService::start() throw (NetworkException) {
     registerControllers();
     initializeDatabase();
     initializeProcessDefinitions();
+    loadEntitiesMD();
 
     m_thread = new Thread(&startSocketListener);
     m_thread->start(NULL);
@@ -94,6 +97,7 @@ void NetworkService::stop() throw (NetworkException) {
     }
 
     m_thread->join();
+    releaseEntitiesMD();
     unloadProcessDefinitions();
     cache::cleanGlobalCache();
 

@@ -31,12 +31,22 @@ Entity* createEntity(int idEntity, Transaction* transaction) {
 }
 
 void loadEntitiesMD() {
+    Logger* log = getLogger(NULL);
+
+    if (log->isInfo()) log->info("Loading Entities Definitions");
+
     std::map<int, EntityMD*>* entities = loadEntities();
     cache::CacheGroup* group = cache::getGlobalCache("DATAMANAGER");
     group->add(string("ENTITYMD"), entities);
+    
+    delete(log);
 }
 
 void releaseEntitiesMD() {
+    Logger* log = getLogger(NULL);
+
+    if (log->isInfo()) log->info("Unloading Entities Definitions");
+
     cache::CacheGroup* group = cache::getGlobalCache("DATAMANAGER");
     std::map<int, EntityMD*>* entities = (std::map<int, EntityMD*>*)group->get(string("ENTITYMD"));
     if (entities != NULL) {
