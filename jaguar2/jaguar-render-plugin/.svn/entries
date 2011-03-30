@@ -1,76 +1,0 @@
-8
-
-dir
-188
-http://svn.assembla.com/svn/jaguar2/jaguar-render-plugin
-http://svn.assembla.com/svn/jaguar2
-
-
-
-2008-10-11T21:38:46.961513Z
-174
-crossley
-has-props
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-e0e46c49-be69-4f5a-ad62-21024a331aea
-
-test
-dir
-
-junit1437062948.properties
-file
-191
-
-
-
-2008-10-16T03:33:41.000000Z
-ae3be3b33ed356786d369f87c22ab58a
-2008-10-16T03:38:37.232405Z
-191
-crossley
-
-lib
-dir
-
-nbproject
-dir
-
-src
-dir
-
-junitvmwatcher1848133985.properties
-file
-191
-
-
-
-2008-10-16T03:33:41.000000Z
-bb06b3acd6619ff0a435e5a331b09dd2
-2008-10-16T03:38:37.232405Z
-191
-crossley
-
-build.xml
-file
-
-
-
-
-2008-09-16T05:14:16.000000Z
-39e659dc9e046d079d532abbcc7b7230
-2008-09-04T18:29:47.289864Z
-85
-crossley
-

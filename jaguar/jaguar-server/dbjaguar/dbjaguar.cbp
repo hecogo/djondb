@@ -7,7 +7,7 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/libdbjaguar" prefix_auto="1" extension_auto="1" />
+				<Option output="../libs/libdbjaguar" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -15,9 +15,14 @@
 				<Option createStaticLib="1" />
 				<Compiler>
 					<Add option="-g" />
-					<Add directory="/usr/include/mysql++" />
 					<Add directory="/usr/include/mysql" />
+					<Add directory="../common" />
 				</Compiler>
+				<Linker>
+					<Add library="common" />
+					<Add directory="../../libs" />
+					<Add directory="/usr/lib/mysql" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/libdbjaguar" prefix_auto="1" extension_auto="1" />
@@ -39,19 +44,21 @@
 		</Compiler>
 		<Unit filename="dbjaguar.cpp" />
 		<Unit filename="dbjaguar.h" />
-		<Unit filename="mysql/connection.cpp" />
-		<Unit filename="mysql/mysql.h" />
-		<Unit filename="mysql/resulset.cpp" />
+		<Unit filename="keys.cpp" />
+		<Unit filename="keys.h" />
+		<Unit filename="mysql/mysqlcommon.cpp" />
+		<Unit filename="mysql/mysqlcommon.h" />
+		<Unit filename="mysql/mysqlconnection.cpp" />
+		<Unit filename="mysql/mysqlconnection.h" />
+		<Unit filename="mysql/mysqlresulset.cpp" />
+		<Unit filename="mysql/mysqlresultset.h" />
+		<Unit filename="mysql/mysqlstatement.cpp" />
+		<Unit filename="mysql/mysqlstatement.h" />
 		<Extensions>
-			<code_completion />
 			<envvars />
+			<code_completion />
 			<debugger />
 			<lib_finder disable_auto="1" />
-			<AutoVersioning>
-				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
-				<Settings autoincrement="1" date_declarations="1" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
-				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
-			</AutoVersioning>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

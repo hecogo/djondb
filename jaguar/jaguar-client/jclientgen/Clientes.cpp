@@ -7,6 +7,9 @@
 
 #include "Clientes.h"
 #include "ui/TextSimple.h"
+#include "process/RequestNewCustomer.h"
+#include "net/response.h"
+#include "networkclient.h"
 
 Clientes::Clientes(QWidget* parent, Qt::WindowFlags flags) : ScreenBase(parent, flags) {
     TextSimple* s1 = new TextSimple();
@@ -32,5 +35,8 @@ Clientes::~Clientes() {
 }
 
 void Clientes::action1() {
-    qDebug("Action1");
+    RequestNewCustomer* req = new RequestNewCustomer();
+    Response* response = sendReceive("localhost", 1043, req);
+    string* data = response->getData();
+    qDebug(data->c_str());
 }

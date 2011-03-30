@@ -1,52 +1,0 @@
-8
-
-dir
-188
-http://svn.assembla.com/svn/jaguar2/jaguar-client-common
-http://svn.assembla.com/svn/jaguar2
-
-
-
-2008-10-15T19:09:28.612838Z
-187
-crossley
-has-props
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-e0e46c49-be69-4f5a-ad62-21024a331aea
-
-test
-dir
-
-lib
-dir
-
-nbproject
-dir
-
-src
-dir
-
-build.xml
-file
-
-
-
-
-2008-10-08T01:00:37.000000Z
-2b348c61a0b1720d72bb5252d0907618
-2008-09-18T18:34:32.189064Z
-129
-crossley
-

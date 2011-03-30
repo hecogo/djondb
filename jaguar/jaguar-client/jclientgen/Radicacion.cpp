@@ -1,6 +1,7 @@
 #include "Radicacion.h"
 #include "ui/TextSimple.h"
 #include "networkclient.h"
+#include "process/RequestNewRadicacion.h"
 
 TextSimple* createText(bool endLine) {
     TextSimple* s = new TextSimple();
@@ -25,9 +26,7 @@ Radicacion::~Radicacion() {
 }
 
 void Radicacion::action1() {
-    Request* req = new Request(1);
-    req->addParameter("ACT ", new string("NEW"));
-    req->addParameter("DEFI", new string("1"));
+    RequestNewRadicacion* req = new RequestNewRadicacion();
     Response* response = sendReceive("localhost", 1043, req);
     string* data = response->getData();
     qDebug(data->c_str());

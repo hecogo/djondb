@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   freeformlayout.h
  * Author: cross
  *
@@ -11,7 +11,7 @@
 #include <QStyle>
 #include <QLayout>
 #include <QWidget>
-#include <QList>
+#include <Qt/qlist.h>
 
 class FreeFormLayout : public QLayout {
 public:
