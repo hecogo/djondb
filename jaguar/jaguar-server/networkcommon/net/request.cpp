@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Request.cpp
  * Author: cross
- * 
+ *
  * Created on November 24, 2009, 8:23 PM
  */
 
@@ -124,4 +124,12 @@ void Request::loadFrom(const char* data) {
     }
 
     delete(log);
+}
+
+Request::Request(const Request& orig) {
+    _parameters = new map<string, string*>();
+    _type = orig._type;
+    for (map<string, string*>::iterator iter = orig._parameters->begin(); iter != orig._parameters->end(); iter++) {
+        _parameters->insert(pair<string, string*>(iter->first, new string(*iter->second)));
+    }
 }

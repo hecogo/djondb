@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "util.h"
 #include "networkservice.h"
+#include "net/defs.h"
 
 using namespace std;
 

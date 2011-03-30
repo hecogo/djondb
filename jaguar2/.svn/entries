@@ -1,93 +1,0 @@
-8
-
-dir
-188
-http://svn.assembla.com/svn/jaguar2
-http://svn.assembla.com/svn/jaguar2
-
-
-
-2008-10-15T19:09:36.012409Z
-188
-crossley
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-e0e46c49-be69-4f5a-ad62-21024a331aea
-
-jaguar-data
-dir
-
-start-client.sh
-file
-189
-
-
-
-2008-10-13T16:06:12.000000Z
-382157911840b0998845d137203e9cf7
-2008-10-16T03:04:50.951321Z
-189
-crossley
-has-props
-
-jaguar-render-plugin
-dir
-
-jaguar-client
-dir
-
-jaguar-client-library
-dir
-
-Jaguar-common
-dir
-
-Jaguar-network
-dir
-
-jaguar-engine-network
-dir
-
-jaguar-designer
-dir
-
-jaguar-network-commons
-dir
-
-Jaguar-console
-dir
-
-start-server.sh
-file
-190
-
-
-
-2008-10-13T16:07:09.000000Z
-266a1dc51965b5ce70584731480f38cb
-2008-10-16T03:04:58.422437Z
-190
-crossley
-has-props
-
-jaguar-client-common
-dir
-
-Jaguar-Engine
-dir
-
-testprocess
-dir
-

@@ -6,14 +6,15 @@
  * Created on November 13, 2008, 5:48 PM
  */
 
-#include "net/defs.h"
+class NetworkException;
+
 class NetworkService {
 public:
     NetworkService();
     virtual ~NetworkService();
-    
-    void start() throw (NetworkException);
 
-    void stop() throw (NetworkException);
+    void start() throw (NetworkException*);
+
+    void stop() throw (NetworkException*);
 };
 

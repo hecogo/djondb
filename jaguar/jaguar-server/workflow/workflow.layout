@@ -1,85 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="engine/defs.h" open="0" top="0" tabpos="0">
-		<Cursor position="131" topLine="0" />
+	<File name="engine/processinstance.h" open="1" top="0" tabpos="2">
+		<Cursor position="195" topLine="0" />
 	</File>
-	<File name="engine/processinstance.cpp" open="0" top="0" tabpos="4">
-		<Cursor position="530" topLine="35" />
+	<File name="metadata/commonevent.h" open="1" top="0" tabpos="1">
+		<Cursor position="204" topLine="0" />
 	</File>
-	<File name="engine/processinstance.h" open="0" top="0" tabpos="6">
-		<Cursor position="152" topLine="0" />
-	</File>
-	<File name="engine/token.cpp" open="0" top="0" tabpos="1">
-		<Cursor position="32" topLine="0" />
-	</File>
-	<File name="engine/token.h" open="0" top="0" tabpos="4">
-		<Cursor position="153" topLine="0" />
-	</File>
-	<File name="engine/tokenfacade.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="2591" topLine="81" />
-	</File>
-	<File name="engine/tokenfacade.h" open="0" top="0" tabpos="10">
-		<Cursor position="122" topLine="0" />
-	</File>
-	<File name="engine/tokenvo.h" open="0" top="0" tabpos="11">
-		<Cursor position="329" topLine="0" />
-	</File>
-	<File name="metadata.cpp" open="0" top="0" tabpos="3">
-		<Cursor position="1643" topLine="47" />
-	</File>
-	<File name="metadata.h" open="0" top="0" tabpos="0">
-		<Cursor position="200" topLine="0" />
-	</File>
-	<File name="metadata/activitycommon.h" open="0" top="0" tabpos="8">
-		<Cursor position="102" topLine="0" />
-	</File>
-	<File name="metadata/assignment.h" open="0" top="0" tabpos="0">
-		<Cursor position="62" topLine="0" />
-	</File>
-	<File name="metadata/commonconnector.h" open="0" top="0" tabpos="4">
-		<Cursor position="106" topLine="21" />
-	</File>
-	<File name="metadata/commonevent.h" open="0" top="0" tabpos="5">
-		<Cursor position="198" topLine="0" />
-	</File>
-	<File name="metadata/connectorsourceable.h" open="0" top="0" tabpos="0">
-		<Cursor position="107" topLine="0" />
-	</File>
-	<File name="metadata/connectortargetable.h" open="0" top="0" tabpos="0">
-		<Cursor position="109" topLine="0" />
-	</File>
-	<File name="metadata/defs.h" open="0" top="0" tabpos="0">
-		<Cursor position="1222" topLine="52" />
-	</File>
-	<File name="metadata/masterentity.h" open="0" top="0" tabpos="6">
-		<Cursor position="91" topLine="0" />
-	</File>
-	<File name="metadata/pool.h" open="0" top="0" tabpos="5">
-		<Cursor position="126" topLine="0" />
-	</File>
-	<File name="metadata/processdefinition.h" open="0" top="0" tabpos="3">
-		<Cursor position="242" topLine="9" />
-	</File>
-	<File name="metadata/property.h" open="0" top="0" tabpos="2">
-		<Cursor position="130" topLine="15" />
-	</File>
-	<File name="metadata/task.h" open="0" top="0" tabpos="7">
-		<Cursor position="437" topLine="7" />
-	</File>
-	<File name="version.h" open="0" top="0" tabpos="8">
-		<Cursor position="0" topLine="0" />
-	</File>
-	<File name="wfcommon.h" open="0" top="0" tabpos="4">
-		<Cursor position="290" topLine="0" />
-	</File>
-	<File name="wfruntime.cpp" open="1" top="1" tabpos="2">
-		<Cursor position="2948" topLine="73" />
-	</File>
-	<File name="wfruntime.h" open="0" top="0" tabpos="1">
-		<Cursor position="80" topLine="0" />
-	</File>
-	<File name="workflowcontroller.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="674" topLine="0" />
+	<File name="workflowcontroller.cpp" open="1" top="1" tabpos="3">
+		<Cursor position="174" topLine="0" />
 	</File>
 </CodeBlocks_layout_file>

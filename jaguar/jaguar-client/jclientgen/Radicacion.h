@@ -8,7 +8,6 @@
 #ifndef _RADICACION_H
 #define	_RADICACION_H
 
-#include "ui_Radicacion.h"
 #include "ScreenBase.h"
 
 class Radicacion : public ScreenBase {

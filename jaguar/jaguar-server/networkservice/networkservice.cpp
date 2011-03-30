@@ -9,6 +9,7 @@
 
 #include "util.h"
 #include "networkservice.h"
+#include "net/defs.h"
 #include "dbjaguar.h"
 #include "net/request.h"
 #include "net/response.h"
@@ -65,9 +66,9 @@ void registerControllers() {
     AddWorkflow();
 }
 
-void NetworkService::start() throw (NetworkException) {
+void NetworkService::start() throw (NetworkException*) {
     if (running) {
-        throw NetworkException(new string("The network service is already active. Try stopping it first"));
+        throw new NetworkException(new string("The network service is already active. Try stopping it first"));
     }
     if (log->isInfo()) log->info("Starting network service");
 
@@ -81,10 +82,10 @@ void NetworkService::start() throw (NetworkException) {
 
 }
 
-void NetworkService::stop() throw (NetworkException) {
+void NetworkService::stop() throw (NetworkException*) {
     log->info("Shutting down the network service");
     if (!running) {
-        throw NetworkException(new string("The network service is not running. Try starting it first"));
+        throw new NetworkException(new string("The network service is not running. Try starting it first"));
     }
     running = false;
     while (accepting) {
@@ -186,7 +187,7 @@ void *processRequest(void *arg) {
     pthread_mutex_lock(&requests_lock);
     int rescond = pthread_cond_signal(&request_cv);
     pthread_mutex_unlock(&requests_lock);
-    
+
     if (log->isDebug()) log->debug("Receiving request");
 
     int readed;

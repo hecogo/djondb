@@ -1,76 +1,0 @@
-8
-
-dir
-188
-http://svn.assembla.com/svn/jaguar2/Jaguar-network
-http://svn.assembla.com/svn/jaguar2
-
-
-
-2008-10-15T19:09:36.012409Z
-188
-crossley
-has-props
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-e0e46c49-be69-4f5a-ad62-21024a331aea
-
-test
-dir
-
-lib
-dir
-
-nbproject
-dir
-
-src
-dir
-
-junit735401268.properties
-file
-
-
-
-
-2008-10-11T18:05:24.000000Z
-9e8eb1de46804434fab4636792b965a7
-2008-10-09T19:10:20.334829Z
-164
-crossley
-
-junitvmwatcher628135552.properties
-file
-
-
-
-
-2008-10-11T18:05:24.000000Z
-0f55b8d4d59d4280d7061a2b920e2a84
-2008-10-09T19:10:20.334829Z
-164
-crossley
-
-build.xml
-file
-
-
-
-
-2008-09-16T05:14:02.000000Z
-06c3112e84f423831966a9a56dcca423
-2008-08-24T17:59:39.770505Z
-32
-crossley
-

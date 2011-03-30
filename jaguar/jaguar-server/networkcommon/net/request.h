@@ -17,6 +17,7 @@ using namespace std;
 class Request {
 public:
     Request(int type);
+    Request(const Request& orig);
     virtual ~Request();
     Request(const char* data);
     void addParameter(string codename, string* value);

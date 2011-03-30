@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="networkcommon.cpp" open="0" top="0" tabpos="8">
-		<Cursor position="2708" topLine="73" />
+	<File name="net/defs.h" open="0" top="0" tabpos="0">
+		<Cursor position="96" topLine="0" />
 	</File>
-	<File name="networkcommon.h" open="0" top="0" tabpos="2">
-		<Cursor position="322" topLine="0" />
-	</File>
-	<File name="networkservice.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="5200" topLine="57" />
-	</File>
-	<File name="networkservice.h" open="0" top="0" tabpos="3">
-		<Cursor position="208" topLine="0" />
+	<File name="net/request.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="3349" topLine="105" />
 	</File>
 </CodeBlocks_layout_file>

@@ -1,6 +1,0 @@
-
-class NetworkService {
-    void start() {
-
-    }
-};
