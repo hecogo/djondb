@@ -1,0 +1,3 @@
+The filesubsystem is responsible for controlling the little endian read/write operations.
+
+Also the project will handle other sources like network streaming, etc.
