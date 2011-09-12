@@ -1,0 +1,5 @@
+Common utilities
+
+This package contains global functions and classes that allow the support of threads, strings, etc.
+
+

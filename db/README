@@ -1,0 +1,17 @@
+Jaguar DB
+
+Jaguar DB is an implementation of a NoSQL Model, the following are the goals to be achieved:
+
+1. Fast DB
+2. Horizontal Scale Up
+3. 
+4. APIs for Java, C++, C#, PHP, etc.
+5. Transactional NoSQL.
+
+Modules
+
+the Jaguar project is big, that's why all the components are breakdown into subprojects to keep the concepts as separated as possible,
+this approach keep the mantainance easy and allow each component to grow independent from the others, also it provides a way to test
+each component separatedly from the others.
+
+
