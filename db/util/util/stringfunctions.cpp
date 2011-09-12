@@ -1,5 +1,5 @@
 #include "stringfunctions.h"
-#include "util.h"
+#include "../util.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,7 +11,7 @@ char* strcpy(std::string str) {
 }
 
 char* strcpy(char* str, int len) {
-    char* result = (char*)mmalloc(len + 1);
+    char* result = (char*)malloc(len + 1);
     memset(result, 0, len +1);
     memcpy(result, str, len);
     return result;
@@ -29,12 +29,12 @@ bool endsWith(char* source, char* check) {
     }
 }
 
-std::vector<string*>* tokenizer(const std::string source, const char* tokens) {
-    std::vector<string*>* result = new std::vector<string*>();
+std::vector<std::string*>* tokenizer(const std::string source, const char* tokens) {
+    std::vector<std::string*>* result = new std::vector<std::string*>();
     char* csource = strcpy(source);
     char* token = strtok(csource, tokens);
     while (token != NULL) {
-        std::string* item = new string(token);
+        std::string* item = new std::string(token);
         result->push_back(item);
         token = strtok(NULL, tokens);
     }
@@ -57,3 +57,72 @@ std::string format(const char * fmt, ...) {
   free(buffer);
   return result;
 }
+
+std::string toString(double a) {
+    std::stringstream ss;
+
+    ss << a;
+    string res = ss.str();
+    return res;
+}
+
+std::string toString(double a, int fixedPrecision) {
+    std::stringstream ss;
+
+    ss.precision(fixedPrecision);
+    ss.setf(ios::fixed,ios::floatfield);
+
+    ss << a;
+    string res = ss.str();
+    return res;
+}
+
+std::string toString(int a) {
+    std::stringstream ss;
+    ss << a;
+    string s = ss.str();
+    return s;
+}
+
+bool endsWith(const char* text, const char* end) {
+    if (strlen(end) > strlen(text)) {
+        return false;
+    }
+    for (unsigned int pos = 0; strlen(end) > pos; pos++) {
+        if (end[strlen(end) - pos] != text[strlen(text) - pos]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::vector<string> split(const string str, string token) {
+//    char* s = (char*) malloc(str.size());
+    const char* delim = token.c_str();
+
+    //strcpy(s, str.c_str());
+    char* s = strcpy((char*)str.c_str());
+
+    vector<string> res;
+    char* ptr;
+    ptr = strtok(s, delim);
+    while (ptr != NULL) {
+        res.push_back(string(ptr));
+        ptr = strtok(NULL, delim);
+    }
+
+    free (s);
+    return res;
+}
+
+
+long countChar(const char* s, const char c) {
+    long num = 0;
+    for (unsigned int x = 0; x < strlen(s); x++) {
+        if (s[x] == c) {
+            num++;
+        }
+    }
+    return num;
+}
+

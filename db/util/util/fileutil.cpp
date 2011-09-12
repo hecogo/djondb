@@ -1,7 +1,7 @@
 #include "fileutil.h"
 #include "stringfunctions.h"
 #include "errorHandle.h"
-#include "util.h"
+#include "../util.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -65,7 +65,7 @@ int getdir (const char* dir, vector<char*> &files, const char* extension)
     }
 
     int len = strlen(extension) + 2;
-    char* fileextension = (char*)mmalloc(len);
+    char* fileextension = (char*)malloc(len);
 
     memset(fileextension, 0, len);
     fileextension[0] = '.';
@@ -78,7 +78,7 @@ int getdir (const char* dir, vector<char*> &files, const char* extension)
         }
     }
     closedir(dp);
-    
+
     free(fileextension);
     return 0;
 }
@@ -98,7 +98,6 @@ bool existFile(const char* fileName) {
 
 bool existDir(const char* dir) {
     DIR *dp;
-    struct dirent *dirp;
     bool exists = true;
     if((dp  = opendir(dir)) == NULL) {
         exists = false;

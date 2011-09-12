@@ -1,6 +1,7 @@
 #include "version.h"
-#include "util.h"
+#include "../util.h"
 #include <stdlib.h>
+#include <vector>
 
 Version::Version(std::string version)
 {
@@ -9,7 +10,7 @@ Version::Version(std::string version)
     _mayor = 0;
     _minor = 0;
     _revision = 0;
-    std::vector<string> values = split(version, ".");
+    std::vector<std::string> values = split(version, ".");
     _mayor = atoi(values.at(0).c_str());
     if (values.size() > 1) {
         _minor = atoi(values.at(1).c_str());

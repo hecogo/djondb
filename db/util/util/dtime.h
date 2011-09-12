@@ -10,6 +10,7 @@ public:
     DTime(long secs);
     DTime(int hours, int minutes, int secs);
     DTime(std::string time); // HHMMSS
+    DTime(const DTime& time); // HHMMSS
     ~DTime();
 
     long totalSecs() const;
@@ -26,6 +27,8 @@ public:
 
     DTime operator +(const DTime& dtime) const;
     void operator ++(int secs);
+    DTime operator -(const DTime& dtime) const;
+    void operator --(int secs);
 
 
 private:

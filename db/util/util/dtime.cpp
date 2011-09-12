@@ -1,7 +1,8 @@
 #include "dtime.h"
-#include "util.h"
+#include "../util.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 DTime::DTime() {
     _secs = 0;
@@ -17,11 +18,6 @@ DTime::DTime(int hours, int minutes, int secs) {
 
 DTime::DTime(const DTime& time) {
     this->_secs = time._secs;
-}
-
-DTime::DTime(const QTime& time) {
-    int secs = QTime(0, 0, 0, 0).secsTo(time);
-    _secs = secs;
 }
 
 DTime::DTime(std::string time) {
@@ -80,17 +76,6 @@ int DTime::seconds() const {
     return secs;
 }
 
-QTime DTime::toQTime() const {
-    int secs = _secs;
-
-    int hour = (secs / 3600);
-    secs -= (hour * 3600);
-    int min = (secs / 60);
-    secs -= (min * 60);
-    QTime res(hour, min, secs);
-    return res;
-}
-
 void DTime::time(int& hour, int& min, int& sec) const {
     int tmpSecs = _secs;
     hour = tmpSecs / 3600;
@@ -102,7 +87,7 @@ void DTime::time(int& hour, int& min, int& sec) const {
 
 char* DTime::toChar() const {
 
-    char* buffer = (char*)malloc(20);
+    char* buffer = (char*)mmalloc(20);
     memset(buffer, 0, 20);
 
     int hour;
@@ -132,9 +117,13 @@ void DTime::operator ++(int secs) {
     _secs += secs;
 }
 
-QString DTime::toQString() const {
-    char* cTime = toChar();
-    QString result(cTime);
-    free(cTime);
-    return result;
+DTime DTime::operator -(const DTime& dtime) const {
+    DTime current = *this;
+    long secs = dtime.totalSecs();
+    return DTime(current.totalSecs() + (secs*-1));
 }
+
+void DTime::operator --(int secs) {
+    _secs -= secs;
+}
+

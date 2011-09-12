@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <stdio.h>
-#include <time.h>
+#include <ctime>
 
 
 DateTime::DateTime(string dateTime) {
@@ -19,12 +19,12 @@ DateTime::DateTime(string dateTime) {
 
 DateTime::DateTime(time_t time) {
     struct tm* t = localtime(&time);
-    _year = t.tm_year;
-    _month = t.tm_mon + 1;
-    _day = t.tm_mday;
-    _hour = t.tm_hour;
-    _min = t.tm_min;
-    _secs = t.tm_sec;
+    _year = t->tm_year + 1900;
+    _month = t->tm_mon + 1;
+    _day = t->tm_mday;
+    _hour = t->tm_hour;
+    _min = t->tm_min;
+    _secs = t->tm_sec;
 }
 
 DateTime::DateTime(double value) {
@@ -201,17 +201,20 @@ struct tm* DateTime::toTimeStruct() const {
     time(&rawtime);
 
     struct tm* time = localtime(&rawtime);
-    time.tm_year = date._year;
-    time.tm_mon = date._month - 1;
-    time.tm_mday = date._day;
+    time->tm_year = date._year - 1900;
+    time->tm_mon = date._month - 1;
+    time->tm_mday = date._day;
 
-    time.tm_hour = date._hour;
-    time.tm_min = date._min;
-    time.tm_sec = date._secs;
+    time->tm_hour = date._hour;
+    time->tm_min = date._min;
+    time->tm_sec = date._secs;
 
-    mktime(&time);
+    mktime(time);
 
-    return time;
+    struct tm* result = (struct tm*)malloc(sizeof(struct tm));
+    memcpy(result, time, sizeof(struct tm));
+
+    return result;
 }
 
 long DateTime::operator -(const DateTime& dateTimeRight) const {
@@ -229,18 +232,18 @@ DateTime DateTime::today(bool includeTime) {
     time_t rawtoday = time(NULL);
     struct tm* tmToday = localtime(&rawtoday);
 
-    DateTime result(tmToday.tm_year, tmToday.tm_mon + 1, tmToday.tm_mday);
+    DateTime result(tmToday->tm_year + 1900, tmToday->tm_mon + 1, tmToday->tm_mday);
     if (includeTime) {
-        result.setHour(tmToday.tm_hour);
-        result.setMin(tmToday.tm_min);
-        result.setSecs(tmToday.tm_sec);
+        result.setHour(tmToday->tm_hour);
+        result.setMin(tmToday->tm_min);
+        result.setSecs(tmToday->tm_sec);
     }
     return result;
 }
 
 DateTime DateTime::addDays(int days) const {
     struct tm* t = toTimeStruct();
-    t.tm_mday += days;
+    t->tm_mday += days;
     mktime(t);
 
     DateTime dtNew(mktime(t));
@@ -249,31 +252,23 @@ DateTime DateTime::addDays(int days) const {
 }
 
 int DateTime::daysTo(const DateTime& dt) const {
-    QDateTime thisDate = toQDateTime();
-    QDateTime qdt = dt.toQDateTime();
+    DateTime current = *this;
+    long secs = dt - current;
 
-    int days = thisDate.daysTo(qdt);
+    int days = (double)secs / 60.0 / 60.0 / 24.0;
 
     return days;
 }
 
 int DateTime::dayOfTheWeek() const {
-    return toQDateTime().date().dayOfWeek();
+    struct tm* t = toTimeStruct();
+
+    return t->tm_wday;
 }
 
-DTime DateTime::time() const {
+DTime DateTime::dtime() const {
     int hour = getHour();
     int minute = getMin();
     int secs = getSecs();
     return DTime(hour, minute, secs);
-}
-
-long DateTime::toSecs() const {
-    long res = 0;
-    res += _secs;
-    res += _min * 60;
-    res += _hour * 60 * 60;
-
-    res += _day * 24 * 60 * 60;
-    res += _month *
 }

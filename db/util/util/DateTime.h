@@ -26,8 +26,6 @@ public:
     DateTime(const DateTime& orig);
     virtual ~DateTime();
 
-    static DateTime startDayOfWeek();
-    static DateTime startDayOfNextWeek();
     static DateTime today(bool includeTime = false);
     DateTime addDays(int days) const;
     int daysTo(const DateTime& dt) const;
@@ -47,7 +45,7 @@ public:
     int getMonth() const;
     void setYear(int _year);
     int getYear() const;
-    DTime time() const;
+    DTime dtime() const;
 
     struct tm* toTimeStruct() const;
 
@@ -68,8 +66,6 @@ private:
     int _secs;
 
     void loadDate(string dateTime);
-
-    long toSecs() const;
 };
 
 #endif	/* _DATETIME_H */
