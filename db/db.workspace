@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="bson/bson.cbp" />
+		<Project filename="util/util.cbp" />
+		<Project filename="test/test-util/test-util.cbp" />
+		<Project filename="test/test-filesystem/test-filesystem.cbp" />
+		<Project filename="test/test-db/test-db.cbp" active="1">
+			<Depends filename="bson/bson.cbp" />
+			<Depends filename="util/util.cbp" />
+			<Depends filename="filesystem/filesystem.cbp" />
+			<Depends filename="db/db.cbp" />
+		</Project>
+		<Project filename="filesystem/filesystem.cbp" />
+		<Project filename="db/db.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>

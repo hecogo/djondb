@@ -7,13 +7,14 @@
 #include <iostream>
 #include <boost/crc.hpp>
 
-FileInputStream::FileInputStream(std::string fileName, FILE *pFile)
+FileInputStream::FileInputStream(const char* fileName, const char* flags)
 {
-    _pFile = pFile;
+    _pFile = fopen(fileName, flags);
     _fileName = fileName;
 }
 
 FileInputStream::~FileInputStream() {
+    close();
 }
 
 unsigned char FileInputStream::readChar() {
@@ -118,4 +119,11 @@ long FileInputStream::crc32() {
     // back to the original position
     seek(pos);
     return result;
+}
+
+void FileInputStream::close() {
+    if (_pFile) {
+        fclose(_pFile);
+        _pFile = 0;
+    }
 }

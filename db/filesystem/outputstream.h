@@ -1,35 +1,28 @@
 #ifndef OUTPUTSTREAM_H
 #define OUTPUTSTREAM_H
 
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string>
-#include <sstream>
 
 class OutputStream
 {
 public:
-    OutputStream(FILE* pFile);
-    void writeChar (unsigned char v);
+    virtual void writeChar (unsigned char v) = 0;
     /* Write 2 bytes in the output (little endian order) */
-    void writeInt (int v);
+    virtual void writeInt (int v) = 0;
     /* Write 4 bytes in the output (little endian order) */
-    void writeLong (long v);
+    virtual void writeLong (long v) = 0;
     /* Write a 4 byte float in the output */
-    void writeFloatIEEE (float v);
+    virtual void writeFloatIEEE (float v) = 0;
     /* Write a 8 byte double in the output */
-    void writeDoubleIEEE (double v);
+    virtual void writeDoubleIEEE (double v) = 0;
     /* Write a char */
-    void writeChars(const char* text, int len);
-    void writeString(const std::string* text);
+    virtual void writeChars(const char* text, int len) = 0;
+    virtual void writeString(const std::string* text) = 0;
 
-    void seek(long);
-    long currentPos() const;
+    virtual void seek(long) = 0;
+    virtual long currentPos() const = 0;
 
-    long crc32(int pos);
-private:
-    FILE* _pFile;
+    virtual long crc32(int pos) = 0;
 };
 
 #endif // OUTPUTSTREAM_H

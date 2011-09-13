@@ -12,7 +12,7 @@
 #include <uuid/uuid.h>
 #endif
 #ifdef LINUX
-#include <QX11Info>
+//#include <QX11Info>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/extensions/scrnsaver.h>
@@ -115,13 +115,16 @@ long idleTime() {
     XScreenSaverInfo *_mit_info;
 
     int event_base, error_base;
-    if(XScreenSaverQueryExtension(QX11Info::display(), &event_base, &error_base))
+    Display* display = XOpenDisplay(NULL);
+    if(XScreenSaverQueryExtension(display, &event_base, &error_base))
         _idleDetectionPossible = true;
     else
         _idleDetectionPossible = false;
     _mit_info = XScreenSaverAllocInfo();
 
-    XScreenSaverQueryInfo(QX11Info::display(), QX11Info::appRootWindow(), _mit_info);
+    XScreenSaverQueryInfo(display, DefaultRootWindow(display), _mit_info);
+
+    XCloseDisplay(display);
 
     idlesecs = (_mit_info->idle/1000);
 

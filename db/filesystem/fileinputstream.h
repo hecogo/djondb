@@ -9,7 +9,7 @@
 class FileInputStream: public InputStream
 {
 public:
-    FileInputStream(std::string fileName, FILE* pFile);
+    FileInputStream(const char* fileName, const char* flags);
     virtual ~FileInputStream();
 
     virtual unsigned char readChar();
@@ -32,6 +32,8 @@ public:
     virtual std::string* readString();
     virtual std::string fileName();
     virtual bool eof();
+
+    virtual void close();
 
 private:
     FILE* _pFile;

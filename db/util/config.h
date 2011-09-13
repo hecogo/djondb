@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define WINDOWS
+#define LINUX
 /*
 #if defined Q_WS_MAC
 #define MAC
