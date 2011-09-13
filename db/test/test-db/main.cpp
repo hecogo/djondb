@@ -155,7 +155,7 @@ int main()
 //    testMassiveInsert(1000);
 //    testMassiveInsert(10000);
 //    testMassiveInsert(100000);
-//    testMassiveInsert(1000000);
+    testMassiveInsert(1000000);
 //    testMassiveInsert(10000000);
 
     controller.close("sp1.customer");

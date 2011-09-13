@@ -29,9 +29,35 @@ void DBController::insert(char* ns, BSONObj* obj) {
         id = uuid();
         obj->add("_id", *id);
     }
-    char* c = obj->toChar();
-    stream->writeChars(c, strlen(c));
-    free(c);
+
+    stream->writeInt(obj->length());
+    for (std::map<char*, BSONContent*>::const_iterator i = obj->begin(); i != obj->end(); i++) {
+        stream->writeChars(i->first);
+        BSONContent* cont = i->second;
+        stream->writeInt(cont->_type);
+        switch (cont->_type) {
+            case BSON_TYPE:
+                // Unsupported yet;
+                break;
+            case INT_TYPE:
+                stream->writeInt(*((int*)cont->_element));
+                break;
+            case LONG_TYPE:
+                stream->writeLong(*((long*)cont->_element));
+                break;
+            case DOUBLE_TYPE:
+                stream->writeDoubleIEEE(*((double*)cont->_element));
+                break;
+            case PTRCHAR_TYPE:
+                char* text = (char*)cont->_element;
+                stream->writeChars(text, strlen(text));
+                break;
+            case STRING_TYPE:
+                string* str = (string*)cont->_element;
+                stream->writeString(*str);
+                break;
+        }
+    }
 //    stream->flush();
 }
 

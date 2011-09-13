@@ -170,4 +170,14 @@ BSONObj* BSONObj::getBSON(char* key) const {
     }
 }
 
+std::map<char*, BSONContent* >::const_iterator BSONObj::begin() const {
+    return _elements.begin();
+}
 
+std::map<char*, BSONContent* >::const_iterator BSONObj::end() const {
+    return _elements.end();
+}
+
+int BSONObj::length() const {
+    return _elements.size();
+}

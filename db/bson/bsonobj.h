@@ -57,6 +57,11 @@ class BSONObj
         BSONObj* getBSON(char*) const;
 
         char* toChar() const;
+
+        std::map<char*, BSONContent* >::const_iterator begin() const;
+        std::map<char*, BSONContent* >::const_iterator end() const;
+        int length() const;
+
     protected:
     private:
         std::map<char*, BSONContent* > _elements;

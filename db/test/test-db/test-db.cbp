@@ -41,10 +41,12 @@
 			<Add library="util" />
 			<Add library="filesystem" />
 			<Add library="bson" />
+			<Add library="RpcRT4" />
 			<Add directory="..\..\bson" />
 			<Add directory="..\..\util" />
 			<Add directory="..\..\filesystem" />
 			<Add directory="..\..\db" />
+			<Add directory="C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
