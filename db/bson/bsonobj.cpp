@@ -44,27 +44,27 @@ void BSONObj::add(char* key, void* val) {
 */
 
 void BSONObj::add(char* key, int val) {
-    BSONCONTENT_FILL(key, INT, &val);
+    BSONCONTENT_FILL(key, INT_TYPE, &val);
 }
 
 void BSONObj::add(char* key, double val) {
-    BSONCONTENT_FILL(key, DOUBLE, &val);
+    BSONCONTENT_FILL(key, DOUBLE_TYPE, &val);
 }
 
 void BSONObj::add(char* key, long val) {
-    BSONCONTENT_FILL(key, LONG, &val);
+    BSONCONTENT_FILL(key, LONG_TYPE, &val);
 }
 
 void BSONObj::add(char* key, char* val) {
-    BSONCONTENT_FILL(key, PTRCHAR, val);
+    BSONCONTENT_FILL(key, PTRCHAR_TYPE, val);
 }
 
 void BSONObj::add(char* key, std::string val) {
-    BSONCONTENT_FILL(key, STRING, &val);
+    BSONCONTENT_FILL(key, STRING_TYPE, &val);
 }
 
 void BSONObj::add(char* key, BSONObj* val) {
-    BSONCONTENT_FILL(key, BSON, val);
+    BSONCONTENT_FILL(key, BSON_TYPE, val);
 }
 
 char* BSONObj::toChar() const {
@@ -80,22 +80,22 @@ char* BSONObj::toChar() const {
         char* key = i->first;
         ss << key << ":";
         switch (content->_type)  {
-            case BSON:
+            case BSON_TYPE:
                 ss << ((BSONObj*)content->_element)->toChar();
                 break;
-            case INT:
+            case INT_TYPE:
                 ss << "'" << *((int*)content->_element) << "'";
                 break;
-            case LONG:
+            case LONG_TYPE:
                 ss << "'" << *((long*)content->_element) << "'";
                 break;
-            case DOUBLE:
+            case DOUBLE_TYPE:
                 ss << "'" << *((double*)content->_element) << "'";
                 break;
-            case PTRCHAR:
+            case PTRCHAR_TYPE:
                 ss << "'" << (char*)content->_element << "'";
                 break;
-            case STRING:
+            case STRING_TYPE:
                 ss << "'" << ((std::string*)content->_element)->c_str() << "'";
                 break;
         }
@@ -104,7 +104,70 @@ char* BSONObj::toChar() const {
     std::string s = ss.str();
     const char* temp = s.c_str();
     int len = s.length();
-    char* res = (char*)malloc(len);
+    char* res = (char*)malloc(len +1);
+    memset(res, 0, len + 1);
     memcpy(res, temp, len);
     return res;
 }
+
+int* BSONObj::getInt(char* key) const {
+    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
+    if (it != _elements.end()) {
+        int* res = (int*)it->second;
+        return res;
+    } else {
+        return NULL;
+    }
+}
+
+double* BSONObj::getDouble(char* key) const {
+    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
+    if (it != _elements.end()) {
+        double* res = (double*)it->second;
+        return res;
+    } else {
+        return NULL;
+    }
+}
+
+long* BSONObj::getLong(char* key) const {
+    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
+    if (it != _elements.end()) {
+        long* res = (long*)it->second;
+        return res;
+    } else {
+        return NULL;
+    }
+}
+
+char* BSONObj::getChars(char* key) const {
+    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
+    if (it != _elements.end()) {
+        char* res = (char*)it->second;
+        return res;
+    } else {
+        return NULL;
+    }
+}
+
+std::string* BSONObj::getString(char* key) const {
+    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
+    if (it != _elements.end()) {
+        std::string* res = (std::string*)it->second;
+        return res;
+    } else {
+        return NULL;
+    }
+}
+
+BSONObj* BSONObj::getBSON(char* key) const {
+    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
+    if (it != _elements.end()) {
+        BSONObj* res = (BSONObj*)it->second;
+        return res;
+    } else {
+        return NULL;
+    }
+}
+
+

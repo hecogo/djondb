@@ -13,12 +13,12 @@ using namespace std;
     _elements.insert(pair<char*, BSONContent* >(kkey, content));
 
 enum BSONTYPE {
-    INT,
-    DOUBLE,
-    LONG,
-    PTRCHAR,
-    STRING,
-    BSON
+    INT_TYPE,
+    DOUBLE_TYPE,
+    LONG_TYPE,
+    PTRCHAR_TYPE,
+    STRING_TYPE,
+    BSON_TYPE
 //    PTR
 };
 
@@ -48,6 +48,13 @@ class BSONObj
         void add(char*, char*);
         void add(char*, std::string);
         void add(char*, BSONObj*);
+
+        int* getInt(char*) const;
+        double* getDouble(char*) const;
+        long* getLong(char*) const;
+        char* getChars(char*) const;
+        std::string* getString(char*) const;
+        BSONObj* getBSON(char*) const;
 
         char* toChar() const;
     protected:

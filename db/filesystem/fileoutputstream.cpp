@@ -6,6 +6,7 @@
 
 FileOutputStream::FileOutputStream(const char* fileName, const char* flags) {
     _pFile = fopen(fileName, flags);
+    _fileName = fileName;
 }
 
 FileOutputStream::~FileOutputStream() {
@@ -94,7 +95,16 @@ long FileOutputStream::currentPos() const {
 
 void FileOutputStream::close() {
     if (_pFile) {
+        flush();
         fclose(_pFile);
         _pFile = 0;
     }
+}
+
+void FileOutputStream::flush() {
+    fflush(_pFile);
+}
+
+const char* FileOutputStream::fileName() const {
+    return _fileName;
 }

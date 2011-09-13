@@ -33,7 +33,12 @@ class FileOutputStream: public OutputStream
         virtual long crc32(int pos);
 
         virtual void close();
+
+        virtual void flush();
+        virtual const char* fileName() const;
+
     private:
+        const char* _fileName;
         FILE* _pFile;
 };
 
