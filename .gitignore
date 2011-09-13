@@ -4,4 +4,8 @@
 .svn
 *.bak
 build
+F
+*.depend
+*.layout
+*.a
 bin
