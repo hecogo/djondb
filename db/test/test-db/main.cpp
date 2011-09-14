@@ -129,6 +129,7 @@ int testMassiveInsert(int inserts) {
         obj->add("name", "John");
         obj->add("last", "Smith");
         testInsert(obj);
+        delete(obj);
     }
 
     clock_gettime(interval, &ts2);
@@ -142,21 +143,25 @@ int testMassiveInsert(int inserts) {
     #endif
 
     cout<< "inserts " << inserts << ", secs: " << secs << endl;
+
+    cout << "Throughput: " << (inserts / secs) << " ops." << endl;
 }
 
 int main()
 {
+    /*
     BSONObj* o = new BSONObj();
     o->add("name", "John");
     o->add("last", "Crossley");
     testInsert(o);
     delete(o);
-//
-//    testMassiveInsert(1000);
+    */
+//    testMassiveInsert(100);
 //    testMassiveInsert(10000);
 //    testMassiveInsert(100000);
-    testMassiveInsert(1000000);
+//    testMassiveInsert(1000000);
 //    testMassiveInsert(10000000);
+    testMassiveInsert(50000000);
 
     controller.close("sp1.customer");
     return 0;

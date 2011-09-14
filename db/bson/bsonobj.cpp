@@ -10,17 +10,13 @@
 using namespace std;
 
 BSONContent::~BSONContent() {
-    /*
     switch (_type) {
-        case BSON:
-            delete _element;
-            break;
-        case PTRCHAR:
+        case STRING_TYPE:
+            delete ((string*)_element);
             break;
         default:
             break;
     }
-    */
 }
 
 BSONObj::BSONObj()
@@ -34,6 +30,7 @@ BSONObj::~BSONObj()
         BSONContent* cont = i->second;
         delete(cont);
     }
+    _elements.clear();
     //dtor
 }
 
@@ -59,8 +56,8 @@ void BSONObj::add(char* key, char* val) {
     BSONCONTENT_FILL(key, PTRCHAR_TYPE, val);
 }
 
-void BSONObj::add(char* key, std::string val) {
-    BSONCONTENT_FILL(key, STRING_TYPE, &val);
+void BSONObj::add(char* key, std::string* val) {
+    BSONCONTENT_FILL(key, STRING_TYPE, val);
 }
 
 void BSONObj::add(char* key, BSONObj* val) {

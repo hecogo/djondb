@@ -46,7 +46,7 @@ class BSONObj
         void add(char*, double);
         void add(char*, long);
         void add(char*, char*);
-        void add(char*, std::string);
+        void add(char*, std::string*);
         void add(char*, BSONObj*);
 
         int* getInt(char*) const;
