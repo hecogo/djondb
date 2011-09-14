@@ -2,31 +2,25 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="db" />
+		<Option title="test-cache" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="libdb" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
+				<Option output="bin\Debug\test-cache" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
-				<Option type="2" />
+				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-Wall" />
 					<Add option="-g" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="libdb" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
+				<Option output="bin\Release\test-cache" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
-				<Option type="2" />
+				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-Wall" />
 					<Add option="-O2" />
 				</Compiler>
 				<Linker>
@@ -35,16 +29,18 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add directory="..\filesystem" />
-			<Add directory="..\bson" />
-			<Add directory="..\util" />
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="..\..\cache" />
 			<Add directory="c:\development\boost_1_47_0" />
 		</Compiler>
-		<Unit filename="dbcontroller.cpp" />
-		<Unit filename="dbcontroller.h" />
+		<Linker>
+			<Add library="cache" />
+			<Add directory="..\..\cache" />
+		</Linker>
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
-			<envvars />
 			<debugger />
 		</Extensions>
 	</Project>

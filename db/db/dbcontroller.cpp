@@ -1,9 +1,9 @@
 #include "dbcontroller.h"
 #include "bson.h"
-#include <fileoutputstream.h>
+#include "util.h"
+#include "fileoutputstream.h"
 #include <iostream>
 #include <string.h>
-#include "util.h"
 
 using namespace std;
 
@@ -22,15 +22,17 @@ DBController::~DBController()
 }
 
 void DBController::insert(char* ns, BSONObj* obj) {
-    FileOutputStream* stream = open(ns);
+    FileOutputStream* streamData = open(ns, DATA_FTYPE);
 
     std::string* id = obj->getString("_id");
     if (id == NULL) {
         obj->add("_id", uuid());
     }
 
+    long crcStructure = saveStructure(obj);
+
     char* text = obj->toChar();
-    stream->writeChars(text, strlen(text));
+    streamData->writeChars(text, strlen(text));
     free(text);
     /*
     stream->writeInt(obj->length());
@@ -68,9 +70,19 @@ void DBController::insert(char* ns, BSONObj* obj) {
 }
 
 
-FileOutputStream* DBController::open(char* ns) {
+FileOutputStream* DBController::open(char* ns, FILE_TYPE type) {
+    char* fileName = strcat(ns, ".");
+    switch (type) {
+        case DATA_FTYPE:
+            fileName = strcat(fileName, "dat");
+            break;
+        case STRC_FTYPE:
+            fileName = strcat(fileName, "stc");
+            break;
+    }
+
     map<char*, FileOutputStream*>::iterator it = _spaces.find(ns);
-    char* fileName = ns;
+    fileName = ns;
     if (it != _spaces.end()) {
         FileOutputStream* stream = it->second;
         if (stream->currentPos() < (300 * 1024 * 1024)) {
