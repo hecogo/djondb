@@ -11,7 +11,7 @@
 class FileOutputStream: public OutputStream
 {
     public:
-        FileOutputStream(const char* fileName, const char* flags);
+        FileOutputStream(char* fileName, const char* flags);
         virtual ~FileOutputStream();
     public:
         virtual void writeChar (unsigned char v);
@@ -38,7 +38,7 @@ class FileOutputStream: public OutputStream
         virtual const char* fileName() const;
 
     private:
-        const char* _fileName;
+        char* _fileName;
         FILE* _pFile;
 };
 

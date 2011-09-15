@@ -130,6 +130,9 @@ int testMassiveInsert(int inserts) {
         obj->add("last", "Smith");
         testInsert(obj);
         delete(obj);
+        if ((x % 1000000) == 0) {
+            cout << "Inserted " << x << " records." << endl;
+        }
     }
 
     clock_gettime(interval, &ts2);
@@ -159,9 +162,9 @@ int main()
 //    testMassiveInsert(100);
 //    testMassiveInsert(10000);
 //    testMassiveInsert(100000);
-    testMassiveInsert(1000000);
+//    testMassiveInsert(1000000);
 //    testMassiveInsert(10000000);
-//    testMassiveInsert(50000000);
+    testMassiveInsert(50000000);
 
     controller.close("sp1.customer");
     return 0;

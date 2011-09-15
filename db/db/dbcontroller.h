@@ -7,7 +7,8 @@ class BSONObj;
 
 enum FILE_TYPE {
     DATA_FTYPE,
-    STRC_FTYPE
+    STRC_FTYPE,
+    INDEX_FTYPE
 };
 
 class DBController

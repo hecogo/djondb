@@ -1,7 +1,12 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#ifdef _WIN32
+#define WINDOWS
+#endif
+#ifdef __linux
 #define LINUX
+#endif
 /*
 #if defined Q_WS_MAC
 #define MAC

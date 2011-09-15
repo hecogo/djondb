@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string.h>
 #include "cachemanager.h"
+#include "index.h"
+#include <memory>
 
 using namespace std;
 
@@ -32,7 +34,10 @@ long DBController::checkStructure(BSONObj* obj) {
     long strId = structure->crc();
     if (!cache->containsKey(strId)) {
         cache->add(strId, structure);
+    } else {
+        delete(structure);
     }
+    return strId;
 }
 
 void DBController::insert(char* ns, BSONObj* obj) {
@@ -40,7 +45,8 @@ void DBController::insert(char* ns, BSONObj* obj) {
 
     std::string* id = obj->getString("_id");
     if (id == NULL) {
-        obj->add("_id", uuid());
+        id = uuid();
+        obj->add("_id", id);
     }
 
     long crcStructure = checkStructure(obj);
@@ -48,6 +54,9 @@ void DBController::insert(char* ns, BSONObj* obj) {
 //    char* text = obj->toChar();
 //    streamData->writeChars(text, strlen(text));
 //    free(text);
+
+    createIndex(obj);
+
     streamData->writeInt(obj->length());
     for (std::map<char*, BSONContent*>::const_iterator i = obj->begin(); i != obj->end(); i++) {
         char* key = i->first;
@@ -83,39 +92,40 @@ void DBController::insert(char* ns, BSONObj* obj) {
 
 
 FileOutputStream* DBController::open(char* ns, FILE_TYPE type) {
-    char* fileName = (char*)malloc(strlen(ns) + 5);
-    memset(fileName, 0, strlen(ns) + 5);
+
+    char fileName[255];
+    memset(fileName, 0, 255);
     strcat(fileName, ns);
     strcat(fileName, ".");
     switch (type) {
         case DATA_FTYPE:
-            fileName = strcat(fileName, "dat");
+            strcat(fileName, "dat");
             break;
         case STRC_FTYPE:
-            fileName = strcat(fileName, "stc");
+            strcat(fileName, "stc");
             break;
     }
 
-    map<char*, FileOutputStream*>::iterator it = _spaces.find(ns);
-    fileName = ns;
+    map<char*, FileOutputStream*>::iterator it = _spaces.find(fileName);
     if (it != _spaces.end()) {
         FileOutputStream* stream = it->second;
-        if (stream->currentPos() < (300 * 1024 * 1024)) {
+//        if (stream->currentPos() < (300 * 1024 * 1024)) {
+            free(fileName);
             return stream;
-        } else {
-            fileName = (char*)stream->fileName();
-            stream->close();
-            delete(stream);
-            char* newFileName = (char*)malloc(strlen(fileName) + 2);
-            memset(newFileName, 0, strlen(fileName) + 2);
-            strcat(newFileName, fileName);
-            strcat(newFileName, "1");
-            fileName = newFileName;
-            _spaces.erase(it);
-        }
+//        } else {
+//            fileName = (char*)stream->fileName();
+//            stream->close();
+//            delete(stream);
+//            char* newFileName = (char*)malloc(strlen(fileName) + 2);
+//            memset(newFileName, 0, strlen(fileName) + 2);
+//            strcat(newFileName, fileName);
+//            strcat(newFileName, "1");
+//            fileName = newFileName;
+//            _spaces.erase(it);
+//        }
     }
     FileOutputStream* output = new FileOutputStream(fileName, "ab+");
-    _spaces.insert(pair<char*, FileOutputStream*>(ns, output));
+    _spaces.insert(pair<char*, FileOutputStream*>(fileName, output));
     return output;
 }
 

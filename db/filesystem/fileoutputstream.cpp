@@ -4,12 +4,14 @@
 #include <iostream>
 #include <boost/crc.hpp>
 
-FileOutputStream::FileOutputStream(const char* fileName, const char* flags) {
+FileOutputStream::FileOutputStream(char* fileName, const char* flags) {
     _pFile = fopen(fileName, flags);
     _fileName = fileName;
 }
 
 FileOutputStream::~FileOutputStream() {
+    free(_fileName);
+    free(_pFile);
     close();
 }
 

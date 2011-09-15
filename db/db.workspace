@@ -10,6 +10,7 @@
 			<Depends filename="util/util.cbp" />
 			<Depends filename="filesystem/filesystem.cbp" />
 			<Depends filename="db/db.cbp" />
+			<Depends filename="cache/cache.cbp" />
 		</Project>
 		<Project filename="filesystem/filesystem.cbp" />
 		<Project filename="db/db.cbp" />
