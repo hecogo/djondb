@@ -40,7 +40,6 @@
 		<Unit filename="cache.h" />
 		<Unit filename="cachemanager.cpp" />
 		<Unit filename="cachemanager.h" />
-		<Unit filename="index.h" />
 		<Unit filename="structure.cpp" />
 		<Unit filename="structure.h" />
 		<Extensions>

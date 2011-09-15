@@ -27,6 +27,7 @@ class DBController
 
     private:
         long checkStructure(BSONObj* bson);
+        void updateIndex()
 };
 
 #endif // DBCONTROLLER_H
