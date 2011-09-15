@@ -8,7 +8,7 @@ class BSONObj;
 enum FILE_TYPE {
     DATA_FTYPE,
     STRC_FTYPE
-}
+};
 
 class DBController
 {
@@ -24,6 +24,8 @@ class DBController
     private:
         std::map<char*, FileOutputStream*>  _spaces;
 
+    private:
+        long checkStructure(BSONObj* bson);
 };
 
 #endif // DBCONTROLLER_H

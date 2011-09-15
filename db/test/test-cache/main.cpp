@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "cachemanager.h"
+#include <assert.h>
 
 using namespace std;
 
@@ -19,12 +20,9 @@ int testCache() {
     cache->add(id2, str);
 
     Structure* s2 = (*cache)[id];
-    if (s2 == str) {
-        cout << "Yuju!" << endl;
-    }
-    if (s2 == str2) {
-        cout << "Yuju 2!" << endl;
-    }
+    assert (s2 == str);
+
+    assert (s2 != str2);
 }
 
 int main()

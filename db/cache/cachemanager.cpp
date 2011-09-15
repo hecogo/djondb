@@ -1,16 +1,18 @@
 #include "cachemanager.h"
 
+StructureCache* CacheManager::structures = new StructureCache();
+
 CacheManager::CacheManager()
 {
-    _structures = new StructureCache();
 }
 
 CacheManager::~CacheManager()
 {
-    delete _structures;
+//    delete _structures;
 }
-
 
 StructureCache* CacheManager::structuresCache() {
-    return _structures;
+    return structures;
 }
+
+

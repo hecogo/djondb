@@ -15,11 +15,10 @@ class CacheManager
         CacheManager();
         virtual ~CacheManager();
 
-        StructureCache* structuresCache();
+        static StructureCache* structuresCache();
     protected:
     private:
-        StructureCache* _structures;
-
+        static StructureCache* structures;
 };
 
 #endif // CACHEMANAGER_H

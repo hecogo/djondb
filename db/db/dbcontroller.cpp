@@ -4,6 +4,7 @@
 #include "fileoutputstream.h"
 #include <iostream>
 #include <string.h>
+#include "cachemanager.h"
 
 using namespace std;
 
@@ -21,6 +22,19 @@ DBController::~DBController()
     }
 }
 
+long DBController::checkStructure(BSONObj* obj) {
+    Structure* structure = new Structure();
+    for (std::map<char*, BSONContent* >::const_iterator i = obj->begin(); i != obj->end(); i++) {
+        structure->add(i->first);
+    }
+
+    StructureCache* cache = CacheManager::structuresCache();
+    long strId = structure->crc();
+    if (!cache->containsKey(strId)) {
+        cache->add(strId, structure);
+    }
+}
+
 void DBController::insert(char* ns, BSONObj* obj) {
     FileOutputStream* streamData = open(ns, DATA_FTYPE);
 
@@ -29,49 +43,50 @@ void DBController::insert(char* ns, BSONObj* obj) {
         obj->add("_id", uuid());
     }
 
-    long crcStructure = saveStructure(obj);
+    long crcStructure = checkStructure(obj);
 
-    char* text = obj->toChar();
-    streamData->writeChars(text, strlen(text));
-    free(text);
-    /*
-    stream->writeInt(obj->length());
+//    char* text = obj->toChar();
+//    streamData->writeChars(text, strlen(text));
+//    free(text);
+    streamData->writeInt(obj->length());
     for (std::map<char*, BSONContent*>::const_iterator i = obj->begin(); i != obj->end(); i++) {
         char* key = i->first;
-        stream->writeChars(key, strlen(key));
+        streamData->writeChars(key, strlen(key));
         BSONContent* cont = i->second;
-        stream->writeInt(cont->_type);
+        streamData->writeInt(cont->_type);
         char* text;
         switch (cont->_type) {
             case BSON_TYPE:
                 // Unsupported yet;
                 break;
             case INT_TYPE:
-                stream->writeInt(*((int*)cont->_element));
+                streamData->writeInt(*((int*)cont->_element));
                 break;
             case LONG_TYPE:
-                stream->writeLong(*((long*)cont->_element));
+                streamData->writeLong(*((long*)cont->_element));
                 break;
             case DOUBLE_TYPE:
-                stream->writeDoubleIEEE(*((double*)cont->_element));
+                streamData->writeDoubleIEEE(*((double*)cont->_element));
                 break;
             case PTRCHAR_TYPE:
                 text = (char*)cont->_element;
-                stream->writeChars(text, strlen(text));
+                streamData->writeChars(text, strlen(text));
                 break;
             case STRING_TYPE:
                 string* str = (string*)cont->_element;
-                stream->writeString(str);
+                streamData->writeString(str);
                 break;
         }
     }
-    */
 //    stream->flush();
 }
 
 
 FileOutputStream* DBController::open(char* ns, FILE_TYPE type) {
-    char* fileName = strcat(ns, ".");
+    char* fileName = (char*)malloc(strlen(ns) + 5);
+    memset(fileName, 0, strlen(ns) + 5);
+    strcat(fileName, ns);
+    strcat(fileName, ".");
     switch (type) {
         case DATA_FTYPE:
             fileName = strcat(fileName, "dat");
@@ -115,6 +130,4 @@ bool DBController::close(char* ns) {
     }
     return true;
 }
-
-
 

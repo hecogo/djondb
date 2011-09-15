@@ -39,8 +39,6 @@
 		</Compiler>
 		<Linker>
 			<Add library="util" />
-			<Add library="Xss" />
-			<Add library="X11" />
 		</Linker>
 		<Unit filename="bson.h" />
 		<Unit filename="bsonobj.cpp" />

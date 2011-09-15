@@ -9,7 +9,35 @@
 			<Target title="Debug">
 				<Option output="libdb" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Debug\" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add directory="c:/development/boost_1_47_0" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="libdb" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="DebugLinux">
+				<Option output="libdb" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -18,10 +46,10 @@
 					<Add option="-g" />
 				</Compiler>
 			</Target>
-			<Target title="Release">
+			<Target title="ReleaseLinux">
 				<Option output="libdb" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
-				<Option object_output="obj\Release\" />
+				<Option object_output="obj/Release/" />
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
@@ -35,10 +63,10 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add directory="..\filesystem" />
-			<Add directory="..\bson" />
-			<Add directory="..\util" />
-			<Add directory="c:\development\boost_1_47_0" />
+			<Add directory="../filesystem" />
+			<Add directory="../bson" />
+			<Add directory="../util" />
+			<Add directory="../cache" />
 		</Compiler>
 		<Unit filename="dbcontroller.cpp" />
 		<Unit filename="dbcontroller.h" />

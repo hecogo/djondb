@@ -7,17 +7,41 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin\Debug\test-db" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option output="bin/Debug/test-db" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add directory="C:/Program Files (x86)/Microsoft SDKs/Windows/v7.0A/Lib" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/test-db" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="DebugLinux">
+				<Option output="bin/Debug/test-db" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
 			</Target>
-			<Target title="Release">
-				<Option output="bin\Release\test-db" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+			<Target title="ReleaseLinux">
+				<Option output="bin/Release/test-db" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -31,22 +55,27 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="..\..\db" />
-			<Add directory="..\..\bson" />
-			<Add directory="..\..\filesystem" />
-			<Add directory="..\..\util" />
+			<Add directory="../../db" />
+			<Add directory="../../bson" />
+			<Add directory="../../filesystem" />
+			<Add directory="../../util" />
+			<Add directory="../../cache" />
 		</Compiler>
 		<Linker>
 			<Add library="db" />
 			<Add library="util" />
 			<Add library="filesystem" />
 			<Add library="bson" />
-			<Add library="RpcRT4" />
-			<Add directory="..\..\bson" />
-			<Add directory="..\..\util" />
-			<Add directory="..\..\filesystem" />
-			<Add directory="..\..\db" />
-			<Add directory="C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib" />
+			<Add library="rt" />
+			<Add library="uuid" />
+			<Add library="X11" />
+			<Add library="Xss" />
+			<Add library="cache" />
+			<Add directory="../../bson" />
+			<Add directory="../../util" />
+			<Add directory="../../filesystem" />
+			<Add directory="../../db" />
+			<Add directory="../../cache" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
