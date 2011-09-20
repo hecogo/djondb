@@ -10,7 +10,6 @@ FileOutputStream::FileOutputStream(char* fileName, const char* flags) {
 }
 
 FileOutputStream::~FileOutputStream() {
-    free(_fileName);
     free(_pFile);
     close();
 }

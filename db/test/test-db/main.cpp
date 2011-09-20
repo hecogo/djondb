@@ -131,7 +131,19 @@ int testMassiveInsert(int inserts) {
         testInsert(obj);
         delete(obj);
         if ((x % 1000000) == 0) {
-            cout << "Inserted " << x << " records." << endl;
+            clock_gettime(interval, &ts2);
+
+            #ifdef LINUX
+            timespec etime = diff(ts1, ts2);
+            double secs = etime.tv_sec + ((double)etime.tv_nsec / 1000000000.0);
+            #else
+            struct timeval etime = diff(ts1, ts2);
+            double secs = etime.tv_sec + ((double)etime.tv_usec / 1000000.0);
+            #endif
+
+            cout<< "inserts " << x << ", secs: " << secs << endl;
+
+            cout << "Throughput: " << (x / secs) << " ops." << endl;
         }
     }
 
@@ -163,8 +175,8 @@ int main()
 //    testMassiveInsert(10000);
 //    testMassiveInsert(100000);
 //    testMassiveInsert(1000000);
-//    testMassiveInsert(10000000);
-    testMassiveInsert(50000000);
+    testMassiveInsert(10000000);
+//    testMassiveInsert(50000000);
 
     controller.close("sp1.customer");
     return 0;

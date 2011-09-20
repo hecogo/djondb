@@ -27,7 +27,8 @@ class DBController
 
     private:
         long checkStructure(BSONObj* bson);
-        void updateIndex()
+        void updateIndex(char* ns, BSONObj* bson, long filePos);
+        void writeBSON(FileOutputStream* stream, BSONObj* obj);
 };
 
 #endif // DBCONTROLLER_H

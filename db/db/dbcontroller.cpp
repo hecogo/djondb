@@ -2,11 +2,12 @@
 #include "bson.h"
 #include "util.h"
 #include "fileoutputstream.h"
-#include <iostream>
-#include <string.h>
 #include "cachemanager.h"
+#include "indexfactory.h"
 #include "index.h"
 #include <memory>
+#include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -40,6 +41,40 @@ long DBController::checkStructure(BSONObj* obj) {
     return strId;
 }
 
+void DBController::writeBSON(FileOutputStream* stream, BSONObj* obj) {
+
+    stream->writeInt(obj->length());
+    for (std::map<char*, BSONContent*>::const_iterator i = obj->begin(); i != obj->end(); i++) {
+        char* key = i->first;
+        stream->writeChars(key, strlen(key));
+        BSONContent* cont = i->second;
+        stream->writeInt(cont->_type);
+        char* text;
+        switch (cont->_type) {
+            case BSON_TYPE:
+                // Unsupported yet;
+                break;
+            case INT_TYPE:
+                stream->writeInt(*((int*)cont->_element));
+                break;
+            case LONG_TYPE:
+                stream->writeLong(*((long*)cont->_element));
+                break;
+            case DOUBLE_TYPE:
+                stream->writeDoubleIEEE(*((double*)cont->_element));
+                break;
+            case PTRCHAR_TYPE:
+                text = (char*)cont->_element;
+                stream->writeChars(text, strlen(text));
+                break;
+            case STRING_TYPE:
+                string* str = (string*)cont->_element;
+                stream->writeString(str);
+                break;
+        }
+    }
+}
+
 void DBController::insert(char* ns, BSONObj* obj) {
     FileOutputStream* streamData = open(ns, DATA_FTYPE);
 
@@ -55,38 +90,9 @@ void DBController::insert(char* ns, BSONObj* obj) {
 //    streamData->writeChars(text, strlen(text));
 //    free(text);
 
-    createIndex(obj);
+    updateIndex(ns, obj, streamData->currentPos());
 
-    streamData->writeInt(obj->length());
-    for (std::map<char*, BSONContent*>::const_iterator i = obj->begin(); i != obj->end(); i++) {
-        char* key = i->first;
-        streamData->writeChars(key, strlen(key));
-        BSONContent* cont = i->second;
-        streamData->writeInt(cont->_type);
-        char* text;
-        switch (cont->_type) {
-            case BSON_TYPE:
-                // Unsupported yet;
-                break;
-            case INT_TYPE:
-                streamData->writeInt(*((int*)cont->_element));
-                break;
-            case LONG_TYPE:
-                streamData->writeLong(*((long*)cont->_element));
-                break;
-            case DOUBLE_TYPE:
-                streamData->writeDoubleIEEE(*((double*)cont->_element));
-                break;
-            case PTRCHAR_TYPE:
-                text = (char*)cont->_element;
-                streamData->writeChars(text, strlen(text));
-                break;
-            case STRING_TYPE:
-                string* str = (string*)cont->_element;
-                streamData->writeString(str);
-                break;
-        }
-    }
+    writeBSON(streamData, obj);
 //    stream->flush();
 }
 
@@ -110,7 +116,6 @@ FileOutputStream* DBController::open(char* ns, FILE_TYPE type) {
     if (it != _spaces.end()) {
         FileOutputStream* stream = it->second;
 //        if (stream->currentPos() < (300 * 1024 * 1024)) {
-            free(fileName);
             return stream;
 //        } else {
 //            fileName = (char*)stream->fileName();
@@ -141,3 +146,15 @@ bool DBController::close(char* ns) {
     return true;
 }
 
+void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
+    BSONObj* indexBSON = new BSONObj();
+    indexBSON->add("_id", bson->getString("_id"));
+    IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
+    Index* index = impl->find(indexBSON);
+
+    index->pos = filePos;
+
+    FileOutputStream* out = open(ns, INDEX_FTYPE);
+    BSONObj* key = index->key;
+    writeBSON(out, key);
+}

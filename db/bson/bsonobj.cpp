@@ -110,7 +110,8 @@ char* BSONObj::toChar() const {
 int* BSONObj::getInt(char* key) const {
     std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
     if (it != _elements.end()) {
-        int* res = (int*)it->second;
+        BSONContent* content = it->second;
+        int* res = (int*)content->_element;
         return res;
     } else {
         return NULL;
@@ -120,7 +121,8 @@ int* BSONObj::getInt(char* key) const {
 double* BSONObj::getDouble(char* key) const {
     std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
     if (it != _elements.end()) {
-        double* res = (double*)it->second;
+        BSONContent* content = it->second;
+        double* res = (double*)content->_element;
         return res;
     } else {
         return NULL;
@@ -130,7 +132,8 @@ double* BSONObj::getDouble(char* key) const {
 long* BSONObj::getLong(char* key) const {
     std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
     if (it != _elements.end()) {
-        long* res = (long*)it->second;
+        BSONContent* content = it->second;
+        long* res = (long*)content->_element;
         return res;
     } else {
         return NULL;
@@ -140,7 +143,8 @@ long* BSONObj::getLong(char* key) const {
 char* BSONObj::getChars(char* key) const {
     std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
     if (it != _elements.end()) {
-        char* res = (char*)it->second;
+        BSONContent* content = it->second;
+        char* res = (char*)content->_element;
         return res;
     } else {
         return NULL;
@@ -150,7 +154,8 @@ char* BSONObj::getChars(char* key) const {
 std::string* BSONObj::getString(char* key) const {
     std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
     if (it != _elements.end()) {
-        std::string* res = (std::string*)it->second;
+        BSONContent* content = it->second;
+        std::string* res = (std::string*)content->_element;
         return res;
     } else {
         return NULL;
@@ -160,7 +165,8 @@ std::string* BSONObj::getString(char* key) const {
 BSONObj* BSONObj::getBSON(char* key) const {
     std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
     if (it != _elements.end()) {
-        BSONObj* res = (BSONObj*)it->second;
+        BSONContent* content = it->second;
+        BSONObj* res = (BSONObj*)content->_element;
         return res;
     } else {
         return NULL;
