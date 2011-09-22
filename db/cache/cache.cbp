@@ -36,6 +36,7 @@
 		</Build>
 		<Compiler>
 			<Add directory="C:\development\boost_1_47_0" />
+			<Add directory="..\bson" />
 		</Compiler>
 		<Unit filename="cache.h" />
 		<Unit filename="cachemanager.cpp" />

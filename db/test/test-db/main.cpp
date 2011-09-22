@@ -229,13 +229,6 @@ void testFinds() {
 
 int main()
 {
-    /*
-    BSONObj* o = new BSONObj();
-    o->add("name", "John");
-    o->add("last", "Crossley");
-    testInsert(o);
-    delete(o);
-    */
     int x = pow(10, 5);
     testMassiveInsert(x);
     testFinds();
