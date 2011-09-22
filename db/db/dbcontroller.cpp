@@ -2,11 +2,13 @@
 #include "bson.h"
 #include "util.h"
 #include "fileoutputstream.h"
+#include "fileinputstream.h"
 #include "cachemanager.h"
 #include "indexfactory.h"
 #include "index.h"
 #include <memory>
 #include <iostream>
+#include <sstream>
 #include <string.h>
 
 using namespace std;
@@ -17,7 +19,7 @@ DBController::DBController()
 
 DBController::~DBController()
 {
-    for (std::map<char*, FileOutputStream*>::iterator i = _spaces.begin(); i != _spaces.end(); i++) {
+    for (std::map<std::string, FileOutputStream*>::iterator i = _spaces.begin(); i != _spaces.end(); i++) {
         FileOutputStream* stream = i->second;
         stream->close();
         delete(stream);
@@ -27,7 +29,7 @@ DBController::~DBController()
 
 long DBController::checkStructure(BSONObj* obj) {
     Structure* structure = new Structure();
-    for (std::map<char*, BSONContent* >::const_iterator i = obj->begin(); i != obj->end(); i++) {
+    for (std::map<t_keytype, BSONContent* >::const_iterator i = obj->begin(); i != obj->end(); i++) {
         structure->add(i->first);
     }
 
@@ -44,9 +46,9 @@ long DBController::checkStructure(BSONObj* obj) {
 void DBController::writeBSON(FileOutputStream* stream, BSONObj* obj) {
 
     stream->writeInt(obj->length());
-    for (std::map<char*, BSONContent*>::const_iterator i = obj->begin(); i != obj->end(); i++) {
-        char* key = i->first;
-        stream->writeChars(key, strlen(key));
+    for (std::map<t_keytype, BSONContent*>::const_iterator i = obj->begin(); i != obj->end(); i++) {
+        t_keytype key = i->first;
+        stream->writeString(&key);
         BSONContent* cont = i->second;
         stream->writeInt(cont->_type);
         char* text;
@@ -75,6 +77,39 @@ void DBController::writeBSON(FileOutputStream* stream, BSONObj* obj) {
     }
 }
 
+BSONObj* DBController::readBSON(FileInputStream* stream) {
+
+    BSONObj* obj = new BSONObj();
+    int elements = stream->readInt();
+    for (int x = 0; x < elements; x++) {
+        string key = *stream->readString();
+
+        int type = stream->readInt();
+        char* text;
+        switch (type) {
+            case BSON_TYPE:
+                // Unsupported yet;
+                break;
+            case INT_TYPE:
+                obj->add(key, stream->readInt());
+                break;
+            case LONG_TYPE:
+                obj->add(key, stream->readLong());
+                break;
+            case DOUBLE_TYPE:
+                obj->add(key, stream->readDoubleIEEE());
+                break;
+            case PTRCHAR_TYPE:
+                obj->add(key, stream->readChars());
+                break;
+            case STRING_TYPE:
+                obj->add(key, stream->readString());
+                break;
+        }
+    }
+    return obj;
+}
+
 void DBController::insert(char* ns, BSONObj* obj) {
     FileOutputStream* streamData = open(ns, DATA_FTYPE);
 
@@ -99,24 +134,29 @@ void DBController::insert(char* ns, BSONObj* obj) {
 
 FileOutputStream* DBController::open(char* ns, FILE_TYPE type) {
 
-    char fileName[255];
-    memset(fileName, 0, 255);
-    strcat(fileName, ns);
-    strcat(fileName, ".");
+    std::stringstream ss;
+    ss << ns << ".";
     switch (type) {
         case DATA_FTYPE:
-            strcat(fileName, "dat");
+            ss << "dat";
+            break;
+        case INDEX_FTYPE:
+            ss << "idx";
             break;
         case STRC_FTYPE:
-            strcat(fileName, "stc");
+            ss << "stt";
             break;
     }
 
-    map<char*, FileOutputStream*>::iterator it = _spaces.find(fileName);
-    if (it != _spaces.end()) {
-        FileOutputStream* stream = it->second;
+    std::string fileName = ss.str();
+    FileOutputStream* stream = NULL;
+    for (map<std::string, FileOutputStream*>::iterator it = _spaces.begin(); it != _spaces.end(); it++) {
+        std::string key = it->first;
+        if (key.compare(fileName) == 0) {
+            stream = it->second;
+            break;
+        }
 //        if (stream->currentPos() < (300 * 1024 * 1024)) {
-            return stream;
 //        } else {
 //            fileName = (char*)stream->fileName();
 //            stream->close();
@@ -129,13 +169,16 @@ FileOutputStream* DBController::open(char* ns, FILE_TYPE type) {
 //            _spaces.erase(it);
 //        }
     }
-    FileOutputStream* output = new FileOutputStream(fileName, "ab+");
-    _spaces.insert(pair<char*, FileOutputStream*>(fileName, output));
+    if (stream != NULL) {
+        return stream;
+    }
+    FileOutputStream* output = new FileOutputStream(const_cast<char*>(fileName.c_str()), "ab+");
+    _spaces.insert(pair<std::string, FileOutputStream*>(fileName, output));
     return output;
 }
 
 bool DBController::close(char* ns) {
-    map<char*, FileOutputStream*>::iterator it = _spaces.find(ns);
+    map<std::string, FileOutputStream*>::iterator it = _spaces.find(std::string(ns));
     if (it != _spaces.end()) {
         FileOutputStream* stream = it->second;
         stream->close();
@@ -157,4 +200,41 @@ void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
     FileOutputStream* out = open(ns, INDEX_FTYPE);
     BSONObj* key = index->key;
     writeBSON(out, key);
+}
+
+
+std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
+    BSONObj* indexBSON = new BSONObj();
+    indexBSON->add("_id", filter->getString("_id"));
+    IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
+    Index* index = impl->find(indexBSON);
+
+    char fileName[255];
+    memset(fileName, 0, 255);
+    strcat(fileName, ns);
+    strcat(fileName, ".");
+    strcat(fileName, "dat");
+
+    FileOutputStream* out = open(ns, DATA_FTYPE);
+    out->flush();
+//    out->close();
+
+    FileInputStream* input = new FileInputStream(fileName, "rb");
+    input->seek(index->pos);
+
+    BSONObj* obj = readBSON(input);
+    std::vector<BSONObj*> result;
+    result.push_back(obj);
+    input->close();
+
+    return result;
+}
+
+BSONObj* DBController::findFirst(char* ns, BSONObj* filter) {
+    std::vector<BSONObj*> temp = find(ns, filter);
+    if (temp.size() == 1) {
+        return *temp.begin();
+    } else {
+        return NULL;
+    }
 }

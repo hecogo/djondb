@@ -2,7 +2,11 @@
 #define DBCONTROLLER_H
 
 #include <map>
+#include <vector>
+#include <string>
+
 class FileOutputStream;
+class FileInputStream;
 class BSONObj;
 
 enum FILE_TYPE {
@@ -21,9 +25,12 @@ class DBController
         bool close(char* ns);
 
         void insert(char* ns, BSONObj* bson);
+        std::vector<BSONObj*> find(char* ns, BSONObj* filter);
+        BSONObj* findFirst(char* ns, BSONObj* filter);
+        BSONObj* readBSON(FileInputStream* stream);
     protected:
     private:
-        std::map<char*, FileOutputStream*>  _spaces;
+        std::map<std::string, FileOutputStream*>  _spaces;
 
     private:
         long checkStructure(BSONObj* bson);

@@ -10,10 +10,15 @@
 #include <Windows.h>
 #endif
 #include "bson.h"
+#include <stdlib.h>
+#include <assert.h>
+#include <math.h>
 
 using namespace std;
 
 DBController controller;
+
+std::vector<std::string*> __ids;
 
 #ifdef LINUX
 timespec diff(timespec start, timespec end)
@@ -127,8 +132,17 @@ int testMassiveInsert(int inserts) {
     for (int x = 0; x < inserts; x++) {
         BSONObj* obj = new BSONObj();
         obj->add("name", "John");
+        char temp[700];
+        memset(temp, 0, 699);
+        memset(temp, 'a', 700);
+        obj->add("content", temp);
         obj->add("last", "Smith");
         testInsert(obj);
+
+        int test = rand() % 10;
+        if (test > 6) {
+            __ids.push_back(new std::string(((std::string*)obj->getString("_id"))->c_str()));
+        }
         delete(obj);
         if ((x % 1000000) == 0) {
             clock_gettime(interval, &ts2);
@@ -160,6 +174,57 @@ int testMassiveInsert(int inserts) {
     cout<< "inserts " << inserts << ", secs: " << secs << endl;
 
     cout << "Throughput: " << (inserts / secs) << " ops." << endl;
+    cout << "------------------------------------------------------------" << endl;
+}
+
+void testFinds() {
+   int interval;
+    #ifdef LINUX
+    timespec ts1;
+    timespec ts2;
+    interval = CLOCK_PROCESS_CPUTIME_ID;
+    #endif
+    #ifdef WINDOWS
+    struct timeval ts1;
+    struct timeval ts2;
+    interval = 0;
+    #endif
+
+    clock_gettime(interval, &ts1);
+
+    for (std::vector<string*>::iterator i = __ids.begin(); i != __ids.end(); i++) {
+        string* id = *i;
+
+        BSONObj* obj = new BSONObj();
+        obj->add("_id", id);
+        BSONObj* res = controller.findFirst("sp1.customer", obj);
+        std::string* id2 = res->getString("_id");
+//        cout << "Looking for: " << *id << endl;
+//        cout << "Found        " << *id2 << endl;
+        if ((id2 == NULL) || (id2->compare(*id) != 0)) {
+            if (id2 != NULL) {
+                cout << "Looking for: " << *id << " and got " << *id2 << endl;
+            }
+            cout << "Error " << endl;
+        }
+        delete res;
+        delete(obj);
+    }
+
+    clock_gettime(interval, &ts2);
+
+    #ifdef LINUX
+    timespec etime = diff(ts1, ts2);
+    double secs = etime.tv_sec + ((double)etime.tv_nsec / 1000000000.0);
+    #else
+    struct timeval etime = diff(ts1, ts2);
+    double secs = etime.tv_sec + ((double)etime.tv_usec / 1000000.0);
+    #endif
+
+    cout<< "finds " << __ids.size() << ", secs: " << secs << endl;
+
+    cout << "Throughput: " << (__ids.size() / secs) << " ops." << endl;
+    cout << "------------------------------------------------------------" << endl;
 }
 
 int main()
@@ -171,12 +236,9 @@ int main()
     testInsert(o);
     delete(o);
     */
-//    testMassiveInsert(100);
-//    testMassiveInsert(10000);
-//    testMassiveInsert(100000);
-//    testMassiveInsert(1000000);
-    testMassiveInsert(10000000);
-//    testMassiveInsert(50000000);
+    int x = pow(10, 5);
+    testMassiveInsert(x);
+    testFinds();
 
     controller.close("sp1.customer");
     return 0;

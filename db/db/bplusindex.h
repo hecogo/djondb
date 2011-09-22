@@ -3,10 +3,11 @@
 
 #include "index.h"
 
+typedef char* INDEXPOINTERTYPE;
 
 struct IndexPointer {
     Index* elem;
-    long value;
+    INDEXPOINTERTYPE value;
 
     IndexPointer* left;
     IndexPointer* right;
@@ -27,7 +28,7 @@ class BPlusIndex: public IndexAlgorithm
 
     private:
         void insertElement(Index* elem);
-        IndexPointer* findNode(IndexPointer* start, long value);
+        IndexPointer* findNode(IndexPointer* start, INDEXPOINTERTYPE value);
 };
 
 #endif // BPLUSINDEX_H

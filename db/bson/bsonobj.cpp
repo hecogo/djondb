@@ -26,7 +26,7 @@ BSONObj::BSONObj()
 
 BSONObj::~BSONObj()
 {
-    for (std::map<char*, BSONContent*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
+    for (std::map<t_keytype, BSONContent*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
         BSONContent* cont = i->second;
         delete(cont);
     }
@@ -35,32 +35,32 @@ BSONObj::~BSONObj()
 }
 
 /*
-void BSONObj::add(char* key, void* val) {
+void BSONObj::add(t_keytype key, void* val) {
     BSONCONTENT_FILL(key, PTR, val);
 }
 */
 
-void BSONObj::add(char* key, int val) {
+void BSONObj::add(t_keytype key, int val) {
     BSONCONTENT_FILL(key, INT_TYPE, &val);
 }
 
-void BSONObj::add(char* key, double val) {
+void BSONObj::add(t_keytype key, double val) {
     BSONCONTENT_FILL(key, DOUBLE_TYPE, &val);
 }
 
-void BSONObj::add(char* key, long val) {
+void BSONObj::add(t_keytype key, long val) {
     BSONCONTENT_FILL(key, LONG_TYPE, &val);
 }
 
-void BSONObj::add(char* key, char* val) {
+void BSONObj::add(t_keytype key, char* val) {
     BSONCONTENT_FILL(key, PTRCHAR_TYPE, val);
 }
 
-void BSONObj::add(char* key, std::string* val) {
+void BSONObj::add(t_keytype key, std::string* val) {
     BSONCONTENT_FILL(key, STRING_TYPE, val);
 }
 
-void BSONObj::add(char* key, BSONObj* val) {
+void BSONObj::add(t_keytype key, BSONObj* val) {
     BSONCONTENT_FILL(key, BSON_TYPE, val);
 }
 
@@ -68,13 +68,13 @@ char* BSONObj::toChar() const {
     std::stringstream ss;
     ss << "{ ";
     bool first = true;
-    for (std::map<char*, BSONContent*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
+    for (std::map<t_keytype, BSONContent*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
         if (!first) {
             ss << ",";
         }
         first = false;
         BSONContent* content = i->second;
-        char* key = i->first;
+        t_keytype key = i->first;
         ss << key << ":";
         switch (content->_type)  {
             case BSON_TYPE:
@@ -107,10 +107,10 @@ char* BSONObj::toChar() const {
     return res;
 }
 
-int* BSONObj::getInt(char* key) const {
-    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
-    if (it != _elements.end()) {
-        BSONContent* content = it->second;
+int* BSONObj::getInt(t_keytype key) const {
+    BSONContent* content = NULL;
+    SEARCHBSON(key);
+    if (content != NULL) {
         int* res = (int*)content->_element;
         return res;
     } else {
@@ -118,10 +118,10 @@ int* BSONObj::getInt(char* key) const {
     }
 }
 
-double* BSONObj::getDouble(char* key) const {
-    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
-    if (it != _elements.end()) {
-        BSONContent* content = it->second;
+double* BSONObj::getDouble(t_keytype key) const {
+    BSONContent* content = NULL;
+    SEARCHBSON(key);
+    if (content != NULL) {
         double* res = (double*)content->_element;
         return res;
     } else {
@@ -129,10 +129,10 @@ double* BSONObj::getDouble(char* key) const {
     }
 }
 
-long* BSONObj::getLong(char* key) const {
-    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
-    if (it != _elements.end()) {
-        BSONContent* content = it->second;
+long* BSONObj::getLong(t_keytype key) const {
+    BSONContent* content = NULL;
+    SEARCHBSON(key);
+    if (content != NULL) {
         long* res = (long*)content->_element;
         return res;
     } else {
@@ -140,10 +140,10 @@ long* BSONObj::getLong(char* key) const {
     }
 }
 
-char* BSONObj::getChars(char* key) const {
-    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
-    if (it != _elements.end()) {
-        BSONContent* content = it->second;
+char* BSONObj::getChars(t_keytype key) const {
+    BSONContent* content = NULL;
+    SEARCHBSON(key);
+    if (content != NULL) {
         char* res = (char*)content->_element;
         return res;
     } else {
@@ -151,10 +151,10 @@ char* BSONObj::getChars(char* key) const {
     }
 }
 
-std::string* BSONObj::getString(char* key) const {
-    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
-    if (it != _elements.end()) {
-        BSONContent* content = it->second;
+std::string* BSONObj::getString(t_keytype key) const {
+    BSONContent* content = NULL;
+    SEARCHBSON(key);
+    if (content != NULL) {
         std::string* res = (std::string*)content->_element;
         return res;
     } else {
@@ -162,10 +162,10 @@ std::string* BSONObj::getString(char* key) const {
     }
 }
 
-BSONObj* BSONObj::getBSON(char* key) const {
-    std::map<char*, BSONContent*>::const_iterator it = _elements.find(key);
-    if (it != _elements.end()) {
-        BSONContent* content = it->second;
+BSONObj* BSONObj::getBSON(t_keytype key) const {
+    BSONContent* content = NULL;
+    SEARCHBSON(key);
+    if (content != NULL) {
         BSONObj* res = (BSONObj*)content->_element;
         return res;
     } else {
@@ -173,11 +173,11 @@ BSONObj* BSONObj::getBSON(char* key) const {
     }
 }
 
-std::map<char*, BSONContent* >::const_iterator BSONObj::begin() const {
+std::map<t_keytype, BSONContent* >::const_iterator BSONObj::begin() const {
     return _elements.begin();
 }
 
-std::map<char*, BSONContent* >::const_iterator BSONObj::end() const {
+std::map<t_keytype, BSONContent* >::const_iterator BSONObj::end() const {
     return _elements.end();
 }
 

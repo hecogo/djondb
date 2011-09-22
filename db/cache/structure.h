@@ -1,6 +1,7 @@
 #ifndef STRUCTURE_H
 #define STRUCTURE_H
 
+#include "bson.h"
 #include <vector>
 #include <boost/crc.hpp>
 #include <string>
@@ -14,14 +15,14 @@ class Structure
     public:
         Structure();
         virtual ~Structure();
-        void add(char* name);
+        void add(t_keytype name);
 
         long crc();
 
     protected:
     private:
         long _id; // CRC Code
-        vector<char*> _elements;
+        vector<t_keytype> _elements;
 };
 
 
