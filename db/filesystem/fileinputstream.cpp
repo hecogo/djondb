@@ -64,7 +64,7 @@ std::string* FileInputStream::readString() {
     return res;
 }
 
-std::string FileInputStream::fileName() {
+const std::string FileInputStream::fileName() const {
     return _fileName;
 }
 
@@ -90,7 +90,16 @@ const char* FileInputStream::readFull() {
 }
 
 bool FileInputStream::eof() {
-    return feof(_pFile);
+    if (_pFile == NULL) {
+        return true;
+    }
+    long pos = currentPos();
+    // Force reading the last char to check the feof flag
+    readChar();
+    bool res = feof(_pFile);
+    // Back to the original position
+    seek(pos);
+    return res;
 }
 
 long FileInputStream::currentPos() const {

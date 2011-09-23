@@ -18,7 +18,7 @@ BPlusIndex::~BPlusIndex()
 Index* BPlusIndex::add(BSONObj* elem, long filePos) {
     Index* index = new Index();
     index->key = elem;
-    index->pos = filePos;
+    index->posData = filePos;
 
     insertElement(index);
     return index;

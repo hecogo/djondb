@@ -30,7 +30,7 @@ public:
     virtual long crc32();
 
     virtual std::string* readString();
-    virtual std::string fileName();
+    virtual const std::string fileName() const;
     virtual bool eof();
 
     virtual void close();

@@ -16,7 +16,7 @@ class IndexFactory
         virtual ~IndexFactory();
 
         static IndexFactory* indexFactory;
-        IndexAlgorithm* index(char* ns, BSONObj* key);
+        IndexAlgorithm* index(const char* ns, BSONObj* key);
     protected:
     private:
         IndexFactory();

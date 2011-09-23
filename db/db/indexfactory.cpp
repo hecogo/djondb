@@ -17,7 +17,7 @@ IndexFactory::~IndexFactory()
     //dtor
 }
 
-IndexAlgorithm* IndexFactory::index(char* ns, BSONObj* key) {
+IndexAlgorithm* IndexFactory::index(const char* ns, BSONObj* key) {
     std::stringstream ss;
     ss << "ns:" << ns << ":";
     for (std::map<t_keytype, BSONContent* >::const_iterator i = key->begin(); i != key->end(); i++) {

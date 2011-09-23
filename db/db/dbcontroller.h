@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 
-class FileOutputStream;
+class FileInputOutputStream;
 class FileInputStream;
 class BSONObj;
 
@@ -15,6 +15,15 @@ enum FILE_TYPE {
     INDEX_FTYPE
 };
 
+typedef FileInputOutputStream StreamType;
+struct Space {
+    std::string ns;
+    FILE_TYPE type;
+    StreamType* stream;
+};
+typedef Space SpacesType;
+
+
 class DBController
 {
     public:
@@ -22,23 +31,24 @@ class DBController
         virtual ~DBController();
 
         void initialize();
+        void shutdown();
 
-        FileOutputStream* open(char* ns, FILE_TYPE type);
         bool close(char* ns);
 
         void insert(char* ns, BSONObj* bson);
         std::vector<BSONObj*> find(char* ns, BSONObj* filter);
         BSONObj* findFirst(char* ns, BSONObj* filter);
-        BSONObj* readBSON(FileInputStream* stream);
+        BSONObj* readBSON(StreamType* stream);
     protected:
     private:
-        std::map<std::string, FileOutputStream*>  _spaces;
+        std::map<std::string, SpacesType>  _spaces;
+        StreamType* open(std::string ns, FILE_TYPE type);
 
     private:
         long checkStructure(BSONObj* bson);
         void updateIndex(char* ns, BSONObj* bson, long filePos);
         void insertIndex(char* ns, BSONObj* bson, long filePos);
-        void writeBSON(FileOutputStream* stream, BSONObj* obj);
+        void writeBSON(StreamType* stream, BSONObj* obj);
 };
 
 #endif // DBCONTROLLER_H

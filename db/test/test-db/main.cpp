@@ -230,10 +230,11 @@ void testFinds() {
 
 int main()
 {
-    int x = pow(10, 6);
+    controller.initialize();
+    int x = 2;//pow(10, 0);
     testMassiveInsert(x);
     testFinds();
 
-    controller.close("sp1.customer");
+    controller.shutdown();
     return 0;
 }

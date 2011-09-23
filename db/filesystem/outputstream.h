@@ -22,7 +22,6 @@ public:
     virtual void seek(long) = 0;
     virtual long currentPos() const = 0;
 
-    virtual long crc32(int pos) = 0;
 };
 
 #endif // OUTPUTSTREAM_H

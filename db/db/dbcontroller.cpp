@@ -1,8 +1,9 @@
 #include "dbcontroller.h"
 #include "bson.h"
 #include "util.h"
-#include "fileoutputstream.h"
+#include "fileinputoutputstream.h"
 #include "fileinputstream.h"
+#include "fileoutputstream.h"
 #include "cachemanager.h"
 #include "indexfactory.h"
 #include "index.h"
@@ -19,32 +20,45 @@ DBController::DBController()
 
 DBController::~DBController()
 {
-    for (std::map<std::string, FileOutputStream*>::iterator i = _spaces.begin(); i != _spaces.end(); i++) {
-        FileOutputStream* stream = i->second;
-        stream->close();
-        delete(stream);
-        stream = 0;
-    }
 }
 
 void DBController::shutdown() {
+    FileOutputStream* fos = new FileOutputStream("djondb.dat", "wb");
+    for (std::map<std::string, SpacesType>::iterator i = _spaces.begin(); i != _spaces.end(); i++) {
+        SpacesType space = i->second;
+        std::string ns = space.ns;
+        FILE_TYPE type = space.type;
+        fos->writeString(&ns);
+        fos->writeInt(static_cast<int>(type));
+        space.stream->close();
+    }
+    fos->close();
 }
 
 void DBController::initialize() {
-    FileInputStream* fis = new FileInputStream("jaguar.dat", "rb");
-    while (fis->eof()) {
+    FileInputStream* fis = new FileInputStream("djondb.dat", "rb");
+    while (!fis->eof()) {
         std::string* ns = fis->readString();
+        FILE_TYPE type = static_cast<FILE_TYPE>(fis->readInt());
 
-        IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
-        FileInputStream* fis = new FileInputStream(*ns + ".idx");
-        while (fis->eof()) {
-            BSONObj* obj = readBSON(fis);
-            long indexPos = index->indexPos);
-            long posData = index->posData;
-            Index* index = impl->add(obj, posData);
-            index->indexPos = indexPos;
+        StreamType* stream = open(*ns, type);
+        long currentPos = stream->currentPos();
+        if (type == INDEX_FTYPE) {
+            stream->seek(0);
+            IndexAlgorithm* impl = NULL;
+            while (!stream->eof()) {
+                BSONObj* obj = readBSON(stream);
+
+                if (!impl) {
+                    impl = IndexFactory::indexFactory->index(ns->c_str(), obj);
+                }
+                long indexPos = stream->readLong();
+                long posData = stream->readLong();
+                Index* index = impl->add(obj, posData);
+                index->indexPos = indexPos;
+            }
+            stream->seek(currentPos);
         }
-        fis->close();
     }
     fis->close();
 }
@@ -65,7 +79,7 @@ long DBController::checkStructure(BSONObj* obj) {
     return strId;
 }
 
-void DBController::writeBSON(FileOutputStream* stream, BSONObj* obj) {
+void DBController::writeBSON(StreamType* stream, BSONObj* obj) {
 
     stream->writeInt(obj->length());
     for (std::map<t_keytype, BSONContent*>::const_iterator i = obj->begin(); i != obj->end(); i++) {
@@ -99,7 +113,7 @@ void DBController::writeBSON(FileOutputStream* stream, BSONObj* obj) {
     }
 }
 
-BSONObj* DBController::readBSON(FileInputStream* stream) {
+BSONObj* DBController::readBSON(StreamType* stream) {
 
     BSONObj* obj = new BSONObj();
     int elements = stream->readInt();
@@ -107,7 +121,6 @@ BSONObj* DBController::readBSON(FileInputStream* stream) {
         string key = *stream->readString();
 
         int type = stream->readInt();
-        char* text;
         switch (type) {
             case BSON_TYPE:
                 // Unsupported yet;
@@ -133,7 +146,7 @@ BSONObj* DBController::readBSON(FileInputStream* stream) {
 }
 
 void DBController::insert(char* ns, BSONObj* obj) {
-    FileOutputStream* streamData = open(ns, DATA_FTYPE);
+    StreamType* streamData = open(ns, DATA_FTYPE);
 
     std::string* id = obj->getString("_id");
     if (id == NULL) {
@@ -147,14 +160,14 @@ void DBController::insert(char* ns, BSONObj* obj) {
 //    streamData->writeChars(text, strlen(text));
 //    free(text);
 
-    updateIndex(ns, obj, streamData->currentPos());
+    insertIndex(ns, obj, streamData->currentPos());
 
     writeBSON(streamData, obj);
 //    stream->flush();
 }
 
 
-FileOutputStream* DBController::open(char* ns, FILE_TYPE type) {
+StreamType* DBController::open(std::string ns, FILE_TYPE type) {
 
     std::stringstream ss;
     ss << ns << ".";
@@ -171,11 +184,12 @@ FileOutputStream* DBController::open(char* ns, FILE_TYPE type) {
     }
 
     std::string fileName = ss.str();
-    FileOutputStream* stream = NULL;
-    for (map<std::string, FileOutputStream*>::iterator it = _spaces.begin(); it != _spaces.end(); it++) {
+    StreamType* stream = NULL;
+    for (map<std::string, SpacesType>::iterator it = _spaces.begin(); it != _spaces.end(); it++) {
         std::string key = it->first;
         if (key.compare(fileName) == 0) {
-            stream = it->second;
+            SpacesType space = it->second;
+            stream = space.stream;
             break;
         }
 //        if (stream->currentPos() < (300 * 1024 * 1024)) {
@@ -194,15 +208,21 @@ FileOutputStream* DBController::open(char* ns, FILE_TYPE type) {
     if (stream != NULL) {
         return stream;
     }
-    FileOutputStream* output = new FileOutputStream(const_cast<char*>(fileName.c_str()), "ab+");
-    _spaces.insert(pair<std::string, FileOutputStream*>(fileName, output));
+    StreamType* output = new StreamType(fileName, "ab+");
+    SpacesType space;
+    space.ns = ns;
+    space.stream = output;
+    space.type = type;
+    _spaces.insert(pair<std::string, SpacesType>(fileName, space));
     return output;
 }
 
 bool DBController::close(char* ns) {
-    map<std::string, FileOutputStream*>::iterator it = _spaces.find(std::string(ns));
+    map<std::string, SpacesType>::iterator it = _spaces.find(std::string(ns));
     if (it != _spaces.end()) {
-        FileOutputStream* stream = it->second;
+        SpacesType space = it->second;
+
+        StreamType* stream = space.stream;
         stream->close();
         delete(stream);
         stream = 0;
@@ -217,9 +237,9 @@ void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
     IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
     Index* index = impl->find(indexBSON);
 
-    index->pos = filePos;
+    index->posData = filePos;
 
-    FileOutputStream* out = open(ns, INDEX_FTYPE);
+    StreamType* out = open(ns, INDEX_FTYPE);
     long currentPos = out->currentPos();
     out->seek(index->indexPos);
     BSONObj* key = index->key;
@@ -237,7 +257,7 @@ void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
 
     index->posData = filePos;
 
-    FileOutputStream* out = open(ns, INDEX_FTYPE);
+    StreamType* out = open(ns, INDEX_FTYPE);
     index->indexPos = out->currentPos();
     BSONObj* key = index->key;
     writeBSON(out, key);
@@ -257,12 +277,12 @@ std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
     strcat(fileName, ".");
     strcat(fileName, "dat");
 
-    FileOutputStream* out = open(ns, DATA_FTYPE);
+    StreamType* out = open(ns, DATA_FTYPE);
     out->flush();
 //    out->close();
 
-    FileInputStream* input = new FileInputStream(fileName, "rb");
-    input->seek(index->pos);
+    StreamType* input = new StreamType(fileName, "rb");
+    input->seek(index->posData);
 
     BSONObj* obj = readBSON(input);
     std::vector<BSONObj*> result;
