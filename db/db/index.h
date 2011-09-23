@@ -5,12 +5,13 @@ class BSONObj;
 
 struct Index {
     BSONObj* key;
-    long pos;
+    long posData;
+    long indexPos;
 };
 
 class IndexAlgorithm {
     public:
-    virtual void add(BSONObj* elem, long filePos) = 0;
+    virtual Index* add(BSONObj* elem, long filePos) = 0;
     virtual Index* find(BSONObj* elem) = 0;
     virtual void remove(BSONObj* elem) = 0;
 };

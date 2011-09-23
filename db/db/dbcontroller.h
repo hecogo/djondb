@@ -21,6 +21,8 @@ class DBController
         DBController();
         virtual ~DBController();
 
+        void initialize();
+
         FileOutputStream* open(char* ns, FILE_TYPE type);
         bool close(char* ns);
 
@@ -35,6 +37,7 @@ class DBController
     private:
         long checkStructure(BSONObj* bson);
         void updateIndex(char* ns, BSONObj* bson, long filePos);
+        void insertIndex(char* ns, BSONObj* bson, long filePos);
         void writeBSON(FileOutputStream* stream, BSONObj* obj);
 };
 

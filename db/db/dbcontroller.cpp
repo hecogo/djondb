@@ -27,6 +27,28 @@ DBController::~DBController()
     }
 }
 
+void DBController::shutdown() {
+}
+
+void DBController::initialize() {
+    FileInputStream* fis = new FileInputStream("jaguar.dat", "rb");
+    while (fis->eof()) {
+        std::string* ns = fis->readString();
+
+        IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
+        FileInputStream* fis = new FileInputStream(*ns + ".idx");
+        while (fis->eof()) {
+            BSONObj* obj = readBSON(fis);
+            long indexPos = index->indexPos);
+            long posData = index->posData;
+            Index* index = impl->add(obj, posData);
+            index->indexPos = indexPos;
+        }
+        fis->close();
+    }
+    fis->close();
+}
+
 long DBController::checkStructure(BSONObj* obj) {
     Structure* structure = new Structure();
     for (std::map<t_keytype, BSONContent* >::const_iterator i = obj->begin(); i != obj->end(); i++) {
@@ -198,10 +220,30 @@ void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
     index->pos = filePos;
 
     FileOutputStream* out = open(ns, INDEX_FTYPE);
+    long currentPos = out->currentPos();
+    out->seek(index->indexPos);
     BSONObj* key = index->key;
     writeBSON(out, key);
+    out->writeLong(index->indexPos);
+    out->writeLong(index->posData);
+    out->seek(currentPos);
 }
 
+void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
+    BSONObj* indexBSON = new BSONObj();
+    indexBSON->add("_id", bson->getString("_id"));
+    IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
+    Index* index = impl->find(indexBSON);
+
+    index->posData = filePos;
+
+    FileOutputStream* out = open(ns, INDEX_FTYPE);
+    index->indexPos = out->currentPos();
+    BSONObj* key = index->key;
+    writeBSON(out, key);
+    out->writeLong(index->indexPos);
+    out->writeLong(index->posData);
+}
 
 std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
     BSONObj* indexBSON = new BSONObj();

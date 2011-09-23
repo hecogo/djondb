@@ -11,6 +11,7 @@
 #endif
 #include "bson.h"
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include <math.h>
 
@@ -229,7 +230,7 @@ void testFinds() {
 
 int main()
 {
-    int x = pow(10, 5);
+    int x = pow(10, 6);
     testMassiveInsert(x);
     testFinds();
 

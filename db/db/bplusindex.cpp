@@ -15,12 +15,13 @@ BPlusIndex::~BPlusIndex()
     //dtor
 }
 
-void BPlusIndex::add(BSONObj* elem, long filePos) {
+Index* BPlusIndex::add(BSONObj* elem, long filePos) {
     Index* index = new Index();
     index->key = elem;
     index->pos = filePos;
 
     insertElement(index);
+    return index;
 }
 
 Index* BPlusIndex::find(BSONObj* elem) {

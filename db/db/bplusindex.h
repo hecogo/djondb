@@ -19,7 +19,7 @@ class BPlusIndex: public IndexAlgorithm
         BPlusIndex();
         virtual ~BPlusIndex();
 
-        virtual void add(BSONObj* elem, long filePos);
+        virtual Index* add(BSONObj* elem, long filePos);
         virtual Index* find(BSONObj* elem);
         virtual void remove(BSONObj* elem);
     protected:
