@@ -14,11 +14,14 @@ typedef std::string t_keytype;
     content->_element = vval; \
     _elements.insert(pair<t_keytype, BSONContent* >(kkey, content));
 
-#define SEARCHBSON(key) \
+#define SEARCHBSON(key,ttype) \
     for (std::map<t_keytype, BSONContent*>::const_iterator it = _elements.begin(); it != _elements.end(); it++) { \
         t_keytype itKey = it->first; \
         if (itKey.compare(key) == 0) { \
             content = it->second; \
+            if (content->_type != ttype) { \
+               throw "The type does not match"; \
+            } \
             break; \
         } \
     }

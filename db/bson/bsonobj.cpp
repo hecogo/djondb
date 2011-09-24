@@ -109,7 +109,7 @@ char* BSONObj::toChar() const {
 
 int* BSONObj::getInt(t_keytype key) const {
     BSONContent* content = NULL;
-    SEARCHBSON(key);
+    SEARCHBSON(key, INT_TYPE);
     if (content != NULL) {
         int* res = (int*)content->_element;
         return res;
@@ -120,7 +120,7 @@ int* BSONObj::getInt(t_keytype key) const {
 
 double* BSONObj::getDouble(t_keytype key) const {
     BSONContent* content = NULL;
-    SEARCHBSON(key);
+    SEARCHBSON(key, DOUBLE_TYPE);
     if (content != NULL) {
         double* res = (double*)content->_element;
         return res;
@@ -131,7 +131,7 @@ double* BSONObj::getDouble(t_keytype key) const {
 
 long* BSONObj::getLong(t_keytype key) const {
     BSONContent* content = NULL;
-    SEARCHBSON(key);
+    SEARCHBSON(key, LONG_TYPE);
     if (content != NULL) {
         long* res = (long*)content->_element;
         return res;
@@ -142,7 +142,7 @@ long* BSONObj::getLong(t_keytype key) const {
 
 char* BSONObj::getChars(t_keytype key) const {
     BSONContent* content = NULL;
-    SEARCHBSON(key);
+    SEARCHBSON(key, PTRCHAR_TYPE);
     if (content != NULL) {
         char* res = (char*)content->_element;
         return res;
@@ -153,7 +153,7 @@ char* BSONObj::getChars(t_keytype key) const {
 
 std::string* BSONObj::getString(t_keytype key) const {
     BSONContent* content = NULL;
-    SEARCHBSON(key);
+    SEARCHBSON(key, STRING_TYPE);
     if (content != NULL) {
         std::string* res = (std::string*)content->_element;
         return res;
@@ -164,7 +164,7 @@ std::string* BSONObj::getString(t_keytype key) const {
 
 BSONObj* BSONObj::getBSON(t_keytype key) const {
     BSONContent* content = NULL;
-    SEARCHBSON(key);
+    SEARCHBSON(key, BSON_TYPE);
     if (content != NULL) {
         BSONObj* res = (BSONObj*)content->_element;
         return res;
