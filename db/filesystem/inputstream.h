@@ -20,13 +20,9 @@ public:
     /* Read a chars */
     virtual char* readChars() = 0;
     virtual char* readChars(int length) = 0;
-    virtual const char* readFull() = 0;
-    virtual long currentPos() const = 0;
-    virtual void seek(long i) = 0;
     bool eof();
 
     virtual std::string* readString() = 0;
-    virtual const std::string fileName() const = 0;
 
 };
 

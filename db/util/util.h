@@ -15,6 +15,7 @@
 #include "util/errorHandle.h"
 #include "util/version.h"
 #include "util/logger.h"
+#include "util/threads.h"
 
 #include <string>
 #include <vector>
