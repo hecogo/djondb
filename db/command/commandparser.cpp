@@ -12,7 +12,7 @@ InsertCommand* parseInsert(InputStream* is)  {
 
     BSONInputStream* bsonis = new BSONInputStream(is);
     BSONObj* obj = bsonis->readBSON();
-    command->setBSON(NULL);
+    command->setBSON(obj);
 
     return command;
 }

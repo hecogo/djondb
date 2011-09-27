@@ -1,0 +1,32 @@
+#ifndef NETWORKOUTPUTSTREAM_H
+#define NETWORKOUTPUTSTREAM_H
+#include "outputstream.h"
+
+class NetworkOutputStream: public OutputStream
+{
+    public:
+        /** Default constructor */
+        NetworkOutputStream(int socket);
+        /** Default destructor */
+        virtual ~NetworkOutputStream();
+
+        virtual void writeChar (unsigned char v);
+        /* Write 2 bytes in the output (little endian order) */
+        virtual void writeInt (int v);
+        /* Write 4 bytes in the output (little endian order) */
+        virtual void writeLong (long v);
+        /* Write a 4 byte float in the output */
+        virtual void writeFloatIEEE (float v);
+        /* Write a 8 byte double in the output */
+        virtual void writeDoubleIEEE (double v);
+        /* Write a char */
+        virtual void writeChars(const char* text, int len);
+        virtual void writeString(const std::string* text);
+
+    protected:
+    private:
+
+        int _socket;
+};
+
+#endif // NETWORKOUTPUTSTREAM_H

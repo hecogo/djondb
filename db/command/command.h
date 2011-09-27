@@ -21,6 +21,8 @@ class Command {
         Command(const Command& orig);
         virtual ~Command();
 
+        virtual void execute() = 0;
+
         COMMANDTYPE commandType() const;
 
     private:
@@ -48,6 +50,8 @@ class InsertCommand: public Command {
         BSONObj* bson() const {
             return _bson;
         }
+
+        virtual void execute();
 
     private:
         const std::string* _namespace;

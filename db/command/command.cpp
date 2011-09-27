@@ -28,3 +28,6 @@ COMMANDTYPE Command::commandType() const
 {
     return _commandType;
 }
+
+void InsertCommand::execute() {
+}

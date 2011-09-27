@@ -19,9 +19,6 @@ public:
     virtual void writeChars(const char* text, int len) = 0;
     virtual void writeString(const std::string* text) = 0;
 
-    virtual void seek(long) = 0;
-    virtual long currentPos() const = 0;
-
 };
 
 #endif // OUTPUTSTREAM_H

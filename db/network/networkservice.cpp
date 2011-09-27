@@ -13,6 +13,7 @@
 #include "networkinputstream.h"
 #include "command.h"
 #include "commandparser.h"
+#include "dbcontroller.h"
 
 #include "defs.h"
 //#include "dbjaguar.h"
@@ -36,6 +37,7 @@ pthread_cond_t  request_cv =   PTHREAD_COND_INITIALIZER;
 Logger* log;
 Thread* m_thread; // Main thread
 
+DBController* __dbController;
 
 NetworkService::NetworkService() {
     log = getLogger(NULL);
@@ -51,7 +53,7 @@ void NetworkService::start() { //throw (NetworkException*) {
     }
     if (log->isInfo()) log->info("Starting network service");
 
-
+    __dbController = new DBController();
     m_thread = new Thread(&startSocketListener);
     m_thread->start(NULL);
 
