@@ -31,7 +31,29 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="../../network" />
+			<Add directory="../../util" />
+			<Add directory="../../filesystem" />
+			<Add directory="../../bson" />
+			<Add directory="../../db" />
 		</Compiler>
+		<Linker>
+			<Add library="util" />
+			<Add library="bson" />
+			<Add library="filesystem" />
+			<Add library="cache" />
+			<Add library="command" />
+			<Add library="db" />
+			<Add library="network" />
+			<Add directory="../../util" />
+			<Add directory="../../filesystem" />
+			<Add directory="../../bson" />
+			<Add directory="../../network" />
+			<Add directory="../../db" />
+			<Add directory="../../cache" />
+			<Add directory="../../service" />
+			<Add directory="../../command" />
+		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<envvars />

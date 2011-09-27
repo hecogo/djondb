@@ -38,7 +38,12 @@
 			<Add directory="../util" />
 			<Add directory="../filesystem" />
 			<Add directory="../command" />
+			<Add directory="../db" />
 		</Compiler>
+		<Linker>
+			<Add library="db" />
+			<Add directory="../db" />
+		</Linker>
 		<Unit filename="network.h" />
 		<Unit filename="networkservice.cpp" />
 		<Unit filename="networkservice.h" />

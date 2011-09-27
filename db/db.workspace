@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
 	<Workspace title="db">
-		<Project filename="bson/bson.cbp" />
 		<Project filename="util/util.cbp" />
+		<Project filename="bson/bson.cbp" />
+		<Project filename="filesystem/filesystem.cbp" active="1">
+			<Depends filename="bson/bson.cbp" />
+		</Project>
+		<Project filename="cache/cache.cbp" />
+		<Project filename="command/command.cbp">
+			<Depends filename="filesystem/filesystem.cbp" />
+		</Project>
+		<Project filename="db/db.cbp" />
+		<Project filename="network/network.cbp" />
+		<Project filename="service/service.cbp" />
+		<Project filename="daemon/daemon.cbp">
+			<Depends filename="bson/bson.cbp" />
+			<Depends filename="util/util.cbp" />
+			<Depends filename="filesystem/filesystem.cbp" />
+			<Depends filename="service/service.cbp" />
+			<Depends filename="network/network.cbp" />
+			<Depends filename="command/command.cbp" />
+		</Project>
 		<Project filename="test/test-util/test-util.cbp" />
 		<Project filename="test/test-filesystem/test-filesystem.cbp" />
 		<Project filename="test/test-db/test-db.cbp">
@@ -12,22 +30,15 @@
 			<Depends filename="db/db.cbp" />
 			<Depends filename="cache/cache.cbp" />
 		</Project>
-		<Project filename="filesystem/filesystem.cbp">
-			<Depends filename="bson/bson.cbp" />
-		</Project>
-		<Project filename="db/db.cbp" />
-		<Project filename="cache/cache.cbp" />
 		<Project filename="test/test-cache/test-cache.cbp">
 			<Depends filename="cache/cache.cbp" />
 		</Project>
-		<Project filename="service/service.cbp" />
-		<Project filename="network/network.cbp" />
-		<Project filename="command/command.cbp">
-			<Depends filename="filesystem/filesystem.cbp" />
-		</Project>
-		<Project filename="daemon/daemon.cbp" active="1" />
 		<Project filename="test/test-command/test-command.cbp">
 			<Depends filename="command/command.cbp" />
+		</Project>
+		<Project filename="test/test-network/test-network.cbp">
+			<Depends filename="util/util.cbp" />
+			<Depends filename="network/network.cbp" />
 		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>

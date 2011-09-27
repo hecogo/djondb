@@ -32,6 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add directory="../../command" />
+			<Add directory="../../bson" />
+			<Add directory="../../filesystem" />
 		</Compiler>
 		<Linker>
 			<Add library="command" />

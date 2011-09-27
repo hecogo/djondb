@@ -34,13 +34,14 @@
 			<Add directory="../service" />
 		</Compiler>
 		<Linker>
-			<Add library="service" />
-			<Add library="network" />
 			<Add library="util" />
-			<Add library="command" />
-			<Add library="filesystem" />
-			<Add library="pthread" />
 			<Add library="bson" />
+			<Add library="filesystem" />
+			<Add library="cache" />
+			<Add library="command" />
+			<Add library="db" />
+			<Add library="network" />
+			<Add library="service" />
 			<Add directory="../service" />
 			<Add directory="../network" />
 			<Add directory="../util" />

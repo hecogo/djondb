@@ -79,6 +79,8 @@
 		<Unit filename="inputstream.h" />
 		<Unit filename="networkinputstream.cpp" />
 		<Unit filename="networkinputstream.h" />
+		<Unit filename="networkoutputstream.cpp" />
+		<Unit filename="networkoutputstream.h" />
 		<Unit filename="outputstream.h" />
 		<Extensions>
 			<code_completion />
