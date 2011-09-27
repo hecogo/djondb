@@ -295,7 +295,7 @@ int main()
     controller.initialize();
 
     testFindPrevious();
-    int x = pow(10, 5);
+    int x = pow(10, 1);
     testMassiveInsert(x);
     testFinds();
 

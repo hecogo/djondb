@@ -1,3 +1,5 @@
+#ifndef NETWORKSERVICE_H_INCLUDED
+#define NETWORKSERVICE_H_INCLUDED
 
 /*
  * File:   networkservice.h
@@ -6,15 +8,17 @@
  * Created on November 13, 2008, 5:48 PM
  */
 
-class NetworkException;
+//#include "network.h"
 
 class NetworkService {
 public:
     NetworkService();
     virtual ~NetworkService();
 
-    void start() throw (NetworkException*);
+    void start();// throw (NetworkException*);
 
-    void stop() throw (NetworkException*);
+    void stop();// throw (NetworkException*);
 };
 
+
+#endif // NETWORKSERVICE_H_INCLUDED

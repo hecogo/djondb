@@ -37,6 +37,7 @@
 		<Compiler>
 			<Add directory="../util" />
 			<Add directory="../filesystem" />
+			<Add directory="../command" />
 		</Compiler>
 		<Unit filename="network.h" />
 		<Unit filename="networkservice.cpp" />

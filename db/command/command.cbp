@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="service" />
+		<Option title="command" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="libservice" prefix_auto="1" extension_auto="1" />
+				<Option output="libcommand" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Debug/" />
 				<Option type="2" />
@@ -19,7 +19,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="libservice" prefix_auto="1" extension_auto="1" />
+				<Option output="libcommand" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Release/" />
 				<Option type="2" />
@@ -35,10 +35,13 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add directory="../network" />
+			<Add directory="../bson" />
+			<Add directory="../filesystem" />
 		</Compiler>
-		<Unit filename="service.cpp" />
-		<Unit filename="service.h" />
+		<Unit filename="command.cpp" />
+		<Unit filename="command.h" />
+		<Unit filename="commandparser.cpp" />
+		<Unit filename="commandparser.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

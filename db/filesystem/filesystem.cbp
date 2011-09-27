@@ -16,6 +16,7 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add directory="C:/development/boost_1_47_0" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -33,10 +34,41 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="DebugLinux">
+				<Option output="libfilesystem" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="ReleaseLinux">
+				<Option output="libfilesystem" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
-			<Add directory="C:/development/boost_1_47_0" />
+			<Add directory="../bson" />
 		</Compiler>
+		<Unit filename="bsoninputstream.cpp" />
+		<Unit filename="bsoninputstream.h" />
+		<Unit filename="bsonoutputstream.cpp" />
+		<Unit filename="bsonoutputstream.h" />
 		<Unit filename="defs.h" />
 		<Unit filename="fileinputoutputstream.cpp" />
 		<Unit filename="fileinputoutputstream.h" />

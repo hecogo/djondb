@@ -8,6 +8,8 @@
 class InputStream
 {
 public:
+    InputStream() {};
+
     virtual unsigned char readChar() = 0;
     /* Reads 2 bytes in the input (little endian order) */
     virtual int readInt () = 0;

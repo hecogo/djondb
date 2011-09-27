@@ -1,14 +1,22 @@
 #include "service.h"
+#include "networkservice.h"
 
 
-void service_restart() {
+
+int service_restart() {
 }
 
-void service_startup() {
+int service_startup() {
+    NetworkService* service;
+//    if (service != NULL) {
+//        service->stop();
+//    }
+    service = new NetworkService();
+    service->start();
 }
 
-void service_shutdown() {
+int service_shutdown() {
 }
 
-void service_status() {
+int service_status() {
 }

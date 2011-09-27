@@ -4,6 +4,10 @@
 #include "fileinputoutputstream.h"
 #include "fileinputstream.h"
 #include "fileoutputstream.h"
+
+#include "bsonoutputstream.h"
+#include "bsoninputstream.h"
+
 #include "cachemanager.h"
 #include "indexfactory.h"
 #include "index.h"
@@ -80,69 +84,14 @@ long DBController::checkStructure(BSONObj* obj) {
 }
 
 void DBController::writeBSON(StreamType* stream, BSONObj* obj) {
-
-    stream->writeInt(obj->length());
-    for (std::map<t_keytype, BSONContent*>::const_iterator i = obj->begin(); i != obj->end(); i++) {
-        t_keytype key = i->first;
-        stream->writeString(&key);
-        BSONContent* cont = i->second;
-        stream->writeInt(cont->_type);
-        char* text;
-        switch (cont->_type) {
-            case BSON_TYPE:
-                // Unsupported yet;
-                break;
-            case INT_TYPE:
-                stream->writeInt(*((int*)cont->_element));
-                break;
-            case LONG_TYPE:
-                stream->writeLong(*((long*)cont->_element));
-                break;
-            case DOUBLE_TYPE:
-                stream->writeDoubleIEEE(*((double*)cont->_element));
-                break;
-            case PTRCHAR_TYPE:
-                text = (char*)cont->_element;
-                stream->writeChars(text, strlen(text));
-                break;
-            case STRING_TYPE:
-                string* str = (string*)cont->_element;
-                stream->writeString(str);
-                break;
-        }
-    }
+    BSONOutputStream* out = new BSONOutputStream(stream);
+    out->writeBSON(*obj);
 }
 
 BSONObj* DBController::readBSON(StreamType* stream) {
-
-    BSONObj* obj = new BSONObj();
-    int elements = stream->readInt();
-    for (int x = 0; x < elements; x++) {
-        string key = *stream->readString();
-
-        int type = stream->readInt();
-        switch (type) {
-            case BSON_TYPE:
-                // Unsupported yet;
-                break;
-            case INT_TYPE:
-                obj->add(key, stream->readInt());
-                break;
-            case LONG_TYPE:
-                obj->add(key, stream->readLong());
-                break;
-            case DOUBLE_TYPE:
-                obj->add(key, stream->readDoubleIEEE());
-                break;
-            case PTRCHAR_TYPE:
-                obj->add(key, stream->readChars());
-                break;
-            case STRING_TYPE:
-                obj->add(key, stream->readString());
-                break;
-        }
-    }
-    return obj;
+    BSONInputStream* is = new BSONInputStream(stream);
+    BSONObj* res = is->readBSON();
+    return res;
 }
 
 void DBController::insert(char* ns, BSONObj* obj) {

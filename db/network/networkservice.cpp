@@ -11,6 +11,8 @@
 #include "network.h"
 #include "networkservice.h"
 #include "networkinputstream.h"
+#include "command.h"
+#include "commandparser.h"
 
 #include "defs.h"
 //#include "dbjaguar.h"
@@ -43,7 +45,7 @@ NetworkService::~NetworkService() {
     delete(log);
 }
 
-void NetworkService::start() throw (NetworkException*) {
+void NetworkService::start() { //throw (NetworkException*) {
     if (running) {
         throw new NetworkException(new string("The network service is already active. Try stopping it first"));
     }
@@ -55,7 +57,7 @@ void NetworkService::start() throw (NetworkException*) {
 
 }
 
-void NetworkService::stop() throw (NetworkException*) {
+void NetworkService::stop() { //throw (NetworkException*) {
     log->info("Shutting down the network service");
     if (!running) {
         throw new NetworkException(new string("The network service is not running. Try starting it first"));
@@ -132,7 +134,7 @@ void *startSocketListener(void* arg) {
     log->info("Thread stopped");
 //    pthread_exit(arg);
     return NULL;
-};
+}
 
 void *processRequest(void *arg) {
     int sock = *((int*) arg);
@@ -152,7 +154,9 @@ void *processRequest(void *arg) {
     // Checks version
     char* version = nis->readChars();
     // Reads command
-    int command = nis->readInt();
+    CommandParser parser;
+    Command* cmd = parser.parse(nis);
+
 
 //    int readed;
 //    stringstream sreaded;
@@ -187,12 +191,12 @@ void *processRequest(void *arg) {
 //        memset(buffer, 0, 256);
 //    }
 
-    if (log->isDebug()) log->debug("Buffer received, size: " + toString(readed));
+//    if (log->isDebug()) log->debug("Buffer received, size: " + toString(readed));
 
 //    write(clientSocket, sresp->c_str(), sresp->length());
     close(clientSocket);
 
     return NULL;
-};
+}
 
 
