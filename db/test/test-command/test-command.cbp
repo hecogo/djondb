@@ -2,12 +2,12 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="daemon" />
+		<Option title="test-command" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/daemon" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/test-command" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -16,7 +16,7 @@
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/daemon" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/test-command" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -31,22 +31,15 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
-			<Add directory="../service" />
+			<Add directory="../../command" />
 		</Compiler>
 		<Linker>
-			<Add library="service" />
-			<Add library="network" />
-			<Add library="util" />
 			<Add library="command" />
 			<Add library="filesystem" />
-			<Add library="pthread" />
 			<Add library="bson" />
-			<Add directory="../service" />
-			<Add directory="../network" />
-			<Add directory="../util" />
-			<Add directory="../command" />
-			<Add directory="../filesystem" />
-			<Add directory="../bson" />
+			<Add directory="../../command" />
+			<Add directory="../../filesystem" />
+			<Add directory="../../bson" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_workspace_file>
-	<Workspace title="Workspace">
+	<Workspace title="db">
 		<Project filename="bson/bson.cbp" />
 		<Project filename="util/util.cbp" />
 		<Project filename="test/test-util/test-util.cbp" />
@@ -26,5 +26,8 @@
 			<Depends filename="filesystem/filesystem.cbp" />
 		</Project>
 		<Project filename="daemon/daemon.cbp" active="1" />
+		<Project filename="test/test-command/test-command.cbp">
+			<Depends filename="command/command.cbp" />
+		</Project>
 	</Workspace>
 </CodeBlocks_workspace_file>
