@@ -11,6 +11,7 @@
 #include "cachemanager.h"
 #include "indexfactory.h"
 #include "index.h"
+#include "command.h"
 #include <memory>
 #include <iostream>
 #include <sstream>
@@ -95,6 +96,7 @@ BSONObj* DBController::readBSON(StreamType* stream) {
 }
 
 void DBController::insert(char* ns, BSONObj* obj) {
+    Logger* log = getLogger(NULL);
     StreamType* streamData = open(ns, DATA_FTYPE);
 
     std::string* id = obj->getString("_id");
@@ -112,6 +114,7 @@ void DBController::insert(char* ns, BSONObj* obj) {
     insertIndex(ns, obj, streamData->currentPos());
 
     writeBSON(streamData, obj);
+    delete log;
 //    stream->flush();
 }
 
@@ -247,5 +250,12 @@ BSONObj* DBController::findFirst(char* ns, BSONObj* filter) {
         return *temp.begin();
     } else {
         return NULL;
+    }
+}
+
+void DBController::executeCommand(Command* cmd) {
+    if (cmd->commandType() == INSERT) {
+        InsertCommand* insertCmd = (InsertCommand*)cmd;
+        insert(const_cast<char*>(insertCmd->nameSpace()->c_str()), insertCmd->bson());
     }
 }

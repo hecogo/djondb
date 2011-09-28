@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <fcntl.h>
+#include <sys/ioctl.h>
 
 NetworkInputStream::NetworkInputStream(int clientSocket)
 {
@@ -25,6 +26,9 @@ unsigned char NetworkInputStream::readChar() {
     CHECKSTATUS()
     unsigned char v;
     int readed = recv(_socket, &v, 1, 0);
+    if (readed < 0) {
+        throw new StreamException(new std::string("Readed -1"));
+    }
     return v;
 }
 
@@ -47,7 +51,10 @@ long NetworkInputStream::readLong () {
 float NetworkInputStream::readFloatIEEE () {
     CHECKSTATUS()
     float f;
-    recv(_socket, &f, sizeof(f), 0);
+    int readed = recv(_socket, &f, sizeof(f), 0);
+    if (readed < 0) {
+        throw new StreamException(new std::string("Readed -1"));
+    }
     return f;
 }
 
@@ -55,7 +62,10 @@ float NetworkInputStream::readFloatIEEE () {
 double NetworkInputStream::readDoubleIEEE () {
     CHECKSTATUS()
     double d;
-    recv(_socket, &d, sizeof(d), 0);
+    int readed = recv(_socket, &d, sizeof(d), 0);
+    if (readed < 0) {
+        throw new StreamException(new std::string("Readed -1"));
+    }
     return d;
 }
 
@@ -79,7 +89,10 @@ char* NetworkInputStream::readChars(int length) {
     CHECKSTATUS()
     char* res = (char*)malloc(length+1);
     memset(res, 0, length+1);
-    recv(_socket, res, length, 0);
+    int readed = recv(_socket, res, length, 0);
+    if (readed < 0) {
+        throw new StreamException(new std::string("Readed -1"));
+    }
     return res;
 }
 
@@ -104,6 +117,13 @@ int NetworkInputStream::checkStatus() {
     if (result < 0) {
         closeStream();
         return -1;
+    }
+        size_t nbytes = 0;
+    while (nbytes <= 0) {
+        if ( ioctl(_socket, FIONREAD, (char*)&nbytes) < 0 )  {
+                fprintf(stderr, "%s - failed to get byte count on socket.\n", __func__);
+                return -1;
+        }
     }
     return 0;
 }

@@ -67,6 +67,7 @@
 			<Add directory="../bson" />
 			<Add directory="../util" />
 			<Add directory="../cache" />
+			<Add directory="../command" />
 		</Compiler>
 		<Unit filename="bplusindex.cpp" />
 		<Unit filename="bplusindex.h" />

@@ -29,6 +29,9 @@ CommandParser::~CommandParser()
 
 Command* CommandParser::parse(InputStream* is) {
     int type = is->readInt();
+    if (type != 1) {
+        type = 1;
+    }
     Command* cmd = NULL;
     switch (type) {
         case 0:// Security

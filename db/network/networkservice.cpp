@@ -154,12 +154,16 @@ void *processRequest(void *arg) {
     NetworkInputStream* nis = new NetworkInputStream(clientSocket);
 
     // Checks version
+    int elements = nis->readInt();
     char* version = nis->readChars();
-    // Reads command
-    CommandParser parser;
-    Command* cmd = parser.parse(nis);
+    for (int x = 0; x < elements; x++) {
+        // Reads command
+        CommandParser parser;
+        Command* cmd = parser.parse(nis);
 
-
+        __dbController->executeCommand(cmd);
+    }
+    log->debug("received all");
 //    int readed;
 //    stringstream sreaded;
 //

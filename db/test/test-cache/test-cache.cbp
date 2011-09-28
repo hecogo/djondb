@@ -54,6 +54,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add directory="../../cache" />
+			<Add directory="../../bson" />
 		</Compiler>
 		<Linker>
 			<Add library="cache" />

@@ -27,6 +27,30 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="DebugLinux">
+				<Option output="bin/Debug/test-network" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="rt" />
+				</Linker>
+			</Target>
+			<Target title="ReleaseLinux">
+				<Option output="bin/Release/test-network" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
@@ -38,21 +62,24 @@
 			<Add directory="../../db" />
 		</Compiler>
 		<Linker>
-			<Add library="util" />
-			<Add library="bson" />
-			<Add library="filesystem" />
-			<Add library="cache" />
-			<Add library="command" />
-			<Add library="db" />
 			<Add library="network" />
+			<Add library="db" />
+			<Add library="command" />
+			<Add library="cache" />
+			<Add library="filesystem" />
+			<Add library="bson" />
+			<Add library="util" />
+			<Add library="pthread" />
+			<Add library="uuid" />
+			<Add library="Xss" />
 			<Add directory="../../util" />
 			<Add directory="../../filesystem" />
 			<Add directory="../../bson" />
 			<Add directory="../../network" />
-			<Add directory="../../db" />
 			<Add directory="../../cache" />
 			<Add directory="../../service" />
 			<Add directory="../../command" />
+			<Add directory="../../db" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
