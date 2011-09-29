@@ -28,16 +28,17 @@ CommandParser::~CommandParser()
 }
 
 Command* CommandParser::parse(InputStream* is) {
-    int type = is->readInt();
+    int type = is->readLong();
     Command* cmd = NULL;
     switch (type) {
-        case 0:// Security
-            break;
         case 1: // Insert
             cmd = parseInsert(is);
             break;
         case CLOSECONNECTION: // Insert
             cmd = new CloseCommand();
+            break;
+        default:
+            cout << "Unknown type: " << type << endl;
             break;
     }
     return cmd;

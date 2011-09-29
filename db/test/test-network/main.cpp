@@ -135,16 +135,18 @@ char* sendReceive(char* host, int port, int inserts) {
 
     NetworkOutputStream* out = new NetworkOutputStream();
     out->open(host, port);
+    out->writeLong(1999);
     out->writeChars("1.2.3", 5);
     for (int x = 0; x < inserts; x++) {
-        out->writeInt(1); // Command insert
+        out->writeLong(1); // Command insert
         out->writeString(new std::string("myns")); // namespace
         BSONOutputStream* bsonOut = new BSONOutputStream(out);
         BSONObj* obj = new BSONObj();
         obj->add("name", "John");
-        char temp[700];
-        memset(temp, 0, 699);
-        memset(temp, 'a', 700);
+        char temp[2000];
+        memset(temp, 0, 2000);
+        memset(temp, 'a', 1999);
+        int len = strlen(temp);
         obj->add("content", temp);
         obj->add("last", "Smith");
         bsonOut->writeBSON(*obj);
@@ -158,6 +160,9 @@ char* sendReceive(char* host, int port, int inserts) {
 //    n = read(sockfd, rec, 255);
 //    if (n < 0)
 //        log->error("ERROR reading from socket");
+    cout << "Ready to close the connection" << endl;
+    sleep(10);
+    cout << "Closing the connection" << endl;
     out->closeStream();
 
     delete(log);

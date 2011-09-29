@@ -76,7 +76,6 @@
 			<Add directory="../../service" />
 			<Add directory="../../command" />
 			<Add directory="../../db" />
-			<Add directory="../../service" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>

@@ -17,12 +17,12 @@ BSONOutputStream::~BSONOutputStream()
 
 
 void BSONOutputStream::writeBSON(const BSONObj& bson) {
-    _outputStream->writeInt(bson.length());
+    _outputStream->writeLong(bson.length());
     for (std::map<t_keytype, BSONContent*>::const_iterator i = bson.begin(); i != bson.end(); i++) {
         t_keytype key = i->first;
         _outputStream->writeString(&key);
         BSONContent* cont = i->second;
-        _outputStream->writeInt(cont->_type);
+        _outputStream->writeLong(cont->_type);
         char* text;
         switch (cont->_type) {
             case BSON_TYPE:

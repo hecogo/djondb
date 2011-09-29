@@ -13,11 +13,11 @@ BSONInputStream::~BSONInputStream()
 
 BSONObj* BSONInputStream::readBSON() const {
     BSONObj* obj = new BSONObj();
-    int elements = _inputStream->readInt();
+    int elements = _inputStream->readLong();
     for (int x = 0; x < elements; x++) {
         string key = *_inputStream->readString();
 
-        int type = _inputStream->readInt();
+        int type = _inputStream->readLong();
         switch (type) {
             case BSON_TYPE:
                 // Unsupported yet;

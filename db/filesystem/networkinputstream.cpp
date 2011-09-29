@@ -30,7 +30,12 @@ unsigned char NetworkInputStream::readChar() {
 
 /* Reads 2 bytes in the input (little endian order) */
 int NetworkInputStream::readInt () {
-    int v = readChar() | readChar() << 8;
+    unsigned char c1 = readChar();
+    unsigned char c2 = readChar();
+    int v = c1 | c2 << 8;
+    if (v > 10000) {
+        cout << "Aqui estoy " << endl;
+    }
     return v;
 }
 
@@ -57,7 +62,7 @@ double NetworkInputStream::readDoubleIEEE () {
 
 /* Read a chars */
 char* NetworkInputStream::readChars() {
-    int len = readInt();
+    int len = readLong();
     char* res = readChars(len);
     return res;
 }
@@ -103,6 +108,22 @@ int NetworkInputStream::readData(void* data, int len) {
     while (waitAvailable(1) < len);
 
     int readed = recv(_socket, data, len, 0);
+    if (readed != len) {
+        cout << "Error len" << endl;
+    }
+
+//    char buffer[1024];
+//    int total = 0;
+//    int bytesleft = len;
+//    while (true) {
+//        int readed = recv(_socket, buffer, bytesleft, 0);
+//        total += readed;
+//        bytesleft -= readed;
+//        if (total == len) {
+//            break;
+//        }
+//    }
+
     return readed;
 }
 

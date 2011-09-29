@@ -50,7 +50,7 @@ void NetworkOutputStream::writeDoubleIEEE (double v)
 }
 
 void NetworkOutputStream::writeChars(const char *text, int len) {
-    writeInt(len);
+    writeLong(len);
     write(_socket, text, len);
 }
 
