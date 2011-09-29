@@ -74,11 +74,13 @@
 			<Add library="filesystem" />
 			<Add library="bson" />
 			<Add library="cache" />
+			<Add library="command" />
 			<Add directory="../../bson" />
 			<Add directory="../../util" />
 			<Add directory="../../filesystem" />
 			<Add directory="../../db" />
 			<Add directory="../../cache" />
+			<Add directory="../../command" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>

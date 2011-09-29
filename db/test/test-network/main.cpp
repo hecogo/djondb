@@ -14,6 +14,7 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
+#include "command.h"
 
 #include <ctime>
 #ifndef WINDOWS
@@ -129,36 +130,11 @@ char* sendReceive(char* host, int port, int inserts) {
     struct timeval ts2;
     interval = 0;
     #endif
-    int sockfd, portno, n;
-    struct sockaddr_in serv_addr;
-    struct hostent *server;
 
     Logger* log = getLogger(NULL);
 
-    portno = port;
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) {
-        log->error("ERROR opening socket");
-        return NULL;
-    }
-    server = gethostbyname(host);
-    if (server == NULL) {
-        log->error("ERROR, no such host\n");
-        return NULL;
-    }
-    bzero((char *) & serv_addr, sizeof (serv_addr));
-    serv_addr.sin_family = AF_INET;
-    bcopy((char *) server->h_addr,
-            (char *) & serv_addr.sin_addr.s_addr,
-            server->h_length);
-    serv_addr.sin_port = htons(portno);
-    if (connect(sockfd, (sockaddr *) & serv_addr, sizeof (serv_addr)) < 0) {
-        log->error("ERROR connecting");
-        return NULL;
-    }
-
-    NetworkOutputStream* out = new NetworkOutputStream(sockfd);
-    out->writeInt(inserts);
+    NetworkOutputStream* out = new NetworkOutputStream();
+    out->open(host, port);
     out->writeChars("1.2.3", 5);
     for (int x = 0; x < inserts; x++) {
         out->writeInt(1); // Command insert
@@ -173,29 +149,16 @@ char* sendReceive(char* host, int port, int inserts) {
         obj->add("last", "Smith");
         bsonOut->writeBSON(*obj);
 
-        if ((x % 1000000) == 0) {
-            clock_gettime(interval, &ts2);
-
-            #ifdef LINUX
-            timespec etime = diff(ts1, ts2);
-            double secs = etime.tv_sec + ((double)etime.tv_nsec / 1000000000.0);
-            #else
-            struct timeval etime = diff(ts1, ts2);
-            double secs = etime.tv_sec + ((double)etime.tv_usec / 1000000.0);
-            #endif
-
-            cout<< "inserts " << x << ", secs: " << secs << endl;
-
-            cout << "Throughput: " << (x / secs) << " ops." << endl;
-        }
     }
+    cout << "Sending close connection command" << endl;
+    out->writeInt(CLOSECONNECTION);
     cout << "all sent" << endl;
 //    char rec[256];
 //    bzero(rec, 256);
 //    n = read(sockfd, rec, 255);
 //    if (n < 0)
 //        log->error("ERROR reading from socket");
-    close(sockfd);
+    out->closeStream();
 
     delete(log);
     return 0;
@@ -236,16 +199,25 @@ void testMassiveInsert(int inserts) {
     cout << "------------------------------------------------------------" << endl;
 }
 
-int main()
+int main(int argc, char* args[])
 {
-    NetworkService service;
-    service.start();
+//    NetworkService service;
+//    service.start();
+//
+    int inserts;
+    if (argc > 1) {
+        cout << "Arg: " << args[1] << endl;
+        inserts = atoi(args[1]);
+    } else {
+        inserts = 1;
+    }
+    cout << "Inserts " << inserts << endl;
+    sleep(2);
+    testMassiveInsert(inserts);
 
-    testMassiveInsert(1000000);
-
-    getchar();
-
-    service.stop();
+//    getchar();
+//
+//    service.stop();
 
     return 0;
 }

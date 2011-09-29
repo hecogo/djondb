@@ -63,12 +63,16 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-pg" />
 			<Add directory="../filesystem" />
 			<Add directory="../bson" />
 			<Add directory="../util" />
 			<Add directory="../cache" />
 			<Add directory="../command" />
 		</Compiler>
+		<Linker>
+			<Add option="-pg" />
+		</Linker>
 		<Unit filename="bplusindex.cpp" />
 		<Unit filename="bplusindex.h" />
 		<Unit filename="dbcontroller.cpp" />

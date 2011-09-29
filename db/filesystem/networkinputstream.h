@@ -33,6 +33,8 @@ class NetworkInputStream : public InputStream
 
         virtual void closeStream();
         bool eof();
+        int available();
+        int waitAvailable(int timeout = 10);
 
         virtual std::string* readString();
     protected:
@@ -41,6 +43,7 @@ class NetworkInputStream : public InputStream
 
     private:
         int checkStatus();
+        int readData(void *buffer, int len);
 };
 
 #endif // NETWORKINPUTSTREAM_H

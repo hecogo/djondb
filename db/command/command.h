@@ -11,7 +11,8 @@ enum COMMANDTYPE {
     INSERT,
     UPDATE,
     FINDBYKEY,
-    FINDBYFILTER
+    FINDBYFILTER,
+    CLOSECONNECTION
 };
 
 class Command {
@@ -27,6 +28,16 @@ class Command {
 
     private:
         COMMANDTYPE _commandType;
+};
+
+class CloseCommand: public Command {
+    public:
+        CloseCommand();
+
+        CloseCommand(const CloseCommand& orig);
+        virtual ~CloseCommand();
+
+        virtual void execute();
 };
 
 class InsertCommand: public Command {

@@ -29,15 +29,15 @@ CommandParser::~CommandParser()
 
 Command* CommandParser::parse(InputStream* is) {
     int type = is->readInt();
-    if (type != 1) {
-        type = 1;
-    }
     Command* cmd = NULL;
     switch (type) {
         case 0:// Security
             break;
         case 1: // Insert
             cmd = parseInsert(is);
+            break;
+        case CLOSECONNECTION: // Insert
+            cmd = new CloseCommand();
             break;
     }
     return cmd;

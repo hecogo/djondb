@@ -35,9 +35,11 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-pg" />
 			<Add directory="../util" />
 		</Compiler>
 		<Linker>
+			<Add option="-pg" />
 			<Add library="util" />
 		</Linker>
 		<Unit filename="bson.h" />

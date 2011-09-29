@@ -35,12 +35,14 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-pg" />
 			<Add directory="../util" />
 			<Add directory="../filesystem" />
 			<Add directory="../command" />
 			<Add directory="../db" />
 		</Compiler>
 		<Linker>
+			<Add option="-pg" />
 			<Add library="db" />
 			<Add directory="../db" />
 		</Linker>

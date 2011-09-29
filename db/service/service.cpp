@@ -16,6 +16,7 @@ int service_startup() {
 }
 
 int service_shutdown() {
+    __service->stop();
 }
 
 int service_status() {

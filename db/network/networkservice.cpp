@@ -14,6 +14,7 @@
 #include "command.h"
 #include "commandparser.h"
 #include "dbcontroller.h"
+#include <stdlib.h>
 
 #include "defs.h"
 //#include "dbjaguar.h"
@@ -41,6 +42,7 @@ DBController* __dbController;
 
 NetworkService::NetworkService() {
     log = getLogger(NULL);
+    m_thread = NULL;
 }
 
 NetworkService::~NetworkService() {
@@ -65,9 +67,15 @@ void NetworkService::stop() { //throw (NetworkException*) {
         throw new NetworkException(new string("The network service is not running. Try starting it first"));
     }
     running = false;
+    if (accepting) {
+        cout << "Stop requested but still working" << endl;
+    }
     while (accepting) {
         sleep(1);
     }
+    __dbController->shutdown();
+    if (m_thread) delete(m_thread);
+
     int res = close(sock);
     if (res != 0) {
         log->error("The close method returned: " + toString(res));
@@ -75,7 +83,6 @@ void NetworkService::stop() { //throw (NetworkException*) {
 
     m_thread->join();
 
-    delete(m_thread);
 }
 
 void *startSocketListener(void* arg) {
@@ -122,12 +129,16 @@ void *startSocketListener(void* arg) {
 
         if (newsocket > 0) {
             accepting = true;
-            pthread_mutex_lock(&requests_lock);
+//            pthread_mutex_lock(&requests_lock);
             //processRequest((void*)&sock);
+            processRequest((void*) &sock);
+            /*
             Thread* thread = new Thread(&processRequest);
             thread->start((void*) &sock);
-            pthread_cond_wait(&request_cv, &requests_lock);
-            pthread_mutex_unlock(&requests_lock);
+            */
+//            pthread_cond_wait(&request_cv, &requests_lock);
+//            pthread_mutex_unlock(&requests_lock);
+            accepting = false;
 //            m_requestThreads.push_back(thread);
         }
     }
@@ -145,25 +156,29 @@ void *processRequest(void *arg) {
     int clientSocket = accept(sock, (sockaddr *) & cliaddr, &clilen);
     log->debug("Accepted");
 
-    pthread_mutex_lock(&requests_lock);
-    int rescond = pthread_cond_signal(&request_cv);
-    pthread_mutex_unlock(&requests_lock);
+//    pthread_mutex_lock(&requests_lock);
+//    int rescond = pthread_cond_signal(&request_cv);
+//    pthread_mutex_unlock(&requests_lock);
 
     if (log->isDebug()) log->debug("Receiving request");
 
     NetworkInputStream* nis = new NetworkInputStream(clientSocket);
 
     // Checks version
-    int elements = nis->readInt();
     char* version = nis->readChars();
-    for (int x = 0; x < elements; x++) {
+    while (nis->waitAvailable() > 0) {
+//        log->debug("New command available");
         // Reads command
         CommandParser parser;
         Command* cmd = parser.parse(nis);
-
-        __dbController->executeCommand(cmd);
+        if (cmd->commandType() != CLOSECONNECTION) {
+            __dbController->executeCommand(cmd);
+        } else {
+            log->debug("Close command received");
+            break;
+        }
     }
-    log->debug("received all");
+    free(version);
 //    int readed;
 //    stringstream sreaded;
 //
@@ -200,7 +215,7 @@ void *processRequest(void *arg) {
 //    if (log->isDebug()) log->debug("Buffer received, size: " + toString(readed));
 
 //    write(clientSocket, sresp->c_str(), sresp->length());
-    close(clientSocket);
+//    close(clientSocket);
 
     return NULL;
 }

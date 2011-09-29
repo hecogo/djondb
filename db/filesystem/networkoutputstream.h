@@ -6,7 +6,8 @@ class NetworkOutputStream: public OutputStream
 {
     public:
         /** Default constructor */
-        NetworkOutputStream(int socket);
+        NetworkOutputStream();
+        int open(const char* hostname, int port);
         /** Default destructor */
         virtual ~NetworkOutputStream();
 
@@ -22,6 +23,7 @@ class NetworkOutputStream: public OutputStream
         /* Write a char */
         virtual void writeChars(const char* text, int len);
         virtual void writeString(const std::string* text);
+        void closeStream();
 
     protected:
     private:

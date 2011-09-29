@@ -35,9 +35,13 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-pg" />
 			<Add directory="../bson" />
 			<Add directory="../filesystem" />
 		</Compiler>
+		<Linker>
+			<Add option="-pg" />
+		</Linker>
 		<Unit filename="command.cpp" />
 		<Unit filename="command.h" />
 		<Unit filename="commandparser.cpp" />
