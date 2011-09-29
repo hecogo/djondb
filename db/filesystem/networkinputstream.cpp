@@ -33,9 +33,6 @@ int NetworkInputStream::readInt () {
     unsigned char c1 = readChar();
     unsigned char c2 = readChar();
     int v = c1 | c2 << 8;
-    if (v > 10000) {
-        cout << "Aqui estoy " << endl;
-    }
     return v;
 }
 
@@ -77,7 +74,26 @@ std::string* NetworkInputStream::readString() {
 char* NetworkInputStream::readChars(int length) {
     char* res = (char*)malloc(length+1);
     memset(res, 0, length+1);
-    readData(res, length);
+    int x = 0;
+    int loops = 0;
+    while (x < length) {
+        char v;
+        int readed = recv(_socket, &v, 1, 0);
+        if (v == 0) {
+        cout << "Houston this is going down" << endl;
+        }
+        res[x] = v;
+        x += readed;
+        loops++;
+    }
+    if (loops != x) {
+        cout << "Houston this is going down" << endl;
+    }
+//    readData(res, length);Ş
+    int lent = strlen(res);
+    if (lent < length) {
+        cout << "Size does not match " << endl;
+    }
     return res;
 }
 
@@ -105,7 +121,10 @@ int NetworkInputStream::available() {
 int NetworkInputStream::readData(void* data, int len) {
     CHECKSTATUS()
     // wait until a data is available to be readed
-    while (waitAvailable(1) < len);
+    int avai;
+    do {
+        avai = waitAvailable(1);
+    }  while (avai < len);
 
     int readed = recv(_socket, data, len, 0);
     if (readed != len) {

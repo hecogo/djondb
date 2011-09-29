@@ -28,7 +28,7 @@ CommandParser::~CommandParser()
 }
 
 Command* CommandParser::parse(InputStream* is) {
-    int type = is->readLong();
+    int type = is->readInt();
     Command* cmd = NULL;
     switch (type) {
         case 1: // Insert

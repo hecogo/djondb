@@ -163,7 +163,6 @@ void *processRequest(void *arg) {
     if (log->isDebug()) log->debug("Receiving request");
 
     NetworkInputStream* nis = new NetworkInputStream(clientSocket);
-    int i = nis->readLong();
     // Checks version
     char* version = nis->readChars();
     while (nis->waitAvailable() > 0) {
