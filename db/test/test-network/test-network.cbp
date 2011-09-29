@@ -63,6 +63,7 @@
 			<Add directory="../../filesystem" />
 			<Add directory="../../bson" />
 			<Add directory="../../db" />
+			<Add directory="../../command" />
 		</Compiler>
 		<Linker>
 			<Add option="-pg" />
