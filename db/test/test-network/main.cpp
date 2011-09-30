@@ -198,7 +198,7 @@ void testMassiveInsert(int inserts) {
     double secs = etime.tv_sec + ((double)etime.tv_usec / 1000000.0);
     #endif
 
-    cout<< "inserts " << inserts << ", secs: " << secs << endl;
+    cout<< "inserts " << inserts << ", secs: " << secs << " time " << etime.tv_sec << " ntime " << etime.tv_nsec << endl;
 
     cout << "Throughput: " << (inserts / secs) << " ops." << endl;
     cout << "------------------------------------------------------------" << endl;

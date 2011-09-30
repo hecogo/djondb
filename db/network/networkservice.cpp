@@ -86,7 +86,7 @@ void NetworkService::stop() { //throw (NetworkException*) {
 }
 
 void *startSocketListener(void* arg) {
-    sock = socket(AF_INET, SOCK_STREAM, 0);
+    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     if (sock < 0) {
         log->error("Error creating the socked");

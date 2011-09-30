@@ -74,25 +74,23 @@ std::string* NetworkInputStream::readString() {
 char* NetworkInputStream::readChars(int length) {
     char* res = (char*)malloc(length+1);
     memset(res, 0, length+1);
-    int x = 0;
-    int loops = 0;
-    while (x < length) {
-        char v;
-        int readed = recv(_socket, &v, 1, 0);
-        if (v == 0) {
-        cout << "Houston this is going down" << endl;
+    int pos = 0;
+    char buffer[256];
+    while (pos < length) {
+        memset(buffer, 0, 256);
+        int readed = 0;
+        int read = 0;
+        if ((length - pos) > 256) {
+            read = 256;
+        } else {
+            read = (length - pos);
         }
-        res[x] = v;
-        x += readed;
-        loops++;
-    }
-    if (loops != x) {
-        cout << "Houston this is going down" << endl;
-    }
-//    readData(res, length);Ş
-    int lent = strlen(res);
-    if (lent < length) {
-        cout << "Size does not match " << endl;
+        readed = readData(buffer, read);
+        if (strlen(buffer) != readed) {
+            cout << "Error" << endl;
+        }
+        memcpy(&res[pos], buffer, read);
+        pos += read;
     }
     return res;
 }

@@ -5,6 +5,10 @@
 #include <netdb.h>
 #include <string.h>
 
+#include <iostream>
+
+using namespace std;
+
 NetworkOutputStream::NetworkOutputStream()
 {
 }
@@ -51,7 +55,29 @@ void NetworkOutputStream::writeDoubleIEEE (double v)
 
 void NetworkOutputStream::writeChars(const char *text, int len) {
     writeLong(len);
-    write(_socket, text, len);
+    char buffer[256];
+    int pos = 0;
+    while (pos < len) {
+        int loops = 0;
+        memset(buffer, 0, 256);
+        int size;
+        if ((len-pos) > 256) {
+            size = 256;
+            memcpy(buffer, &(text[pos]), size);
+        } else {
+            size = len-pos;
+            memcpy(buffer, &(text[pos]), size);
+        }
+        pos += size;
+        int sent = 0;
+        while ((sent < size) && (++loops < 100)) {
+            sent += write(_socket, &buffer[sent], size - sent);
+        }
+        if (loops > 50) {
+            cout << "Too many loops " << loops << endl;
+        }
+    }
+//    write(_socket, text, len);
 }
 
 void NetworkOutputStream::writeString(const std::string* text) {
