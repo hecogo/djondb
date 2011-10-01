@@ -55,14 +55,14 @@ void NetworkOutputStream::writeDoubleIEEE (double v)
 
 void NetworkOutputStream::writeChars(const char *text, int len) {
     writeLong(len);
-    char buffer[256];
+    char buffer[1024];
     int pos = 0;
     while (pos < len) {
         int loops = 0;
-        memset(buffer, 0, 256);
+        memset(buffer, 0, 1024);
         int size;
-        if ((len-pos) > 256) {
-            size = 256;
+        if ((len-pos) > 1024) {
+            size = 1024;
             memcpy(buffer, &(text[pos]), size);
         } else {
             size = len-pos;

@@ -164,12 +164,20 @@ void *processRequest(void *arg) {
 
     NetworkInputStream* nis = new NetworkInputStream(clientSocket);
     // Checks version
+    int commands = 0;
     char* version = nis->readChars();
     while (nis->waitAvailable() > 0) {
 //        log->debug("New command available");
         // Reads command
         CommandParser parser;
         Command* cmd = parser.parse(nis);
+        commands++;
+        if ((commands % 100000)== 0) {
+            std::stringstream ss;
+            ss << commands << " Executed";
+            log->debug(ss.str());
+        }
+
         if (cmd->commandType() != CLOSECONNECTION) {
             __dbController->executeCommand(cmd);
         } else {
@@ -177,9 +185,12 @@ void *processRequest(void *arg) {
             break;
         }
     }
+    std::stringstream ss;
+    ss << commands << " Executed";
+    log->debug(ss.str());
     free(version);
 //    int readed;
-//    stringstream sreaded;
+//    stringstream sreaded;a
 //
 //    char buffer[256];
 //    memset(buffer, 0, 256);

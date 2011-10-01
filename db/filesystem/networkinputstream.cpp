@@ -75,22 +75,19 @@ char* NetworkInputStream::readChars(int length) {
     char* res = (char*)malloc(length+1);
     memset(res, 0, length+1);
     int pos = 0;
-    char buffer[256];
+    char buffer[1025];
     while (pos < length) {
-        memset(buffer, 0, 256);
+        memset(buffer, 0, 1025);
         int readed = 0;
         int read = 0;
-        if ((length - pos) > 256) {
-            read = 256;
+        if ((length - pos) > 1024) {
+            read = 1024;
         } else {
             read = (length - pos);
         }
         readed = readData(buffer, read);
-        if (strlen(buffer) != readed) {
-            cout << "Error" << endl;
-        }
-        memcpy(&res[pos], buffer, read);
-        pos += read;
+        memcpy(&res[pos], buffer, readed);
+        pos += readed;
     }
     return res;
 }
