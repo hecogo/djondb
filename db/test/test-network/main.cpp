@@ -131,7 +131,11 @@ char* sendReceive(char* host, int port, int inserts) {
     interval = 0;
     #endif
 
+    clock_gettime(interval, &ts1);
+
     Logger* log = getLogger(NULL);
+
+    cout << "Starting " << endl;
 
     NetworkOutputStream* out = new NetworkOutputStream();
     out->open(host, port);
@@ -154,39 +158,6 @@ char* sendReceive(char* host, int port, int inserts) {
     cout << "Sending close connection command" << endl;
     out->writeInt(CLOSECONNECTION);
     cout << "all sent" << endl;
-//    char rec[256];
-//    bzero(rec, 256);
-//    n = read(sockfd, rec, 255);
-//    if (n < 0)
-//        log->error("ERROR reading from socket");
-    cout << "Ready to close the connection" << endl;
-    getchar();
-
-    cout << "Closing the connection" << endl;
-    out->closeStream();
-
-    delete(log);
-    return 0;
-}
-
-void testMassiveInsert(int inserts) {
-    int interval;
-    #ifdef LINUX
-    timespec ts1;
-    timespec ts2;
-    interval = CLOCK_PROCESS_CPUTIME_ID;
-    #endif
-    #ifdef WINDOWS
-    struct timeval ts1;
-    struct timeval ts2;
-    interval = 0;
-    #endif
-
-    clock_gettime(interval, &ts1);
-//    FileOutputStream fos("temp.txt", "wb+");
-
-    sendReceive("localhost",1243, inserts);
-//    fos.close();
 
     clock_gettime(interval, &ts2);
 
@@ -198,10 +169,26 @@ void testMassiveInsert(int inserts) {
     double secs = etime.tv_sec + ((double)etime.tv_usec / 1000000.0);
     #endif
 
-    cout<< "inserts " << inserts << ", secs: " << secs << " time " << etime.tv_sec << " ntime " << etime.tv_nsec << endl;
+    cout<< "inserts " << inserts << ", secs: " << secs << endl;
 
     cout << "Throughput: " << (inserts / secs) << " ops." << endl;
     cout << "------------------------------------------------------------" << endl;
+    cout << "Ready to close the connection" << endl;
+    getchar();
+
+    cout << "Closing the connection" << endl;
+    out->closeStream();
+
+    delete(log);
+    return 0;
+}
+
+void testMassiveInsert(int inserts) {
+//    FileOutputStream fos("temp.txt", "wb+");
+
+    sendReceive("localhost",1243, inserts);
+//    fos.close();
+
 }
 
 int main(int argc, char* args[])
@@ -217,7 +204,6 @@ int main(int argc, char* args[])
         inserts = 1;
     }
     cout << "Inserts " << inserts << endl;
-    sleep(2);
     testMassiveInsert(inserts);
 
 //    getchar();
