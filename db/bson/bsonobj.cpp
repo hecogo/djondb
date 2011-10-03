@@ -153,7 +153,17 @@ char* BSONObj::getChars(t_keytype key) const {
 
 std::string* BSONObj::getString(t_keytype key) const {
     BSONContent* content = NULL;
-    SEARCHBSON(key, STRING_TYPE);
+//    SEARCHBSON(key, STRING_TYPE);
+    for (std::map<t_keytype, BSONContent*>::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
+        t_keytype itKey = it->first;
+        if (itKey.compare(key) == 0) {
+            content = it->second;
+            if (content->_type != STRING_TYPE) {
+               throw "The type does not match";
+            }
+            break;
+        }
+    }
     if (content != NULL) {
         std::string* res = (std::string*)content->_element;
         return res;

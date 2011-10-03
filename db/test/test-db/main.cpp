@@ -122,7 +122,7 @@ int testMassiveInsert(int inserts) {
     #ifdef LINUX
     timespec ts1;
     timespec ts2;
-    interval = CLOCK_PROCESS_CPUTIME_ID;
+    interval = CLOCK_REALTIME;//CLOCK_PROCESS_CPUTIME_ID;
     #endif
     #ifdef WINDOWS
     struct timeval ts1;
@@ -144,7 +144,7 @@ int testMassiveInsert(int inserts) {
         testInsert(obj);
 
         int test = rand() % 10;
-        if (test > 6) {
+        if (test > 0) {
             __ids.push_back(new std::string(((std::string*)obj->getString("_id"))->c_str()));
             fos.writeString(obj->getString("_id"));
         }
@@ -188,7 +188,7 @@ void testFinds() {
     #ifdef LINUX
     timespec ts1;
     timespec ts2;
-    interval = CLOCK_PROCESS_CPUTIME_ID;
+    interval = CLOCK_REALTIME;
     #endif
     #ifdef WINDOWS
     struct timeval ts1;
@@ -238,7 +238,7 @@ void testFindPrevious() {
     #ifdef LINUX
     timespec ts1;
     timespec ts2;
-    interval = CLOCK_PROCESS_CPUTIME_ID;
+    interval = CLOCK_REALTIME; //CLOCK_PROCESS_CPUTIME_ID;
     #endif
     #ifdef WINDOWS
     struct timeval ts1;
@@ -290,12 +290,18 @@ void testFindPrevious() {
     cout << "------------------------------------------------------------" << endl;
 }
 
-int main()
+int main(int argc, char* args[])
 {
+    if (argc < 2) {
+        cout << "Usage: " << endl;
+        cout << "    test-db inserts" << endl << endl;
+        cout << "inserts:   number of inserts to execute" << endl << endl;
+        return 0;
+    }
     controller.initialize();
 
     testFindPrevious();
-    int x = pow(10, 1);
+    int x = atoi(args[1]);
     testMassiveInsert(x);
     testFinds();
 

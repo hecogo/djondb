@@ -57,6 +57,7 @@ void NetworkService::start() { //throw (NetworkException*) {
     if (log->isInfo()) log->info("Starting network service");
 
     __dbController = new DBController();
+    __dbController->initialize();
     m_thread = new Thread(&startSocketListener);
     m_thread->start(NULL);
 
