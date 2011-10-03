@@ -40,7 +40,6 @@ class DBController
         std::vector<BSONObj*> find(char* ns, BSONObj* filter);
         BSONObj* findFirst(char* ns, BSONObj* filter);
         BSONObj* readBSON(StreamType* stream);
-        void executeCommand(Command* command);
     protected:
     private:
         std::map<std::string, SpacesType>  _spaces;

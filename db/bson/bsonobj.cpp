@@ -184,3 +184,13 @@ std::map<t_keytype, BSONContent* >::const_iterator BSONObj::end() const {
 int BSONObj::length() const {
     return _elements.size();
 }
+
+bool BSONObj::has(t_keytype key) {
+    for (std::map<t_keytype, BSONContent*>::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
+        t_keytype itKey = it->first;
+        if (itKey.compare(key) == 0) {
+            return true;
+        }
+    }
+    return false;
+}

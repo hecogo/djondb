@@ -1,8 +1,10 @@
 #include <iostream>
 #include "networkservice.h"
 #include "networkoutputstream.h"
+#include "networkinputstream.h"
 #include "util.h"
 #include "bsonoutputstream.h"
+#include "bsoninputstream.h"
 #include "bson.h"
 #include "config.h"
 #include <sys/types.h>
@@ -49,7 +51,7 @@ timeval diff(timeval start, timeval end)
 	timeval temp;
 	if ((end.tv_usec-start.tv_usec)<0) {
 		temp.tv_sec = end.tv_sec-start.tv_sec-1;
-		temp.tv_usec = 1000000+end.tv_usec-start.tv_usec;
+		temp.tv_usec = 1000000000+end.tv_usec-start.tv_usec;
 	} else {
 		temp.tv_sec = end.tv_sec-start.tv_sec;
 		temp.tv_usec = end.tv_usec-start.tv_usec;
@@ -123,7 +125,7 @@ char* sendReceive(char* host, int port, int inserts) {
     #ifdef LINUX
     timespec ts1;
     timespec ts2;
-    interval = CLOCK_PROCESS_CPUTIME_ID;
+    interval = CLOCK_REALTIME;// CLOCK_PROCESS_CPUTIME_ID;
     #endif
     #ifdef WINDOWS
     struct timeval ts1;
@@ -138,12 +140,14 @@ char* sendReceive(char* host, int port, int inserts) {
     cout << "Starting " << endl;
 
     NetworkOutputStream* out = new NetworkOutputStream();
-    out->open(host, port);
+    int socket = out->open(host, port);
+    NetworkInputStream* nis = new NetworkInputStream(socket);
     out->writeChars("1.2.3", 5);
+    BSONInputStream* bis = new BSONInputStream(nis);
+    BSONOutputStream* bsonOut = new BSONOutputStream(out);
     for (int x = 0; x < inserts; x++) {
         out->writeInt(1); // Command insert
         out->writeString(new std::string("myns")); // namespace
-        BSONOutputStream* bsonOut = new BSONOutputStream(out);
         BSONObj* obj = new BSONObj();
 //        obj->add("name", "John");
         char temp[2000];
@@ -154,6 +158,12 @@ char* sendReceive(char* host, int port, int inserts) {
         //obj->add("last", "Smith");
         bsonOut->writeBSON(*obj);
 
+//        BSONObj* resObj = bis->readBSON();
+//        assert(resObj != NULL);
+//        assert(resObj->has("_id"));
+        if ((x % (inserts / 10)) == 0) {
+            cout << x << " Records sent" << endl;
+        }
     }
     cout << "Sending close connection command" << endl;
     out->writeInt(CLOSECONNECTION);
@@ -203,6 +213,15 @@ int main(int argc, char* args[])
     } else {
         inserts = 1;
     }
+//    timespec t1;
+//    clock_gettime(CLOCK_REALTIME, &t1);
+//    sleep(2);
+//    timespec t2;
+//    clock_gettime(CLOCK_REALTIME, &t2);
+//
+//    timespec res = diff(t1, t2);
+//    cout << "res: " << res.tv_sec << ":" << res.tv_nsec << endl;
+
     cout << "Inserts " << inserts << endl;
     testMassiveInsert(inserts);
 

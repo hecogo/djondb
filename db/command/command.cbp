@@ -38,6 +38,7 @@
 			<Add option="-pg" />
 			<Add directory="../bson" />
 			<Add directory="../filesystem" />
+			<Add directory="../db" />
 		</Compiler>
 		<Linker>
 			<Add option="-pg" />

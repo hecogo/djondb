@@ -7,6 +7,9 @@ class NetworkOutputStream: public OutputStream
     public:
         /** Default constructor */
         NetworkOutputStream();
+        NetworkOutputStream(int socket);
+        NetworkOutputStream(const NetworkOutputStream& origin);
+
         int open(const char* hostname, int port);
         /** Default destructor */
         virtual ~NetworkOutputStream();

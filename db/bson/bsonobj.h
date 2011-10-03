@@ -63,6 +63,8 @@ class BSONObj
         void add(t_keytype, std::string*);
         void add(t_keytype, BSONObj*);
 
+        bool has(t_keytype);
+
         int* getInt(t_keytype) const;
         double* getDouble(t_keytype) const;
         long* getLong(t_keytype) const;

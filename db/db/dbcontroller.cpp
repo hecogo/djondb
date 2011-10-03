@@ -11,7 +11,6 @@
 #include "cachemanager.h"
 #include "indexfactory.h"
 #include "index.h"
-#include "command.h"
 #include <memory>
 #include <iostream>
 #include <sstream>
@@ -253,9 +252,3 @@ BSONObj* DBController::findFirst(char* ns, BSONObj* filter) {
     }
 }
 
-void DBController::executeCommand(Command* cmd) {
-    if (cmd->commandType() == INSERT) {
-        InsertCommand* insertCmd = (InsertCommand*)cmd;
-        insert(const_cast<char*>(insertCmd->nameSpace()->c_str()), insertCmd->bson());
-    }
-}

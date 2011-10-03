@@ -11,6 +11,7 @@
 #include "network.h"
 #include "networkservice.h"
 #include "networkinputstream.h"
+#include "networkoutputstream.h"
 #include "command.h"
 #include "commandparser.h"
 #include "dbcontroller.h"
@@ -163,6 +164,7 @@ void *processRequest(void *arg) {
     if (log->isDebug()) log->debug("Receiving request");
 
     NetworkInputStream* nis = new NetworkInputStream(clientSocket);
+    NetworkOutputStream* nos = new NetworkOutputStream(clientSocket);
     // Checks version
     int commands = 0;
     char* version = nis->readChars();
@@ -172,19 +174,17 @@ void *processRequest(void *arg) {
         CommandParser parser;
         Command* cmd = parser.parse(nis);
         commands++;
-        if ((commands % 100000)== 0) {
-            std::stringstream ss;
-            ss << commands << " Executed";
-            log->debug(ss.str());
-        }
-
+        cmd->setDBController(__dbController);
         if (cmd->commandType() != CLOSECONNECTION) {
-            __dbController->executeCommand(cmd);
+            cmd->execute();
+//            cmd->writeResult(nos);
         } else {
             log->debug("Close command received");
             break;
         }
     }
+    nos->closeStream();
+
     std::stringstream ss;
     ss << commands << " Executed";
     log->debug(ss.str());

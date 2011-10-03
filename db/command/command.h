@@ -2,6 +2,8 @@
 #define COMMAND_H_INCLUDED
 
 #include <string>
+#include "dbcontroller.h"
+#include "outputstream.h"
 
 using namespace std;
 
@@ -23,11 +25,23 @@ class Command {
         virtual ~Command();
 
         virtual void execute() = 0;
+        virtual void* result() = 0;
+
+        virtual void writeResult(OutputStream* out) const = 0;
+
+        DBController* dbController() const {
+            return  _dbController;
+        }
+
+        void setDBController(DBController* dbController) {
+            _dbController = dbController;
+        }
 
         COMMANDTYPE commandType() const;
 
     private:
         COMMANDTYPE _commandType;
+        DBController* _dbController;
 };
 
 class CloseCommand: public Command {
@@ -38,6 +52,12 @@ class CloseCommand: public Command {
         virtual ~CloseCommand();
 
         virtual void execute();
+
+        virtual void* result() {
+            return NULL;
+        }
+
+        virtual void writeResult(OutputStream* out) const {};
 };
 
 class InsertCommand: public Command {
@@ -63,10 +83,14 @@ class InsertCommand: public Command {
         }
 
         virtual void execute();
+        virtual void* result();
+        virtual void writeResult(OutputStream* out) const;
 
     private:
         const std::string* _namespace;
         BSONObj* _bson;
+
+        BSONObj* _bsonResult;
 };
 
 

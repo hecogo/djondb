@@ -18,6 +18,14 @@ NetworkOutputStream::~NetworkOutputStream()
     //dtor
 }
 
+NetworkOutputStream::NetworkOutputStream(int socket)
+{
+    _socket = socket;
+}
+
+NetworkOutputStream::NetworkOutputStream(const NetworkOutputStream& origin) {
+    this->_socket = origin._socket;
+}
 
 /* Write 1 byte in the output */
 void NetworkOutputStream::writeChar (unsigned char v)
@@ -100,12 +108,12 @@ int NetworkOutputStream::open(const char* hostname, int port)
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
 //        log->error("ERROR opening socket");
-        return NULL;
+        return -1;
     }
     server = gethostbyname(hostname);
     if (server == NULL) {
 //        log->error("ERROR, no such host\n");
-        return NULL;
+        return -1;
     }
     bzero((char *) & serv_addr, sizeof (serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -119,8 +127,11 @@ int NetworkOutputStream::open(const char* hostname, int port)
         return -1;
     }
     _socket = sockfd;
+
+    return sockfd;
 }
 
 void NetworkOutputStream::closeStream() {
     close(_socket);
 }
+

@@ -5,8 +5,8 @@
 		<Project filename="bson/bson.cbp" />
 		<Project filename="filesystem/filesystem.cbp" />
 		<Project filename="cache/cache.cbp" />
-		<Project filename="command/command.cbp" />
 		<Project filename="db/db.cbp" />
+		<Project filename="command/command.cbp" />
 		<Project filename="network/network.cbp" />
 		<Project filename="service/service.cbp" />
 		<Project filename="daemon/daemon.cbp" />

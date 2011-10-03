@@ -1,5 +1,6 @@
 #include "command.h"
 #include "bson.h"
+#include "bsonoutputstream.h"
 
 Command::Command(COMMANDTYPE commandType)
 {
@@ -32,6 +33,12 @@ COMMANDTYPE Command::commandType() const
 }
 
 void InsertCommand::execute() {
+    const char* ns = _namespace->c_str();
+    dbController()->insert(const_cast<char*>(ns), _bson);
+}
+
+void* InsertCommand::result() {
+    return _bson;
 }
 
 CloseCommand::CloseCommand()
@@ -47,4 +54,9 @@ CloseCommand::~CloseCommand() {
 }
 
 void CloseCommand::execute() {
+}
+
+void InsertCommand::writeResult(OutputStream* out) const {
+    BSONOutputStream* bsonout = new BSONOutputStream(out);
+    bsonout->writeBSON(*_bson);
 }
