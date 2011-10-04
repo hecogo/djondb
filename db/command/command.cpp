@@ -24,6 +24,7 @@ InsertCommand::InsertCommand(const InsertCommand& orig)
 }
 
 InsertCommand::~InsertCommand() {
+    delete(_bson);
 }
 
 COMMANDTYPE Command::commandType() const
@@ -37,7 +38,7 @@ void InsertCommand::execute() {
 }
 
 void* InsertCommand::result() {
-    return _bson.get();
+    return _bson;
 }
 
 CloseCommand::CloseCommand()
@@ -58,5 +59,4 @@ void CloseCommand::execute() {
 void InsertCommand::writeResult(OutputStream* out) const {
     BSONOutputStream* bsonout = new BSONOutputStream(out);
     bsonout->writeBSON(*_bson);
-    delete bsonout;
 }

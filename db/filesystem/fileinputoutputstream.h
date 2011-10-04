@@ -28,7 +28,7 @@ class FileInputOutputStream: public InputStream, public OutputStream
         virtual char* readChars(int length);
         virtual const char* readFull();
 
-        virtual boost::shared_ptr<std::string> readString();
+        virtual std::string* readString();
 
         virtual void writeChar (unsigned char v);
         /* Write 2 bytes in the output (little endian order) */

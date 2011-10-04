@@ -4,18 +4,15 @@
 #include "inputstream.h"
 #include "bsoninputstream.h"
 
-#include <boost/shared_ptr.hpp>
 
 InsertCommand* parseInsert(InputStream* is)  {
     InsertCommand* command = new InsertCommand();
-    boost::shared_ptr<std::string> ns = is->readString();
+    std::string* ns = is->readString();
     command->setNameSpace(ns);
 
     BSONInputStream* bsonis = new BSONInputStream(is);
-    boost::shared_ptr<BSONObj> obj = bsonis->readBSON();
+    BSONObj* obj = bsonis->readBSON();
     command->setBSON(obj);
-
-    delete bsonis;
 
     return command;
 }

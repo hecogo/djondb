@@ -64,9 +64,9 @@ char* NetworkInputStream::readChars() {
     return res;
 }
 
-boost::shared_ptr<std::string> NetworkInputStream::readString() {
+std::string* NetworkInputStream::readString() {
     char* c = readChars();
-    boost::shared_ptr<std::string> res(new std::string(c));
+    std::string* res = new std::string(c);
     free(c);
     return res;
 }

@@ -4,7 +4,6 @@
 #include <istream>
 #include <iostream>
 #include <stdio.h>
-#include <boost/shared_ptr.hpp>
 
 class InputStream
 {
@@ -25,7 +24,7 @@ public:
     virtual char* readChars(int length) = 0;
     bool eof();
 
-    virtual boost::shared_ptr<std::string> readString() = 0;
+    virtual std::string* readString() = 0;
 
 };
 

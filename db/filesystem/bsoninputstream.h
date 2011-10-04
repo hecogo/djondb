@@ -4,8 +4,6 @@
 class BSONObj;
 class InputStream;
 
-#include <boost/shared_ptr.hpp>
-
 class BSONInputStream
 {
     public:
@@ -14,7 +12,7 @@ class BSONInputStream
         /** Default destructor */
         virtual ~BSONInputStream();
 
-        boost::shared_ptr<BSONObj> readBSON() const;
+        BSONObj* readBSON() const;
 
     protected:
     private:

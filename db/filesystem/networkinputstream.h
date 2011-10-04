@@ -36,7 +36,7 @@ class NetworkInputStream : public InputStream
         int available();
         int waitAvailable(int timeout = 10);
 
-        virtual boost::shared_ptr<std::string> readString();
+        virtual std::string* readString();
     protected:
     private:
         int _socket;

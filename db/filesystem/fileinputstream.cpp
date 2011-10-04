@@ -57,9 +57,9 @@ char* FileInputStream::readChars() {
     return res;
 }
 
-boost::shared_ptr<std::string> FileInputStream::readString() {
+std::string* FileInputStream::readString() {
     char* c = readChars();
-    boost::shared_ptr<std::string> res(new std::string(c));
+    std::string* res = new std::string(c);
     free(c);
     return res;
 }

@@ -161,7 +161,7 @@ char* sendReceive(char* host, int port, int inserts) {
 //        BSONObj* resObj = bis->readBSON();
 //        assert(resObj != NULL);
 //        assert(resObj->has("_id"));
-        if ((inserts > 10) && (x % (inserts / 10)) == 0) {
+        if ((x % (inserts / 10)) == 0) {
             cout << x << " Records sent" << endl;
         }
     }
