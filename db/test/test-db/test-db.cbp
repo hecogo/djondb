@@ -61,7 +61,6 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-pg" />
 			<Add option="-fexceptions" />
 			<Add directory="../../db" />
 			<Add directory="../../bson" />
@@ -70,7 +69,6 @@
 			<Add directory="../../cache" />
 		</Compiler>
 		<Linker>
-			<Add option="-pg" />
 			<Add library="db" />
 			<Add library="util" />
 			<Add library="filesystem" />

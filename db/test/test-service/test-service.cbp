@@ -51,10 +51,12 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-pg" />
 			<Add option="-fexceptions" />
 			<Add directory="../../service" />
 		</Compiler>
 		<Linker>
+			<Add option="-pg" />
 			<Add library="service" />
 			<Add library="network" />
 			<Add library="db" />

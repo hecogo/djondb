@@ -35,12 +35,8 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-pg" />
 			<Add directory="../network" />
 		</Compiler>
-		<Linker>
-			<Add option="-pg" />
-		</Linker>
 		<Unit filename="service.cpp" />
 		<Unit filename="service.h" />
 		<Extensions>
