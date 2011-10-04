@@ -131,9 +131,9 @@ char* FileInputOutputStream::readChars() {
     return res;
 }
 
-std::string* FileInputOutputStream::readString() {
+boost::shared_ptr<std::string> FileInputOutputStream::readString() {
     char* c = readChars();
-    std::string* res = new std::string(c);
+    boost::shared_ptr<std::string> res(new std::string(c));
     free(c);
     return res;
 }

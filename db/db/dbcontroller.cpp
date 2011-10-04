@@ -12,6 +12,7 @@
 #include "indexfactory.h"
 #include "index.h"
 #include <memory>
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <sstream>
 #include <string.h>
@@ -37,39 +38,41 @@ void DBController::shutdown() {
         space.stream->close();
     }
     fos->close();
+    delete fos;
 }
 
 void DBController::initialize() {
     FileInputStream* fis = new FileInputStream("djondb.dat", "rb");
     while (!fis->eof()) {
-        std::string* ns = fis->readString();
+        boost::shared_ptr<std::string> ns = fis->readString();
         FILE_TYPE type = static_cast<FILE_TYPE>(fis->readInt());
 
         StreamType* stream = open(*ns, type);
         long currentPos = stream->currentPos();
         if (type == INDEX_FTYPE) {
             stream->seek(0);
-            IndexAlgorithm* impl = NULL;
+            boost::shared_ptr<IndexAlgorithm> impl;
             while (!stream->eof()) {
-                BSONObj* obj = readBSON(stream);
+                boost::shared_ptr<BSONObj> obj = readBSON(stream);
 
                 if (!impl) {
                     impl = IndexFactory::indexFactory->index(ns->c_str(), obj);
                 }
                 long indexPos = stream->readLong();
                 long posData = stream->readLong();
-                Index* index = impl->add(obj, posData);
+                boost::shared_ptr<Index> index = impl->add(obj, posData);
                 index->indexPos = indexPos;
             }
             stream->seek(currentPos);
         }
     }
     fis->close();
+    delete fis;
 }
 
-long DBController::checkStructure(BSONObj* obj) {
+long DBController::checkStructure(boost::shared_ptr<BSONObj> obj) {
     Structure* structure = new Structure();
-    for (std::map<t_keytype, BSONContent* >::const_iterator i = obj->begin(); i != obj->end(); i++) {
+    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator i = obj->begin(); i != obj->end(); i++) {
         structure->add(i->first);
     }
 
@@ -83,23 +86,26 @@ long DBController::checkStructure(BSONObj* obj) {
     return strId;
 }
 
-void DBController::writeBSON(StreamType* stream, BSONObj* obj) {
+void DBController::writeBSON(StreamType* stream, boost::shared_ptr<BSONObj> obj) {
     BSONOutputStream* out = new BSONOutputStream(stream);
-    out->writeBSON(*obj);
+    out->writeBSON(*obj.get());
+
+    delete out;
 }
 
-BSONObj* DBController::readBSON(StreamType* stream) {
+boost::shared_ptr<BSONObj> DBController::readBSON(StreamType* stream) {
     BSONInputStream* is = new BSONInputStream(stream);
-    BSONObj* res = is->readBSON();
+    boost::shared_ptr<BSONObj> res = is->readBSON();
+    delete is;
     return res;
 }
 
-void DBController::insert(char* ns, BSONObj* obj) {
+void DBController::insert(char* ns, boost::shared_ptr<BSONObj> obj) {
     Logger* log = getLogger(NULL);
     StreamType* streamData = open(ns, DATA_FTYPE);
 
-    std::string* id = obj->getString("_id");
-    if (id == NULL) {
+    std::string* id;
+    if (!obj->has("_id")) {
         id = uuid();
         obj->add("_id", id);
     }
@@ -182,45 +188,45 @@ bool DBController::close(char* ns) {
     return true;
 }
 
-void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
-    BSONObj* indexBSON = new BSONObj();
-    indexBSON->add("_id", bson->getString("_id"));
-    IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
-    Index* index = impl->find(indexBSON);
+void DBController::updateIndex(char* ns, boost::shared_ptr<BSONObj> bson, long filePos) {
+    boost::shared_ptr<BSONObj> indexBSON(new BSONObj());
+    indexBSON->add("_id", bson->getString("_id").get());
+    boost::shared_ptr<IndexAlgorithm> impl = IndexFactory::indexFactory->index(ns, indexBSON);
+    boost::shared_ptr<Index> index = impl->find(indexBSON);
 
     index->posData = filePos;
 
     StreamType* out = open(ns, INDEX_FTYPE);
     long currentPos = out->currentPos();
     out->seek(index->indexPos);
-    BSONObj* key = index->key;
+    boost::shared_ptr<BSONObj> key = index->key;
     writeBSON(out, key);
     out->writeLong(index->indexPos);
     out->writeLong(index->posData);
     out->seek(currentPos);
 }
 
-void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
-    BSONObj* indexBSON = new BSONObj();
-    indexBSON->add("_id", bson->getString("_id"));
-    IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
-    Index* index = impl->find(indexBSON);
+void DBController::insertIndex(char* ns, boost::shared_ptr<BSONObj> bson, long filePos) {
+    boost::shared_ptr<BSONObj> indexBSON(new BSONObj());
+    indexBSON->add("_id", bson->getString("_id").get());
+    boost::shared_ptr<IndexAlgorithm> impl = IndexFactory::indexFactory->index(ns, indexBSON);
+    boost::shared_ptr<Index> index = impl->find(indexBSON);
 
     index->posData = filePos;
 
     StreamType* out = open(ns, INDEX_FTYPE);
     index->indexPos = out->currentPos();
-    BSONObj* key = index->key;
+    boost::shared_ptr<BSONObj> key = index->key;
     writeBSON(out, key);
     out->writeLong(index->indexPos);
     out->writeLong(index->posData);
 }
 
-std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
-    BSONObj* indexBSON = new BSONObj();
-    indexBSON->add("_id", filter->getString("_id"));
-    IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
-    Index* index = impl->find(indexBSON);
+std::vector<boost::shared_ptr<BSONObj> > DBController::find(char* ns, boost::shared_ptr<BSONObj> filter) {
+    boost::shared_ptr<BSONObj> indexBSON(new BSONObj());
+    indexBSON->add("_id", filter->getString("_id").get());
+    boost::shared_ptr<IndexAlgorithm> impl = IndexFactory::indexFactory->index(ns, indexBSON);
+    boost::shared_ptr<Index> index = impl->find(indexBSON);
 
     char fileName[255];
     memset(fileName, 0, 255);
@@ -235,20 +241,20 @@ std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
     StreamType* input = new StreamType(fileName, "rb");
     input->seek(index->posData);
 
-    BSONObj* obj = readBSON(input);
-    std::vector<BSONObj*> result;
+    boost::shared_ptr<BSONObj> obj = readBSON(input);
+    std::vector<boost::shared_ptr<BSONObj> > result;
     result.push_back(obj);
     input->close();
 
     return result;
 }
 
-BSONObj* DBController::findFirst(char* ns, BSONObj* filter) {
-    std::vector<BSONObj*> temp = find(ns, filter);
+boost::shared_ptr<BSONObj> DBController::findFirst(char* ns, boost::shared_ptr<BSONObj> filter) {
+    std::vector<boost::shared_ptr<BSONObj> > temp = find(ns, filter);
+    boost::shared_ptr<BSONObj> res;
     if (temp.size() == 1) {
-        return *temp.begin();
-    } else {
-        return NULL;
+        res = *temp.begin();
     }
+    return res;
 }
 

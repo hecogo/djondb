@@ -2,6 +2,7 @@
 #define COMMAND_H_INCLUDED
 
 #include <string>
+#include <boost/shared_ptr.hpp>
 #include "dbcontroller.h"
 #include "outputstream.h"
 
@@ -67,18 +68,18 @@ class InsertCommand: public Command {
         virtual ~InsertCommand();
         InsertCommand(const InsertCommand& orig);
 
-        void setNameSpace(const std::string* ns) {
+        void setNameSpace(boost::shared_ptr<std::string> ns) {
             _namespace = ns;
         }
-        const std::string* nameSpace() const {
+        const boost::shared_ptr<std::string> nameSpace() const {
             return _namespace;
         }
 
-        void setBSON(BSONObj* bson) {
+        void setBSON(boost::shared_ptr<BSONObj> bson) {
             _bson = bson;
         }
 
-        BSONObj* bson() const {
+        boost::shared_ptr<BSONObj> bson() const {
             return _bson;
         }
 
@@ -87,10 +88,10 @@ class InsertCommand: public Command {
         virtual void writeResult(OutputStream* out) const;
 
     private:
-        const std::string* _namespace;
-        BSONObj* _bson;
+        boost::shared_ptr<std::string> _namespace;
+        boost::shared_ptr<BSONObj> _bson;
 
-        BSONObj* _bsonResult;
+        boost::shared_ptr<BSONObj> _bsonResult;
 };
 
 

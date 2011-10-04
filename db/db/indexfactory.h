@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 class IndexAlgorithm;
 
@@ -16,14 +17,14 @@ class IndexFactory
         virtual ~IndexFactory();
 
         static IndexFactory* indexFactory;
-        IndexAlgorithm* index(const char* ns, BSONObj* key);
+        boost::shared_ptr<IndexAlgorithm> index(const char* ns, boost::shared_ptr<BSONObj> key);
     protected:
     private:
         IndexFactory();
 
     private:
 
-        map<std::string, IndexAlgorithm*> _indexes;
+        map<std::string, boost::shared_ptr<IndexAlgorithm> > _indexes;
 };
 
 #endif // INDEXFACTORY_H
