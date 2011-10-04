@@ -27,7 +27,7 @@ DBController::~DBController()
 }
 
 void DBController::shutdown() {
-    FileOutputStream* fos = new FileOutputStream("djondb.dat", "wb");
+    std::auto_ptr<FileOutputStream> fos(new FileOutputStream("djondb.dat", "wb"));
     for (std::map<std::string, SpacesType>::iterator i = _spaces.begin(); i != _spaces.end(); i++) {
         SpacesType space = i->second;
         std::string ns = space.ns;
@@ -40,9 +40,9 @@ void DBController::shutdown() {
 }
 
 void DBController::initialize() {
-    FileInputStream* fis = new FileInputStream("djondb.dat", "rb");
+    std::auto_ptr<FileInputStream> fis(new FileInputStream("djondb.dat", "rb"));
     while (!fis->eof()) {
-        std::string* ns = fis->readString();
+        std::auto_ptr<std::string> ns(fis->readString());
         FILE_TYPE type = static_cast<FILE_TYPE>(fis->readInt());
 
         StreamType* stream = open(*ns, type);
@@ -54,12 +54,13 @@ void DBController::initialize() {
                 BSONObj* obj = readBSON(stream);
 
                 if (!impl) {
-                    impl = IndexFactory::indexFactory->index(ns->c_str(), obj);
+                    impl = IndexFactory::indexFactory.index(ns->c_str(), obj);
                 }
                 long indexPos = stream->readLong();
                 long posData = stream->readLong();
                 Index* index = impl->add(obj, posData);
                 index->indexPos = indexPos;
+                delete obj;
             }
             stream->seek(currentPos);
         }
@@ -84,12 +85,12 @@ long DBController::checkStructure(BSONObj* obj) {
 }
 
 void DBController::writeBSON(StreamType* stream, BSONObj* obj) {
-    BSONOutputStream* out = new BSONOutputStream(stream);
+    auto_ptr<BSONOutputStream> out(new BSONOutputStream(stream));
     out->writeBSON(*obj);
 }
 
 BSONObj* DBController::readBSON(StreamType* stream) {
-    BSONInputStream* is = new BSONInputStream(stream);
+    auto_ptr<BSONInputStream> is(new BSONInputStream(stream));
     BSONObj* res = is->readBSON();
     return res;
 }
@@ -185,7 +186,7 @@ bool DBController::close(char* ns) {
 void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
     BSONObj* indexBSON = new BSONObj();
     indexBSON->add("_id", bson->getString("_id"));
-    IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
+    IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
     Index* index = impl->find(indexBSON);
 
     index->posData = filePos;
@@ -203,7 +204,7 @@ void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
 void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
     BSONObj* indexBSON = new BSONObj();
     indexBSON->add("_id", bson->getString("_id"));
-    IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
+    IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
     Index* index = impl->find(indexBSON);
 
     index->posData = filePos;
@@ -219,7 +220,7 @@ void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
 std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
     BSONObj* indexBSON = new BSONObj();
     indexBSON->add("_id", filter->getString("_id"));
-    IndexAlgorithm* impl = IndexFactory::indexFactory->index(ns, indexBSON);
+    IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
     Index* index = impl->find(indexBSON);
 
     char fileName[255];

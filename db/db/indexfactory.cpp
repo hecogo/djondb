@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-IndexFactory* IndexFactory::indexFactory = new IndexFactory();
+IndexFactory IndexFactory::indexFactory;
 
 IndexFactory::IndexFactory()
 {
@@ -14,7 +14,10 @@ IndexFactory::IndexFactory()
 
 IndexFactory::~IndexFactory()
 {
-    //dtor
+    for (map<std::string, IndexAlgorithm*>::iterator i = _indexes.begin(); i != _indexes.end(); i++) {
+        IndexAlgorithm* alg = i->second;
+        delete alg;
+    }
 }
 
 IndexAlgorithm* IndexFactory::index(const char* ns, BSONObj* key) {

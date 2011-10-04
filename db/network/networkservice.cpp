@@ -16,6 +16,8 @@
 #include "commandparser.h"
 #include "dbcontroller.h"
 #include <stdlib.h>
+#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include "defs.h"
 //#include "dbjaguar.h"
@@ -173,7 +175,7 @@ void *processRequest(void *arg) {
 //        log->debug("New command available");
         // Reads command
         CommandParser parser;
-        Command* cmd = parser.parse(nis);
+        std::auto_ptr<Command> cmd(parser.parse(nis));
         commands++;
         cmd->setDBController(__dbController);
         if (cmd->commandType() != CLOSECONNECTION) {

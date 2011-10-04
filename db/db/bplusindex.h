@@ -2,6 +2,7 @@
 #define BPLUSINDEX_H
 
 #include "index.h"
+#include <boost/shared_ptr.hpp>
 
 typedef char* INDEXPOINTERTYPE;
 

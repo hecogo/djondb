@@ -14,6 +14,8 @@ BSONContent::~BSONContent() {
         case STRING_TYPE:
             delete ((string*)_element);
             break;
+        case PTRCHAR_TYPE:
+            free ((char*)_element);
         default:
             break;
     }

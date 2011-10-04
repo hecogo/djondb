@@ -4,15 +4,35 @@
 
 #include <string.h>
 #include <boost/crc.hpp>
+#include <boost/shared_ptr.hpp>
+#include <vector>
 
 BPlusIndex::BPlusIndex()
 {
     _head = NULL;
 }
 
+void cascadeDelete(IndexPointer* element) {
+    if (element->left != NULL) {
+        cascadeDelete(element->left);
+    }
+    if (element->right != NULL) {
+        cascadeDelete(element->right);
+    }
+    if (element->elem) {
+        delete element->elem;
+    }
+    if (element->value != NULL) {
+        free(element->value);
+    }
+    delete element;
+}
+
 BPlusIndex::~BPlusIndex()
 {
-    //dtor
+    if (_head) {
+        cascadeDelete(_head);
+    }
 }
 
 Index* BPlusIndex::add(BSONObj* elem, long filePos) {
@@ -89,7 +109,7 @@ void BPlusIndex::insertElement(Index* elem) {
 
     IndexPointer* node = NULL;
     if (!_head) {
-        _head = new IndexPointer;
+        _head = new IndexPointer();
         _head->elem = elem;
         _head->left = 0;
         _head->right = 0;
