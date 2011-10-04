@@ -7,7 +7,6 @@
 
 BPlusIndex::BPlusIndex()
 {
-    _head = NULL;
 }
 
 BPlusIndex::~BPlusIndex()
@@ -15,8 +14,8 @@ BPlusIndex::~BPlusIndex()
     //dtor
 }
 
-Index* BPlusIndex::add(BSONObj* elem, long filePos) {
-    Index* index = new Index();
+boost::shared_ptr<Index> BPlusIndex::add(boost::shared_ptr<BSONObj> elem, long filePos) {
+    boost::shared_ptr<Index> index(new Index());
     index->key = elem;
     index->posData = filePos;
 
@@ -24,15 +23,15 @@ Index* BPlusIndex::add(BSONObj* elem, long filePos) {
     return index;
 }
 
-Index* BPlusIndex::find(BSONObj* elem) {
+boost::shared_ptr<Index> BPlusIndex::find(boost::shared_ptr<BSONObj> elem) {
     char* key = elem->toChar();
 //    boost::crc_32_type crc32;
 //    crc32.process_bytes(key, strlen(key));
 //    long value = crc32.checksum();
 
-    IndexPointer* pointer = findNode(_head, key);
-    if (pointer->elem == NULL) {
-        Index* index = new Index();
+    boost::shared_ptr<IndexPointer> pointer = findNode(_head, key);
+    if (pointer->elem.get() == NULL) {
+        boost::shared_ptr<Index> index(new Index());
         index->key = elem;
         pointer->elem = index;
     }
@@ -42,21 +41,16 @@ Index* BPlusIndex::find(BSONObj* elem) {
 void BPlusIndex::remove(BSONObj* elem) {
 }
 
-IndexPointer* BPlusIndex::findNode(IndexPointer* start, INDEXPOINTERTYPE value) {
-    if (_head == NULL) {
-        _head = new IndexPointer;
-        _head->left = NULL;
-        _head->right = NULL;
+boost::shared_ptr<IndexPointer> BPlusIndex::findNode(boost::shared_ptr<IndexPointer> start, INDEXPOINTERTYPE value) {
+    if (_head.get() == NULL) {
+        _head = boost::shared_ptr<IndexPointer>(new IndexPointer);
         _head->value = value;
-        _head->elem = NULL;
         return _head;
     } else {
-        IndexPointer* current = start;
+        boost::shared_ptr<IndexPointer> current = start;
         if (strcmp(current->value, value) > 0) {
-            if (current->left == NULL) {
-                IndexPointer* pointer = new IndexPointer();
-                pointer->right = NULL;
-                pointer->elem = NULL;
+            if (current->left.get() == NULL) {
+                boost::shared_ptr<IndexPointer> pointer(new IndexPointer());
                 pointer->value = value;
                 current->left = pointer;
                 return pointer;
@@ -64,10 +58,8 @@ IndexPointer* BPlusIndex::findNode(IndexPointer* start, INDEXPOINTERTYPE value) 
                 return findNode(current->left, value);
             }
         } else if (strcmp(current->value, value) < 0) {
-            if (current->right == NULL) {
-                IndexPointer* pointer = new IndexPointer();
-                pointer->left = NULL;
-                pointer->elem = NULL;
+            if (current->right.get() == NULL) {
+                boost::shared_ptr<IndexPointer> pointer(new IndexPointer());
                 pointer->value = value;
                 current->right = pointer;
                 return pointer;
@@ -80,23 +72,21 @@ IndexPointer* BPlusIndex::findNode(IndexPointer* start, INDEXPOINTERTYPE value) 
     }
 }
 
-void BPlusIndex::insertElement(Index* elem) {
-    BSONObj* obj = elem->key;
+void BPlusIndex::insertElement(boost::shared_ptr<Index> elem) {
+    boost::shared_ptr<BSONObj> obj = elem->key;
     char* key = obj->toChar();
 //    boost::crc_32_type crc32;
 //    crc32.process_bytes(key, strlen(key));
 //    long value = crc32.checksum();
 
-    IndexPointer* node = NULL;
-    if (!_head) {
-        _head = new IndexPointer;
+    boost::shared_ptr<IndexPointer> node;
+    if (_head.get() != NULL) {
+        _head = boost::shared_ptr<IndexPointer>(new IndexPointer());
         _head->elem = elem;
-        _head->left = 0;
-        _head->right = 0;
         _head->value = key;
         node = _head;
     } else {
-        IndexPointer* node = findNode(_head, key);
+        boost::shared_ptr<IndexPointer> node = findNode(_head, key);
         node->elem = elem;
     }
 }

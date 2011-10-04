@@ -53,7 +53,7 @@ timeval diff(timeval start, timeval end)
 }
 #endif
 
-int testInsert(BSONObj* o) {
+int testInsert(boost::shared_ptr<BSONObj> o) {
     controller.insert("sp1.customer", o);
 }
 
@@ -134,7 +134,7 @@ int testMassiveInsert(int inserts) {
     FileOutputStream fos("temp.txt", "wb+");
 
     for (int x = 0; x < inserts; x++) {
-        BSONObj* obj = new BSONObj();
+        boost::shared_ptr<BSONObj> obj(new BSONObj());
         obj->add("name", "John");
         char temp[700];
         memset(temp, 0, 699);
@@ -144,11 +144,10 @@ int testMassiveInsert(int inserts) {
         testInsert(obj);
 
         int test = rand() % 10;
-        if (test > 0) {
-            __ids.push_back(new std::string(((std::string*)obj->getString("_id"))->c_str()));
-            fos.writeString(obj->getString("_id"));
+        if (test > 5) {
+            __ids.push_back(new std::string(obj->getString("_id")->c_str()));
+            fos.writeString(obj->getString("_id").get());
         }
-        delete(obj);
         if ((x % 1000000) == 0) {
             clock_gettime(interval, &ts2);
 
@@ -199,12 +198,12 @@ void testFinds() {
     clock_gettime(interval, &ts1);
 
     for (std::vector<string*>::iterator i = __ids.begin(); i != __ids.end(); i++) {
-        string* id = *i;
+        boost::shared_ptr<string> id(*i);
 
-        BSONObj* obj = new BSONObj();
+        boost::shared_ptr<BSONObj> obj(new BSONObj());
         obj->add("_id", id);
-        BSONObj* res = controller.findFirst("sp1.customer", obj);
-        std::string* id2 = res->getString("_id");
+        boost::shared_ptr<BSONObj> res = controller.findFirst("sp1.customer", obj);
+        std::string* id2 = res->getString("_id").get();
 //        cout << "Looking for: " << *id << endl;
 //        cout << "Found        " << *id2 << endl;
         if ((id2 == NULL) || (id2->compare(*id) != 0)) {
@@ -213,8 +212,6 @@ void testFinds() {
             }
             cout << "Error " << endl;
         }
-        delete res;
-        delete(obj);
     }
 
     clock_gettime(interval, &ts2);
@@ -249,19 +246,19 @@ void testFindPrevious() {
     FileInputStream fis("temp.txt", "rb");
     std::vector<std::string*> ids;
     while (!fis.eof()) {
-        ids.push_back(fis.readString());
+        ids.push_back(fis.readString().get());
     }
     fis.close();
 
     clock_gettime(interval, &ts1);
 
     for (std::vector<string*>::iterator i = ids.begin(); i != ids.end(); i++) {
-        string* id = *i;
+        boost::shared_ptr<string> id(*i);
 
-        BSONObj* obj = new BSONObj();
+        boost::shared_ptr<BSONObj> obj(new BSONObj());
         obj->add("_id", id);
-        BSONObj* res = controller.findFirst("sp1.customer", obj);
-        std::string* id2 = res->getString("_id");
+        boost::shared_ptr<BSONObj> res = controller.findFirst("sp1.customer", obj);
+        std::string* id2 = res->getString("_id").get();
 //        cout << "Looking for: " << *id << endl;
 //        cout << "Found        " << *id2 << endl;
         if ((id2 == NULL) || (id2->compare(*id) != 0)) {
@@ -270,8 +267,6 @@ void testFindPrevious() {
             }
             cout << "Error " << endl;
         }
-        delete res;
-        delete(obj);
     }
 
     clock_gettime(interval, &ts2);

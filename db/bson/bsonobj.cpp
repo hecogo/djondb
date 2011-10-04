@@ -11,8 +11,8 @@ using namespace std;
 
 BSONContent::~BSONContent() {
     switch (_type) {
-        case STRING_TYPE:
-            delete ((string*)_element);
+        case PTRCHAR_TYPE:
+            free((char*)_element);
             break;
         default:
             break;
@@ -26,11 +26,6 @@ BSONObj::BSONObj()
 
 BSONObj::~BSONObj()
 {
-    for (std::map<t_keytype, BSONContent*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
-        BSONContent* cont = i->second;
-        delete(cont);
-    }
-    _elements.clear();
     //dtor
 }
 
@@ -68,12 +63,12 @@ char* BSONObj::toChar() const {
     std::stringstream ss;
     ss << "{ ";
     bool first = true;
-    for (std::map<t_keytype, BSONContent*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
+    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
         if (!first) {
             ss << ",";
         }
         first = false;
-        BSONContent* content = i->second;
+        boost::shared_ptr<BSONContent> content = i->second;
         t_keytype key = i->first;
         ss << key << ":";
         switch (content->_type)  {
@@ -108,7 +103,7 @@ char* BSONObj::toChar() const {
 }
 
 int* BSONObj::getInt(t_keytype key) const {
-    BSONContent* content = NULL;
+    boost::shared_ptr<BSONContent> content;
     SEARCHBSON(key, INT_TYPE);
     if (content != NULL) {
         int* res = (int*)content->_element;
@@ -119,7 +114,7 @@ int* BSONObj::getInt(t_keytype key) const {
 }
 
 double* BSONObj::getDouble(t_keytype key) const {
-    BSONContent* content = NULL;
+    boost::shared_ptr<BSONContent> content;
     SEARCHBSON(key, DOUBLE_TYPE);
     if (content != NULL) {
         double* res = (double*)content->_element;
@@ -130,7 +125,7 @@ double* BSONObj::getDouble(t_keytype key) const {
 }
 
 long* BSONObj::getLong(t_keytype key) const {
-    BSONContent* content = NULL;
+    boost::shared_ptr<BSONContent> content;
     SEARCHBSON(key, LONG_TYPE);
     if (content != NULL) {
         long* res = (long*)content->_element;
@@ -141,7 +136,7 @@ long* BSONObj::getLong(t_keytype key) const {
 }
 
 char* BSONObj::getChars(t_keytype key) const {
-    BSONContent* content = NULL;
+    boost::shared_ptr<BSONContent> content;
     SEARCHBSON(key, PTRCHAR_TYPE);
     if (content != NULL) {
         char* res = (char*)content->_element;
@@ -151,10 +146,10 @@ char* BSONObj::getChars(t_keytype key) const {
     }
 }
 
-std::string* BSONObj::getString(t_keytype key) const {
-    BSONContent* content = NULL;
+boost::shared_ptr<std::string> BSONObj::getString(t_keytype key) const {
+    boost::shared_ptr<BSONContent> content;
 //    SEARCHBSON(key, STRING_TYPE);
-    for (std::map<t_keytype, BSONContent*>::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
+    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
         t_keytype itKey = it->first;
         if (itKey.compare(key) == 0) {
             content = it->second;
@@ -164,30 +159,28 @@ std::string* BSONObj::getString(t_keytype key) const {
             break;
         }
     }
+    boost::shared_ptr<std::string> res;
     if (content != NULL) {
-        std::string* res = (std::string*)content->_element;
-        return res;
-    } else {
-        return NULL;
+        res = boost::shared_ptr<std::string>((std::string*)content->_element);
     }
+    return res;
 }
 
-BSONObj* BSONObj::getBSON(t_keytype key) const {
-    BSONContent* content = NULL;
+boost::shared_ptr<BSONObj> BSONObj::getBSON(t_keytype key) const {
+    boost::shared_ptr<BSONContent> content;
     SEARCHBSON(key, BSON_TYPE);
+    boost::shared_ptr<BSONObj> res;
     if (content != NULL) {
-        BSONObj* res = (BSONObj*)content->_element;
-        return res;
-    } else {
-        return NULL;
+        boost::shared_ptr<BSONObj>((BSONObj*)content->_element);
     }
+    return res;
 }
 
-std::map<t_keytype, BSONContent* >::const_iterator BSONObj::begin() const {
+std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator BSONObj::begin() const {
     return _elements.begin();
 }
 
-std::map<t_keytype, BSONContent* >::const_iterator BSONObj::end() const {
+std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator BSONObj::end() const {
     return _elements.end();
 }
 
@@ -196,7 +189,7 @@ int BSONObj::length() const {
 }
 
 bool BSONObj::has(t_keytype key) {
-    for (std::map<t_keytype, BSONContent*>::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
+    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
         t_keytype itKey = it->first;
         if (itKey.compare(key) == 0) {
             return true;

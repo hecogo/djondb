@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <boost/shared_ptr.hpp>
 
 class FileInputOutputStream;
 class FileInputStream;
@@ -36,20 +37,20 @@ class DBController
 
         bool close(char* ns);
 
-        void insert(char* ns, BSONObj* bson);
-        std::vector<BSONObj*> find(char* ns, BSONObj* filter);
-        BSONObj* findFirst(char* ns, BSONObj* filter);
-        BSONObj* readBSON(StreamType* stream);
+        void insert(char* ns, boost::shared_ptr<BSONObj> bson);
+        std::vector<boost::shared_ptr<BSONObj> > find(char* ns, boost::shared_ptr<BSONObj> filter);
+        boost::shared_ptr<BSONObj> findFirst(char* ns, boost::shared_ptr<BSONObj> filter);
+        boost::shared_ptr<BSONObj> readBSON(StreamType* stream);
     protected:
     private:
         std::map<std::string, SpacesType>  _spaces;
         StreamType* open(std::string ns, FILE_TYPE type);
 
     private:
-        long checkStructure(BSONObj* bson);
-        void updateIndex(char* ns, BSONObj* bson, long filePos);
-        void insertIndex(char* ns, BSONObj* bson, long filePos);
-        void writeBSON(StreamType* stream, BSONObj* obj);
+        long checkStructure(boost::shared_ptr<BSONObj> bson);
+        void updateIndex(char* ns, boost::shared_ptr<BSONObj> bson, long filePos);
+        void insertIndex(char* ns, boost::shared_ptr<BSONObj> bson, long filePos);
+        void writeBSON(StreamType* stream, boost::shared_ptr<BSONObj> obj);
 };
 
 #endif // DBCONTROLLER_H

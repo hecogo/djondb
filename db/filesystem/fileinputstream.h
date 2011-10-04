@@ -29,7 +29,7 @@ public:
     virtual void seek(long i);
     virtual long crc32();
 
-    virtual std::string* readString();
+    virtual boost::shared_ptr<std::string> readString();
     virtual const std::string fileName() const;
     virtual bool eof();
 

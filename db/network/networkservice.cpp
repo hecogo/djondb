@@ -178,13 +178,18 @@ void *processRequest(void *arg) {
         cmd->setDBController(__dbController);
         if (cmd->commandType() != CLOSECONNECTION) {
             cmd->execute();
+            delete cmd;
 //            cmd->writeResult(nos);
         } else {
             log->debug("Close command received");
+            delete cmd;
             break;
         }
     }
     nos->closeStream();
+
+    delete nos;
+    delete nis;
 
     std::stringstream ss;
     ss << commands << " Executed";
