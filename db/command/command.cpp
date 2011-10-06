@@ -24,6 +24,7 @@ InsertCommand::InsertCommand(const InsertCommand& orig)
 }
 
 InsertCommand::~InsertCommand() {
+    delete(_namespace);
     delete(_bson);
 }
 

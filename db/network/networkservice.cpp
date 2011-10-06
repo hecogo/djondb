@@ -166,8 +166,8 @@ void *processRequest(void *arg) {
 
     if (log->isDebug()) log->debug("Receiving request");
 
-    NetworkInputStream* nis = new NetworkInputStream(clientSocket);
-    NetworkOutputStream* nos = new NetworkOutputStream(clientSocket);
+    std::auto_ptr<NetworkInputStream> nis(new NetworkInputStream(clientSocket));
+    std::auto_ptr<NetworkOutputStream> nos(new NetworkOutputStream(clientSocket));
     // Checks version
     int commands = 0;
     char* version = nis->readChars();
@@ -175,7 +175,7 @@ void *processRequest(void *arg) {
 //        log->debug("New command available");
         // Reads command
         CommandParser parser;
-        std::auto_ptr<Command> cmd(parser.parse(nis));
+        std::auto_ptr<Command> cmd(parser.parse(nis.get()));
         commands++;
         cmd->setDBController(__dbController);
         if (cmd->commandType() != CLOSECONNECTION) {

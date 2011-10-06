@@ -4,13 +4,14 @@
 #include "inputstream.h"
 #include "bsoninputstream.h"
 
+#include <memory>
 
 InsertCommand* parseInsert(InputStream* is)  {
     InsertCommand* command = new InsertCommand();
     std::string* ns = is->readString();
     command->setNameSpace(ns);
 
-    BSONInputStream* bsonis = new BSONInputStream(is);
+    std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
     BSONObj* obj = bsonis->readBSON();
     command->setBSON(obj);
 

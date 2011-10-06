@@ -28,7 +28,7 @@ class BPlusIndex: public IndexAlgorithm
         IndexPointer* _head;
 
     private:
-        void insertElement(Index* elem);
+        bool insertElement(Index* elem);
         IndexPointer* findNode(IndexPointer* start, INDEXPOINTERTYPE value);
 };
 

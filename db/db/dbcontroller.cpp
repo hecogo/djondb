@@ -45,7 +45,7 @@ void DBController::initialize() {
         std::auto_ptr<std::string> ns(fis->readString());
         FILE_TYPE type = static_cast<FILE_TYPE>(fis->readInt());
 
-        StreamType* stream = open(*ns, type);
+        StreamType* stream = open(*(ns.get()), type);
         long currentPos = stream->currentPos();
         if (type == INDEX_FTYPE) {
             stream->seek(0);
@@ -60,7 +60,6 @@ void DBController::initialize() {
                 long posData = stream->readLong();
                 Index* index = impl->add(obj, posData);
                 index->indexPos = indexPos;
-                delete obj;
             }
             stream->seek(currentPos);
         }
@@ -102,7 +101,8 @@ void DBController::insert(char* ns, BSONObj* obj) {
     std::string* id = obj->getString("_id");
     if (id == NULL) {
         id = uuid();
-        obj->add("_id", id);
+        std::string key("_id");
+        obj->add(key, id);
     }
 
     long crcStructure = checkStructure(obj);
@@ -144,18 +144,6 @@ StreamType* DBController::open(std::string ns, FILE_TYPE type) {
             stream = space.stream;
             break;
         }
-//        if (stream->currentPos() < (300 * 1024 * 1024)) {
-//        } else {
-//            fileName = (char*)stream->fileName();
-//            stream->close();
-//            delete(stream);
-//            char* newFileName = (char*)malloc(strlen(fileName) + 2);
-//            memset(newFileName, 0, strlen(fileName) + 2);
-//            strcat(newFileName, fileName);
-//            strcat(newFileName, "1");
-//            fileName = newFileName;
-//            _spaces.erase(it);
-//        }
     }
     if (stream != NULL) {
         return stream;

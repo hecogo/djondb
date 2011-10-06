@@ -20,7 +20,9 @@ void cascadeDelete(IndexPointer* element) {
         cascadeDelete(element->right);
     }
     if (element->elem) {
-        delete element->elem;
+        Index* index = element->elem;
+        delete index->key;
+        delete index;
     }
     if (element->value != NULL) {
         free(element->value);
@@ -40,7 +42,10 @@ Index* BPlusIndex::add(BSONObj* elem, long filePos) {
     index->key = elem;
     index->posData = filePos;
 
-    insertElement(index);
+    bool inserted = insertElement(index);
+    if (!inserted) {
+        delete elem;
+    }
     return index;
 }
 
@@ -100,9 +105,10 @@ IndexPointer* BPlusIndex::findNode(IndexPointer* start, INDEXPOINTERTYPE value) 
     }
 }
 
-void BPlusIndex::insertElement(Index* elem) {
+bool BPlusIndex::insertElement(Index* elem) {
     BSONObj* obj = elem->key;
     char* key = obj->toChar();
+    bool inserted = false;
 //    boost::crc_32_type crc32;
 //    crc32.process_bytes(key, strlen(key));
 //    long value = crc32.checksum();
@@ -115,8 +121,13 @@ void BPlusIndex::insertElement(Index* elem) {
         _head->right = 0;
         _head->value = key;
         node = _head;
+        inserted = true;
     } else {
         IndexPointer* node = findNode(_head, key);
-        node->elem = elem;
+        if (!node->elem) {
+            node->elem = elem;
+            inserted = true;
+        }
     }
+    return inserted;
 }

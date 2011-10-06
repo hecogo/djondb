@@ -17,7 +17,7 @@ BSONObj* BSONInputStream::readBSON() const {
     BSONObj* obj = new BSONObj();
     int elements = _inputStream->readLong();
     for (int x = 0; x < elements; x++) {
-        std::auto_ptr<string> key(_inputStream->readString());
+        string* key = _inputStream->readString();
 
         int type = _inputStream->readLong();
         switch (type) {
@@ -25,21 +25,22 @@ BSONObj* BSONInputStream::readBSON() const {
                 // Unsupported yet;
                 break;
             case INT_TYPE:
-                obj->add(*key.get(), _inputStream->readInt());
+                obj->add(*key, _inputStream->readInt());
                 break;
             case LONG_TYPE:
-                obj->add(*key.get(), _inputStream->readLong());
+                obj->add(*key, _inputStream->readLong());
                 break;
             case DOUBLE_TYPE:
-                obj->add(*key.get(), _inputStream->readDoubleIEEE());
+                obj->add(*key, _inputStream->readDoubleIEEE());
                 break;
             case PTRCHAR_TYPE:
-                obj->add(*key.get(), _inputStream->readChars());
+                obj->add(*key, _inputStream->readChars());
                 break;
             case STRING_TYPE:
-                obj->add(*key.get(), _inputStream->readString());
+                obj->add(*key, _inputStream->readString());
                 break;
         }
+        delete key;
     }
     return obj;
 }
