@@ -180,7 +180,7 @@ void *processRequest(void *arg) {
         cmd->setDBController(__dbController);
         if (cmd->commandType() != CLOSECONNECTION) {
             cmd->execute();
-//            cmd->writeResult(nos);
+            cmd->writeResult(nos.get());
         } else {
             log->debug("Close command received");
             break;

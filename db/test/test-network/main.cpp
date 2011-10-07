@@ -158,9 +158,9 @@ char* sendReceive(char* host, int port, int inserts) {
         //obj->add("last", "Smith");
         bsonOut->writeBSON(*obj);
 
-//        BSONObj* resObj = bis->readBSON();
-//        assert(resObj != NULL);
-//        assert(resObj->has("_id"));
+        BSONObj* resObj = bis->readBSON();
+        assert(resObj != NULL);
+        assert(resObj->has("_id"));
         if ((inserts > 9) && (x % (inserts / 10)) == 0) {
             cout << x << " Records sent" << endl;
         }
