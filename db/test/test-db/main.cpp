@@ -135,12 +135,12 @@ int testMassiveInsert(int inserts) {
 
     for (int x = 0; x < inserts; x++) {
         BSONObj* obj = new BSONObj();
-        obj->add("name", "John");
+        obj->add("name", new std::string("John"));
         char temp[700];
         memset(temp, 0, 699);
         memset(temp, 'a', 700);
-        obj->add("content", temp);
-        obj->add("last", "Smith");
+        obj->add("content", new std::string(temp));
+        obj->add("last", new std::string("Smith"));
         testInsert(obj);
 
         int test = rand() % 10;
@@ -148,7 +148,6 @@ int testMassiveInsert(int inserts) {
             __ids.push_back(new std::string(((std::string*)obj->getString("_id"))->c_str()));
             fos.writeString(obj->getString("_id"));
         }
-        delete(obj);
         if ((x % 1000000) == 0) {
             clock_gettime(interval, &ts2);
 

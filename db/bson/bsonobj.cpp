@@ -16,6 +16,7 @@ BSONContent::~BSONContent() {
             break;
         case PTRCHAR_TYPE:
             free ((char*)_element);
+            break;
         default:
             break;
     }
