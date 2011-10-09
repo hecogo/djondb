@@ -30,6 +30,11 @@
 
 using namespace std;
 
+
+bool __running;
+void *startSocketListener(void* arg);
+
+
 #ifdef LINUX
 timespec diff(timespec start, timespec end)
 {
@@ -120,6 +125,17 @@ int clock_gettime(int X, struct timeval *tv)
 }
 #endif
 
+void *startSocketListener(void* arg) {
+    NetworkInputStream* nis = (NetworkInputStream*)arg;
+
+    BSONInputStream* bis = new BSONInputStream(nis);
+    while (__running) {
+        BSONObj* resObj = bis->readBSON();
+        assert(resObj != NULL);
+        assert(resObj->has("_id"));
+    }
+}
+
 char* sendReceive(char* host, int port, int inserts) {
     int interval;
     #ifdef LINUX
@@ -139,11 +155,14 @@ char* sendReceive(char* host, int port, int inserts) {
 
     cout << "Starting " << endl;
 
+    __running = true;
     NetworkOutputStream* out = new NetworkOutputStream();
     int socket = out->open(host, port);
     NetworkInputStream* nis = new NetworkInputStream(socket);
+    Thread* receiveThread = new Thread(&startSocketListener);
+    receiveThread->start(nis);
     out->writeChars("1.2.3", 5);
-    BSONInputStream* bis = new BSONInputStream(nis);
+//    BSONInputStream* bis = new BSONInputStream(nis);
     BSONOutputStream* bsonOut = new BSONOutputStream(out);
     for (int x = 0; x < inserts; x++) {
         out->writeInt(1); // Command insert
@@ -158,9 +177,9 @@ char* sendReceive(char* host, int port, int inserts) {
         //obj->add("last", "Smith");
         bsonOut->writeBSON(*obj);
 
-        BSONObj* resObj = bis->readBSON();
-        assert(resObj != NULL);
-        assert(resObj->has("_id"));
+//        BSONObj* resObj = bis->readBSON();
+//        assert(resObj != NULL);
+//        assert(resObj->has("_id"));
         if ((inserts > 9) && (x % (inserts / 10)) == 0) {
             cout << x << " Records sent" << endl;
         }
@@ -185,6 +204,7 @@ char* sendReceive(char* host, int port, int inserts) {
     cout << "------------------------------------------------------------" << endl;
     cout << "Ready to close the connection" << endl;
     getchar();
+    __running = false;
 
     cout << "Closing the connection" << endl;
     out->closeStream();

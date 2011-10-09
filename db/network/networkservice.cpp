@@ -78,7 +78,6 @@ void NetworkService::stop() { //throw (NetworkException*) {
         sleep(1);
     }
     __dbController->shutdown();
-    if (m_thread) delete(m_thread);
 
     int res = close(sock);
     if (res != 0) {
@@ -87,6 +86,7 @@ void NetworkService::stop() { //throw (NetworkException*) {
 
     m_thread->join();
 
+    if (m_thread) delete(m_thread);
 }
 
 void *startSocketListener(void* arg) {

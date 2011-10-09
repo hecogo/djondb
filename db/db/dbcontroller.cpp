@@ -69,7 +69,7 @@ void DBController::initialize() {
 
 long DBController::checkStructure(BSONObj* obj) {
     Structure* structure = new Structure();
-    for (std::map<t_keytype, BSONContent* >::const_iterator i = obj->begin(); i != obj->end(); i++) {
+    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator i = obj->begin(); i != obj->end(); i++) {
         structure->add(i->first);
     }
 
@@ -191,7 +191,8 @@ void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
 
 void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
     BSONObj* indexBSON = new BSONObj();
-    indexBSON->add("_id", bson->getString("_id"));
+    std::string id = *bson->getString("_id");
+    indexBSON->add("_id", new std::string(id));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
     Index* index = impl->find(indexBSON);
 

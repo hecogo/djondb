@@ -66,7 +66,6 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
     char buffer[1024];
     int pos = 0;
     while (pos < len) {
-        int loops = 0;
         memset(buffer, 0, 1024);
         int size;
         if ((len-pos) > 1024) {
@@ -78,11 +77,8 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
         }
         pos += size;
         int sent = 0;
-        while ((sent < size) && (++loops < 100)) {
+        while (sent < size) {
             sent += write(_socket, &buffer[sent], size - sent);
-        }
-        if (loops > 50) {
-            cout << "Too many loops " << loops << endl;
         }
     }
 //    write(_socket, text, len);
