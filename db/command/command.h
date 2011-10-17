@@ -60,38 +60,6 @@ class CloseCommand: public Command {
         virtual void writeResult(OutputStream* out) const {};
 };
 
-class InsertCommand: public Command {
-    public:
-        InsertCommand();
-
-        virtual ~InsertCommand();
-        InsertCommand(const InsertCommand& orig);
-
-        void setNameSpace(const std::string* ns) {
-            _namespace = ns;
-        }
-        const std::string* nameSpace() const {
-            return _namespace;
-        }
-
-        void setBSON(BSONObj* bson) {
-            _bson = bson;
-        }
-
-        BSONObj* bson() const {
-            return _bson;
-        }
-
-        virtual void execute();
-        virtual void* result();
-        virtual void writeResult(OutputStream* out) const;
-
-    private:
-        const std::string* _namespace;
-        BSONObj* _bson;
-
-        BSONObj* _bsonResult;
-};
 
 
 #endif // COMMAND_H_INCLUDED

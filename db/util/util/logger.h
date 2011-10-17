@@ -2,6 +2,15 @@
 #define LOGGER_H_INCLUDED
 
 #include <string>
+#include "../config.h"
+#include "dtime.h"
+#include <ctime>
+#ifndef WINDOWS
+#include <time.h>
+#endif
+#ifdef WINDOWS
+#include <Windows.h>
+#endif
 
 using namespace std;
 
@@ -11,6 +20,17 @@ class Logger {
         bool m_info;
         bool m_warn;
         void* m_clazz;
+
+        int _interval;
+        #ifdef LINUX
+        timespec _ts1;
+        timespec _ts2;
+        #endif
+        #ifdef WINDOWS
+        struct timeval _ts1;
+        struct timeval _ts2;
+        #endif
+
 
     public:
         Logger(void* clazz);
@@ -22,6 +42,11 @@ class Logger {
         void error(exception ex);
         void info(string message);
         void warn(string warn);
+
+        void startTimeRecord();
+        void stopTimeRecord();
+
+        DTime recordedTime();
 };
 
 Logger* getLogger(void* clazz);

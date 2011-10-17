@@ -45,8 +45,14 @@
 		</Linker>
 		<Unit filename="command.cpp" />
 		<Unit filename="command.h" />
-		<Unit filename="commandparser.cpp" />
-		<Unit filename="commandparser.h" />
+		<Unit filename="commandreader.cpp" />
+		<Unit filename="commandreader.h" />
+		<Unit filename="commandwriter.cpp" />
+		<Unit filename="commandwriter.h" />
+		<Unit filename="findbykeycommand.cpp" />
+		<Unit filename="findbykeycommand.h" />
+		<Unit filename="insertcommand.cpp" />
+		<Unit filename="insertcommand.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

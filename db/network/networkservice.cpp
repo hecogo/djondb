@@ -13,7 +13,7 @@
 #include "networkinputstream.h"
 #include "networkoutputstream.h"
 #include "command.h"
-#include "commandparser.h"
+#include "commandreader.h"
 #include "dbcontroller.h"
 #include <stdlib.h>
 #include <boost/shared_ptr.hpp>
@@ -168,14 +168,16 @@ void *processRequest(void *arg) {
 
     std::auto_ptr<NetworkInputStream> nis(new NetworkInputStream(clientSocket));
     std::auto_ptr<NetworkOutputStream> nos(new NetworkOutputStream(clientSocket));
+    nos->setNonblocking();
+    nis->setNonblocking();
     // Checks version
     int commands = 0;
     char* version = nis->readChars();
+    std::auto_ptr<CommandReader> reader(new CommandReader(nis.get()));
     while (nis->waitAvailable() > 0) {
 //        log->debug("New command available");
         // Reads command
-        CommandParser parser;
-        std::auto_ptr<Command> cmd(parser.parse(nis.get()));
+        std::auto_ptr<Command> cmd(reader->readCommand());
         commands++;
         cmd->setDBController(__dbController);
         if (cmd->commandType() != CLOSECONNECTION) {

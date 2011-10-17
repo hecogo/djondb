@@ -36,7 +36,7 @@ class DBController
 
         bool close(char* ns);
 
-        void insert(char* ns, BSONObj* bson);
+        BSONObj* insert(char* ns, BSONObj* bson);
         std::vector<BSONObj*> find(char* ns, BSONObj* filter);
         BSONObj* findFirst(char* ns, BSONObj* filter);
         BSONObj* readBSON(StreamType* stream);

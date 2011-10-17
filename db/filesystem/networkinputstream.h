@@ -37,6 +37,7 @@ class NetworkInputStream : public InputStream
         int waitAvailable(int timeout = 10);
 
         virtual std::string* readString();
+        int setNonblocking();
     protected:
     private:
         int _socket;
@@ -44,6 +45,7 @@ class NetworkInputStream : public InputStream
     private:
         int checkStatus();
         int readData(void *buffer, int len);
+
 };
 
 #endif // NETWORKINPUTSTREAM_H

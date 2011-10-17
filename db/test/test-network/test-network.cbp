@@ -33,12 +33,14 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="100" />
+				<Option parameters="1000000" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
 					<Add library="rt" />
+					<Add library="uuid" />
+					<Add library="Xss" />
 				</Linker>
 			</Target>
 			<Target title="ReleaseLinux">
@@ -68,15 +70,12 @@
 		<Linker>
 			<Add option="-pg" />
 			<Add library="network" />
-			<Add library="db" />
 			<Add library="command" />
+			<Add library="db" />
 			<Add library="cache" />
 			<Add library="filesystem" />
 			<Add library="bson" />
 			<Add library="util" />
-			<Add library="pthread" />
-			<Add library="uuid" />
-			<Add library="Xss" />
 			<Add directory="../../util" />
 			<Add directory="../../filesystem" />
 			<Add directory="../../bson" />

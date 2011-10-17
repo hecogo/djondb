@@ -28,10 +28,12 @@ class NetworkOutputStream: public OutputStream
         virtual void writeString(const std::string* text);
         void closeStream();
 
+        int setNonblocking();
+
     protected:
     private:
-
         int _socket;
+
 };
 
 #endif // NETWORKOUTPUTSTREAM_H

@@ -4,6 +4,8 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <string.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
 
 #include <iostream>
 
@@ -27,10 +29,12 @@ NetworkOutputStream::NetworkOutputStream(const NetworkOutputStream& origin) {
     this->_socket = origin._socket;
 }
 
+
 /* Write 1 byte in the output */
 void NetworkOutputStream::writeChar (unsigned char v)
 {
-    write(_socket, &v, 1);
+    send(_socket, &v, 1, MSG_NOSIGNAL);
+//    write(_socket, &v, 1);
 }
 
 /* Write 2 bytes in the output (little endian order) */
@@ -52,13 +56,16 @@ void NetworkOutputStream::writeLong (long v)
 /* Write a 4 byte float in the output */
 void NetworkOutputStream::writeFloatIEEE (float v)
 {
-    write(_socket, &v, sizeof(v));
+    send(_socket, &v, sizeof(v), MSG_NOSIGNAL);
+//    write(_socket, &v, sizeof(v));
 }
 
 /* Write a 8 byte double in the output */
 void NetworkOutputStream::writeDoubleIEEE (double v)
 {
-    write(_socket, &v, sizeof(v));
+    send(_socket, &v, sizeof(v), MSG_NOSIGNAL);
+//    write(_socket, &v, sizeof(v));
+
 }
 
 void NetworkOutputStream::writeChars(const char *text, int len) {
@@ -78,7 +85,8 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
         pos += size;
         int sent = 0;
         while (sent < size) {
-            sent += write(_socket, &buffer[sent], size - sent);
+            sent += send(_socket, &buffer[sent], size - sent, MSG_NOSIGNAL);
+//            sent += write(_socket, &buffer[sent], size - sent);
         }
     }
 //    write(_socket, text, len);
@@ -128,6 +136,23 @@ int NetworkOutputStream::open(const char* hostname, int port)
 }
 
 void NetworkOutputStream::closeStream() {
+    shutdown(_socket, SHUT_RDWR);
     close(_socket);
+}
+
+int NetworkOutputStream::setNonblocking() {
+    int flags;
+
+    /* If they have O_NONBLOCK, use the Posix way to do it */
+#if defined(O_NONBLOCK)
+    /* Fixme: O_NONBLOCK is defined but broken on SunOS 4.1.x and AIX 3.2.5. */
+    if (-1 == (flags = fcntl(_socket, F_GETFL, 0)))
+        flags = 0;
+    return fcntl(_socket, F_SETFL, flags | O_NONBLOCK);
+#else
+    /* Otherwise, use the old way of doing it */
+    flags = 1;
+    return ioctl(_socket, FIOBIO, &flags);
+#endif
 }
 

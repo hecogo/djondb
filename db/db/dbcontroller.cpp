@@ -94,15 +94,18 @@ BSONObj* DBController::readBSON(StreamType* stream) {
     return res;
 }
 
-void DBController::insert(char* ns, BSONObj* obj) {
+BSONObj* DBController::insert(char* ns, BSONObj* obj) {
     Logger* log = getLogger(NULL);
     StreamType* streamData = open(ns, DATA_FTYPE);
 
     std::string* id = obj->getString("_id");
+    BSONObj* result = NULL;
     if (id == NULL) {
         id = uuid();
         std::string key("_id");
         obj->add(key, id);
+        result = new BSONObj();
+        result->add("_id", id);
     }
 
     long crcStructure = checkStructure(obj);
@@ -111,11 +114,11 @@ void DBController::insert(char* ns, BSONObj* obj) {
 //    streamData->writeChars(text, strlen(text));
 //    free(text);
 
-    insertIndex(ns, obj, streamData->currentPos());
+    // insertIndex(ns, obj, streamData->currentPos());
 
     writeBSON(streamData, obj);
     delete log;
-//    stream->flush();
+    return result;
 }
 
 
