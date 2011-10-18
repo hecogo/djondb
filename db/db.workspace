@@ -5,7 +5,7 @@
 		<Project filename="bson/bson.cbp" />
 		<Project filename="filesystem/filesystem.cbp" />
 		<Project filename="cache/cache.cbp" />
-		<Project filename="db/db.cbp" />
+		<Project filename="db/db.cbp" active="1" />
 		<Project filename="command/command.cbp" />
 		<Project filename="network/network.cbp" />
 		<Project filename="service/service.cbp" />
@@ -24,7 +24,7 @@
 			<Depends filename="command/command.cbp" />
 			<Depends filename="network/network.cbp" />
 		</Project>
-		<Project filename="test/test-service/test-service.cbp" active="1">
+		<Project filename="test/test-service/test-service.cbp">
 			<Depends filename="util/util.cbp" />
 			<Depends filename="bson/bson.cbp" />
 			<Depends filename="filesystem/filesystem.cbp" />

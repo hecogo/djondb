@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <assert.h>
 
 NetworkInputStream::NetworkInputStream(int clientSocket)
 {
@@ -116,14 +117,13 @@ int NetworkInputStream::available() {
 int NetworkInputStream::readData(void* data, int len) {
     CHECKSTATUS()
     // wait until a data is available to be readed
-    int avai;
-    do {
-        avai = waitAvailable(1);
-    }  while (avai < len);
-
-    int readed = recv(_socket, data, len, 0);
-    if (readed != len) {
-        cout << "Error len" << endl;
+    int readed = 0;
+    while (readed < len) {
+        waitAvailable(1);
+        int read = recv(_socket, data, len, 0);
+        // the connection could be closed
+        assert(read != 0);
+        readed += read;
     }
 
 //    char buffer[1024];

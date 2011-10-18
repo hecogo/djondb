@@ -114,7 +114,7 @@ BSONObj* DBController::insert(char* ns, BSONObj* obj) {
 //    streamData->writeChars(text, strlen(text));
 //    free(text);
 
-    // insertIndex(ns, obj, streamData->currentPos());
+    insertIndex(ns, obj, streamData->currentPos());
 
     writeBSON(streamData, obj);
     delete log;
