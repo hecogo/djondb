@@ -16,6 +16,7 @@
 #include <math.h>
 #include "fileoutputstream.h"
 #include "fileinputstream.h"
+#include "bplusindex.cpp"
 
 using namespace std;
 
@@ -150,6 +151,64 @@ void testFindPrevious() {
     }
 }
 
+void testIndex(std::vector<std::string*> ids) {
+    BPlusIndex tree;
+
+    std::auto_ptr<Logger> log(getLogger(NULL));
+
+    cout << "Staring index insert test" << endl;
+    log->startTimeRecord();
+    // Inserting
+    int x = 0;
+    for (std::vector<std::string*>::iterator i = ids.begin(); i != ids.end(); i++) {
+        BSONObj* id = new BSONObj();
+        id->add("_id", *i);
+        tree.add(id, 0);
+        x++;
+    }
+    log->stopTimeRecord();
+    DTime time = log->recordedTime();
+    cout << "Inserted " << x << " keys in " << time.toChar() << endl;
+
+    cout << "Staring index search test" << endl;
+    log->startTimeRecord();
+    // Searching
+    for (std::vector<std::string*>::iterator i = ids.begin(); i != ids.end(); i++) {
+        BSONObj* id = new BSONObj();
+        std::string* guid = *i;
+        id->add("_id", guid);
+        Index* index = tree.find(id);
+        assert(index != NULL);
+        BSONObj* key = index->key;
+        assert(key != NULL);
+        assert(key->getString("_id")->compare(*guid) == 0);
+    }
+    log->stopTimeRecord();
+    time = log->recordedTime();
+    cout << "Searched " << x << " keys in " << time.toChar() << endl;
+
+}
+
+void testSimpleIndex() {
+    FileInputStream fis("simple.dat", "rb");
+    std::vector<std::string*> ids;
+    while (!fis.eof()) {
+        ids.push_back(fis.readString());
+    }
+    fis.close();
+    testIndex(ids);
+}
+
+void testComplexIndex() {
+    FileInputStream fis("guids.txt", "rb");
+    std::vector<std::string*> ids;
+    while (!fis.eof()) {
+        ids.push_back(fis.readString());
+    }
+    fis.close();
+    testIndex(ids);
+}
+
 int main(int argc, char* args[])
 {
     if (argc < 2) {
@@ -158,6 +217,23 @@ int main(int argc, char* args[])
         cout << "inserts:   number of inserts to execute" << endl << endl;
         return 0;
     }
+
+    FileOutputStream fos("simple.dat", "wb");
+    fos.writeString(new std::string("1"));
+    fos.writeString(new std::string("4"));
+    fos.writeString(new std::string("8"));
+    fos.writeString(new std::string("7"));
+    fos.writeString(new std::string("9"));
+    fos.writeString(new std::string("5"));
+    fos.writeString(new std::string("6"));
+    fos.writeString(new std::string("10"));
+    fos.writeString(new std::string("2"));
+    fos.writeString(new std::string("3"));
+    fos.close();
+
+    testSimpleIndex();
+    testComplexIndex();
+
     controller.initialize();
 
     testFindPrevious();
