@@ -101,6 +101,9 @@ void BPlusIndex::checkBucket(Bucket* const bucket)
         initializeBucket(leftBucket);
         bucket->left = leftBucket;
 
+        BucketElement* leftElement = bucket->root;
+        BucketElement* rightElement = bucket->tail;
+
         // Move the elements
         bucket->root = bucket->root->next;
         bucket->minKey = bucket->root->key;
@@ -109,12 +112,17 @@ void BPlusIndex::checkBucket(Bucket* const bucket)
         initializeBucket(rightBucket);
         bucket->right = rightBucket;
 
-        insertBucketElement(leftBucket, bucket->root);
-        insertBucketElement(rightBucket, bucket->tail);
+        leftElement->next = NULL;
+        rightElement->next = NULL;
+        bucket->root->next = NULL;
 
         bucket->tail = bucket->root;
         bucket->maxKey = bucket->tail->key;
         bucket->size -= 2;
+
+        insertBucketElement(leftBucket, leftElement);
+        insertBucketElement(rightBucket, rightElement);
+
     }
 }
 
@@ -150,7 +158,6 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
                     element->next = currentElement;
                     bucket->root = element;
                     bucket->minKey = element->key;
-                    bucket->size++;
                 }
                 else
                 {
