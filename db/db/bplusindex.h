@@ -27,6 +27,8 @@ struct Bucket {
 
     Bucket* left;
     Bucket* right;
+
+    Bucket* parentBucket;
 };
 
 class BPlusIndex: public IndexAlgorithm
@@ -44,7 +46,7 @@ class BPlusIndex: public IndexAlgorithm
 
     private:
         bool insertElement(Index* elem);
-        BucketElement* findBucketElement(Bucket* start, BSONObj* key);
+        BucketElement* findBucketElement(Bucket* start, Index* index, bool create);
         void initializeBucket(Bucket* const element);
         void initializeBucketElement(BucketElement* const elem);
 

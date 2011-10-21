@@ -126,16 +126,20 @@ void testFindPrevious() {
         BSONObj* obj = new BSONObj();
         obj->add("_id", id);
         BSONObj* res = controller.findFirst("sp1.customer", obj);
-        std::string* id2 = res->getString("_id");
-//        cout << "Looking for: " << *id << endl;
-//        cout << "Found        " << *id2 << endl;
-        if ((id2 == NULL) || (id2->compare(*id) != 0)) {
-            if (id2 != NULL) {
-                cout << "Looking for: " << *id << " and got " << *id2 << endl;
+        if (res == NULL) {
+            cout << "Looking for " << *id << " does not returned any match" << endl;
+        } else {
+            std::string* id2 = res->getString("_id");
+    //        cout << "Looking for: " << *id << endl;
+    //        cout << "Found        " << *id2 << endl;
+            if ((id2 == NULL) || (id2->compare(*id) != 0)) {
+                if (id2 != NULL) {
+                    cout << "Looking for: " << *id << " and got " << *id2 << endl;
+                }
+                cout << "Error " << endl;
             }
-            cout << "Error " << endl;
+            delete res;
         }
-        delete res;
         delete(obj);
     }
 

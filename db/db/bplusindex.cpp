@@ -1,7 +1,7 @@
 #include "bplusindex.h"
 
 #include "bson.h"
-
+#include "util.h"
 #include <string.h>
 #include <boost/crc.hpp>
 #include <boost/shared_ptr.hpp>
@@ -63,14 +63,15 @@ Index* BPlusIndex::find(BSONObj* elem)
 //    crc32.process_bytes(key, strlen(key));
 //    long value = crc32.checksum();
 
-    BucketElement* element = findBucketElement(_head, elem);
-    if (element->index == NULL)
-    {
-        Index* index = new Index();
-        index->key = elem;
-        element->index = index;
+    Index* index = new Index();
+    index->key = elem;
+    BucketElement* element = findBucketElement(_head, index, false);
+    Index* result = NULL;
+    if (element != NULL) {
+        result = element->index;
     }
-    return element->index;
+    delete (index);
+    return result;
 }
 
 void BPlusIndex::remove(BSONObj* elem)
@@ -91,36 +92,59 @@ void BPlusIndex::initializeBucket(Bucket* const bucket)
     bucket->root = NULL;
     bucket->size = 0;
     bucket->tail = NULL;
+    bucket->parentBucket = NULL;
 }
 
 void BPlusIndex::checkBucket(Bucket* const bucket)
 {
     if (bucket->size == BUCKET_MAX_ELEMENTS) {
+        std::auto_ptr<Logger> log(getLogger(NULL));
         // The bucked will be split
         Bucket* leftBucket = new Bucket();
+        leftBucket->parentBucket = bucket;
         initializeBucket(leftBucket);
         bucket->left = leftBucket;
 
-        // Move the elements
-        bucket->root = bucket->root->next;
-        bucket->minKey = bucket->root->key;
+        BucketElement* leftElement = bucket->root;
+        BucketElement* rightElement = bucket->tail;
 
+        // Move 2nd element
+        bucket->root = leftElement->next;
+        bucket->minKey = bucket->root->key;
+        // Disconnects last element
+        bucket->tail = rightElement->previous;
+        bucket->maxKey = bucket->tail->key;
+
+        // Disconnects the leaf
+        leftElement->next = NULL;
+        leftElement->previous = NULL;
+        rightElement->next = NULL;
+        rightElement->previous = NULL;
+
+        // Creates buckets
         Bucket* rightBucket = new Bucket();
+        rightBucket->parentBucket = bucket;
         initializeBucket(rightBucket);
         bucket->right = rightBucket;
 
-        insertBucketElement(leftBucket, bucket->root);
-        insertBucketElement(rightBucket, bucket->tail);
+        insertBucketElement(leftBucket, leftElement);
+        insertBucketElement(rightBucket, rightElement);
 
-        bucket->tail = bucket->root;
-        bucket->maxKey = bucket->tail->key;
         bucket->size -= 2;
+    #ifdef DEBUG
+        log->debug("Sucessful split of the bucket. min: %s, max: %s, size: %d. Left: %s, Right: %s", bucket->minKey, bucket->maxKey, bucket->size, leftBucket->minKey, rightBucket->minKey);
+    #endif
     }
 }
 
 // This method will insert the element into the currentBucket
 void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 {
+    std::auto_ptr<Logger> log(getLogger(NULL));
+    #ifdef DEBUG
+        log->debug("inserting element. key: %s", element->key);
+        log->debug("current bucket. min: %s, max: %s, size: %d", bucket->minKey, bucket->maxKey, bucket->size);
+    #endif
     INDEXPOINTERTYPE key = element->key;
     BucketElement* currentElement = bucket->root;
     if (currentElement == NULL) {
@@ -131,6 +155,15 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
         bucket->maxKey = element->key;
         return;
     }
+    INDEXPOINTERTYPE testKey = currentElement->key;
+    int compMinKey = strcmp(bucket->minKey, testKey);
+    // the element should be inserted on the parent, because it's lesser than the
+    // root element
+    if ((compMinKey < 0) && (bucket->parentBucket != NULL)) {
+        insertBucketElement(bucket->parentBucket, element);
+        return;
+    }
+
     // Insert in the current bucket
     while (true) {
         INDEXPOINTERTYPE testKey = currentElement->key;
@@ -148,9 +181,9 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
                 if (currentElement == bucket->root)
                 {
                     element->next = currentElement;
+                    currentElement->previous = element;
                     bucket->root = element;
                     bucket->minKey = element->key;
-                    bucket->size++;
                 }
                 else
                 {
@@ -179,6 +212,9 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
         }
     }
     checkBucket(bucket);
+    #ifdef DEBUG
+        log->debug("bucket after insert. min: %s, max: %s, size: %d", bucket->minKey, bucket->maxKey, bucket->size);
+    #endif
 }
 
 int compKey(BucketElement* element, INDEXPOINTERTYPE key) {
@@ -189,23 +225,23 @@ int compKey(BucketElement* element, INDEXPOINTERTYPE key) {
 /***
 This will find the bucket in which the key should be in
 */
-BucketElement* BPlusIndex::findBucketElement(Bucket* start, BSONObj* bkey)
+BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool create)
 {
+    BSONObj* bkey = index->key;
     Bucket* currentBucket = start;
     INDEXPOINTERTYPE key = bkey->toChar();
     if (currentBucket->size == 0)
     {
+        if (!create) {
+            return NULL;
+        }
         BucketElement* element = new BucketElement();
         initializeBucketElement(element);
-        Index* index = new Index();
-        index->key = bkey;
         element->index = index;
         element->key = key;
         insertBucketElement(currentBucket, element);
         return element;
-    }
-    else
-    {
+    } else {
         while (true)
         {
             int comp = strcmp(key, currentBucket->minKey);
@@ -234,25 +270,23 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, BSONObj* bkey)
                     continue;
                 }
             }
-            BucketElement* element = new BucketElement();
-            initializeBucketElement(element);
-            Index* index = new Index();
-            index->key = bkey;
-            element->index = index;
-            element->key = key;
-            insertBucketElement(currentBucket, element);
-            return element;
+            if (create) {
+                BucketElement* element = new BucketElement();
+                initializeBucketElement(element);
+                element->index = index;
+                element->key = key;
+                insertBucketElement(currentBucket, element);
+                return element;
+            } else {
+                return NULL;
+            }
         }
     }
 }
 
 bool BPlusIndex::insertElement(Index* elem)
 {
-    BSONObj* obj = elem->key;
-    char* key = obj->toChar();
-    bool inserted = false;
+    BucketElement* res = findBucketElement(_head, elem, true);
 
-    findBucketElement(_head, obj);
-
-    return true;
+    return (res != NULL);
 }

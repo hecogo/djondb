@@ -197,9 +197,7 @@ void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
     std::string id = *bson->getString("_id");
     indexBSON->add("_id", new std::string(id));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
-    Index* index = impl->find(indexBSON);
-
-    index->posData = filePos;
+    Index* index = impl->add(indexBSON, filePos);
 
     StreamType* out = open(ns, INDEX_FTYPE);
     index->indexPos = out->currentPos();
@@ -215,24 +213,25 @@ std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
     Index* index = impl->find(indexBSON);
 
-    char fileName[255];
-    memset(fileName, 0, 255);
-    strcat(fileName, ns);
-    strcat(fileName, ".");
-    strcat(fileName, "dat");
-
-    StreamType* out = open(ns, DATA_FTYPE);
-    out->flush();
-//    out->close();
-
-    StreamType* input = new StreamType(fileName, "rb");
-    input->seek(index->posData);
-
-    BSONObj* obj = readBSON(input);
     std::vector<BSONObj*> result;
-    result.push_back(obj);
-    input->close();
+    if (index != NULL) {
+        char fileName[255];
+        memset(fileName, 0, 255);
+        strcat(fileName, ns);
+        strcat(fileName, ".");
+        strcat(fileName, "dat");
 
+        StreamType* out = open(ns, DATA_FTYPE);
+        out->flush();
+    //    out->close();
+
+        StreamType* input = new StreamType(fileName, "rb");
+        input->seek(index->posData);
+
+        BSONObj* obj = readBSON(input);
+        result.push_back(obj);
+        input->close();
+    }
     return result;
 }
 

@@ -37,11 +37,11 @@ class Logger {
         bool isDebug();
         bool isInfo();
         bool isWarn();
-        void debug(string message);
-        void error(string error);
+        void debug(string message, ...);
+        void error(string error, ...);
         void error(exception ex);
-        void info(string message);
-        void warn(string warn);
+        void info(string message, ...);
+        void warn(string warn, ...);
 
         void startTimeRecord();
         void stopTimeRecord();

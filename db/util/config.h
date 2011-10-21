@@ -7,6 +7,7 @@
 #ifdef __linux
 #define LINUX
 #endif
+
 /*
 #if defined Q_WS_MAC
 #define MAC

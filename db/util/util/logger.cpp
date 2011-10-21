@@ -3,8 +3,23 @@
 
 #include <iostream>
 #include <stdarg.h>
-#define PRINT(TYPE, CLAZZ, MESSAGE) \
-    cout << TYPE << ": " << CLAZZ << ": " << MESSAGE << endl;
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <sstream>
+#define PRINT(TYPE, CLAZZ) \
+  char* buffer = (char*)malloc(1000); \
+  memset(buffer, 0, 1000); \
+  va_list args; \
+  va_start (args, message); \
+  vsprintf (buffer, message.c_str(), args); \
+  va_end(args); \
+  std::string result; \
+  std::stringstream ss; \
+  ss << buffer; \
+  result = ss.str(); \
+  free(buffer); \
+  cout << TYPE << ": " << CLAZZ << ": " << result << endl;
 
 
 
@@ -111,22 +126,38 @@ Logger::Logger(void* clazz) {
     m_warn = true;
 }
 
-void Logger::debug(string message) {
-    PRINT("DEBUG", m_clazz, message);
+/*
+std::string format(const char * message, ...) {
+  char* buffer = (char*)malloc(1000);
+  memset(buffer, 0, 1000);
+  va_list args;
+  va_start (args, message);
+  vsprintf (buffer,message, args);
+  va_end(args);
+  std::string result;
+  std::stringstream ss;
+  ss << buffer;
+  result = ss.str();
+  free(buffer);
+}
+*/
+
+void Logger::debug(string message, ...) {
+    PRINT("DEBUG", m_clazz);
 }
 
-void Logger::info(string message) {
-    PRINT("INFO", m_clazz, message);
+void Logger::info(string message, ...) {
+    PRINT("INFO", m_clazz);
 }
 
 
-void Logger::warn(string message) {
-    PRINT("WARN", m_clazz, message);
+void Logger::warn(string message, ...) {
+    PRINT("WARN", m_clazz);
 }
 
 
-void Logger::error(string message) {
-    cout << m_clazz << ":" << message << endl;
+void Logger::error(string message, ...) {
+    PRINT("ERROR", m_clazz);
 }
 
 void Logger::error(exception ex) {
