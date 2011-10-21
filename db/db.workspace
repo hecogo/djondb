@@ -12,7 +12,9 @@
 		<Project filename="daemon/daemon.cbp" />
 		<Project filename="test/test-util/test-util.cbp" />
 		<Project filename="test/test-filesystem/test-filesystem.cbp" />
-		<Project filename="test/test-db/test-db.cbp" active="1" />
+		<Project filename="test/test-db/test-db.cbp" active="1">
+			<Depends filename="db/db.cbp" />
+		</Project>
 		<Project filename="test/test-cache/test-cache.cbp" />
 		<Project filename="test/test-command/test-command.cbp" />
 		<Project filename="test/test-network/test-network.cbp">
