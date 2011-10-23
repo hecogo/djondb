@@ -14,31 +14,43 @@ BPlusIndex::BPlusIndex()
     initializeBucket(_head);
 }
 
-//void cascadeDelete(IndexPointer* element) {
-/*
-if (element->left != NULL) {
-    cascadeDelete(element->left);
+
+
+void cascadeDelete(Bucket* bucket) {
+    BucketElement* element = bucket->root;
+    while (element != NULL) {
+        BucketElement* next = element->next;
+        if (next != NULL)
+            next->previous = NULL;
+        if (element->index != NULL) {
+            Index* index = element->index;
+            delete index->key;
+            delete element->index;
+            element->index = 0;
+        }
+        if (element->key != NULL) {
+            free(element->key);
+            element->key = 0;
+        }
+        delete element;
+        element = next;
+    }
+    bucket->root = NULL;
+    bucket->tail = NULL;
+    if (bucket->left != NULL) {
+        cascadeDelete(bucket->left);
+    }
+    if (bucket->right != NULL) {
+        cascadeDelete(bucket->right);
+    }
+    delete bucket;
 }
-if (element->right != NULL) {
-    cascadeDelete(element->right);
-}
-if (element->elem) {
-    Index* index = element->elem;
-    delete index->key;
-    delete index;
-}
-if (element->value != NULL) {
-    free(element->value);
-}
-delete element;
-*/
-//}
 
 BPlusIndex::~BPlusIndex()
 {
     if (_head)
     {
-//        cascadeDelete(_head);
+        cascadeDelete(_head);
     }
 }
 
@@ -113,6 +125,7 @@ void BPlusIndex::checkBucket(Bucket* const bucket)
         bucket->minKey = bucket->root->key;
         // Disconnects last element
         bucket->tail = rightElement->previous;
+        bucket->tail->next = NULL;
         bucket->maxKey = bucket->tail->key;
 
         // Disconnects the leaf
@@ -230,17 +243,21 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
     BSONObj* bkey = index->key;
     Bucket* currentBucket = start;
     INDEXPOINTERTYPE key = bkey->toChar();
+    BucketElement* result = NULL;
+    bool created = false;
     if (currentBucket->size == 0)
     {
         if (!create) {
-            return NULL;
+            result = result;
+        } else {
+            BucketElement* element = new BucketElement();
+            initializeBucketElement(element);
+            element->index = index;
+            element->key = key;
+            insertBucketElement(currentBucket, element);
+            result = element;
+            created = true;
         }
-        BucketElement* element = new BucketElement();
-        initializeBucketElement(element);
-        element->index = index;
-        element->key = key;
-        insertBucketElement(currentBucket, element);
-        return element;
     } else {
         while (true)
         {
@@ -249,7 +266,8 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
             // Lucky the min is the one we're looking for
             if (comp == 0)
             {
-                return currentBucket->root;
+                result = currentBucket->root;
+                break;
             }
             else if (comp < 0)
             {
@@ -263,7 +281,8 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
 
             comp = strcmp(key, currentBucket->maxKey);
             if (comp == 0) {
-                return currentBucket->tail;
+                result = currentBucket->tail;
+                break;
             } else if (comp > 0) {
                 if (currentBucket->right != NULL) {
                     currentBucket = currentBucket->right;
@@ -276,12 +295,19 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
                 element->index = index;
                 element->key = key;
                 insertBucketElement(currentBucket, element);
-                return element;
+                result = element;
+                created = true;
+                break;
             } else {
-                return NULL;
+                result = NULL;
+                break;
             }
         }
     }
+//    if (!created) {
+//        free(key);
+//    }
+    return result;
 }
 
 bool BPlusIndex::insertElement(Index* elem)

@@ -17,6 +17,7 @@
 #include "fileoutputstream.h"
 #include "fileinputstream.h"
 #include "bplusindex.cpp"
+#include "math.h"
 
 using namespace std;
 
@@ -156,7 +157,7 @@ void testFindPrevious() {
 }
 
 void testIndex(std::vector<std::string*> ids) {
-    BPlusIndex tree;
+    std::auto_ptr<BPlusIndex> tree(new BPlusIndex());
 
     std::auto_ptr<Logger> log(getLogger(NULL));
 
@@ -167,7 +168,7 @@ void testIndex(std::vector<std::string*> ids) {
     for (std::vector<std::string*>::iterator i = ids.begin(); i != ids.end(); i++) {
         BSONObj* id = new BSONObj();
         id->add("_id", *i);
-        tree.add(id, 0);
+        tree->add(id, 0);
         x++;
     }
     log->stopTimeRecord();
@@ -176,16 +177,24 @@ void testIndex(std::vector<std::string*> ids) {
 
     cout << "Staring index search test" << endl;
     log->startTimeRecord();
-    // Searching
-    for (std::vector<std::string*>::iterator i = ids.begin(); i != ids.end(); i++) {
+    while (ids.size() > 0) {
+        int pos = rand() % ids.size();
+        std::string* guid = NULL;
+        while (pos > ids.size()) {
+            pos = rand() % ids.size();
+        }
+        std::vector<std::string*>::iterator i = ids.begin() + pos;
+        guid = *i;
+
         BSONObj* id = new BSONObj();
-        std::string* guid = *i;
         id->add("_id", guid);
-        Index* index = tree.find(id);
+        Index* index = tree->find(id);
         assert(index != NULL);
         BSONObj* key = index->key;
         assert(key != NULL);
         assert(key->getString("_id")->compare(*guid) == 0);
+
+        ids.erase(i);
     }
     log->stopTimeRecord();
     time = log->recordedTime();
@@ -223,21 +232,30 @@ int main(int argc, char* args[])
     }
 
     FileOutputStream fos("simple.dat", "wb");
-    fos.writeString(new std::string("1"));
-    fos.writeString(new std::string("4"));
-    fos.writeString(new std::string("8"));
-    fos.writeString(new std::string("7"));
-    fos.writeString(new std::string("9"));
-    fos.writeString(new std::string("5"));
-    fos.writeString(new std::string("6"));
-    fos.writeString(new std::string("10"));
-    fos.writeString(new std::string("2"));
-    fos.writeString(new std::string("3"));
+    fos.writeString(&std::string("1"));
+    fos.writeString(&std::string("4"));
+    fos.writeString(&std::string("11"));
+    fos.writeString(&std::string("6"));
+    fos.writeString(&std::string("15"));
+    fos.writeString(&std::string("20"));
+    fos.writeString(&std::string("18"));
+    fos.writeString(&std::string("8"));
+    fos.writeString(&std::string("19"));
+    fos.writeString(&std::string("7"));
+    fos.writeString(&std::string("13"));
+    fos.writeString(&std::string("9"));
+    fos.writeString(&std::string("14"));
+    fos.writeString(&std::string("5"));
+    fos.writeString(&std::string("17"));
+    fos.writeString(&std::string("10"));
+    fos.writeString(&std::string("12"));
+    fos.writeString(&std::string("16"));
+    fos.writeString(&std::string("12"));
+    fos.writeString(&std::string("13"));
     fos.close();
 
     testSimpleIndex();
     testComplexIndex();
-
     controller.initialize();
 
     testFindPrevious();
