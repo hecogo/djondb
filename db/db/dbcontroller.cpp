@@ -54,7 +54,7 @@ void DBController::initialize() {
                 BSONObj* obj = readBSON(stream);
 
                 if (!impl) {
-                    impl = IndexFactory::indexFactory.index(ns->c_str(), obj);
+                    impl = IndexFactory::indexFactory.index(ns->c_str(), *obj);
                 }
                 long indexPos = stream->readLong();
                 long posData = stream->readLong();
@@ -175,10 +175,10 @@ bool DBController::close(char* ns) {
 }
 
 void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
-    BSONObj* indexBSON = new BSONObj();
-    indexBSON->add("_id", bson->getString("_id"));
+    BSONObj indexBSON;
+    indexBSON.add("_id", bson->getString("_id"));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
-    Index* index = impl->find(*indexBSON);
+    Index* index = impl->find(indexBSON);
 
     index->posData = filePos;
 
@@ -193,11 +193,11 @@ void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
 }
 
 void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
-    BSONObj* indexBSON = new BSONObj();
+    BSONObj indexBSON;
     std::string id = *bson->getString("_id");
-    indexBSON->add("_id", new std::string(id));
+    indexBSON.add("_id", new std::string(id));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
-    Index* index = impl->add(*indexBSON, filePos);
+    Index* index = impl->add(indexBSON, filePos);
 
     StreamType* out = open(ns, INDEX_FTYPE);
     index->indexPos = out->currentPos();
@@ -208,10 +208,10 @@ void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
 }
 
 std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
-    BSONObj* indexBSON = new BSONObj();
-    indexBSON->add("_id", filter->getString("_id"));
+    BSONObj indexBSON;
+    indexBSON.add("_id", filter->getString("_id"));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
-    Index* index = impl->find(*indexBSON);
+    Index* index = impl->find(indexBSON);
 
     std::vector<BSONObj*> result;
     if (index != NULL) {
