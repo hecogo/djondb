@@ -12,9 +12,9 @@ struct Index {
 class IndexAlgorithm {
     public:
     virtual ~IndexAlgorithm() {};
-    virtual Index* add(BSONObj* elem, long filePos) = 0;
-    virtual Index* find(BSONObj* elem) = 0;
-    virtual void remove(BSONObj* elem) = 0;
+    virtual Index* add(BSONObj elem, long filePos) = 0;
+    virtual Index* find(BSONObj elem) = 0;
+    virtual void remove(BSONObj elem) = 0;
 };
 
 #endif // INDEX_H_INCLUDED

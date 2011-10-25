@@ -58,7 +58,7 @@ void DBController::initialize() {
                 }
                 long indexPos = stream->readLong();
                 long posData = stream->readLong();
-                Index* index = impl->add(obj, posData);
+                Index* index = impl->add(*obj, posData);
                 index->indexPos = indexPos;
             }
             stream->seek(currentPos);
@@ -178,7 +178,7 @@ void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
     BSONObj* indexBSON = new BSONObj();
     indexBSON->add("_id", bson->getString("_id"));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
-    Index* index = impl->find(indexBSON);
+    Index* index = impl->find(*indexBSON);
 
     index->posData = filePos;
 
@@ -197,7 +197,7 @@ void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
     std::string id = *bson->getString("_id");
     indexBSON->add("_id", new std::string(id));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
-    Index* index = impl->add(indexBSON, filePos);
+    Index* index = impl->add(*indexBSON, filePos);
 
     StreamType* out = open(ns, INDEX_FTYPE);
     index->indexPos = out->currentPos();
@@ -211,7 +211,7 @@ std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
     BSONObj* indexBSON = new BSONObj();
     indexBSON->add("_id", filter->getString("_id"));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
-    Index* index = impl->find(indexBSON);
+    Index* index = impl->find(*indexBSON);
 
     std::vector<BSONObj*> result;
     if (index != NULL) {

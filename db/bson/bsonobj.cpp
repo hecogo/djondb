@@ -207,3 +207,7 @@ bool BSONObj::has(t_keytype key) {
     }
     return false;
 }
+
+BSONObj::BSONObj(const BSONObj& orig) {
+    this->_elements = orig._elements;
+}

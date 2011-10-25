@@ -168,7 +168,7 @@ void testIndex(std::vector<std::string*> ids) {
     for (std::vector<std::string*>::iterator i = ids.begin(); i != ids.end(); i++) {
         BSONObj* id = new BSONObj();
         id->add("_id", *i);
-        tree->add(id, 0);
+        tree->add(*id, 0);
         x++;
     }
     log->stopTimeRecord();
@@ -188,7 +188,7 @@ void testIndex(std::vector<std::string*> ids) {
 
         BSONObj* id = new BSONObj();
         id->add("_id", guid);
-        Index* index = tree->find(id);
+        Index* index = tree->find(*id);
         assert(index != NULL);
         BSONObj* key = index->key;
         assert(key != NULL);

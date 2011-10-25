@@ -56,6 +56,7 @@ class BSONObj
 {
     public:
         BSONObj();
+        BSONObj(const BSONObj& orig);
         virtual ~BSONObj();
 //        void add(char*, void*);
         void add(t_keytype, int);

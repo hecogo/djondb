@@ -23,10 +23,10 @@ void cascadeDelete(Bucket* bucket) {
         if (next != NULL)
             next->previous = NULL;
         if (element->index != NULL) {
-            Index* index = element->index;
+            boost::shared_ptr<Index> index = element->index;
             delete index->key;
-            delete element->index;
-            element->index = 0;
+//            delete element->index;
+//            element->index = 0;
         }
         if (element->key != NULL) {
             free(element->key);
@@ -54,21 +54,17 @@ BPlusIndex::~BPlusIndex()
     }
 }
 
-Index* BPlusIndex::add(BSONObj* elem, long filePos)
+Index* BPlusIndex::add(BSONObj elem, long filePos)
 {
     Index* index = new Index();
-    index->key = elem;
+    index->key = new BSONObj(elem);
     index->posData = filePos;
 
-    bool inserted = insertElement(index);
-    if (!inserted)
-    {
-        delete elem;
-    }
+    insertElement(index);
     return index;
 }
 
-Index* BPlusIndex::find(BSONObj* elem)
+Index* BPlusIndex::find(BSONObj elem)
 {
 //    char* key = elem->toChar();
 //    boost::crc_32_type crc32;
@@ -76,23 +72,23 @@ Index* BPlusIndex::find(BSONObj* elem)
 //    long value = crc32.checksum();
 
     Index* index = new Index();
-    index->key = elem;
+    index->key = new BSONObj(elem);
     BucketElement* element = findBucketElement(_head, index, false);
     Index* result = NULL;
     if (element != NULL) {
-        result = element->index;
+        result = element->index.get();
     }
     delete (index);
     return result;
 }
 
-void BPlusIndex::remove(BSONObj* elem)
+void BPlusIndex::remove(BSONObj elem)
 {
 }
 
 void BPlusIndex::initializeBucketElement(BucketElement* const elem)
 {
-    elem->index = NULL;
+//    elem->index = NULL;
     elem->next = NULL;
     elem->previous = NULL;
 }
@@ -252,7 +248,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
         } else {
             BucketElement* element = new BucketElement();
             initializeBucketElement(element);
-            element->index = index;
+            element->index = boost::shared_ptr<Index>(index);
             element->key = key;
             insertBucketElement(currentBucket, element);
             result = element;
@@ -292,7 +288,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
             if (create) {
                 BucketElement* element = new BucketElement();
                 initializeBucketElement(element);
-                element->index = index;
+                element->index = boost::shared_ptr<Index>(index);
                 element->key = key;
                 insertBucketElement(currentBucket, element);
                 result = element;

@@ -9,7 +9,7 @@ typedef char* INDEXPOINTERTYPE;
 const int BUCKET_MAX_ELEMENTS = 3; // Should be even (3, 5, 7)
 
 struct BucketElement {
-    Index* index;
+    boost::shared_ptr<Index> index;
 
     INDEXPOINTERTYPE key;
 
@@ -37,9 +37,9 @@ class BPlusIndex: public IndexAlgorithm
         BPlusIndex();
         virtual ~BPlusIndex();
 
-        virtual Index* add(BSONObj* elem, long filePos);
-        virtual Index* find(BSONObj* elem);
-        virtual void remove(BSONObj* elem);
+        virtual Index* add(BSONObj elem, long filePos);
+        virtual Index* find(BSONObj elem);
+        virtual void remove(BSONObj elem);
     protected:
     private:
         Bucket* _head;
