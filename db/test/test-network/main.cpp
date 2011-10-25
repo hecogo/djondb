@@ -211,8 +211,9 @@ int main(int argc, char* args[])
     cout << "Inserts " << inserts << endl;
     testMassiveInsert(inserts);
 
-    cout << "Finds " << endl;
-    testFinds("localhost",1243);
+////
+////    cout << "Finds " << endl;
+////    testFinds("localhost",1243);
 //    getchar();
 //
 //    service.stop();

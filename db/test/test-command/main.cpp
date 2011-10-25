@@ -1,5 +1,4 @@
 #include <iostream>
-#include "commandparser.h"
 #include "bson.h"
 #include "fileinputstream.h"
 #include "fileoutputstream.h"
