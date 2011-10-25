@@ -7,6 +7,7 @@
 #include "bsonoutputstream.h"
 #include "bsoninputstream.h"
 #include "insertcommand.h"
+#include "findbykeycommand.h"
 #include "bson.h"
 #include "config.h"
 #include <sys/types.h>
@@ -33,6 +34,7 @@ bool __running;
 void *startSocketListener(void* arg);
 
 
+std::vector<std::string> __ids;
 
 void *startSocketListener(void* arg) {
     NetworkInputStream* nis = (NetworkInputStream*)arg;
@@ -45,7 +47,7 @@ void *startSocketListener(void* arg) {
     }
 }
 
-char* sendReceive(char* host, int port, int inserts) {
+char* testInsert(char* host, int port, int inserts) {
 
 
     Logger* log = getLogger(NULL);
@@ -70,6 +72,10 @@ char* sendReceive(char* host, int port, int inserts) {
         BSONObj* obj = new BSONObj();
         std::string* guid = uuid();
         obj->add("_id", guid);
+        int test = rand() % 10;
+        if (test > 0) {
+            __ids.push_back(*guid);
+        }
 //        obj->add("name", "John");
         char* temp = (char*)malloc(2000);
         memset(temp, 0, 2000);
@@ -114,10 +120,69 @@ char* sendReceive(char* host, int port, int inserts) {
     return 0;
 }
 
+void testFinds(char* host, int port) {
+
+
+    Logger* log = getLogger(NULL);
+
+    cout << "Starting " << endl;
+
+    log->startTimeRecord();
+    __running = true;
+    NetworkOutputStream* out = new NetworkOutputStream();
+    int socket = out->open(host, port);
+    NetworkInputStream* nis = new NetworkInputStream(socket);
+    // nis->setNonblocking();
+//    Thread* receiveThread = new Thread(&startSocketListener);
+//    receiveThread->start(nis);
+    out->writeChars("1.2.3", 5);
+    BSONInputStream* bis = new BSONInputStream(nis);
+//    BSONOutputStream* bsonOut = new BSONOutputStream(out);
+    std::auto_ptr<CommandWriter> writer(new CommandWriter(out));
+    for (std::vector<std::string>::iterator i = __ids.begin(); i != __ids.end(); i++) {
+        std::string guid = *i;
+        std::auto_ptr<FindByKeyCommand> cmd(new FindByKeyCommand());
+
+        BSONObj* obj = new BSONObj();
+        obj->add("_id", &guid);
+        //obj->add("last", "Smith");
+        cmd->setBSON(obj);
+        std::string* ns = new std::string("myns");
+        cmd->setNameSpace(ns);
+        writer->writeCommand(cmd.get());
+        std::auto_ptr<BSONObj> resObj(bis->readBSON());
+        assert(resObj.get() != NULL);
+        assert(resObj->has("_id"));
+    }
+    cout << "Sending close connection command" << endl;
+    out->writeInt(CLOSECONNECTION);
+    cout << "all sent" << endl;
+
+    log->stopTimeRecord();
+
+    DTime rec = log->recordedTime();
+
+    int secs = rec.totalSecs();
+    cout<< "finds " << __ids.size() << ", time: " << rec.toChar() << endl;
+
+    if (secs > 0) {
+        cout << "Throughput: " << (__ids.size() / secs) << " ops." << endl;
+    }
+    cout << "------------------------------------------------------------" << endl;
+    cout << "Ready to close the connection" << endl;
+    getchar();
+    __running = false;
+
+    cout << "Closing the connection" << endl;
+    out->closeStream();
+
+    delete(log);
+}
+
 void testMassiveInsert(int inserts) {
 //    FileOutputStream fos("temp.txt", "wb+");
 
-    sendReceive("localhost",1243, inserts);
+    testInsert("localhost",1243, inserts);
 //    fos.close();
 
 }
@@ -146,6 +211,8 @@ int main(int argc, char* args[])
     cout << "Inserts " << inserts << endl;
     testMassiveInsert(inserts);
 
+    cout << "Finds " << endl;
+    testFinds("localhost",1243);
 //    getchar();
 //
 //    service.stop();
