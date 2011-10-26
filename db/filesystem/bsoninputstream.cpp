@@ -37,7 +37,7 @@ BSONObj* BSONInputStream::readBSON() const {
                 obj->add(*key, _inputStream->readChars());
                 break;
             case STRING_TYPE:
-                obj->add(*key, _inputStream->readString());
+                obj->add(*key, *_inputStream->readString());
                 break;
         }
         delete key;

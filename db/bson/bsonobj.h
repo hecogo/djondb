@@ -63,8 +63,8 @@ class BSONObj
         void add(t_keytype, double);
         void add(t_keytype, long);
         void add(t_keytype, char*);
-        void add(t_keytype, std::string*);
-        void add(t_keytype, BSONObj*);
+        void add(t_keytype, std::string);
+        void add(t_keytype, BSONObj);
 
         bool has(t_keytype);
 

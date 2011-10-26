@@ -61,15 +61,19 @@ void BSONObj::add(t_keytype key, long val) {
 }
 
 void BSONObj::add(t_keytype key, char* val) {
-    BSONCONTENT_FILL(key, PTRCHAR_TYPE, val);
+    char* internalValue = (char*)malloc(strlen(val));
+    strcpy(internalValue, val);
+    BSONCONTENT_FILL(key, PTRCHAR_TYPE, internalValue);
 }
 
-void BSONObj::add(t_keytype key, std::string* val) {
-    BSONCONTENT_FILL(key, STRING_TYPE, val);
+void BSONObj::add(t_keytype key, std::string val) {
+    std::string* internalValue = new std::string(val);
+    BSONCONTENT_FILL(key, STRING_TYPE, internalValue);
 }
 
-void BSONObj::add(t_keytype key, BSONObj* val) {
-    BSONCONTENT_FILL(key, BSON_TYPE, val);
+void BSONObj::add(t_keytype key, BSONObj val) {
+    BSONObj* internalValue = new BSONObj(val);
+    BSONCONTENT_FILL(key, BSON_TYPE, internalValue);
 }
 
 char* BSONObj::toChar() const {

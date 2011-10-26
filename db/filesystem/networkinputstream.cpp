@@ -82,23 +82,7 @@ char* NetworkInputStream::readChars(int length) {
     char* res = (char*)malloc(length+1);
     memset(res, 0, length+1);
     readData(res, length);
-    /*
-    int pos = 0;
-    char buffer[8193];
-    while (pos < length) {
-        memset(buffer, 0, 8193);
-        int readed = 0;
-        int read = 0;
-        if ((length - pos) > 8192) {
-            read = 8192;
-        } else {
-            read = (length - pos);
-        }
-        readed = readData(buffer, read);
-        memcpy(&res[pos], buffer, readed);
-        pos += readed;
-    }
-    */
+    assert(strlen(res) == length);
     return res;
 }
 
@@ -128,14 +112,12 @@ int NetworkInputStream::readData(void* data, int len) {
     // wait until a data is available to be readed
     int readed = 0;
     while (readed < len) {
-        int read = 0;
-        while (waitAvailable(10) < 0) {
+        if (waitAvailable(10) < 0) {
             assert(false);
         }
-        if ((_bufferSize - _bufferPos) < len) {
+        int read = (len - readed);
+        if ((_bufferSize - _bufferPos) < read) {
             read = _bufferSize - _bufferPos;
-        } else {
-            read = len - readed;
         }
         memcpy(data + readed, _buffer + _bufferPos, read);
         _bufferPos += read;
@@ -156,6 +138,11 @@ int NetworkInputStream::readData(void* data, int len) {
 //            break;
 //        }
 //    }
+    if (len == 1999) {
+        if (((char*)data)[1998] != 'a') {
+            cout << "Hey!!!!" << endl;
+        }
+    }
 
     return readed;
 }

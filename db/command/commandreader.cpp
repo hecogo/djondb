@@ -54,9 +54,10 @@ Command* CommandReader::readCommand() {
             cmd = new CloseCommand();
             break;
         default:
-            cout << "Unknown type: " << type << endl;
+            cout << "unknown command type " << type << endl;
             break;
     }
+    assert(cmd != NULL);
     return cmd;
 }
 

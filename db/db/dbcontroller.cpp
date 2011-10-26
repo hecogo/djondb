@@ -103,9 +103,10 @@ BSONObj* DBController::insert(char* ns, BSONObj* obj) {
     if (id == NULL) {
         id = uuid();
         std::string key("_id");
-        obj->add(key, id);
+        obj->add(key, *id);
         result = new BSONObj();
-        result->add("_id", id);
+        result->add("_id", *id);
+        delete id;
     }
 
     long crcStructure = checkStructure(obj);
@@ -176,7 +177,7 @@ bool DBController::close(char* ns) {
 
 void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
     BSONObj indexBSON;
-    indexBSON.add("_id", bson->getString("_id"));
+    indexBSON.add("_id", *bson->getString("_id"));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
     Index* index = impl->find(indexBSON);
 
@@ -194,8 +195,8 @@ void DBController::updateIndex(char* ns, BSONObj* bson, long filePos) {
 
 void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
     BSONObj indexBSON;
-    std::string id = *bson->getString("_id");
-    indexBSON.add("_id", new std::string(id));
+    std::string* id = bson->getString("_id");
+    indexBSON.add("_id", *id);
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
     Index* index = impl->add(indexBSON, filePos);
 
@@ -209,7 +210,7 @@ void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
 
 std::vector<BSONObj*> DBController::find(char* ns, BSONObj* filter) {
     BSONObj indexBSON;
-    indexBSON.add("_id", filter->getString("_id"));
+    indexBSON.add("_id", *filter->getString("_id"));
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
     Index* index = impl->find(indexBSON);
 

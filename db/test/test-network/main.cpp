@@ -72,7 +72,7 @@ char* testInsert(char* host, int port, int inserts) {
 
         BSONObj* obj = new BSONObj();
         std::string* guid = uuid();
-        obj->add("_id", guid);
+        obj->add("_id", *guid);
         int test = rand() % 10;
         if (test > 0) {
             __ids.push_back(*guid);
@@ -94,6 +94,7 @@ char* testInsert(char* host, int port, int inserts) {
         if ((inserts > 9) && (x % (inserts / 10)) == 0) {
             cout << x << " Records sent" << endl;
         }
+        delete guid;
     }
     cout << "Sending close connection command" << endl;
     out->writeInt(CLOSECONNECTION);
@@ -145,7 +146,7 @@ void testFinds(char* host, int port) {
         std::auto_ptr<FindByKeyCommand> cmd(new FindByKeyCommand());
 
         BSONObj* obj = new BSONObj();
-        obj->add("_id", &guid);
+        obj->add("_id", guid);
         //obj->add("last", "Smith");
         cmd->setBSON(obj);
         std::string* ns = new std::string("myns");

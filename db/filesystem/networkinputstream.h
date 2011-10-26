@@ -38,12 +38,13 @@ class NetworkInputStream : public InputStream
 
         virtual std::string* readString();
         int setNonblocking();
-    protected:
-    private:
-        int _socket;
+
         char* _buffer;
         int _bufferPos;
         int _bufferSize;
+    protected:
+    private:
+        int _socket;
 
     private:
         int checkStatus();

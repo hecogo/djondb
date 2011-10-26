@@ -38,12 +38,12 @@ int testMassiveInsert(int inserts) {
 
     for (int x = 0; x < inserts; x++) {
         BSONObj* obj = new BSONObj();
-        obj->add("name", new std::string("John"));
+        obj->add("name", "John");
         char temp[700];
         memset(temp, 0, 699);
         memset(temp, 'a', 700);
-        obj->add("content", new std::string(temp));
-        obj->add("last", new std::string("Smith"));
+        obj->add("content", std::string(temp));
+        obj->add("last", std::string("Smith"));
         testInsert(obj);
 
         int test = rand() % 10;
@@ -81,7 +81,7 @@ void testFinds() {
         string* id = *i;
 
         BSONObj* obj = new BSONObj();
-        obj->add("_id", id);
+        obj->add("_id", *id);
         BSONObj* res = controller.findFirst("sp1.customer", obj);
         std::string* id2 = res->getString("_id");
 //        cout << "Looking for: " << *id << endl;
@@ -125,7 +125,7 @@ void testFindPrevious() {
         string* id = *i;
 
         BSONObj* obj = new BSONObj();
-        obj->add("_id", id);
+        obj->add("_id", *id);
         BSONObj* res = controller.findFirst("sp1.customer", obj);
         if (res == NULL) {
             cout << "Looking for " << *id << " does not returned any match" << endl;
@@ -167,7 +167,7 @@ void testIndex(std::vector<std::string*> ids) {
     int x = 0;
     for (std::vector<std::string*>::iterator i = ids.begin(); i != ids.end(); i++) {
         BSONObj* id = new BSONObj();
-        id->add("_id", *i);
+        id->add("_id", **i);
         tree->add(*id, 0);
         x++;
     }
@@ -187,7 +187,7 @@ void testIndex(std::vector<std::string*> ids) {
         guid = *i;
 
         BSONObj* id = new BSONObj();
-        id->add("_id", guid);
+        id->add("_id", *guid);
         Index* index = tree->find(*id);
         assert(index != NULL);
         BSONObj* key = index->key;
