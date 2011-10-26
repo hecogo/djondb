@@ -59,7 +59,8 @@ char* testInsert(char* host, int port, int inserts) {
     NetworkOutputStream* out = new NetworkOutputStream();
     int socket = out->open(host, port);
     NetworkInputStream* nis = new NetworkInputStream(socket);
-    // nis->setNonblocking();
+    //out->setNonblocking();
+    out->disableNagle();
 //    Thread* receiveThread = new Thread(&startSocketListener);
 //    receiveThread->start(nis);
     out->writeChars("1.2.3", 5);

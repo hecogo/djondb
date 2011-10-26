@@ -29,6 +29,7 @@ class NetworkOutputStream: public OutputStream
         void closeStream();
 
         int setNonblocking();
+        int disableNagle();
 
     protected:
     private:

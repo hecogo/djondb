@@ -6,7 +6,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
-
+#include <netinet/tcp.h>
 #include <iostream>
 
 using namespace std;
@@ -142,7 +142,7 @@ void NetworkOutputStream::closeStream() {
 
 int NetworkOutputStream::setNonblocking() {
     int flags;
-
+    int ret;
     /* If they have O_NONBLOCK, use the Posix way to do it */
 #if defined(O_NONBLOCK)
     /* Fixme: O_NONBLOCK is defined but broken on SunOS 4.1.x and AIX 3.2.5. */
@@ -156,3 +156,11 @@ int NetworkOutputStream::setNonblocking() {
 #endif
 }
 
+int NetworkOutputStream::disableNagle() {
+    /* Disable the Nagle (TCP No Delay) algorithm */
+
+    int flag = 1;
+
+    int ret = setsockopt( _socket, IPPROTO_TCP, TCP_NODELAY, (char *)&flag, sizeof(flag) );
+    return ret;
+}

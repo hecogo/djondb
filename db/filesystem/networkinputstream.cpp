@@ -14,12 +14,18 @@
 #include <sys/ioctl.h>
 #include <assert.h>
 
+const int STREAM_BUFFER_SIZE = 100000;
+
 NetworkInputStream::NetworkInputStream(int clientSocket)
 {
     _socket = clientSocket;
+    _buffer = (char*) malloc(STREAM_BUFFER_SIZE);
+    _bufferPos = 0;
+    _bufferSize = 0;
 }
 
 NetworkInputStream::~NetworkInputStream() {
+    free (_buffer);
     closeStream();
 }
 
@@ -75,14 +81,16 @@ std::string* NetworkInputStream::readString() {
 char* NetworkInputStream::readChars(int length) {
     char* res = (char*)malloc(length+1);
     memset(res, 0, length+1);
+    readData(res, length);
+    /*
     int pos = 0;
-    char buffer[1025];
+    char buffer[8193];
     while (pos < length) {
-        memset(buffer, 0, 1025);
+        memset(buffer, 0, 8193);
         int readed = 0;
         int read = 0;
-        if ((length - pos) > 1024) {
-            read = 1024;
+        if ((length - pos) > 8192) {
+            read = 8192;
         } else {
             read = (length - pos);
         }
@@ -90,6 +98,7 @@ char* NetworkInputStream::readChars(int length) {
         memcpy(&res[pos], buffer, readed);
         pos += readed;
     }
+    */
     return res;
 }
 
@@ -119,10 +128,20 @@ int NetworkInputStream::readData(void* data, int len) {
     // wait until a data is available to be readed
     int readed = 0;
     while (readed < len) {
-        waitAvailable(1);
-        int read = recv(_socket, data, len, 0);
-        // the connection could be closed
-        assert(read != 0);
+        int read = 0;
+        while (waitAvailable(10) < 0) {
+            assert(false);
+        }
+        if ((_bufferSize - _bufferPos) < len) {
+            read = _bufferSize - _bufferPos;
+        } else {
+            read = len - readed;
+        }
+        memcpy(data + readed, _buffer + _bufferPos, read);
+        _bufferPos += read;
+//        int read = recv(_socket, data, len, 0);
+//        // the connection could be closed
+//        assert(read != 0);
         readed += read;
     }
 
@@ -142,19 +161,13 @@ int NetworkInputStream::readData(void* data, int len) {
 }
 
 int NetworkInputStream::waitAvailable(int timeout) {
-    fd_set read;
-    FD_ZERO(&read);
-    FD_SET(_socket, &read);
-    timeval val;
-    val.tv_sec = timeout;
-    val.tv_usec = 0;
-    int result = select(_socket + 1, &read, NULL, NULL, &val);
-
-    if (result < 0) {
-        closeStream();
-        return -1;
+    if (_bufferPos < _bufferSize) {
+        int available = (_bufferSize - _bufferPos);
+        assert(available > 0);
+        return available;
+    } else {
+        return fillBuffer(timeout);
     }
-    return available();
 }
 
 int NetworkInputStream::setNonblocking() {
@@ -171,4 +184,25 @@ int NetworkInputStream::setNonblocking() {
     flags = 1;
     return ioctl(_socket, FIOBIO, &flags);
 #endif
+}
+
+int NetworkInputStream::fillBuffer(int timeout) {
+    memset(_buffer, 0, STREAM_BUFFER_SIZE);
+
+    fd_set read;
+    FD_ZERO(&read);
+    FD_SET(_socket, &read);
+    timeval val;
+    val.tv_sec = timeout;
+    val.tv_usec = 0;
+    int result = select(_socket + 1, &read, NULL, NULL, &val);
+
+    assert(result > 0);
+    if (result < 0) {
+        closeStream();
+        return -1;
+    }
+    int readed = recv(_socket, _buffer, STREAM_BUFFER_SIZE, 0);
+    _bufferPos = 0;
+    _bufferSize = readed;
 }

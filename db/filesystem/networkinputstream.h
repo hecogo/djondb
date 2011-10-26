@@ -41,11 +41,14 @@ class NetworkInputStream : public InputStream
     protected:
     private:
         int _socket;
+        char* _buffer;
+        int _bufferPos;
+        int _bufferSize;
 
     private:
         int checkStatus();
         int readData(void *buffer, int len);
-
+        int fillBuffer(int timeout);
 };
 
 #endif // NETWORKINPUTSTREAM_H
