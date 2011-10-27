@@ -15,8 +15,12 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
+					<Add option="-pg" />
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="libnetwork" prefix_auto="1" extension_auto="1" />
@@ -35,14 +39,12 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-pg" />
 			<Add directory="../util" />
 			<Add directory="../filesystem" />
 			<Add directory="../command" />
 			<Add directory="../db" />
 		</Compiler>
 		<Linker>
-			<Add option="-pg" />
 			<Add library="db" />
 			<Add directory="../db" />
 		</Linker>

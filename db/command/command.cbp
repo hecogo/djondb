@@ -15,8 +15,12 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
+					<Add option="-pg" />
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="libcommand" prefix_auto="1" extension_auto="1" />
@@ -26,8 +30,8 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-Wall" />
 					<Add option="-O2" />
+					<Add option="-Wall" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -35,14 +39,10 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-pg" />
 			<Add directory="../bson" />
 			<Add directory="../filesystem" />
 			<Add directory="../db" />
 		</Compiler>
-		<Linker>
-			<Add option="-pg" />
-		</Linker>
 		<Unit filename="command.cpp" />
 		<Unit filename="command.h" />
 		<Unit filename="commandreader.cpp" />

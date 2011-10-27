@@ -38,9 +38,11 @@
 				<Option compiler="gcc" />
 				<Option parameters="100000" />
 				<Compiler>
+					<Add option="-pg" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg" />
 					<Add library="rt" />
 					<Add library="uuid" />
 					<Add library="X11" />
@@ -57,6 +59,10 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="rt" />
+					<Add library="uuid" />
+					<Add library="X11" />
+					<Add library="Xss" />
 				</Linker>
 			</Target>
 		</Build>

@@ -15,8 +15,12 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
+					<Add option="-pg" />
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="libbson" prefix_auto="1" extension_auto="1" />
@@ -26,8 +30,8 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-Wall" />
 					<Add option="-O2" />
+					<Add option="-Wall" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -35,11 +39,9 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-pg" />
 			<Add directory="../util" />
 		</Compiler>
 		<Linker>
-			<Add option="-pg" />
 			<Add library="util" />
 		</Linker>
 		<Unit filename="bson.h" />

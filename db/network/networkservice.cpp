@@ -169,6 +169,7 @@ void *processRequest(void *arg) {
     std::auto_ptr<NetworkInputStream> nis(new NetworkInputStream(clientSocket));
     std::auto_ptr<NetworkOutputStream> nos(new NetworkOutputStream(clientSocket));
     nos->setNonblocking();
+    nos->disableNagle();
     nis->setNonblocking();
     // Checks version
     int commands = 0;

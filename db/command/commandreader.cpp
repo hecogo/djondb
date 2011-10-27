@@ -19,12 +19,13 @@ CommandReader::~CommandReader()
 InsertCommand* parseInsert(InputStream* is)  {
     InsertCommand* command = new InsertCommand();
     std::string* ns = is->readString();
-    command->setNameSpace(ns);
-
+    command->setNameSpace(*ns);
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
     BSONObj* obj = bsonis->readBSON();
-    command->setBSON(obj);
+    command->setBSON(*obj);
 
+    delete ns;
+    delete obj;
     return command;
 }
 

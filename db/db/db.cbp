@@ -15,9 +15,13 @@
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-Wall" />
+					<Add option="-pg" />
 					<Add option="-g" />
 					<Add directory="c:/development/boost_1_47_0" />
 				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="libdb" prefix_auto="1" extension_auto="1" />
@@ -27,8 +31,8 @@
 				<Option compiler="gcc" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-Wall" />
 					<Add option="-O2" />
+					<Add option="-Wall" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -36,15 +40,11 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-pg" />
 			<Add directory="../filesystem" />
 			<Add directory="../bson" />
 			<Add directory="../util" />
 			<Add directory="../cache" />
 		</Compiler>
-		<Linker>
-			<Add option="-pg" />
-		</Linker>
 		<Unit filename="bplusindex.cpp" />
 		<Unit filename="bplusindex.h" />
 		<Unit filename="dbcontroller.cpp" />

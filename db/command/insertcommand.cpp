@@ -32,15 +32,15 @@ void InsertCommand::writeResult(OutputStream* out) const {
     }
 }
 
-void InsertCommand::setNameSpace(const std::string* ns) {
-    _namespace = ns;
+void InsertCommand::setNameSpace(const std::string ns) {
+    _namespace = new std::string(ns);
 }
 const std::string* InsertCommand::nameSpace() const {
     return _namespace;
 }
 
-void InsertCommand::setBSON(BSONObj* bson) {
-    _bson = bson;
+void InsertCommand::setBSON(const BSONObj bson) {
+    _bson = new BSONObj(bson);
 }
 
 BSONObj* InsertCommand::bson() const {

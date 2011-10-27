@@ -13,8 +13,12 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-pg" />
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/test-network" prefix_auto="1" extension_auto="1" />
@@ -33,11 +37,13 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="100" />
+				<Option parameters="10000" />
 				<Compiler>
+					<Add option="-pg" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg" />
 					<Add library="rt" />
 					<Add library="uuid" />
 					<Add library="Xss" />
@@ -53,12 +59,14 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="rt" />
+					<Add library="uuid" />
+					<Add library="Xss" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-pg" />
 			<Add option="-fexceptions" />
 			<Add directory="../../network" />
 			<Add directory="../../util" />
@@ -68,7 +76,6 @@
 			<Add directory="../../command" />
 		</Compiler>
 		<Linker>
-			<Add option="-pg" />
 			<Add library="network" />
 			<Add library="command" />
 			<Add library="db" />

@@ -12,8 +12,12 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-pg" />
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add option="-pg" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/test-service" prefix_auto="1" extension_auto="1" />
@@ -33,9 +37,11 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-pg" />
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
+					<Add option="-pg" />
 					<Add library="rt" />
 				</Linker>
 			</Target>
@@ -49,17 +55,16 @@
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="rt" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-pg" />
 			<Add option="-fexceptions" />
 			<Add directory="../../service" />
 		</Compiler>
 		<Linker>
-			<Add option="-pg" />
 			<Add library="service" />
 			<Add library="network" />
 			<Add library="db" />

@@ -96,7 +96,7 @@ BSONObj* DBController::readBSON(StreamType* stream) {
 
 BSONObj* DBController::insert(char* ns, BSONObj* obj) {
     Logger* log = getLogger(NULL);
-    StreamType* streamData = open(ns, DATA_FTYPE);
+    StreamType* streamData = open(std::string(ns), DATA_FTYPE);
 
     std::string* id = obj->getString("_id");
     BSONObj* result = NULL;
@@ -200,7 +200,7 @@ void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
     IndexAlgorithm* impl = IndexFactory::indexFactory.index(ns, indexBSON);
     Index* index = impl->add(indexBSON, filePos);
 
-    StreamType* out = open(ns, INDEX_FTYPE);
+    StreamType* out = open(std::string(ns), INDEX_FTYPE);
     index->indexPos = out->currentPos();
     BSONObj* key = index->key;
     writeBSON(out, key);

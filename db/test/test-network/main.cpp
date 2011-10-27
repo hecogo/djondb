@@ -56,36 +56,37 @@ char* testInsert(char* host, int port, int inserts) {
 
     log->startTimeRecord();
     __running = true;
-    NetworkOutputStream* out = new NetworkOutputStream();
+    std::auto_ptr<NetworkOutputStream> out(new NetworkOutputStream());
     int socket = out->open(host, port);
-    NetworkInputStream* nis = new NetworkInputStream(socket);
+    std::auto_ptr<NetworkInputStream> nis(new NetworkInputStream(socket));
     //out->setNonblocking();
     out->disableNagle();
 //    Thread* receiveThread = new Thread(&startSocketListener);
 //    receiveThread->start(nis);
     out->writeChars("1.2.3", 5);
-    BSONInputStream* bis = new BSONInputStream(nis);
+    std::auto_ptr<BSONInputStream> bis(new BSONInputStream(nis.get()));
 //    BSONOutputStream* bsonOut = new BSONOutputStream(out);
-    std::auto_ptr<CommandWriter> writer(new CommandWriter(out));
+    std::auto_ptr<CommandWriter> writer(new CommandWriter(out.get()));
     for (int x = 0; x < inserts; x++) {
         std::auto_ptr<InsertCommand> cmd(new InsertCommand());
 
-        BSONObj* obj = new BSONObj();
-        std::string* guid = uuid();
-        obj->add("_id", *guid);
+        BSONObj obj;
+        std::auto_ptr<std::string> guid(uuid());
+        obj.add("_id", *guid.get());
         int test = rand() % 10;
         if (test > 0) {
-            __ids.push_back(*guid);
+            __ids.push_back(*guid.get());
         }
 //        obj->add("name", "John");
         char* temp = (char*)malloc(2000);
         memset(temp, 0, 2000);
         memset(temp, 'a', 1999);
         int len = strlen(temp);
-        obj->add("content", temp);
+        obj.add("content", temp);
+        free(temp);
         //obj->add("last", "Smith");
         cmd->setBSON(obj);
-        std::string* ns = new std::string("myns");
+        std::string ns("myns");
         cmd->setNameSpace(ns);
         writer->writeCommand(cmd.get());
 //        std::auto_ptr<BSONObj> resObj(bis->readBSON());
@@ -94,7 +95,6 @@ char* testInsert(char* host, int port, int inserts) {
         if ((inserts > 9) && (x % (inserts / 10)) == 0) {
             cout << x << " Records sent" << endl;
         }
-        delete guid;
     }
     cout << "Sending close connection command" << endl;
     out->writeInt(CLOSECONNECTION);
@@ -123,8 +123,6 @@ char* testInsert(char* host, int port, int inserts) {
 }
 
 void testFinds(char* host, int port) {
-
-
     Logger* log = getLogger(NULL);
 
     cout << "Starting " << endl;
@@ -141,6 +139,8 @@ void testFinds(char* host, int port) {
     BSONInputStream* bis = new BSONInputStream(nis);
 //    BSONOutputStream* bsonOut = new BSONOutputStream(out);
     std::auto_ptr<CommandWriter> writer(new CommandWriter(out));
+    cout << "Records to found: " << __ids.size() << endl;
+    int x = 0;
     for (std::vector<std::string>::iterator i = __ids.begin(); i != __ids.end(); i++) {
         std::string guid = *i;
         std::auto_ptr<FindByKeyCommand> cmd(new FindByKeyCommand());
@@ -155,6 +155,10 @@ void testFinds(char* host, int port) {
         std::auto_ptr<BSONObj> resObj(bis->readBSON());
         assert(resObj.get() != NULL);
         assert(resObj->has("_id"));
+        if ((__ids.size() > 9) && (x % (__ids.size() / 10)) == 0) {
+            cout << x << " Records received" << endl;
+        }
+        x++;
     }
     cout << "Sending close connection command" << endl;
     out->writeInt(CLOSECONNECTION);
@@ -213,10 +217,9 @@ int main(int argc, char* args[])
     cout << "Inserts " << inserts << endl;
     testMassiveInsert(inserts);
 
-////
-////    cout << "Finds " << endl;
-////    testFinds("localhost",1243);
-//    getchar();
+
+    cout << "Finds " << endl;
+    testFinds("localhost",1243);
 //
 //    service.stop();
 

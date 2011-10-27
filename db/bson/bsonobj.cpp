@@ -61,7 +61,8 @@ void BSONObj::add(t_keytype key, long val) {
 }
 
 void BSONObj::add(t_keytype key, char* val) {
-    char* internalValue = (char*)malloc(strlen(val));
+    char* internalValue = (char*)malloc(strlen(val) + 1);
+    memset(internalValue, 0, strlen(val) + 1);
     strcpy(internalValue, val);
     BSONCONTENT_FILL(key, PTRCHAR_TYPE, internalValue);
 }
