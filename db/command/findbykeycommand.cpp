@@ -28,7 +28,8 @@ void* FindByKeyCommand::result() {
 
 void FindByKeyCommand::writeResult(OutputStream* out) const {
     BSONOutputStream* bsonout = new BSONOutputStream(out);
-    bsonout->writeBSON(*_bson);
+    bsonout->writeBSON(*_bsonResult);
+    delete bsonout;
 }
 
 void FindByKeyCommand::setNameSpace(const std::string* ns) {

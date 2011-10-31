@@ -2,6 +2,8 @@
 #include "networkservice.h"
 #include "networkoutputstream.h"
 #include "networkinputstream.h"
+#include "fileinputstream.h"
+#include "fileoutputstream.h"
 #include "commandwriter.h"
 #include "util.h"
 #include "bsonoutputstream.h"
@@ -34,8 +36,6 @@ bool __running;
 void *startSocketListener(void* arg);
 
 
-std::vector<std::string> __ids;
-
 void *startSocketListener(void* arg) {
     NetworkInputStream* nis = (NetworkInputStream*)arg;
 
@@ -67,6 +67,8 @@ char* testInsert(char* host, int port, int inserts) {
     std::auto_ptr<BSONInputStream> bis(new BSONInputStream(nis.get()));
 //    BSONOutputStream* bsonOut = new BSONOutputStream(out);
     std::auto_ptr<CommandWriter> writer(new CommandWriter(out.get()));
+
+    std::vector<std::string> ids;
     for (int x = 0; x < inserts; x++) {
         std::auto_ptr<InsertCommand> cmd(new InsertCommand());
 
@@ -75,7 +77,7 @@ char* testInsert(char* host, int port, int inserts) {
         obj.add("_id", *guid.get());
         int test = rand() % 10;
         if (test > 0) {
-            __ids.push_back(*guid.get());
+            ids.push_back(*guid.get());
         }
 //        obj->add("name", "John");
         char* temp = (char*)malloc(2000);
@@ -96,6 +98,13 @@ char* testInsert(char* host, int port, int inserts) {
             cout << x << " Records sent" << endl;
         }
     }
+    FileOutputStream* fosIds = new FileOutputStream("results.txt", "wb");
+    fosIds->writeInt(ids.size());
+    for (std::vector<std::string>::iterator i2 = ids.begin(); i2!= ids.end(); i2++) {
+        std::string s = *i2;
+        fosIds->writeString(&s);
+    }
+    fosIds->close();
     cout << "Sending close connection command" << endl;
     out->writeInt(CLOSECONNECTION);
     cout << "all sent" << endl;
@@ -139,14 +148,16 @@ void testFinds(char* host, int port) {
     BSONInputStream* bis = new BSONInputStream(nis);
 //    BSONOutputStream* bsonOut = new BSONOutputStream(out);
     std::auto_ptr<CommandWriter> writer(new CommandWriter(out));
-    cout << "Records to found: " << __ids.size() << endl;
+    FileInputStream* fisIds = new FileInputStream("results.txt", "rb");
     int x = 0;
-    for (std::vector<std::string>::iterator i = __ids.begin(); i != __ids.end(); i++) {
-        std::string guid = *i;
+    int count = fisIds->readInt();
+    cout << "Records to find: " << count << endl;
+    for (x =0; x < count; x++) {
+        std::string* guid = fisIds->readString();
         std::auto_ptr<FindByKeyCommand> cmd(new FindByKeyCommand());
 
         BSONObj* obj = new BSONObj();
-        obj->add("_id", guid);
+        obj->add("_id", *guid);
         //obj->add("last", "Smith");
         cmd->setBSON(obj);
         std::string* ns = new std::string("myns");
@@ -155,10 +166,10 @@ void testFinds(char* host, int port) {
         std::auto_ptr<BSONObj> resObj(bis->readBSON());
         assert(resObj.get() != NULL);
         assert(resObj->has("_id"));
-        if ((__ids.size() > 9) && (x % (__ids.size() / 10)) == 0) {
+        if ((count > 9) && (x % (count / 10)) == 0) {
             cout << x << " Records received" << endl;
         }
-        x++;
+        delete guid;
     }
     cout << "Sending close connection command" << endl;
     out->writeInt(CLOSECONNECTION);
@@ -169,10 +180,10 @@ void testFinds(char* host, int port) {
     DTime rec = log->recordedTime();
 
     int secs = rec.totalSecs();
-    cout<< "finds " << __ids.size() << ", time: " << rec.toChar() << endl;
+    cout<< "finds " << count << ", time: " << rec.toChar() << endl;
 
     if (secs > 0) {
-        cout << "Throughput: " << (__ids.size() / secs) << " ops." << endl;
+        cout << "Throughput: " << (count / secs) << " ops." << endl;
     }
     cout << "------------------------------------------------------------" << endl;
     cout << "Ready to close the connection" << endl;
@@ -214,9 +225,9 @@ int main(int argc, char* args[])
 //    timespec res = diff(t1, t2);
 //    cout << "res: " << res.tv_sec << ":" << res.tv_nsec << endl;
 
-    cout << "Inserts " << inserts << endl;
-    testMassiveInsert(inserts);
-
+//    cout << "Inserts " << inserts << endl;
+//    testMassiveInsert(inserts);
+//
 
     cout << "Finds " << endl;
     testFinds("localhost",1243);
