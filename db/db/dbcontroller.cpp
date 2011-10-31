@@ -69,7 +69,7 @@ void DBController::initialize() {
 
 long DBController::checkStructure(BSONObj* obj) {
     Structure* structure = new Structure();
-    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator i = obj->begin(); i != obj->end(); i++) {
+    for (std::map<t_keytype, BSONContent* >::const_iterator i = obj->begin(); i != obj->end(); i++) {
         structure->add(i->first);
     }
 
@@ -109,7 +109,7 @@ BSONObj* DBController::insert(char* ns, BSONObj* obj) {
         delete id;
     }
 
-    long crcStructure = checkStructure(obj);
+//    long crcStructure = checkStructure(obj);
 
 //    char* text = obj->toChar();
 //    streamData->writeChars(text, strlen(text));

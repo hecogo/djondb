@@ -59,7 +59,7 @@ char* testInsert(char* host, int port, int inserts) {
     std::auto_ptr<NetworkOutputStream> out(new NetworkOutputStream());
     int socket = out->open(host, port);
     std::auto_ptr<NetworkInputStream> nis(new NetworkInputStream(socket));
-    //out->setNonblocking();
+//    out->setNonblocking();
     out->disableNagle();
 //    Thread* receiveThread = new Thread(&startSocketListener);
 //    receiveThread->start(nis);

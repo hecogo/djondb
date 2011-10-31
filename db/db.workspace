@@ -10,12 +10,13 @@
 		<Project filename="network/network.cbp" />
 		<Project filename="service/service.cbp" />
 		<Project filename="test/test-util/test-util.cbp" />
+		<Project filename="test/test-bson/test-bson.cbp" />
 		<Project filename="test/test-filesystem/test-filesystem.cbp" />
+		<Project filename="test/test-cache/test-cache.cbp" />
 		<Project filename="test/test-db/test-db.cbp">
 			<Depends filename="db/db.cbp" />
 		</Project>
-		<Project filename="test/test-cache/test-cache.cbp" />
-		<Project filename="test/test-network/test-network.cbp" />
-		<Project filename="test/test-service/test-service.cbp" active="1" />
+		<Project filename="test/test-network/test-network.cbp" active="1" />
+		<Project filename="test/test-service/test-service.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

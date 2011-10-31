@@ -18,8 +18,11 @@ BSONContent::~BSONContent() {
             }
             break;
         case PTRCHAR_TYPE:
+        case INT_TYPE:
+        case LONG_TYPE:
+        case DOUBLE_TYPE:
             if (_element) {
-                free ((char*)_element);
+                free (_element);
                 _element = 0;
             }
             break;
@@ -34,12 +37,11 @@ BSONObj::BSONObj()
 
 BSONObj::~BSONObj()
 {
-//    for (std::map<t_keytype, BSONContent*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
-//        BSONContent* cont = i->second;
-//        delete(cont);
-//    }
+    for (std::map<t_keytype, BSONContent*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
+        BSONContent* cont = i->second;
+        delete(cont);
+    }
     _elements.clear();
-    //dtor
 }
 
 /*
@@ -49,15 +51,21 @@ void BSONObj::add(t_keytype key, void* val) {
 */
 
 void BSONObj::add(t_keytype key, int val) {
-    BSONCONTENT_FILL(key, INT_TYPE, &val);
+    int* internalValue = (int*)malloc(sizeof(int));
+    *internalValue = val;
+    BSONCONTENT_FILL(key, INT_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, double val) {
-    BSONCONTENT_FILL(key, DOUBLE_TYPE, &val);
+    double* internalValue = (double*)malloc(sizeof(double));
+    *internalValue = val;
+    BSONCONTENT_FILL(key, DOUBLE_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, long val) {
-    BSONCONTENT_FILL(key, LONG_TYPE, &val);
+    long* internalValue = (long*)malloc(sizeof(long));
+    *internalValue = val;
+    BSONCONTENT_FILL(key, LONG_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, char* val) {
@@ -81,12 +89,12 @@ char* BSONObj::toChar() const {
     std::stringstream ss;
     ss << "{ ";
     bool first = true;
-    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
+    for (std::map<t_keytype, BSONContent* >::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
         if (!first) {
             ss << ",";
         }
         first = false;
-        boost::shared_ptr<BSONContent> content = i->second;
+        BSONContent* content = i->second;
         t_keytype key = i->first;
         ss << key << ":";
         switch (content->_type)  {
@@ -161,9 +169,9 @@ char* BSONObj::getChars(t_keytype key) const {
 }
 
 std::string* BSONObj::getString(t_keytype key) const {
-    boost::shared_ptr<BSONContent> content;
+    BSONContent* content = NULL;
 //    SEARCHBSON(key, STRING_TYPE);
-    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
+    for (std::map<t_keytype, BSONContent* >::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
         t_keytype itKey = it->first;
         if (itKey.compare(key) == 0) {
             content = it->second;
@@ -191,11 +199,11 @@ BSONObj* BSONObj::getBSON(t_keytype key) const {
     }
 }
 
-std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator BSONObj::begin() const {
+std::map<t_keytype, BSONContent* >::const_iterator BSONObj::begin() const {
     return _elements.begin();
 }
 
-std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator BSONObj::end() const {
+std::map<t_keytype, BSONContent* >::const_iterator BSONObj::end() const {
     return _elements.end();
 }
 
@@ -204,7 +212,7 @@ int BSONObj::length() const {
 }
 
 bool BSONObj::has(t_keytype key) {
-    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
+    for (std::map<t_keytype, BSONContent* >::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
         t_keytype itKey = it->first;
         if (itKey.compare(key) == 0) {
             return true;
@@ -214,5 +222,11 @@ bool BSONObj::has(t_keytype key) {
 }
 
 BSONObj::BSONObj(const BSONObj& orig) {
-    this->_elements = orig._elements;
+    for (std::map<t_keytype, BSONContent* >::const_iterator i = orig._elements.begin(); i != orig._elements.end(); i++) {
+        t_keytype key = i->first;
+        BSONContent* origContent = i->second;
+        BSONContent* content = new BSONContent(*origContent);
+
+        this->_elements.insert(pair<t_keytype, BSONContent* >(i->first, content));
+    }
 }

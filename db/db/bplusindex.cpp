@@ -54,7 +54,7 @@ BPlusIndex::~BPlusIndex()
     }
 }
 
-Index* BPlusIndex::add(BSONObj elem, long filePos)
+Index* BPlusIndex::add(const BSONObj& elem, long filePos)
 {
     Index* index = new Index();
     index->key = new BSONObj(elem);
@@ -64,7 +64,7 @@ Index* BPlusIndex::add(BSONObj elem, long filePos)
     return index;
 }
 
-Index* BPlusIndex::find(BSONObj elem)
+Index* BPlusIndex::find(const BSONObj& elem)
 {
 //    char* key = elem->toChar();
 //    boost::crc_32_type crc32;
@@ -82,7 +82,7 @@ Index* BPlusIndex::find(BSONObj elem)
     return result;
 }
 
-void BPlusIndex::remove(BSONObj elem)
+void BPlusIndex::remove(const BSONObj& elem)
 {
 }
 

@@ -142,7 +142,6 @@ void NetworkOutputStream::closeStream() {
 
 int NetworkOutputStream::setNonblocking() {
     int flags;
-    int ret;
     /* If they have O_NONBLOCK, use the Posix way to do it */
 #if defined(O_NONBLOCK)
     /* Fixme: O_NONBLOCK is defined but broken on SunOS 4.1.x and AIX 3.2.5. */

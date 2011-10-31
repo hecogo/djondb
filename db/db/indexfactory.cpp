@@ -23,7 +23,7 @@ IndexFactory::~IndexFactory()
 IndexAlgorithm* IndexFactory::index(const char* ns, BSONObj key) {
     std::stringstream ss;
     ss << "ns:" << ns << ":";
-    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator i = key.begin(); i != key.end(); i++) {
+    for (std::map<t_keytype, BSONContent* >::const_iterator i = key.begin(); i != key.end(); i++) {
         ss << i->first << ";";
     }
     std::string skey = ss.str();

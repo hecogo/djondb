@@ -184,7 +184,7 @@ int NetworkInputStream::fillBuffer(int timeout) {
     val.tv_usec = 0;
     int result = select(_socket + 1, &read, NULL, NULL, &val);
 
-    assert(result > 0);
+    assert(result >= 0);
     if (result < 0) {
         closeStream();
         return -1;
@@ -192,4 +192,5 @@ int NetworkInputStream::fillBuffer(int timeout) {
     int readed = recv(_socket, _buffer, STREAM_BUFFER_SIZE, 0);
     _bufferPos = 0;
     _bufferSize = readed;
+    return readed;
 }

@@ -55,6 +55,7 @@ int testMassiveInsert(int inserts) {
 
             cout<< "inserts " << x << endl;
         }
+        delete obj;
     }
     fos.close();
 
@@ -192,6 +193,7 @@ void testIndex(std::vector<std::string*> ids) {
         assert(index != NULL);
         BSONObj* key = index->key;
         assert(key != NULL);
+        assert(key->getString("_id") != NULL);
         assert(key->getString("_id")->compare(*guid) == 0);
 
         ids.erase(i);

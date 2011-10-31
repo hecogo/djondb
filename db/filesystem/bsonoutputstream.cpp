@@ -18,10 +18,10 @@ BSONOutputStream::~BSONOutputStream()
 
 void BSONOutputStream::writeBSON(const BSONObj& bson) {
     _outputStream->writeLong(bson.length());
-    for (std::map<t_keytype, boost::shared_ptr<BSONContent> >::const_iterator i = bson.begin(); i != bson.end(); i++) {
+    for (std::map<t_keytype, BSONContent* >::const_iterator i = bson.begin(); i != bson.end(); i++) {
         t_keytype key = i->first;
         _outputStream->writeString(&key);
-        boost::shared_ptr<BSONContent> cont = i->second;
+        BSONContent* cont = i->second;
         _outputStream->writeLong(cont->_type);
         char* text;
         switch (cont->_type) {
