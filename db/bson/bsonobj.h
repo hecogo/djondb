@@ -59,7 +59,8 @@ class BSONContent {
                     break;
                 case PTRCHAR_TYPE:
                     len = strlen((char*)orig._element);
-                    this->_element = malloc(len);
+                    this->_element = malloc(len+1);
+                    memset(this->_element, 0, len + 1);
                     memcpy(this->_element, orig._element, len);
                     break;
                 case INT_TYPE:

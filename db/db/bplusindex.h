@@ -9,7 +9,7 @@ typedef char* INDEXPOINTERTYPE;
 const int BUCKET_MAX_ELEMENTS = 3; // Should be even (3, 5, 7)
 
 struct BucketElement {
-    boost::shared_ptr<Index> index;
+    Index* index;
 
     INDEXPOINTERTYPE key;
 

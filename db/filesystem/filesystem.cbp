@@ -71,8 +71,12 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-pg" />
 			<Add directory="../bson" />
 		</Compiler>
+		<Linker>
+			<Add option="-pg" />
+		</Linker>
 		<Unit filename="bsoninputstream.cpp" />
 		<Unit filename="bsoninputstream.h" />
 		<Unit filename="bsonoutputstream.cpp" />

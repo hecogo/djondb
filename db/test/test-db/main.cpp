@@ -26,7 +26,8 @@ DBController controller;
 std::vector<std::string*> __ids;
 
 int testInsert(BSONObj* o) {
-    controller.insert("sp1.customer", o);
+    BSONObj* res = controller.insert("sp1.customer", o);
+    delete res;
 }
 
 int testMassiveInsert(int inserts) {
@@ -157,7 +158,7 @@ void testFindPrevious() {
     }
 }
 
-void testIndex(std::vector<std::string*> ids) {
+void testIndex(std::vector<std::string> ids) {
     std::auto_ptr<BPlusIndex> tree(new BPlusIndex());
 
     std::auto_ptr<Logger> log(getLogger(NULL));
@@ -166,10 +167,10 @@ void testIndex(std::vector<std::string*> ids) {
     log->startTimeRecord();
     // Inserting
     int x = 0;
-    for (std::vector<std::string*>::iterator i = ids.begin(); i != ids.end(); i++) {
-        BSONObj* id = new BSONObj();
-        id->add("_id", **i);
-        tree->add(*id, 0);
+    for (std::vector<std::string>::iterator i = ids.begin(); i != ids.end(); i++) {
+        BSONObj id;
+        id.add("_id", *i);
+        tree->add(id, 0);
         x++;
     }
     log->stopTimeRecord();
@@ -180,21 +181,20 @@ void testIndex(std::vector<std::string*> ids) {
     log->startTimeRecord();
     while (ids.size() > 0) {
         int pos = rand() % ids.size();
-        std::string* guid = NULL;
         while (pos > ids.size()) {
             pos = rand() % ids.size();
         }
-        std::vector<std::string*>::iterator i = ids.begin() + pos;
-        guid = *i;
+        std::vector<std::string>::iterator i = ids.begin() + pos;
+        std::string guid = *i;
 
-        BSONObj* id = new BSONObj();
-        id->add("_id", *guid);
-        Index* index = tree->find(*id);
+        BSONObj id;
+        id.add("_id", guid);
+        Index* index = tree->find(id);
         assert(index != NULL);
         BSONObj* key = index->key;
         assert(key != NULL);
         assert(key->getString("_id") != NULL);
-        assert(key->getString("_id")->compare(*guid) == 0);
+        assert(key->getString("_id")->compare(guid) == 0);
 
         ids.erase(i);
     }
@@ -206,9 +206,11 @@ void testIndex(std::vector<std::string*> ids) {
 
 void testSimpleIndex() {
     FileInputStream fis("simple.dat", "rb");
-    std::vector<std::string*> ids;
+    std::vector<std::string> ids;
     while (!fis.eof()) {
-        ids.push_back(fis.readString());
+        std::string* s = fis.readString();
+        ids.push_back(*s);
+        delete s;
     }
     fis.close();
     testIndex(ids);
@@ -216,9 +218,11 @@ void testSimpleIndex() {
 
 void testComplexIndex() {
     FileInputStream fis("guids.txt", "rb");
-    std::vector<std::string*> ids;
+    std::vector<std::string> ids;
     while (!fis.eof()) {
-        ids.push_back(fis.readString());
+        std::string* s= fis.readString();
+        ids.push_back(*s);
+        delete s;
     }
     fis.close();
     testIndex(ids);

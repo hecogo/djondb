@@ -40,6 +40,12 @@
 				</Linker>
 			</Target>
 		</Build>
+		<Compiler>
+			<Add option="-pg" />
+		</Compiler>
+		<Linker>
+			<Add option="-pg" />
+		</Linker>
 		<Unit filename="config.h" />
 		<Unit filename="util.cpp" />
 		<Unit filename="util.h" />

@@ -39,9 +39,13 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-pg" />
 			<Add directory="C:/development/boost_1_47_0" />
 			<Add directory="../bson" />
 		</Compiler>
+		<Linker>
+			<Add option="-pg" />
+		</Linker>
 		<Unit filename="cache.h" />
 		<Unit filename="cachemanager.cpp" />
 		<Unit filename="cachemanager.h" />

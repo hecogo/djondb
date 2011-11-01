@@ -131,7 +131,7 @@ char* testInsert(char* host, int port, int inserts) {
     return 0;
 }
 
-void testFinds(char* host, int port) {
+void testFinds(char* host, int port, int maxfinds) {
     Logger* log = getLogger(NULL);
 
     cout << "Starting " << endl;
@@ -151,6 +151,9 @@ void testFinds(char* host, int port) {
     FileInputStream* fisIds = new FileInputStream("results.txt", "rb");
     int x = 0;
     int count = fisIds->readInt();
+    if ((maxfinds > -1) && (count > maxfinds)) {
+        count = maxfinds;
+    }
     cout << "Records to find: " << count << endl;
     for (x =0; x < count; x++) {
         std::string* guid = fisIds->readString();
@@ -210,11 +213,34 @@ int main(int argc, char* args[])
 //    service.start();
 //
     int inserts;
-    if (argc > 1) {
-        cout << "Arg: " << args[1] << endl;
-        inserts = atoi(args[1]);
-    } else {
-        inserts = 1;
+    bool insert = false;
+    bool finds = false;
+    bool error = false;
+    int maxfinds = -1;
+    for (int x = 1; x < argc; x++) {
+        if (strncmp(args[x], "--insert", 8) == 0) {
+            insert = true;
+            char* val = strchr(args[x], '=');
+            if (val == NULL) {
+                cout << "Incorrect syntax, expected --insert=xxx" << endl;
+                error = true;
+            } else {
+                inserts = atoi(val + 1);
+            }
+        } else if (strncmp(args[x], "--finds", 7) == 0) {
+            finds = true;
+            char* val = strchr(args[x], '=');
+            if (val != NULL) {
+                maxfinds = atoi(val+1);
+            }
+        } else {
+            cout << "Incorrect command " << args[x] << endl;
+            error = true;
+        }
+    }
+    if (error) {
+        cout << "Usage: test-network [--inserts=xxxx] [--finds]" << endl;
+        return 1;
     }
 //    timespec t1;
 //    clock_gettime(CLOCK_REALTIME, &t1);
@@ -224,13 +250,15 @@ int main(int argc, char* args[])
 //
 //    timespec res = diff(t1, t2);
 //    cout << "res: " << res.tv_sec << ":" << res.tv_nsec << endl;
+    if (insert) {
+        cout << "Inserts " << inserts << endl;
+        testMassiveInsert(inserts);
+    }
 
-//    cout << "Inserts " << inserts << endl;
-//    testMassiveInsert(inserts);
-//
-
-    cout << "Finds " << endl;
-    testFinds("localhost",1243);
+    if (finds) {
+        cout << "Finds " << endl;
+        testFinds("localhost",1243, maxfinds);
+    }
 //
 //    service.stop();
 

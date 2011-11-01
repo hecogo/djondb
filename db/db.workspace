@@ -18,5 +18,6 @@
 		</Project>
 		<Project filename="test/test-network/test-network.cbp" active="1" />
 		<Project filename="test/test-service/test-service.cbp" />
+		<Project filename="test/test-mongodb/test-mongodb.cbp" />
 	</Workspace>
 </CodeBlocks_workspace_file>

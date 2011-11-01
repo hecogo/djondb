@@ -23,10 +23,12 @@ void cascadeDelete(Bucket* bucket) {
         if (next != NULL)
             next->previous = NULL;
         if (element->index != NULL) {
-            boost::shared_ptr<Index> index = element->index;
-            delete index->key;
-//            delete element->index;
-//            element->index = 0;
+            if (element->index->key != NULL) {
+                delete (element->index->key);
+                element->index->key = 0;
+            }
+            delete element->index;
+            element->index = 0;
         }
         if (element->key != NULL) {
             free(element->key);
@@ -60,7 +62,11 @@ Index* BPlusIndex::add(const BSONObj& elem, long filePos)
     index->key = new BSONObj(elem);
     index->posData = filePos;
 
-    insertElement(index);
+    if (!insertElement(index)) {
+        // If the index was not inserted then drop the index
+        delete index;
+        index = 0;
+    };
     return index;
 }
 
@@ -76,9 +82,11 @@ Index* BPlusIndex::find(const BSONObj& elem)
     BucketElement* element = findBucketElement(_head, index, false);
     Index* result = NULL;
     if (element != NULL) {
-        result = element->index.get();
+        result = element->index;
+    } else {
+        delete index->key;
+        delete index;
     }
-    delete (index);
     return result;
 }
 
@@ -248,7 +256,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
         } else {
             BucketElement* element = new BucketElement();
             initializeBucketElement(element);
-            element->index = boost::shared_ptr<Index>(index);
+            element->index = index;
             element->key = key;
             insertBucketElement(currentBucket, element);
             result = element;
@@ -288,7 +296,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
             if (create) {
                 BucketElement* element = new BucketElement();
                 initializeBucketElement(element);
-                element->index = boost::shared_ptr<Index>(index);
+                element->index = index;
                 element->key = key;
                 insertBucketElement(currentBucket, element);
                 result = element;
@@ -300,9 +308,11 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
             }
         }
     }
-//    if (!created) {
-//        free(key);
-//    }
+    if (!created) {
+        free(key);
+        delete index;
+    }
+
     return result;
 }
 

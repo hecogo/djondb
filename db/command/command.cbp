@@ -39,10 +39,14 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-pg" />
 			<Add directory="../bson" />
 			<Add directory="../filesystem" />
 			<Add directory="../db" />
 		</Compiler>
+		<Linker>
+			<Add option="-pg" />
+		</Linker>
 		<Unit filename="command.cpp" />
 		<Unit filename="command.h" />
 		<Unit filename="commandreader.cpp" />

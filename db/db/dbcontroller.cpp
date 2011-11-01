@@ -60,6 +60,7 @@ void DBController::initialize() {
                 long posData = stream->readLong();
                 Index* index = impl->add(*obj, posData);
                 index->indexPos = indexPos;
+                delete obj;
             }
             stream->seek(currentPos);
         }

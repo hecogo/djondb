@@ -37,7 +37,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="10000" />
+				<Option parameters="--finds=500" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />
@@ -67,6 +67,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-pg" />
 			<Add option="-fexceptions" />
 			<Add directory="../../network" />
 			<Add directory="../../util" />
@@ -76,6 +77,7 @@
 			<Add directory="../../command" />
 		</Compiler>
 		<Linker>
+			<Add option="-pg" />
 			<Add library="network" />
 			<Add library="command" />
 			<Add library="db" />
