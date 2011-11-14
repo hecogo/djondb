@@ -1,5 +1,6 @@
 #include "commandreader.h"
 #include "insertcommand.h"
+#include "updatecommand.h"
 #include "findbykeycommand.h"
 #include "bsoninputstream.h"
 
@@ -18,6 +19,19 @@ CommandReader::~CommandReader()
 
 InsertCommand* parseInsert(InputStream* is)  {
     InsertCommand* command = new InsertCommand();
+    std::string* ns = is->readString();
+    command->setNameSpace(*ns);
+    std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
+    BSONObj* obj = bsonis->readBSON();
+    command->setBSON(*obj);
+
+    delete ns;
+    delete obj;
+    return command;
+}
+
+UpdateCommand* parseUpdate(InputStream* is)  {
+    UpdateCommand* command = new UpdateCommand();
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
@@ -50,6 +64,9 @@ Command* CommandReader::readCommand() {
     switch (type) {
         case INSERT: // Insert
             cmd = parseInsert(_stream);
+            break;
+        case UPDATE: // Update
+            cmd = parseUpdate(_stream);
             break;
         case FINDBYKEY:
             cmd = parseFindByKey(_stream);
