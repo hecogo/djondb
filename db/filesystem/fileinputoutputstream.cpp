@@ -11,6 +11,7 @@ FileInputOutputStream::FileInputOutputStream(std::string fileName, const char* f
     // Position the cursor at the end of the file
     fseek(_pFile, 0, SEEK_END);
     _fileName = fileName;
+    _open = true;
 }
 
 FileInputOutputStream::~FileInputOutputStream() {
@@ -80,6 +81,7 @@ void FileInputOutputStream::close() {
         flush();
         fclose(_pFile);
         _pFile = 0;
+        _open = false;
     }
 }
 
@@ -172,3 +174,6 @@ bool FileInputOutputStream::eof() {
     return res;
 }
 
+bool FileInputOutputStream::isClosed() {
+    return !_open;
+}

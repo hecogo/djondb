@@ -63,13 +63,14 @@ char* testInsert(char* host, int port, int inserts) {
     out->disableNagle();
 //    Thread* receiveThread = new Thread(&startSocketListener);
 //    receiveThread->start(nis);
-    out->writeChars("1.2.3", 5);
     std::auto_ptr<BSONInputStream> bis(new BSONInputStream(nis.get()));
 //    BSONOutputStream* bsonOut = new BSONOutputStream(out);
     std::auto_ptr<CommandWriter> writer(new CommandWriter(out.get()));
 
     std::vector<std::string> ids;
     for (int x = 0; x < inserts; x++) {
+        out->writeChars("1.2.3", 5);
+
         std::auto_ptr<InsertCommand> cmd(new InsertCommand());
 
         BSONObj obj;
@@ -106,6 +107,7 @@ char* testInsert(char* host, int port, int inserts) {
     }
     fosIds->close();
     cout << "Sending close connection command" << endl;
+    out->writeChars("1.2.3", 5);
     out->writeInt(CLOSECONNECTION);
     cout << "all sent" << endl;
 
@@ -144,7 +146,6 @@ void testFinds(char* host, int port, int maxfinds) {
     // nis->setNonblocking();
 //    Thread* receiveThread = new Thread(&startSocketListener);
 //    receiveThread->start(nis);
-    out->writeChars("1.2.3", 5);
     BSONInputStream* bis = new BSONInputStream(nis);
 //    BSONOutputStream* bsonOut = new BSONOutputStream(out);
     std::auto_ptr<CommandWriter> writer(new CommandWriter(out));
@@ -156,6 +157,7 @@ void testFinds(char* host, int port, int maxfinds) {
     }
     cout << "Records to find: " << count << endl;
     for (x =0; x < count; x++) {
+        out->writeChars("1.2.3", 5);
         std::string* guid = fisIds->readString();
         std::auto_ptr<FindByKeyCommand> cmd(new FindByKeyCommand());
 
@@ -175,6 +177,7 @@ void testFinds(char* host, int port, int maxfinds) {
         delete guid;
     }
     cout << "Sending close connection command" << endl;
+    out->writeChars("1.2.3", 5);
     out->writeInt(CLOSECONNECTION);
     cout << "all sent" << endl;
 
@@ -217,6 +220,10 @@ int main(int argc, char* args[])
     bool finds = false;
     bool error = false;
     int maxfinds = -1;
+    if (argc < 2) {
+        cout << "No command specified" << endl;
+        error = true;
+    }
     for (int x = 1; x < argc; x++) {
         if (strncmp(args[x], "--insert", 8) == 0) {
             insert = true;

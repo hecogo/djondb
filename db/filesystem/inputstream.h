@@ -23,6 +23,7 @@ public:
     virtual char* readChars() = 0;
     virtual char* readChars(int length) = 0;
     bool eof();
+    virtual bool isClosed() = 0;
 
     virtual std::string* readString() = 0;
 

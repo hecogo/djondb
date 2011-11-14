@@ -42,6 +42,9 @@ FindByKeyCommand* parseFindByKey(InputStream* is)  {
 }
 
 Command* CommandReader::readCommand() {
+    if (_stream->isClosed()) {
+        return NULL;
+    }
     COMMANDTYPE type = static_cast<COMMANDTYPE>(_stream->readInt());
     Command* cmd = NULL;
     switch (type) {

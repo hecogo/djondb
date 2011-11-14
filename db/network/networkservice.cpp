@@ -29,10 +29,10 @@
 
 // Just declared to be used later
 void *startSocketListener(void* arg);
-void *processRequest(void* arg);
+int processRequest(void* arg);
 
 bool running;
-bool accepting;
+bool processing;
 // id listening socket
 int sock;
 pthread_mutex_t requests_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -42,6 +42,9 @@ Logger* log;
 Thread* m_thread; // Main thread
 
 DBController* __dbController;
+std::map<int, NetworkInputStream*>  __mapInput;
+std::map<int, NetworkOutputStream*> __mapOutput;
+
 
 NetworkService::NetworkService() {
     log = getLogger(NULL);
@@ -71,10 +74,10 @@ void NetworkService::stop() { //throw (NetworkException*) {
         throw new NetworkException(new string("The network service is not running. Try starting it first"));
     }
     running = false;
-    if (accepting) {
+    if (processing) {
         cout << "Stop requested but still working" << endl;
     }
-    while (accepting) {
+    while (processing) {
         sleep(1);
     }
     __dbController->shutdown();
@@ -95,6 +98,11 @@ void *startSocketListener(void* arg) {
     if (sock < 0) {
         log->error("Error creating the socked");
     }
+
+    fd_set master;    // master file descriptor list
+    FD_ZERO(&master);    // clear the master and temp sets
+    fd_set read_fds;  // temp file descriptor list for select()
+    FD_ZERO(&read_fds);
 
     sockaddr_in addr;
     int port = SERVER_PORT;
@@ -117,48 +125,98 @@ void *startSocketListener(void* arg) {
     currentFlag = currentFlag | O_NONBLOCK;
     fcntl(sock, F_SETFL, currentFlag);
 
-    accepting = false;
+    processing = false;
+    int fdmax = sock;
+    FD_SET(sock, &master); // add to master set
+
     while (running) {
-        sockaddr_in cliaddr;
-        socklen_t clilen = sizeof (cliaddr);
-        int newsocket = accept(sock, (sockaddr *) & cliaddr, &clilen);
         fd_set read;
         FD_ZERO(&read);
         FD_SET(sock, &read);
         timeval val;
         val.tv_sec = 1;
         val.tv_usec = 0;
+        read_fds = master;
+        int newsocket = select(fdmax + 1, &read_fds, NULL, NULL, &val);
+        for (int i = 0; i <= fdmax; i++) {
+            if (FD_ISSET(i, &read_fds)) {
+                // the max is the listener
+                if (i == sock) {
+                    sockaddr_in cliaddr;
+                    socklen_t clilen = sizeof (cliaddr);
+                    int newsocket = accept(sock, (sockaddr *) & cliaddr, &clilen);
 
-        newsocket = select(sock + 1, &read, NULL, NULL, &val);
-
-        if (newsocket > 0) {
-            accepting = true;
-//            pthread_mutex_lock(&requests_lock);
-            //processRequest((void*)&sock);
-            processRequest((void*) &sock);
-            /*
-            Thread* thread = new Thread(&processRequest);
-            thread->start((void*) &sock);
-            */
-//            pthread_cond_wait(&request_cv, &requests_lock);
-//            pthread_mutex_unlock(&requests_lock);
-            accepting = false;
-//            m_requestThreads.push_back(thread);
+                    if (newsocket == -1) {
+                        log->debug("Error accepting");
+                    } else {
+                        FD_SET(newsocket, &master); // add to master set
+                        if (newsocket > fdmax) {    // keep track of the max
+                            fdmax = newsocket;
+                        }
+                    }
+                } else {
+                    processing = true;
+                    if (processRequest((void*) &i) < 0)  {
+                        FD_CLR(i, &master);
+                        if (i == fdmax) {
+                            fdmax--;
+                        }
+                    }
+                    processing = false;
+                }
+    //            pthread_mutex_lock(&requests_lock);
+                //processRequest((void*)&sock);
+                /*
+                Thread* thread = new Thread(&processRequest);
+                thread->start((void*) &sock);
+                */
+    //            pthread_cond_wait(&request_cv, &requests_lock);
+    //            pthread_mutex_unlock(&requests_lock);
+    //            m_requestThreads.push_back(thread);
+            }
+        }
+        for (std::map<int, NetworkInputStream*>::iterator i = __mapInput.begin(); i != __mapInput.end(); i++) {
+            int sock = i->first;
+            NetworkInputStream* nis = i->second;
+            if (nis->available() > 0) {
+                if (processRequest((void*)&sock) < 0) {
+                    FD_CLR(sock, &master);
+                    if (sock == fdmax) {
+                        fdmax--;
+                    }
+                }
+            }
         }
     }
-    accepting = false;
 
     log->info("Thread stopped");
 //    pthread_exit(arg);
     return NULL;
 }
 
-void *processRequest(void *arg) {
+int processRequest(void *arg) {
     int sock = *((int*) arg);
-    sockaddr_in cliaddr;
-    socklen_t clilen = sizeof (cliaddr);
-    int clientSocket = accept(sock, (sockaddr *) & cliaddr, &clilen);
-    log->debug("Accepted");
+
+    NetworkInputStream* nis = NULL;
+    NetworkOutputStream* nos = NULL;
+    std::map<int, NetworkInputStream*>::iterator itNis = __mapInput.find(sock);
+    std::map<int, NetworkOutputStream*>::iterator itNos = __mapOutput.find(sock);
+    if (__mapInput.find(sock) == __mapInput.end()) {
+        nis = new NetworkInputStream(sock);
+        nos = new NetworkOutputStream(sock);
+        nos->setNonblocking();
+        nos->disableNagle();
+        nis->setNonblocking();
+        __mapInput.insert(pair<int, NetworkInputStream*>(sock, nis));
+        __mapOutput.insert(pair<int, NetworkOutputStream*>(sock, nos));
+    } else {
+        nis = itNis->second;
+        nos = itNos->second;
+    }
+//    sockaddr_in cliaddr;
+//    socklen_t clilen = sizeof (cliaddr);
+//    int clientSocket = accept(sock, (sockaddr *) & cliaddr, &clilen);
+//    log->debug("Accepted");
 
 //    pthread_mutex_lock(&requests_lock);
 //    int rescond = pthread_cond_signal(&request_cv);
@@ -166,16 +224,18 @@ void *processRequest(void *arg) {
 
     if (log->isDebug()) log->debug("Receiving request");
 
-    std::auto_ptr<NetworkInputStream> nis(new NetworkInputStream(clientSocket));
-    std::auto_ptr<NetworkOutputStream> nos(new NetworkOutputStream(clientSocket));
-    nos->setNonblocking();
-    nos->disableNagle();
-    nis->setNonblocking();
     // Checks version
     int commands = 0;
+    if (nis->isClosed()) {
+        if (log->isDebug()) log->debug("The connection was closed and nothing is available to be processed");
+        __mapInput.erase(itNis);
+        __mapOutput.erase(itNos);
+        return -1;
+    }
     char* version = nis->readChars();
-    std::auto_ptr<CommandReader> reader(new CommandReader(nis.get()));
-    while (nis->waitAvailable() > 0) {
+    std::auto_ptr<CommandReader> reader(new CommandReader(nis));
+    // Will wait 5 secs, if no other command is available just close the connection
+//    while (nis->waitAvailable(5) > 0) {
 //        log->debug("New command available");
         // Reads command
         std::auto_ptr<Command> cmd(reader->readCommand());
@@ -183,57 +243,16 @@ void *processRequest(void *arg) {
         cmd->setDBController(__dbController);
         if (cmd->commandType() != CLOSECONNECTION) {
             cmd->execute();
-            cmd->writeResult(nos.get());
+            cmd->writeResult(nos);
         } else {
-            log->debug("Close command received");
-            break;
+            if (log->isDebug()) log->debug("Close command received");
         }
-    }
-    nos->closeStream();
-
-    std::stringstream ss;
-    ss << commands << " Executed";
-    log->debug(ss.str());
-    free(version);
-//    int readed;
-//    stringstream sreaded;a
-//
-//    char buffer[256];
-//    memset(buffer, 0, 256);
-//
-//    bool reachEnd = false;
-//    // Reads the socket data until the socket sends the end signal 'FFFF'
-//    while (!reachEnd) {
-//
-//        readed = recv(clientSocket, buffer, 255, 0);
-//        if (readed < 0) {
-//            if (log->isDebug()) log->debug("Readed: " + toString(readed));
-//            } else {
-//                readed = recv(clientSocket, buffer, 255, 0);
-//            }
-//        }
-//        sreaded << buffer;
-//        string s = sreaded.str();
-//        string::reverse_iterator it;
-//        it = s.rbegin();
-//        for (int x = 0; x < 4; x++) {
-//            char c = *it;
-//            if (c != 'F') {
-//                break;
-//            }
-//            it++;
-//            if (x == 3)
-//                reachEnd = true;
-//        }
-//        memset(buffer, 0, 256);
 //    }
 
-//    if (log->isDebug()) log->debug("Buffer received, size: " + toString(readed));
+    if (log->isDebug()) log->debug("%d Executed.", commands);
+    free(version);
 
-//    write(clientSocket, sresp->c_str(), sresp->length());
-//    close(clientSocket);
-
-    return NULL;
+    return 0;
 }
 
 

@@ -52,9 +52,12 @@ class FileInputOutputStream: public InputStream, public OutputStream
 
         virtual void flush();
 
+        virtual bool isClosed();
+
     private:
         std::string _fileName;
         FILE* _pFile;
+        bool _open;
 };
 
 #endif // FILEINPUTOUTPUTSTREAM_H

@@ -115,13 +115,12 @@ int clock_gettime(int X, struct timeval *tv)
 
 Logger* getLogger(void* clazz) {
     Logger* logger = new Logger(clazz);
-
     return logger;
 }
 
 Logger::Logger(void* clazz) {
     m_clazz = clazz;
-    m_debug = true;
+    m_debug = false;
     m_info = true;
     m_warn = true;
 }

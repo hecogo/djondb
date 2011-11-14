@@ -4,16 +4,13 @@
 #include "inputstream.h"
 #include <string>
 
-#define CHECKSTATUS() \
-     if (checkStatus() < 0) { \
-         throw new StreamException(new std::string("Network Error")); \
-     }
-
 class NetworkInputStream : public InputStream
 {
     public:
         /** Default constructor */
         NetworkInputStream(int socket);
+        /** Copy constructor **/
+        NetworkInputStream(const NetworkInputStream& orig);
         /** Default destructor */
         virtual ~NetworkInputStream();
 
@@ -35,6 +32,7 @@ class NetworkInputStream : public InputStream
         bool eof();
         int available();
         int waitAvailable(int timeout = 10);
+        bool isClosed();
 
         virtual std::string* readString();
         int setNonblocking();
@@ -45,6 +43,7 @@ class NetworkInputStream : public InputStream
     protected:
     private:
         int _socket;
+        bool _open;
 
     private:
         int checkStatus();

@@ -35,9 +35,11 @@ public:
 
     virtual void close();
 
+    virtual bool isClosed();
 private:
     FILE* _pFile;
     std::string _fileName;
+    bool _open;
 };
 
 #endif // FILEINPUTSTREAM_H

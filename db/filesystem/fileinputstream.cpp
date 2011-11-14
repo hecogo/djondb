@@ -11,6 +11,7 @@ FileInputStream::FileInputStream(const char* fileName, const char* flags)
 {
     _pFile = fopen(fileName, flags);
     _fileName = fileName;
+    _open = true;
 }
 
 FileInputStream::~FileInputStream() {
@@ -134,5 +135,10 @@ void FileInputStream::close() {
     if (_pFile) {
         fclose(_pFile);
         _pFile = 0;
+        _open = false;
     }
+}
+
+bool FileInputStream::isClosed() {
+    return !_open;
 }

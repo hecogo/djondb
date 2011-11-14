@@ -22,11 +22,20 @@ NetworkInputStream::NetworkInputStream(int clientSocket)
     _buffer = (char*) malloc(STREAM_BUFFER_SIZE);
     _bufferPos = 0;
     _bufferSize = 0;
+    _open = true;
+}
+
+NetworkInputStream::NetworkInputStream(const NetworkInputStream& orig) {
+    _buffer = orig._buffer;
+    this->_bufferPos = orig._bufferPos;
+    this->_bufferSize = orig._bufferSize;
+    this->_socket = orig._socket;
 }
 
 NetworkInputStream::~NetworkInputStream() {
     free (_buffer);
-    closeStream();
+    assert(_bufferPos == _bufferSize);
+//    closeStream();
 }
 
 unsigned char NetworkInputStream::readChar() {
@@ -92,23 +101,41 @@ bool NetworkInputStream::eof() {
 
 void NetworkInputStream::closeStream() {
     close(_socket);
+    _open = false;
+}
+
+
+bool NetworkInputStream::isClosed() {
+    checkStatus();
+    return !_open;
 }
 
 int NetworkInputStream::checkStatus() {
+    if (_open) {
+        int res = waitAvailable(10);
+        if (res < 0) {
+            closeStream();
+        }
+        return res;
+    }
     return 0;
 }
 
 int NetworkInputStream::available() {
-    size_t nbytes = 0;
-    if ( ioctl(_socket, FIONREAD, (char*)&nbytes) < 0 )  {
-            fprintf(stderr, "%s - failed to get byte count on socket.\n", __func__);
-            return -1;
-    }
-    return nbytes;
+    int available = (_bufferSize - _bufferPos);
+    return available;
+//    size_t nbytes = 0;
+//    if ( ioctl(_socket, FIONREAD, (char*)&nbytes) < 0 )  {
+//            fprintf(stderr, "%s - failed to get byte count on socket.\n", __func__);
+//            return -1;
+//    }
+//    return nbytes;
 }
 
 int NetworkInputStream::readData(void* data, int len) {
-    CHECKSTATUS()
+     if (checkStatus() < 0) {
+         return -1;
+     }
     // wait until a data is available to be readed
     int readed = 0;
     while (readed < len) {
@@ -148,13 +175,11 @@ int NetworkInputStream::readData(void* data, int len) {
 }
 
 int NetworkInputStream::waitAvailable(int timeout) {
-    if (_bufferPos < _bufferSize) {
-        int available = (_bufferSize - _bufferPos);
-        assert(available > 0);
-        return available;
-    } else {
-        return fillBuffer(timeout);
+    if (_bufferPos >= _bufferSize) {
+        int result = fillBuffer(timeout);
+        return result;
     }
+    return 0;
 }
 
 int NetworkInputStream::setNonblocking() {
@@ -190,7 +215,11 @@ int NetworkInputStream::fillBuffer(int timeout) {
         return -1;
     }
     int readed = recv(_socket, _buffer, STREAM_BUFFER_SIZE, 0);
+    if (readed == 0) {
+        // the other end closed the connection
+        return -1;
+    }
     _bufferPos = 0;
     _bufferSize = readed;
-    return readed;
+    return 0;
 }
