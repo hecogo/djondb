@@ -156,8 +156,9 @@ void testFinds(char* host, int port, int maxfinds) {
         count = maxfinds;
     }
     cout << "Records to find: " << count << endl;
+    std::string version("1.2.3");
     for (x =0; x < count; x++) {
-        out->writeChars("1.2.3", 5);
+        out->writeString(&version);
         std::string* guid = fisIds->readString();
         std::auto_ptr<FindByKeyCommand> cmd(new FindByKeyCommand());
 

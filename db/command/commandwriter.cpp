@@ -1,5 +1,6 @@
 #include "commandwriter.h"
 #include "insertcommand.h"
+#include "updatecommand.h"
 #include "findbykeycommand.h"
 #include "bsonoutputstream.h"
 #include <memory>
@@ -32,6 +33,16 @@ int writeInsert(InsertCommand* cmd, OutputStream* out)  {
     return 0;
 }
 
+int writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
+    const std::string* ns = cmd->nameSpace();
+    out->writeString(ns);
+
+    std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
+    bsonout->writeBSON(*cmd->bson());
+
+    return 0;
+}
+
 int writeFindByKey(FindByKeyCommand* cmd, OutputStream* out)  {
     const std::string* ns = cmd->nameSpace();
     out->writeString(ns);
@@ -50,6 +61,9 @@ int CommandWriter::writeCommand(Command* cmd) {
     switch (type) {
         case INSERT: // Insert
             ret = writeInsert((InsertCommand*)cmd, _stream);
+            break;
+        case UPDATE: // Update
+            ret = writeUpdate((UpdateCommand*)cmd, _stream);
             break;
         case FINDBYKEY:
             ret = writeFindByKey((FindByKeyCommand*)cmd, _stream);

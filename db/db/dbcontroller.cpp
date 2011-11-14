@@ -123,6 +123,21 @@ BSONObj* DBController::insert(char* ns, BSONObj* obj) {
     return result;
 }
 
+void DBController::update(char* ns, BSONObj* obj) {
+    Logger* log = getLogger(NULL);
+    StreamType* streamData = open(std::string(ns), DATA_FTYPE);
+
+//    long crcStructure = checkStructure(obj);
+
+//    char* text = obj->toChar();
+//    streamData->writeChars(text, strlen(text));
+//    free(text);
+
+    updateIndex(ns, obj, streamData->currentPos());
+
+    writeBSON(streamData, obj);
+    delete log;
+}
 
 StreamType* DBController::open(std::string ns, FILE_TYPE type) {
 

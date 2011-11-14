@@ -57,6 +57,8 @@
 		<Unit filename="findbykeycommand.h" />
 		<Unit filename="insertcommand.cpp" />
 		<Unit filename="insertcommand.h" />
+		<Unit filename="updatecommand.cpp" />
+		<Unit filename="updatecommand.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
