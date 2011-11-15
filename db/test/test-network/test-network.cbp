@@ -37,7 +37,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="--finds=500" />
+				<Option parameters="--inserts=10 --finds --updates" />
 				<Compiler>
 					<Add option="-pg" />
 					<Add option="-g" />

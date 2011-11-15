@@ -1,6 +1,7 @@
 #include "cachemanager.h"
 
 StructureCache* CacheManager::structures = new StructureCache();
+ObjectCache* CacheManager::objects = new ObjectCache();
 
 CacheManager::CacheManager()
 {
@@ -15,4 +16,6 @@ StructureCache* CacheManager::structuresCache() {
     return structures;
 }
 
-
+ObjectCache* CacheManager::objectCache() {
+    return objects;
+}

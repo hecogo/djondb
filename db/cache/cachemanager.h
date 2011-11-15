@@ -9,6 +9,8 @@
 using namespace std;
 
 typedef Cache<long, Structure*> StructureCache;
+typedef Cache<std::string, BSONObj*> ObjectCache;
+
 class CacheManager
 {
     public:
@@ -16,9 +18,11 @@ class CacheManager
         virtual ~CacheManager();
 
         static StructureCache* structuresCache();
+        static ObjectCache* objectCache();
     protected:
     private:
         static StructureCache* structures;
+        static ObjectCache* objects;
 };
 
 #endif // CACHEMANAGER_H

@@ -82,9 +82,9 @@ void testFinds() {
     for (std::vector<string*>::iterator i = __ids.begin(); i != __ids.end(); i++) {
         string* id = *i;
 
-        BSONObj* obj = new BSONObj();
-        obj->add("_id", *id);
-        BSONObj* res = controller.findFirst("sp1.customer", obj);
+        BSONObj obj;
+        obj.add("_id", *id);
+        BSONObj* res = controller.findFirst("sp1.customer", &obj);
         std::string* id2 = res->getString("_id");
 //        cout << "Looking for: " << *id << endl;
 //        cout << "Found        " << *id2 << endl;
@@ -95,7 +95,6 @@ void testFinds() {
             cout << "Error " << endl;
         }
         delete res;
-        delete(obj);
     }
 
     log->stopTimeRecord();
@@ -126,9 +125,9 @@ void testFindPrevious() {
     for (std::vector<string*>::iterator i = ids.begin(); i != ids.end(); i++) {
         string* id = *i;
 
-        BSONObj* obj = new BSONObj();
-        obj->add("_id", *id);
-        BSONObj* res = controller.findFirst("sp1.customer", obj);
+        BSONObj obj;
+        obj.add("_id", *id);
+        BSONObj* res = controller.findFirst("sp1.customer", &obj);
         if (res == NULL) {
             cout << "Looking for " << *id << " does not returned any match" << endl;
         } else {
@@ -143,7 +142,6 @@ void testFindPrevious() {
             }
             delete res;
         }
-        delete(obj);
     }
 
     log->stopTimeRecord();

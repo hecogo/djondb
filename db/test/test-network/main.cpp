@@ -10,6 +10,7 @@
 #include "bsoninputstream.h"
 #include "insertcommand.h"
 #include "findbykeycommand.h"
+#include "updatecommand.h"
 #include "bson.h"
 #include "config.h"
 #include <sys/types.h>
@@ -123,7 +124,7 @@ char* testInsert(char* host, int port, int inserts) {
     }
     cout << "------------------------------------------------------------" << endl;
     cout << "Ready to close the connection" << endl;
-    getchar();
+//    getchar();
     __running = false;
 
     cout << "Closing the connection" << endl;
@@ -162,11 +163,11 @@ void testFinds(char* host, int port, int maxfinds) {
         std::string* guid = fisIds->readString();
         std::auto_ptr<FindByKeyCommand> cmd(new FindByKeyCommand());
 
-        BSONObj* obj = new BSONObj();
-        obj->add("_id", *guid);
+        BSONObj obj;
+        obj.add("_id", *guid);
         //obj->add("last", "Smith");
         cmd->setBSON(obj);
-        std::string* ns = new std::string("myns");
+        std::string ns("myns");
         cmd->setNameSpace(ns);
         writer->writeCommand(cmd.get());
         std::auto_ptr<BSONObj> resObj(bis->readBSON());
@@ -194,7 +195,105 @@ void testFinds(char* host, int port, int maxfinds) {
     }
     cout << "------------------------------------------------------------" << endl;
     cout << "Ready to close the connection" << endl;
-    getchar();
+//    getchar();
+    __running = false;
+
+    cout << "Closing the connection" << endl;
+    out->closeStream();
+
+    delete(log);
+}
+
+void testUpdate(char* host, int port, int maxupdates) {
+    Logger* log = getLogger(NULL);
+
+    cout << "Starting " << endl;
+
+    log->startTimeRecord();
+    __running = true;
+    NetworkOutputStream* out = new NetworkOutputStream();
+    int socket = out->open(host, port);
+    NetworkInputStream* nis = new NetworkInputStream(socket);
+    // nis->setNonblocking();
+//    Thread* receiveThread = new Thread(&startSocketListener);
+//    receiveThread->start(nis);
+    BSONInputStream* bis = new BSONInputStream(nis);
+//    BSONOutputStream* bsonOut = new BSONOutputStream(out);
+    std::auto_ptr<CommandWriter> writer(new CommandWriter(out));
+    FileInputStream* fisIds = new FileInputStream("results.txt", "rb");
+    int x = 0;
+    int count = fisIds->readInt();
+    if ((maxupdates > -1) && (count > maxupdates)) {
+        count = maxupdates;
+    }
+    cout << "Records to update: " << count << endl;
+    std::string version("1.2.3");
+
+    std::vector<std::string> idsUpdated;
+    for (x =0; x < count; x++) {
+        out->writeString(&version);
+        std::auto_ptr<std::string> guid(fisIds->readString());
+        std::auto_ptr<UpdateCommand> cmd(new UpdateCommand());
+
+        BSONObj obj;
+        obj.add("_id", *guid.get());
+
+        idsUpdated.push_back(*guid.get());
+        char* temp = (char*)malloc(100);
+        memset(temp, 0, 100);
+        memset(temp, 'b', 99);
+        int len = strlen(temp);
+        obj.add("content", temp);
+        free(temp);
+        //obj->add("last", "Smith");
+        cmd->setBSON(obj);
+        std::string ns("myns");
+        cmd->setNameSpace(ns);
+        writer->writeCommand(cmd.get());
+
+        if ((count > 9) && (x % (count / 10)) == 0) {
+            cout << x << " Records received" << endl;
+        }
+    }
+
+    log->stopTimeRecord();
+
+    cout << "Executing a verification" << endl;
+
+    for (std::vector<std::string>::iterator i = idsUpdated.begin(); i != idsUpdated.end(); i++) {
+        out->writeString(&version);
+        std::string guid = *i;
+
+        std::auto_ptr<FindByKeyCommand> cmd (new FindByKeyCommand());
+
+        BSONObj obj;
+        obj.add("_id", guid);
+        cmd->setBSON(obj);
+        cmd->setNameSpace("myns");
+        writer->writeCommand(cmd.get());
+
+        std::auto_ptr<BSONObj> resObj(bis->readBSON());
+        assert(resObj.get() != NULL);
+        assert(resObj->has("_id"));
+        assert(resObj->has("content"));
+
+        char* temp = (char*)malloc(100);
+        memset(temp, 0, 100);
+        memset(temp, 'b', 99);
+        assert(strcmp(resObj->getChars("content"), temp) == 0);
+        free(temp);
+    }
+    DTime rec = log->recordedTime();
+
+    int secs = rec.totalSecs();
+    cout<< "finds " << count << ", time: " << rec.toChar() << endl;
+
+    if (secs > 0) {
+        cout << "Throughput: " << (count / secs) << " ops." << endl;
+    }
+    cout << "------------------------------------------------------------" << endl;
+    cout << "Ready to close the connection" << endl;
+//    getchar();
     __running = false;
 
     cout << "Closing the connection" << endl;
@@ -219,8 +318,10 @@ int main(int argc, char* args[])
     int inserts;
     bool insert = false;
     bool finds = false;
+    bool updates = false;
     bool error = false;
     int maxfinds = -1;
+    int maxupdates = -1;
     if (argc < 2) {
         cout << "No command specified" << endl;
         error = true;
@@ -241,13 +342,19 @@ int main(int argc, char* args[])
             if (val != NULL) {
                 maxfinds = atoi(val+1);
             }
+        } else if (strncmp(args[x], "--updates", 9) == 0) {
+            updates = true;
+            char* val = strchr(args[x], '=');
+            if (val != NULL) {
+                maxupdates = atoi(val+1);
+            }
         } else {
             cout << "Incorrect command " << args[x] << endl;
             error = true;
         }
     }
     if (error) {
-        cout << "Usage: test-network [--inserts=xxxx] [--finds]" << endl;
+        cout << "Usage: test-network [--inserts=xxxx] [--finds[=maxfinds] ] [--update[=maxupdates] ]" << endl;
         return 1;
     }
 //    timespec t1;
@@ -266,6 +373,11 @@ int main(int argc, char* args[])
     if (finds) {
         cout << "Finds " << endl;
         testFinds("localhost",1243, maxfinds);
+    }
+
+    if (updates) {
+        cout << "Updates " << endl;
+        testUpdate("localhost",1243, maxupdates);
     }
 //
 //    service.stop();

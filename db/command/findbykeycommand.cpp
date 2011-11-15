@@ -10,7 +10,6 @@ FindByKeyCommand::FindByKeyCommand()
 
 FindByKeyCommand::~FindByKeyCommand()
 {
-    //dtor
 }
 
 FindByKeyCommand::FindByKeyCommand(const FindByKeyCommand& other)
@@ -19,7 +18,7 @@ FindByKeyCommand::FindByKeyCommand(const FindByKeyCommand& other)
 }
 
 void FindByKeyCommand::execute() {
-    _bsonResult = dbController()->findFirst(const_cast<char*>(nameSpace()->c_str()), bson());
+    _bsonResult = dbController()->findFirst(const_cast<char*>(nameSpace().c_str()), bson());
 }
 
 void* FindByKeyCommand::result() {
@@ -32,15 +31,16 @@ void FindByKeyCommand::writeResult(OutputStream* out) const {
     delete bsonout;
 }
 
-void FindByKeyCommand::setNameSpace(const std::string* ns) {
+void FindByKeyCommand::setNameSpace(std::string ns) {
     _namespace = ns;
 }
-const std::string* FindByKeyCommand::nameSpace() const {
+
+std::string FindByKeyCommand::nameSpace() {
     return _namespace;
 }
 
-void FindByKeyCommand::setBSON(BSONObj* bson) {
-    _bson = bson;
+void FindByKeyCommand::setBSON(const BSONObj bson) {
+    _bson = new BSONObj(bson);
 }
 
 BSONObj* FindByKeyCommand::bson() const {

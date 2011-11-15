@@ -46,12 +46,13 @@ UpdateCommand* parseUpdate(InputStream* is)  {
 FindByKeyCommand* parseFindByKey(InputStream* is)  {
     FindByKeyCommand* command = new FindByKeyCommand();
     std::string* ns = is->readString();
-    command->setNameSpace(ns);
-
+    command->setNameSpace(*ns);
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
     BSONObj* obj = bsonis->readBSON();
-    command->setBSON(obj);
+    command->setBSON(*obj);
 
+    delete obj;
+    delete ns;
     return command;
 }
 

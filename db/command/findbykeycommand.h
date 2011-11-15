@@ -2,7 +2,7 @@
 #define FINDBYKEYCOMMAND_H
 
 #include "command.h"
-
+#include "bson.h"
 
 class FindByKeyCommand : public Command
 {
@@ -21,14 +21,14 @@ class FindByKeyCommand : public Command
 
         virtual void writeResult(OutputStream* out) const;
 
-        void setNameSpace(const std::string* ns);
-        const std::string* nameSpace() const;
-        void setBSON(BSONObj* bson);
+        void setNameSpace(std::string ns);
+        std::string nameSpace();
+        void setBSON(BSONObj bson);
         BSONObj* bson() const;
     protected:
     private:
     private:
-        const std::string* _namespace;
+        std::string _namespace;
         BSONObj* _bson;
 
         BSONObj* _bsonResult;
