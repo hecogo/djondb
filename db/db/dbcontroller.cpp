@@ -139,6 +139,10 @@ void DBController::update(char* ns, BSONObj* obj) {
     updateIndex(ns, obj, streamData->currentPos());
 
     writeBSON(streamData, obj);
+
+    std::string* id = obj->getString("_id");
+
+    CacheManager::objectCache()->add(*id, new BSONObj(*obj));
     delete log;
 }
 
