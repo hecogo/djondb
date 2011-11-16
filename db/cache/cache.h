@@ -53,6 +53,10 @@ void Cache<K, V>::remove(const K& key)
 
 template <class K, class V>
 void Cache<K, V>::add(const K& key, const V& val) {
+    typename map<K,V>::const_iterator i = _elements.find(key);
+    if (i != _elements.end()) {
+        _elements.erase(key);
+    }
     _elements.insert(pair<K, V> (key, val));
 }
 
