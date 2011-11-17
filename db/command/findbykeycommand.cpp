@@ -1,6 +1,7 @@
 #include "findbykeycommand.h"
 
 #include "bsonoutputstream.h"
+#include "dbcontroller.h"
 
 FindByKeyCommand::FindByKeyCommand()
 : Command(FINDBYKEY)

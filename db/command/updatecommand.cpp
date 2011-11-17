@@ -1,6 +1,7 @@
 #include "updatecommand.h"
 
 #include "bsonoutputstream.h"
+#include "dbcontroller.h"
 
 UpdateCommand::UpdateCommand()
     : Command(UPDATE)

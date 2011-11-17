@@ -2,12 +2,12 @@
 #define COMMAND_H_INCLUDED
 
 #include <string>
-#include "dbcontroller.h"
-#include "outputstream.h"
 
 using namespace std;
 
 class BSONObj;
+class DBController;
+class OutputStream;
 
 enum COMMANDTYPE {
     INSERT,

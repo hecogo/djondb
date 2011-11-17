@@ -1,6 +1,7 @@
 #include "insertcommand.h"
 
 #include "bsonoutputstream.h"
+#include "dbcontroller.h"
 
 InsertCommand::InsertCommand()
     : Command(INSERT)
