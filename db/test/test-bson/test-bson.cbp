@@ -56,7 +56,9 @@
 		</Compiler>
 		<Linker>
 			<Add library="bson" />
+			<Add library="antlr3c" />
 			<Add directory="../../bson" />
+			<Add directory="/usr/local/lib" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>

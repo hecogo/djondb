@@ -1,5 +1,5 @@
 #include <iostream>
-#include "bsonobj.h"
+#include "bson.h"
 #include <string>
 #include <string.h>
 
@@ -66,11 +66,27 @@ void testCopyBSON() {
     delete obj;
 }
 
+void testParser() {
+    cout << "Testing parser" << endl;
+    BSONObj* obj = BSONParser::parse("{ age: 1, name: 'John', salary: 3500.25}");
+    assert(obj->getInt("age") != NULL);
+    assert(*obj->getInt("age") == 1);
+    assert(obj->getChars("name") != NULL);
+    assert(strcmp(obj->getChars("name"), "John") == 0);
+
+    assert(obj->getDouble("salary") != NULL);
+    assert(*obj->getDouble("salary") == 3500.25);
+    delete obj;
+}
+
+
 int main()
 {
     testBSON();
 
     testCopyBSON();
+
+    testParser();
 
     return 0;
 }

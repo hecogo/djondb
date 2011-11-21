@@ -41,14 +41,27 @@
 		<Compiler>
 			<Add option="-pg" />
 			<Add directory="../util" />
+			<Add directory="../libs/libantlr3c-3.2" />
 		</Compiler>
 		<Linker>
 			<Add option="-pg" />
 			<Add library="util" />
 		</Linker>
+		<Unit filename="JSONGrammar.tokens" />
+		<Unit filename="JSONGrammarLexer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="JSONGrammarLexer.h" />
+		<Unit filename="JSONGrammarParser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="JSONGrammarParser.h" />
 		<Unit filename="bson.h" />
 		<Unit filename="bsonobj.cpp" />
 		<Unit filename="bsonobj.h" />
+		<Unit filename="bsonparser.cpp" />
+		<Unit filename="bsonparser.h" />
+		<Unit filename="parser/JSONGrammar.tokens" />
 		<Extensions>
 			<code_completion />
 			<envvars />

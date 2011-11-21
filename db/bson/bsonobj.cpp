@@ -1,6 +1,8 @@
 #include "bsonobj.h"
 #include "util.h"
 
+#include "bsonparser.h"
+
 #include <iostream>
 #include <sstream>
 #include <string>
