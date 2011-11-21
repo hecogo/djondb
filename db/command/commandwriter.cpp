@@ -54,6 +54,7 @@ int writeFindByKey(FindByKeyCommand* cmd, OutputStream* out)  {
 }
 
 int CommandWriter::writeCommand(Command* cmd) {
+    _stream->writeString(&std::string("1.2.3"));
     int type = cmd->commandType();
     _stream->writeInt(type);
 
