@@ -12,21 +12,67 @@
 using namespace std;
 
 BSONContent::~BSONContent() {
+    if (!_element) {
+        return;
+    }
     switch (_type) {
         case STRING_TYPE:
-            if (_element) {
-                delete ((string*)_element);
-                _element = 0;
-            }
+            delete ((string*)_element);
             break;
         case PTRCHAR_TYPE:
+            free (_element);
+            break;
         case INT_TYPE:
+            delete ((int*)_element);
+            break;
         case LONG_TYPE:
+            delete ((long*)_element);
+            break;
         case DOUBLE_TYPE:
-            if (_element) {
-                free (_element);
-                _element = 0;
-            }
+            delete ((double*)_element);
+            break;
+        default:
+            break;
+    }
+    _element = 0;
+}
+
+BSONContent::BSONContent(const BSONContent& orig) {
+    this->_type = orig._type;
+    int len = 0;
+    int* internalInt;
+    long* internalLong;
+    double* internalDouble;
+    int i;
+    long l;
+    double d;
+    switch (this->_type) {
+        case STRING_TYPE:
+            this->_element = new std::string(*(std::string*)orig._element);
+            break;
+        case PTRCHAR_TYPE:
+            len = strlen((char*)orig._element);
+            this->_element = malloc(len+1);
+            memset(this->_element, 0, len + 1);
+            memcpy(this->_element, orig._element, len);
+            break;
+        case INT_TYPE:
+            i = *((int*)orig._element);
+            internalInt = new int();
+            *internalInt = i;
+            this->_element = internalInt;
+            break;
+        case LONG_TYPE:
+            l = *((long*)orig._element);
+            internalLong = new long();
+            *internalLong = l;
+            this->_element = internalLong;
+            break;
+        case DOUBLE_TYPE:
+            d = *((double*)orig._element);
+            internalDouble = new double();
+            *internalDouble = d;
+            this->_element = internalDouble;
             break;
         default:
             break;
@@ -53,19 +99,19 @@ void BSONObj::add(t_keytype key, void* val) {
 */
 
 void BSONObj::add(t_keytype key, int val) {
-    int* internalValue = (int*)malloc(sizeof(int));
+    int* internalValue = new int();
     *internalValue = val;
     BSONCONTENT_FILL(key, INT_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, double val) {
-    double* internalValue = (double*)malloc(sizeof(double));
+    double* internalValue = new double();
     *internalValue = val;
     BSONCONTENT_FILL(key, DOUBLE_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, long val) {
-    long* internalValue = (long*)malloc(sizeof(long));
+    long* internalValue = new long();
     *internalValue = val;
     BSONCONTENT_FILL(key, LONG_TYPE, internalValue);
 }

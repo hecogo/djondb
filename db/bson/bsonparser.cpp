@@ -219,6 +219,7 @@ BSONObj* BSONParser::parse(const std::string& sbson) {
      while (s != NULL) {
          BSONStruct* temp = s->next;
          free(s->name);
+         free(s->value);
          free(s);
          s = temp;
      }

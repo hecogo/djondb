@@ -5,7 +5,7 @@
 /* #undef ANTLR3_NODEBUGGER */
 
 /* Define if 64 bit mode required */
-#define ANTLR3_USE_64BIT 1
+/* #undef ANTLR3_USE_64BIT */
 
 /* Define to 1 if you have the `accept' function. */
 #define HAVE_ACCEPT 1

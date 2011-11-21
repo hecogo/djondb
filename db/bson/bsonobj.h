@@ -44,48 +44,7 @@ class BSONContent {
         BSONContent() {}
         virtual ~BSONContent();
 
-        BSONContent(const BSONContent& orig) {
-            this->_type = orig._type;
-            int len = 0;
-            int* internalInt;
-            long* internalLong;
-            double* internalDouble;
-            int i;
-            long l;
-            double d;
-            switch (this->_type) {
-                case STRING_TYPE:
-                    this->_element = new std::string(*(std::string*)orig._element);
-                    break;
-                case PTRCHAR_TYPE:
-                    len = strlen((char*)orig._element);
-                    this->_element = malloc(len+1);
-                    memset(this->_element, 0, len + 1);
-                    memcpy(this->_element, orig._element, len);
-                    break;
-                case INT_TYPE:
-                    i = *((int*)orig._element);
-                    internalInt = new int();
-                    *internalInt = i;
-                    this->_element = internalInt;
-                    break;
-                case LONG_TYPE:
-                    l = *((long*)orig._element);
-                    internalLong = new long();
-                    *internalLong = l;
-                    this->_element = internalLong;
-                    break;
-                case DOUBLE_TYPE:
-                    d = *((double*)orig._element);
-                    internalDouble = new double();
-                    *internalDouble = d;
-                    this->_element = internalDouble;
-                    break;
-                default:
-                    break;
-            }
-        }
-
+        BSONContent(const BSONContent& orig);
         void* _element;
         BSONTYPE _type;
 };
