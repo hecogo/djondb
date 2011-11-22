@@ -45,7 +45,7 @@
 		<Unit filename="connection.h" />
 		<Unit filename="connectionmanager.cpp" />
 		<Unit filename="connectionmanager.h" />
-		<Unit filename="djondbdriver.h" />
+		<Unit filename="djondb_client.h" />
 		<Extensions>
 			<envvars />
 			<code_completion />

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int main()
+int mainTemp()
 {
     cout << "Welcome to NoSQL shell" << endl;
     cout << "This application is licensed under GPL and ..." << endl;

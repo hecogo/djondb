@@ -1,19 +1,12 @@
 #include <iostream>
-#include "bson.h"
-#include "config.h"
-#include "djondbdriver.h"
-#include "util.h"
+#include "djondb_client.h"
 
 #include "fileoutputstream.h"
 #include "fileinputstream.h"
+
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
-
-
-#ifdef WINDOWS
-#include <Windows.h>
-#endif
 #include <assert.h>
 #include <math.h>
 

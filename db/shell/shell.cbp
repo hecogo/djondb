@@ -38,6 +38,7 @@
 			<Add library="filesystem" />
 			<Add library="bson" />
 			<Add library="util" />
+			<Add library="v8" />
 			<Add directory="../command" />
 			<Add directory="../filesystem" />
 			<Add directory="../bson" />
@@ -46,6 +47,7 @@
 		<Unit filename="commandcontroller.cpp" />
 		<Unit filename="commandcontroller.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="shell.cc" />
 		<Extensions>
 			<code_completion />
 			<envvars />
