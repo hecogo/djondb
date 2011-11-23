@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <assert.h>
+#include <errno.h>
 
 const int STREAM_BUFFER_SIZE = 100000;
 
@@ -23,6 +24,7 @@ NetworkInputStream::NetworkInputStream(int clientSocket)
     _bufferPos = 0;
     _bufferSize = 0;
     _open = true;
+    cout << "NetworkInputStream::NetworkInputStream socket: " << clientSocket << endl;
 }
 
 NetworkInputStream::NetworkInputStream(const NetworkInputStream& orig) {
@@ -141,6 +143,7 @@ int NetworkInputStream::readData(void* data, int len) {
     while (readed < len) {
         if (waitAvailable(10) < 0) {
             assert(false);
+            return -1;
         }
         int read = (len - readed);
         if ((_bufferSize - _bufferPos) < read) {
@@ -152,23 +155,6 @@ int NetworkInputStream::readData(void* data, int len) {
 //        // the connection could be closed
 //        assert(read != 0);
         readed += read;
-    }
-
-//    char buffer[1024];
-//    int total = 0;
-//    int bytesleft = len;
-//    while (true) {
-//        int readed = recv(_socket, buffer, bytesleft, 0);
-//        total += readed;
-//        bytesleft -= readed;
-//        if (total == len) {
-//            break;
-//        }
-//    }
-    if (len == 1999) {
-        if (((char*)data)[1998] != 'a') {
-            cout << "Hey!!!!" << endl;
-        }
     }
 
     return readed;
@@ -209,13 +195,19 @@ int NetworkInputStream::fillBuffer(int timeout) {
     val.tv_usec = 0;
     int result = select(_socket + 1, &read, NULL, NULL, &val);
 
-    assert(result >= 0);
     if (result < 0) {
-        closeStream();
-        return -1;
+        if (errno != EINTR) {
+            cout << ": errorno " << errno << " socket: " << _socket << endl;
+            perror("An error ocurred with select()");
+            closeStream();
+            return -1;
+        }
     }
     int readed = recv(_socket, _buffer, STREAM_BUFFER_SIZE, 0);
-    if (readed == 0) {
+    if (readed < 0) {
+        cout << ": errorno " << errno << " socket: " << _socket << endl;
+        perror("An error ocurred with recv()");
+        closeStream();
         // the other end closed the connection
         return -1;
     }

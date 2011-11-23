@@ -29,7 +29,6 @@ Connection* ConnectionManager::getConnection(std::string host) {
     }
 
     Connection* conn = new Connection(host);
-    conn->open();
     ConnectionReference ref;
     ref._references = 1;
     ref._connection = conn;
@@ -44,7 +43,6 @@ void ConnectionManager::releaseConnection(Connection* conn) {
         reference._references--;
         if (reference._references == 0) {
             reference._connection->internalClose();
-            delete reference._connection;
             _connections.erase(i);
         };
     }

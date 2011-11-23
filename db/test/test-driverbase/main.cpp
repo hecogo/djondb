@@ -43,6 +43,10 @@ char* testInsert(char* host, int port, int inserts) {
 
     Connection* conn = ConnectionManager::getConnection(std::string(host));
 
+    if (!conn->open()) {
+        cout << "Could not connect to " << host << endl;
+        exit(0);
+    }
     std::vector<std::string> ids;
     for (int x = 0; x < inserts; x++) {
 
@@ -91,9 +95,10 @@ char* testInsert(char* host, int port, int inserts) {
 //    getchar();
     __running = false;
 
-    cout << "Closing the connection" << endl;
-    conn->close();
-
+//    cout << "Closing the connection" << endl;
+//    conn->close();
+//
+//    delete conn;
     delete(log);
     return 0;
 }
@@ -107,7 +112,10 @@ void testFinds(char* host, int port, int maxfinds) {
     __running = true;
     Connection* conn = ConnectionManager::getConnection("localhost");
 
-
+    if (!conn->open()) {
+        cout << "Cannot connect to localhost" << endl;
+        exit(0);
+    }
     FileInputStream* fisIds = new FileInputStream("results.txt", "rb");
     int x = 0;
     int count = fisIds->readInt();
@@ -123,6 +131,13 @@ void testFinds(char* host, int port, int maxfinds) {
 
         assert(resObj.get() != NULL);
         assert(resObj->has("_id"));
+        assert(resObj->has("content"));
+
+        char* temp = (char*)malloc(2000);
+        memset(temp, 0, 2000);
+        memset(temp, 'a', 1999);
+        assert(strcmp(resObj->getChars("content"), temp) == 0);
+        free(temp);
         if ((count > 9) && (x % (count / 10)) == 0) {
             cout << x << " Records received" << endl;
         }
@@ -145,8 +160,10 @@ void testFinds(char* host, int port, int maxfinds) {
 //    getchar();
     __running = false;
 
-    cout << "Closing the connection" << endl;
-    conn->close();
+//    cout << "Closing the connection" << endl;
+//    conn->close();
+//
+//    delete conn;
 
     delete(log);
 }
@@ -161,6 +178,10 @@ void testUpdate(char* host, int port, int maxupdates) {
 
     Connection* conn = ConnectionManager::getConnection("localhost");
 
+    if (!conn->open()) {
+        cout << "Cannot connect to localhost" << endl;
+        exit(0);
+    }
     FileInputStream* fisIds = new FileInputStream("results.txt", "rb");
     int x = 0;
     int count = fisIds->readInt();
@@ -223,9 +244,10 @@ void testUpdate(char* host, int port, int maxupdates) {
 //    getchar();
     __running = false;
 
-    cout << "Closing the connection" << endl;
-    conn->close();
-
+//    cout << "Closing the connection" << endl;
+//    conn->close();
+//
+//    delete conn;
     delete(log);
 }
 
@@ -292,6 +314,15 @@ int main(int argc, char* args[])
         testUpdate("localhost",1243, maxupdates);
     }
 
+    if (!error) {
+        cout << "Press any key to close the connections" << endl;
+        getchar();
+    }
+    Connection* conn = ConnectionManager::getConnection("localhost");
+    if (conn->isOpen()) {
+        conn->close();
+        delete conn;
+    }
     return 0;
 }
 

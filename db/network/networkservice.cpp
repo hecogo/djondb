@@ -19,6 +19,8 @@
 #include <boost/shared_ptr.hpp>
 #include <memory>
 
+#include <sys/wait.h>
+
 #include "defs.h"
 //#include "dbjaguar.h"
 #include "config.h"
@@ -153,6 +155,8 @@ void *startSocketListener(void* arg) {
                         if (newsocket > fdmax) {    // keep track of the max
                             fdmax = newsocket;
                         }
+                        log->info("Accepted socket %d", newsocket);
+
                     }
                 } else {
                     processing = true;
@@ -193,10 +197,11 @@ void *startSocketListener(void* arg) {
 //    pthread_exit(arg);
     return NULL;
 }
+    int __status;
 
 int processRequest(void *arg) {
     int sock = *((int*) arg);
-
+    __status = 0;
     NetworkInputStream* nis = NULL;
     NetworkOutputStream* nos = NULL;
     std::map<int, NetworkInputStream*>::iterator itNis = __mapInput.find(sock);
@@ -242,8 +247,15 @@ int processRequest(void *arg) {
         commands++;
         cmd->setDBController(__dbController);
         if (cmd->commandType() != CLOSECONNECTION) {
+            int pid = 0;
+            if (cmd->commandType() == FINDBYKEY) {
+                pid = fork();
+            }
             cmd->execute();
             cmd->writeResult(nos);
+            if (pid != 0) {
+                wait(NULL);
+            }
         } else {
             if (log->isDebug()) log->debug("Close command received");
         }

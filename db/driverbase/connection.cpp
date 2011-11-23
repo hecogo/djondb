@@ -33,16 +33,23 @@ Connection::~Connection()
     internalClose();
 }
 
-void Connection::open() {
+bool Connection::open() {
     _outputStream = new NetworkOutputStream();
     int socket = _outputStream->open(_host.c_str(), 1243);
-    _inputStream = new NetworkInputStream(socket);
-    _open = true;
-    _commandWriter = new CommandWriter(_outputStream);
+    if (socket > 0) {
+        _inputStream = new NetworkInputStream(socket);
+        _open = true;
+        _commandWriter = new CommandWriter(_outputStream);
+        return true;
+    } else {
+        delete _outputStream;
+        return false;
+    }
 }
 
 void Connection::close() {
     ConnectionManager::releaseConnection(this);
+    _open = false;
 }
 
 void Connection::internalClose() {

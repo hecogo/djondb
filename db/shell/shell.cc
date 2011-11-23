@@ -135,12 +135,12 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 
     __djonConnection->insert(std::string(ns), std::string(json));
 
-    printf("insert executed");
+    printf("insert executed\n");
 }
 
 v8::Handle<v8::Value> connect(const v8::Arguments& args) {
     if (args.Length() < 1) {
-        v8::ThrowException(v8::String::New("usage: db.connect(server)"));
+        v8::ThrowException(v8::String::New("usage: db.connect(server)\n"));
     }
 
     v8::HandleScope handle_scope;
@@ -150,8 +150,13 @@ v8::Handle<v8::Value> connect(const v8::Arguments& args) {
         __djonConnection->close();
     }
     __djonConnection = ConnectionManager::getConnection(std::string(server));
-
-    printf("Connected to %s", server);
+    if (__djonConnection->open()) {
+        printf("Connected to %s\n", server);
+    } else {
+        printf("Could not connect to: %s\n", server);
+        __djonConnection->close();
+        __djonConnection = NULL;
+    }
 }
 
 // The callback that is invoked by v8 whenever the JavaScript 'print'

@@ -20,7 +20,7 @@ namespace djondb {
             /** Default destructor */
             virtual ~Connection();
 
-            void open();
+            bool open();
             void close();
             void internalClose();
             bool isOpen() const;
