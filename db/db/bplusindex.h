@@ -46,7 +46,7 @@ class BPlusIndex: public IndexAlgorithm
 
     private:
         bool insertElement(Index* elem);
-        BucketElement* findBucketElement(Bucket* start, Index* index, bool create);
+        BucketElement* findBucketElement(Bucket* start, Index* idx, bool create);
         void initializeBucket(Bucket* const element);
         void initializeBucketElement(BucketElement* const elem);
 

@@ -83,9 +83,14 @@ Index* BPlusIndex::find(const BSONObj& elem)
     Index* result = NULL;
     if (element != NULL) {
         result = element->index;
-    } else {
-        delete index->key;
+    }
+    if (index) {
+        if (index->key) {
+            delete index->key;
+            index->key = NULL;
+        }
         delete index;
+        index = NULL;
     }
     return result;
 }
@@ -242,9 +247,14 @@ int compKey(BucketElement* element, INDEXPOINTERTYPE key) {
 /***
 This will find the bucket in which the key should be in
 */
-BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool create)
+BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* idx, bool create)
 {
-    BSONObj* bkey = index->key;
+    Index* index = new Index();
+    index->key = new BSONObj(*idx->key);
+    index->indexPos = idx->indexPos;
+    index->posData = idx->posData;
+
+    BSONObj* bkey = idx->key;
     Bucket* currentBucket = start;
     INDEXPOINTERTYPE key = bkey->toChar();
     BucketElement* result = NULL;
@@ -310,6 +320,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, Index* index, bool c
     }
     if (!created) {
         free(key);
+        delete index->key;
         delete index;
     }
 

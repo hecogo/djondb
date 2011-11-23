@@ -249,7 +249,7 @@ int processRequest(void *arg) {
         if (cmd->commandType() != CLOSECONNECTION) {
             int pid = 0;
             if (cmd->commandType() == FINDBYKEY) {
-                pid = fork();
+//                pid = fork();
             }
             cmd->execute();
             cmd->writeResult(nos);
