@@ -32,6 +32,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "djondb_client.h"
+
 #ifdef COMPRESS_STARTUP_DATA_BZ2
 #error Using compressed startup data is not supported for this sample
 #endif
@@ -44,6 +46,9 @@
  * For a more sophisticated shell, consider using the debug shell D8.
  */
 
+using namespace djondb;
+
+Connection* __djonConnection;
 
 v8::Persistent<v8::Context> CreateShellContext();
 void RunShell(v8::Handle<v8::Context> context);
@@ -57,6 +62,8 @@ v8::Handle<v8::Value> Read(const v8::Arguments& args);
 v8::Handle<v8::Value> Load(const v8::Arguments& args);
 v8::Handle<v8::Value> Quit(const v8::Arguments& args);
 v8::Handle<v8::Value> Version(const v8::Arguments& args);
+v8::Handle<v8::Value> insert(const v8::Arguments& args);
+v8::Handle<v8::Value> connect(const v8::Arguments& args);
 v8::Handle<v8::String> ReadFile(const char* name);
 void ReportException(v8::TryCatch* handler);
 
@@ -104,10 +111,48 @@ v8::Persistent<v8::Context> CreateShellContext() {
   global->Set(v8::String::New("quit"), v8::FunctionTemplate::New(Quit));
   // Bind the 'version' function
   global->Set(v8::String::New("version"), v8::FunctionTemplate::New(Version));
+  // Bind the 'db.insert' function
+  global->Set(v8::String::New("insert"), v8::FunctionTemplate::New(insert));
+  // Bind the 'db.connect' function
+  global->Set(v8::String::New("connect"), v8::FunctionTemplate::New(connect));
 
   return v8::Context::New(NULL, global);
 }
 
+v8::Handle<v8::Value> insert(const v8::Arguments& args) {
+    if (args.Length() < 2) {
+        v8::ThrowException(v8::String::New("usage: db.insert(namespace, json)"));
+    }
+
+    if (__djonConnection == NULL) {
+        v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+    }
+    v8::HandleScope handle_scope;
+    v8::String::Utf8Value str(args[0]);
+    const char* ns = ToCString(str);
+    v8::String::Utf8Value strJson(args[1]);
+    const char* json = ToCString(strJson);
+
+    __djonConnection->insert(std::string(ns), std::string(json));
+
+    printf("insert executed");
+}
+
+v8::Handle<v8::Value> connect(const v8::Arguments& args) {
+    if (args.Length() < 1) {
+        v8::ThrowException(v8::String::New("usage: db.connect(server)"));
+    }
+
+    v8::HandleScope handle_scope;
+    v8::String::Utf8Value str(args[0]);
+    const char* server = ToCString(str);
+    if (__djonConnection != NULL) {
+        __djonConnection->close();
+    }
+    __djonConnection = ConnectionManager::getConnection(std::string(server));
+
+    printf("Connected to %s", server);
+}
 
 // The callback that is invoked by v8 whenever the JavaScript 'print'
 // function is called.  Prints its arguments on stdout separated by
@@ -239,7 +284,9 @@ int RunMain(int argc, char* argv[]) {
       }
       if (!ExecuteString(source, file_name, false, true)) return 1;
     }
+
   }
+  __djonConnection = NULL;
   return 0;
 }
 
