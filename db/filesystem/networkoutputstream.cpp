@@ -33,8 +33,8 @@ NetworkOutputStream::NetworkOutputStream(const NetworkOutputStream& origin) {
 /* Write 1 byte in the output */
 void NetworkOutputStream::writeChar (unsigned char v)
 {
-//    send(_socket, &v, 1, MSG_NOSIGNAL);
-    write(_socket, &v, 1);
+    send(_socket, &v, 1, MSG_NOSIGNAL);
+//    write(_socket, &v, 1);
 }
 
 /* Write 2 bytes in the output (little endian order) */
@@ -56,15 +56,15 @@ void NetworkOutputStream::writeLong (long v)
 /* Write a 4 byte float in the output */
 void NetworkOutputStream::writeFloatIEEE (float v)
 {
-//    send(_socket, &v, sizeof(v), MSG_NOSIGNAL);
-    write(_socket, &v, sizeof(v));
+    send(_socket, &v, sizeof(v), MSG_NOSIGNAL);
+//    write(_socket, &v, sizeof(v));
 }
 
 /* Write a 8 byte double in the output */
 void NetworkOutputStream::writeDoubleIEEE (double v)
 {
-//    send(_socket, &v, sizeof(v), MSG_NOSIGNAL);
-    write(_socket, &v, sizeof(v));
+    send(_socket, &v, sizeof(v), MSG_NOSIGNAL);
+//    write(_socket, &v, sizeof(v));
 
 }
 
@@ -85,8 +85,8 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
         pos += size;
         int sent = 0;
         while (sent < size) {
-//            sent += send(_socket, &buffer[sent], size - sent, MSG_NOSIGNAL);
-            sent += write(_socket, &buffer[sent], size - sent);
+            sent += send(_socket, &buffer[sent], size - sent, MSG_NOSIGNAL);
+//            sent += write(_socket, &buffer[sent], size - sent);
         }
     }
 //    write(_socket, text, len);

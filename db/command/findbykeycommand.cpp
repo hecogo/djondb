@@ -2,6 +2,7 @@
 
 #include "bsonoutputstream.h"
 #include "dbcontroller.h"
+#include "outputstream.h"
 
 FindByKeyCommand::FindByKeyCommand()
 : Command(FINDBYKEY)
@@ -27,9 +28,14 @@ void* FindByKeyCommand::result() {
 }
 
 void FindByKeyCommand::writeResult(OutputStream* out) const {
-    BSONOutputStream* bsonout = new BSONOutputStream(out);
-    bsonout->writeBSON(*_bsonResult);
-    delete bsonout;
+    if (_bsonResult != NULL) {
+        out->writeInt(1);
+        BSONOutputStream* bsonout = new BSONOutputStream(out);
+        bsonout->writeBSON(*_bsonResult);
+        delete bsonout;
+    } else {
+        out->writeInt(0);
+    }
 }
 
 void FindByKeyCommand::setNameSpace(std::string ns) {

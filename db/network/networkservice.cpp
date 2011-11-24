@@ -184,6 +184,8 @@ void *startSocketListener(void* arg) {
             NetworkInputStream* nis = i->second;
             if (nis->available() > 0) {
                 if (processRequest((void*)&sock) < 0) {
+                    // If the socket was closed by the other end, then remove it from the
+                    // pull
                     FD_CLR(sock, &master);
                     if (sock == fdmax) {
                         fdmax--;
@@ -255,6 +257,8 @@ int processRequest(void *arg) {
             cmd->writeResult(nos);
             if (pid != 0) {
                 wait(NULL);
+            } else {
+                exit(0);
             }
         } else {
             if (log->isDebug()) log->debug("Close command received");

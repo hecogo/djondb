@@ -202,11 +202,20 @@ int NetworkInputStream::fillBuffer(int timeout) {
             closeStream();
             return -1;
         }
+    } else if (result == 0) {
+        // Timeout
+        closeStream();
+        return -1;
     }
     int readed = recv(_socket, _buffer, STREAM_BUFFER_SIZE, 0);
     if (readed < 0) {
         cout << ": errorno " << errno << " socket: " << _socket << endl;
         perror("An error ocurred with recv()");
+        closeStream();
+        // the other end closed the connection
+        return -1;
+    }
+    if (readed == 0) {
         closeStream();
         // the other end closed the connection
         return -1;

@@ -111,8 +111,12 @@ BSONObj* Connection::findByKey(const std::string& ns, const std::string& id) {
     cmd.setNameSpace(ns);
     _commandWriter->writeCommand(&cmd);
 
-    BSONInputStream is(_inputStream);
-    BSONObj* res = is.readBSON();
+    int results = _inputStream->readInt();
+    BSONObj* res = NULL;
+    if (results > 0) {
+        BSONInputStream is(_inputStream);
+        res = is.readBSON();
+    }
     return res;
 }
 
