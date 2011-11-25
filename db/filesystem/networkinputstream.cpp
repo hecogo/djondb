@@ -1,6 +1,7 @@
 #include "networkinputstream.h"
 
 #include "defs.h"
+#include "util.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -24,7 +25,6 @@ NetworkInputStream::NetworkInputStream(int clientSocket)
     _bufferPos = 0;
     _bufferSize = 0;
     _open = true;
-    cout << "NetworkInputStream::NetworkInputStream socket: " << clientSocket << endl;
 }
 
 NetworkInputStream::NetworkInputStream(const NetworkInputStream& orig) {
@@ -185,6 +185,7 @@ int NetworkInputStream::setNonblocking() {
 }
 
 int NetworkInputStream::fillBuffer(int timeout) {
+    Logger* log = getLogger(NULL);
     memset(_buffer, 0, STREAM_BUFFER_SIZE);
 
     fd_set read;
@@ -195,32 +196,33 @@ int NetworkInputStream::fillBuffer(int timeout) {
     val.tv_usec = 0;
     int result = select(_socket + 1, &read, NULL, NULL, &val);
 
+    bool error = false;
     if (result < 0) {
         if (errno != EINTR) {
-            cout << ": errorno " << errno << " socket: " << _socket << endl;
-            perror("An error ocurred with select()");
-            closeStream();
-            return -1;
+            log->error("An error ocurred with select(). Number: %d, socket: %d, error description: %s", errno, _socket, strerror(errno));
+            error = true;
         }
     } else if (result == 0) {
         // Timeout
+        error = true;
+    }
+    if (!error) {
+        int readed = recv(_socket, _buffer, STREAM_BUFFER_SIZE, 0);
+        if (readed < 0) {
+            log->error("An error ocurred with recv(). Number: %d, socket: %d, error description: %s", errno, _socket, strerror(errno));
+            error = true;
+        }
+        if (readed == 0) {
+            // Nothing readed
+            error = true;
+        }
+        _bufferPos = 0;
+        _bufferSize = readed;
+    }
+    delete log;
+    if (error) {
         closeStream();
         return -1;
     }
-    int readed = recv(_socket, _buffer, STREAM_BUFFER_SIZE, 0);
-    if (readed < 0) {
-        cout << ": errorno " << errno << " socket: " << _socket << endl;
-        perror("An error ocurred with recv()");
-        closeStream();
-        // the other end closed the connection
-        return -1;
-    }
-    if (readed == 0) {
-        closeStream();
-        // the other end closed the connection
-        return -1;
-    }
-    _bufferPos = 0;
-    _bufferSize = readed;
     return 0;
 }

@@ -73,6 +73,7 @@
 		<Compiler>
 			<Add option="-pg" />
 			<Add directory="../bson" />
+			<Add directory="../util" />
 		</Compiler>
 		<Linker>
 			<Add option="-pg" />

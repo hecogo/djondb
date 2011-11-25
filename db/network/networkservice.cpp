@@ -249,17 +249,8 @@ int processRequest(void *arg) {
         commands++;
         cmd->setDBController(__dbController);
         if (cmd->commandType() != CLOSECONNECTION) {
-            int pid = 0;
-            if (cmd->commandType() == FINDBYKEY) {
-//                pid = fork();
-            }
             cmd->execute();
             cmd->writeResult(nos);
-            if (pid != 0) {
-                wait(NULL);
-            } else {
-                exit(0);
-            }
         } else {
             if (log->isDebug()) log->debug("Close command received");
         }
