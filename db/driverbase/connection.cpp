@@ -100,6 +100,8 @@ bool Connection::update(const std::string& ns, const BSONObj& obj) {
     cmd.setNameSpace(ns);
 
     _commandWriter->writeCommand(&cmd);
+
+    return true;
 }
 
 BSONObj* Connection::findByKey(const std::string& ns, const std::string& id) {

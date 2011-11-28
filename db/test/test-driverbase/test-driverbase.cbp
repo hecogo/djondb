@@ -74,7 +74,7 @@
 		<Linker>
 			<Add option="-pg" />
 			<Add library="network" />
-			<Add library="driverbase" />
+			<Add library="djon-client" />
 			<Add library="command" />
 			<Add library="db" />
 			<Add library="cache" />
