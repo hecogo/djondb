@@ -1,6 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
+AM_CPPFLAGS = -I$(srcdir)/../bson -I$(srcdir)/../util -I$(srcdir)/../filesystem -I$(srcdir)/../command
+
 lib_LTLIBRARIES = lib@LIB_NAME@-@DJON_CLIENT_API_VERSION@.la
 
 lib@LIB_NAME@_@DJON_CLIENT_API_VERSION@_la_SOURCES = connection.cpp \

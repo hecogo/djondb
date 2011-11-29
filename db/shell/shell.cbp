@@ -63,7 +63,7 @@
 			<Add directory="../util" />
 		</Compiler>
 		<Linker>
-			<Add library="driverbase" />
+			<Add library="djon-client" />
 			<Add library="command" />
 			<Add library="db" />
 			<Add library="cache" />
