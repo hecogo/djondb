@@ -1,6 +1,8 @@
 #include "php_djonphpext.h"
 #include "../driverbase/djondb_client.h"
+#include <iostream>
 
+using namespace std;
 using namespace djondb;
 
 zend_object_handlers connection_object_handlers;
@@ -13,6 +15,7 @@ struct connection_object {
 
 void connection_free_storage(void *object TSRMLS_DC)
 {
+    cout << "connection_free_storage" << endl;
     connection_object *obj = (connection_object *)object;
     obj->conn->close();
     delete obj->conn;
@@ -25,6 +28,7 @@ void connection_free_storage(void *object TSRMLS_DC)
 
 zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
 {
+    cout << "connection_create_handler" << endl;
     zval *tmp;
     zend_object_value retval;
 
@@ -46,6 +50,7 @@ zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
 
 PHP_METHOD(Connection, __construct)
 {
+    cout << "__construct" << endl;
     char* host;
     int host_len;
     Connection *conn = NULL;
@@ -56,12 +61,16 @@ PHP_METHOD(Connection, __construct)
     }
 
     Connection* con = ConnectionManager::getConnection(host);
+    if (con->open()) {
+        cout << "Connection open. host:" << host << endl;
+    }
     connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
     obj->conn = con;
 }
 
 PHP_METHOD(Connection, djon_insert)
 {
+    cout << "insert" << endl;
     char* ns;
     int ns_len;
     char* json;
@@ -74,7 +83,13 @@ PHP_METHOD(Connection, djon_insert)
     }
 
     connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+    if (!obj) {
+        cout << "obj is null" << endl;
+    }
     Connection* conn = obj->conn;
+    if (!conn) {
+        cout << "conn is null" << endl;
+    }
     conn->insert(ns, json);
 }
 
@@ -105,6 +120,7 @@ function_entry connection_methods[] = {
 
 PHP_MINIT_FUNCTION(djonPhpExt)
 {
+    cout << "minit" << endl;
     zend_class_entry conn;
     INIT_CLASS_ENTRY(conn, "Connection", connection_methods);
     connection_ce = zend_register_internal_class(&conn TSRMLS_CC);

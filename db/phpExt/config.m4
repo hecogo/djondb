@@ -12,5 +12,6 @@ if test $PHP_DJONPHPEXT != "no"; then
     PHP_ADD_LIBRARY_WITH_PATH(djon-bson, /usr/lib, DJONPHPEXT_SHARED_LIBADD)
     PHP_ADD_LIBRARY_WITH_PATH(antlr3c, /usr/lib, DJONPHPEXT_SHARED_LIBADD)
     PHP_ADD_LIBRARY_WITH_PATH(djon-command, /usr/lib, DJONPHPEXT_SHARED_LIBADD)
+    PHP_ADD_LIBRARY_WITH_PATH(djon-filesystem, /usr/lib, DJONPHPEXT_SHARED_LIBADD)
     PHP_NEW_EXTENSION(djonPhpExt, djonphpext.cpp, $ext_shared)
 fi
