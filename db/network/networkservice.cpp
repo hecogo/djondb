@@ -248,11 +248,17 @@ int processRequest(void *arg) {
         std::auto_ptr<Command> cmd(reader->readCommand());
         commands++;
         cmd->setDBController(__dbController);
-        if (cmd->commandType() != CLOSECONNECTION) {
-            cmd->execute();
-            cmd->writeResult(nos);
-        } else {
-            if (log->isDebug()) log->debug("Close command received");
+        try {
+            if (cmd->commandType() != CLOSECONNECTION) {
+                cmd->execute();
+                cmd->writeResult(nos);
+            } else {
+                if (log->isDebug()) log->debug("Close command received");
+            }
+        } catch (const char *errmsg)
+        {
+            std::cerr << "error message from connection: " << errmsg << "\n";
+            return 1;
         }
 //    }
 

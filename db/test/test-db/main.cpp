@@ -30,6 +30,41 @@ int testInsert(BSONObj* o) {
     delete res;
 }
 
+int testInsertWithStringId() {
+    cout << "testInsertWithStringId" << endl;
+    BSONObj obj;
+    std::string* id = uuid();
+    obj.add("_id", *id);
+    obj.add("name", "cross");
+    delete id;
+    BSONObj* res = controller.insert("sp1.customer", &obj);
+    if (res != NULL) {
+        delete res;
+    }
+}
+
+int testInsertWithCharId() {
+    cout << "testInsertWithCharId" << endl;
+    BSONObj obj;
+    std::string* id = uuid();
+    obj.add("_id", id->c_str());
+    obj.add("name", "cross");
+    delete id;
+    BSONObj* res = controller.insert("sp1.customer", &obj);
+    if (res != NULL) {
+        delete res;
+    }
+}
+
+int testInsertWithoutId() {
+    cout << "testInsertWithoutId" << endl;
+    BSONObj obj;
+    obj.add("name", "cross");
+    BSONObj* res = controller.insert("sp1.customer", &obj);
+    assert(res != NULL);
+    assert(res->has("_id"));
+    delete res;
+}
 int testMassiveInsert(int inserts) {
     std::auto_ptr<Logger> log(getLogger(NULL));
 
@@ -258,6 +293,9 @@ int main(int argc, char* args[])
     fos.writeString(&std::string("13"));
     fos.close();
 
+    testInsertWithStringId();
+    testInsertWithCharId();
+    testInsertWithoutId();
     testSimpleIndex();
     testComplexIndex();
     controller.initialize();

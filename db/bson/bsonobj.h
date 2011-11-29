@@ -23,7 +23,8 @@ typedef std::string t_keytype;
         if (itKey.compare(key) == 0) { \
             content = it->second; \
             if (content->_type != ttype) { \
-               throw "The type does not match"; \
+               cout << "The type " << content->_type << " does not match the requested STRING for key2: " << key << endl; \
+               throw "type does not match"; \
             } \
             break; \
         } \
@@ -35,7 +36,8 @@ enum BSONTYPE {
     LONG_TYPE,
     PTRCHAR_TYPE,
     STRING_TYPE,
-    BSON_TYPE
+    BSON_TYPE,
+    UNKNOWN_TYPE
 //    PTR
 };
 
@@ -71,6 +73,9 @@ class BSONObj
         char* getChars(t_keytype) const;
         std::string* getString(t_keytype) const;
         BSONObj* getBSON(t_keytype) const;
+        void* get(t_keytype) const;
+
+        BSONTYPE type(t_keytype) const;
 
         char* toChar() const;
 

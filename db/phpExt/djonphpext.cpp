@@ -90,6 +90,7 @@ PHP_METHOD(Connection, djon_insert)
     if (!conn) {
         cout << "conn is null" << endl;
     }
+    cout << json << endl;
     conn->insert(ns, json);
 }
 

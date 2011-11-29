@@ -99,17 +99,22 @@ BSONObj* DBController::insert(char* ns, BSONObj* obj) {
     Logger* log = getLogger(NULL);
     StreamType* streamData = open(std::string(ns), DATA_FTYPE);
 
-    std::string* id = obj->getString("_id");
     BSONObj* result = NULL;
-    if (id == NULL) {
-        id = uuid();
+    if (!obj->has("_id")) {
+        string* tid = uuid();
         std::string key("_id");
-        obj->add(key, *id);
+        obj->add(key, *tid);
         result = new BSONObj();
-        result->add("_id", *id);
-        delete id;
+        result->add("_id", *tid);
+        delete tid;
     }
 
+    std::string* id = NULL;
+    if (obj->type("_id") == STRING_TYPE) {
+        id = obj->getString("_id");
+    } else if (obj->type("_id") == PTRCHAR_TYPE) {
+        id = new std::string(obj->getChars("_id"));
+    }
 //    long crcStructure = checkStructure(obj);
 
 //    char* text = obj->toChar();
@@ -120,7 +125,9 @@ BSONObj* DBController::insert(char* ns, BSONObj* obj) {
 
     writeBSON(streamData, obj);
 
-    CacheManager::objectCache()->add(*id, new BSONObj(*obj));
+    if (id != NULL) {
+        CacheManager::objectCache()->add(*id, new BSONObj(*obj));
+    }
 
     delete log;
     return result;
