@@ -1,7 +1,15 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-AM_CPPFLAGS = -I$(srcdir)/../util
+if DEBUG
+   AM_CFLAGS = -g3 -O0
+   AM_CPPFLAGS = -g3 -O0
+else
+   AM_CFLAGS = -O2
+   AM_CPPFLAGS = -O2
+endif
+
+AM_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/../util
 
 lib_LTLIBRARIES = lib@LIB_NAME@-@DJON_BSON_API_VERSION@.la
 

@@ -228,8 +228,7 @@ std::string* BSONObj::getString(t_keytype key) const {
                 if (content->_type == PTRCHAR_TYPE) {
                     result = new std::string((char*)content->_element);
                 } else {
-                    std::string msg = format("The type %d does not match the requested STRING for key3: %s", content->_type, key);
-                    throw msg;
+                    throw "The type does not match the requested STRING";
                 }
             } else {
                 result = (std::string*)content->_element;
