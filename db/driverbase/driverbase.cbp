@@ -3,12 +3,21 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="driverbase" />
+		<Option makefile_is_custom="1" />
+		<Option execution_dir="obj" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
+		<MakeCommands>
+			<Build command="$make -f $makefile $target" />
+			<CompileFile command="$make -f $makefile $file" />
+			<Clean command="$make -f $makefile clean" />
+			<DistClean command="$make -f $makefile distclean$target" />
+			<AskRebuildNeeded command="$make -q -f $makefile $target" />
+			<SilentBuild command="$make -s -f $makefile $target" />
+		</MakeCommands>
 		<Build>
-			<Target title="Debug">
+			<Target title="all">
 				<Option output="libdjon-client" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="" />
 				<Option object_output="obj/Debug/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
@@ -18,6 +27,14 @@
 					<Add option="-g" />
 					<Add option="-fPIC" />
 				</Compiler>
+				<MakeCommands>
+					<Build command="$make -f $makefile $target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
+				</MakeCommands>
 			</Target>
 			<Target title="Release">
 				<Option output="libdriverbase" prefix_auto="1" extension_auto="1" />
