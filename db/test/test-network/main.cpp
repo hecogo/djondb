@@ -12,7 +12,7 @@
 #include "findbykeycommand.h"
 #include "updatecommand.h"
 #include "bson.h"
-#include "config.h"
+#include "defs.h"
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

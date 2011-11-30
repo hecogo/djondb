@@ -2,7 +2,7 @@
 #define LOGGER_H_INCLUDED
 
 #include <string>
-#include "../config.h"
+#include "../defs.h"
 #include "dtime.h"
 #include <ctime>
 #ifndef WINDOWS

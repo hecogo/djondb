@@ -4,7 +4,7 @@
 #include <sstream>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "config.h"
+#include "defs.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -165,7 +165,7 @@ long idleTime() {
 }
 
 Version getCurrentVersion() {
-    return getVersion(VERSION);
+    return getVersion(PACKAGE_VERSION);
 }
 
 Version getVersion(const char* version) {

@@ -29,12 +29,13 @@ lib@LIB_NAME@_@DJON_UTIL_API_VERSION@_la_SOURCES = util.cpp \
                                                    util/logger.h \
                                                    util/version.h \
                                                    util/stringfunctions.h \
-                                                   util/threads.h
+                                                   util/threads.h \
+                                                   defs.h
 
 library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
 library_include_HEADERS = util.h
 
 @LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
-nodist_@LIB_NAME@_libinclude_HEADERS = config.h
+# nodist_@LIB_NAME@_libinclude_HEADERS = config.h
 
 

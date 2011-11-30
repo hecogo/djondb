@@ -1,7 +1,15 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-AM_CPPFLAGS = -I$(srcdir)/../network
+all_includes = -I$(srcdir)/../network
+
+if DEBUG
+   AM_CFLAGS = -g3 -O0 $(all_includes)
+   AM_CPPFLAGS = -g3 -O0 $(all_includes)
+else
+   AM_CFLAGS = -O2 $(all_includes)
+   AM_CPPFLAGS = -O2 $(all_includes)
+endif
 
 lib_LTLIBRARIES = lib@LIB_NAME@-@DJON_SERVICE_API_VERSION@.la
 

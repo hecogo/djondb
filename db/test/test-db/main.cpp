@@ -1,7 +1,7 @@
 #include <iostream>
 #include <dbcontroller.h>
 #include <util.h>
-#include <config.h>
+#include <defs.h>
 #include <ctime>
 #ifndef WINDOWS
 #include <time.h>

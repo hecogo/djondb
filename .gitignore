@@ -9,3 +9,5 @@ F
 *.layout
 *.a
 bin
+obj
+

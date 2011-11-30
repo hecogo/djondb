@@ -3,7 +3,7 @@ AC_PREREQ([2.59])
 AM_INIT_AUTOMAKE([1.10 -Wall no-define])
 
 AC_ARG_ENABLE(debug,
-AS_HELP_STRING([--enable-debug],
+AS_HELP_STRING([debug],
                [enable debugging, default: no]),
 [case "${enableval}" in
              yes) debug=true ;;

@@ -23,7 +23,6 @@
 
 #include "defs.h"
 //#include "dbjaguar.h"
-#include "config.h"
 
 
 #define SERVER_PORT 1243
