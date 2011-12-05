@@ -87,7 +87,15 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="check">
+				<Option output="filesystem" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="tests" targets="all;check;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-pg" />
 			<Add directory="../bson" />
@@ -96,23 +104,109 @@
 		<Linker>
 			<Add option="-pg" />
 		</Linker>
-		<Unit filename="bsoninputstream.cpp" />
-		<Unit filename="bsoninputstream.h" />
-		<Unit filename="bsonoutputstream.cpp" />
-		<Unit filename="bsonoutputstream.h" />
-		<Unit filename="defs.h" />
-		<Unit filename="fileinputoutputstream.cpp" />
-		<Unit filename="fileinputoutputstream.h" />
-		<Unit filename="fileinputstream.cpp" />
-		<Unit filename="fileinputstream.h" />
-		<Unit filename="fileoutputstream.cpp" />
-		<Unit filename="fileoutputstream.h" />
-		<Unit filename="inputstream.h" />
-		<Unit filename="networkinputstream.cpp" />
-		<Unit filename="networkinputstream.h" />
-		<Unit filename="networkoutputstream.cpp" />
-		<Unit filename="networkoutputstream.h" />
-		<Unit filename="outputstream.h" />
+		<Unit filename="bsoninputstream.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="bsoninputstream.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="bsonoutputstream.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="bsonoutputstream.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="defs.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="fileinputoutputstream.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="fileinputoutputstream.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="fileinputstream.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="fileinputstream.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="fileoutputstream.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="fileoutputstream.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="inputstream.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="networkinputstream.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="networkinputstream.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="networkoutputstream.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="networkoutputstream.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="outputstream.h">
+			<Option target="all" />
+			<Option target="Release" />
+			<Option target="DebugLinux" />
+			<Option target="ReleaseLinux" />
+		</Unit>
+		<Unit filename="tests/main.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

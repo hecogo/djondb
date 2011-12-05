@@ -49,33 +49,101 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="check">
+				<Option output="util" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="tests" targets="all;check;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-pg" />
 		</Compiler>
 		<Linker>
 			<Add option="-pg" />
 		</Linker>
-		<Unit filename="config.h" />
-		<Unit filename="defs.h" />
-		<Unit filename="util.cpp" />
-		<Unit filename="util.h" />
-		<Unit filename="util/DateTime.cpp" />
-		<Unit filename="util/DateTime.h" />
-		<Unit filename="util/dtime.cpp" />
-		<Unit filename="util/dtime.h" />
-		<Unit filename="util/errorHandle.cpp" />
-		<Unit filename="util/errorHandle.h" />
-		<Unit filename="util/fileutil.cpp" />
-		<Unit filename="util/fileutil.h" />
-		<Unit filename="util/logger.cpp" />
-		<Unit filename="util/logger.h" />
-		<Unit filename="util/stringfunctions.cpp" />
-		<Unit filename="util/stringfunctions.h" />
-		<Unit filename="util/threads.cpp" />
-		<Unit filename="util/threads.h" />
-		<Unit filename="util/version.cpp" />
-		<Unit filename="util/version.h" />
+		<Unit filename="config.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="defs.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/DateTime.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/DateTime.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/dtime.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/dtime.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/errorHandle.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/errorHandle.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/fileutil.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/fileutil.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/logger.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/logger.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/stringfunctions.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/stringfunctions.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/threads.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/threads.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/version.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="util/version.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

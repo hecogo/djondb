@@ -55,7 +55,15 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="check">
+				<Option output="bson" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="tests" targets="all;check;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-pg" />
 			<Add directory="../util" />
@@ -65,21 +73,53 @@
 			<Add option="-pg" />
 			<Add library="util" />
 		</Linker>
-		<Unit filename="JSONGrammar.tokens" />
+		<Unit filename="JSONGrammar.tokens">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="JSONGrammarLexer.c">
 			<Option compilerVar="CC" />
+			<Option target="all" />
+			<Option target="Release" />
 		</Unit>
-		<Unit filename="JSONGrammarLexer.h" />
+		<Unit filename="JSONGrammarLexer.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
 		<Unit filename="JSONGrammarParser.c">
 			<Option compilerVar="CC" />
+			<Option target="all" />
+			<Option target="Release" />
 		</Unit>
-		<Unit filename="JSONGrammarParser.h" />
-		<Unit filename="bson.h" />
-		<Unit filename="bsonobj.cpp" />
-		<Unit filename="bsonobj.h" />
-		<Unit filename="bsonparser.cpp" />
-		<Unit filename="bsonparser.h" />
-		<Unit filename="parser/JSONGrammar.tokens" />
+		<Unit filename="JSONGrammarParser.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="bson.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="bsonobj.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="bsonobj.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="bsonparser.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="bsonparser.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="parser/JSONGrammar.tokens">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="tests/main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

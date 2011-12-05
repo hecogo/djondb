@@ -9,9 +9,9 @@ else
    AM_CXXFLAGS = -O2
 endif
 
-lib_LTLIBRARIES = lib@LIB_NAME@-@DJON_UTIL_API_VERSION@.la
+lib_LTLIBRARIES = lib@LIB_NAME@.la
 
-lib@LIB_NAME@_@DJON_UTIL_API_VERSION@_la_SOURCES = util.cpp \
+lib@LIB_NAME@_la_SOURCES = util.cpp \
                                                    util/fileutil.cpp \
                                                    util/version.cpp \
                                                    util/threads.cpp \
@@ -34,6 +34,14 @@ lib@LIB_NAME@_@DJON_UTIL_API_VERSION@_la_SOURCES = util.cpp \
 
 library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
 library_include_HEADERS = util.h
+
+
+TESTS = test-util
+check_PROGRAMS = test-util
+test_util_LDADD = lib@LIB_NAME@.la 
+test_util_CXXFLAGS = -lX11 -lXss -lrt -luuid -lcpptest
+test_util_SOURCES = tests/main.cpp
+
 
 @LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
 # nodist_@LIB_NAME@_libinclude_HEADERS = config.h
