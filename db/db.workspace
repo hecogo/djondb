@@ -3,9 +3,9 @@
 	<Workspace title="db">
 		<Project filename="util/util.cbp" />
 		<Project filename="bson/bson.cbp" />
-		<Project filename="filesystem/filesystem.cbp" active="1" />
+		<Project filename="filesystem/filesystem.cbp" />
 		<Project filename="cache/cache.cbp" />
-		<Project filename="db/db.cbp" />
+		<Project filename="db/db.cbp" active="1" />
 		<Project filename="command/command.cbp" />
 		<Project filename="driverbase/driverbase.cbp" />
 		<Project filename="network/network.cbp" />

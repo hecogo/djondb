@@ -12,9 +12,9 @@ else
 endif
 
 
-lib_LTLIBRARIES = lib@LIB_NAME@-@DJON_CACHE_API_VERSION@.la
+lib_LTLIBRARIES = lib@LIB_NAME@.la
 
-lib@LIB_NAME@_@DJON_CACHE_API_VERSION@_la_SOURCES = cachemanager.cpp \
+lib@LIB_NAME@_la_SOURCES = cachemanager.cpp \
                                                     structure.cpp \
                                                     structure.h \
                                                     cachemanager.h \
@@ -22,6 +22,12 @@ lib@LIB_NAME@_@DJON_CACHE_API_VERSION@_la_SOURCES = cachemanager.cpp \
 
 library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
 library_include_HEADERS = cache.h
+
+TESTS = test-cache
+check_PROGRAMS = test-cache
+test_cache_LDADD = lib@LIB_NAME@.la 
+test_cache_CXXFLAGS = -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest -ldjon-bson -ldjon-util
+test_cache_SOURCES = tests/main.cpp
 
 @LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
 nodist_@LIB_NAME@_libinclude_HEADERS = config.h

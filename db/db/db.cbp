@@ -56,7 +56,15 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="check">
+				<Option output="db" prefix_auto="1" extension_auto="1" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="tests" targets="all;check;" />
+		</VirtualTargets>
 		<Compiler>
 			<Add option="-pg" />
 			<Add directory="../filesystem" />
@@ -67,15 +75,43 @@
 		<Linker>
 			<Add option="-pg" />
 		</Linker>
-		<Unit filename="bplusindex.cpp" />
-		<Unit filename="bplusindex.h" />
-		<Unit filename="dbcontroller.cpp" />
-		<Unit filename="dbcontroller.h" />
-		<Unit filename="index.h" />
-		<Unit filename="indexfactory.cpp" />
-		<Unit filename="indexfactory.h" />
-		<Unit filename="indexmanager.cpp" />
-		<Unit filename="indexmanager.h" />
+		<Unit filename="bplusindex.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="bplusindex.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="dbcontroller.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="dbcontroller.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="index.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="indexfactory.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="indexfactory.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="indexmanager.cpp">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="indexmanager.h">
+			<Option target="all" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="tests/main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
