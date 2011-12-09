@@ -5,12 +5,11 @@
 		<Project filename="bson/bson.cbp" />
 		<Project filename="filesystem/filesystem.cbp" />
 		<Project filename="cache/cache.cbp" />
-		<Project filename="db/db.cbp" active="1" />
-		<Project filename="command/command.cbp" />
+		<Project filename="db/db.cbp" />
+		<Project filename="command/command.cbp" active="1" />
 		<Project filename="driverbase/driverbase.cbp" />
 		<Project filename="network/network.cbp" />
 		<Project filename="service/service.cbp" />
-		<Project filename="test/test-bson/test-bson.cbp" />
 		<Project filename="test/test-filesystem/test-filesystem.cbp" />
 		<Project filename="test/test-cache/test-cache.cbp" />
 		<Project filename="test/test-db/test-db.cbp">
