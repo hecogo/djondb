@@ -4,6 +4,11 @@
 #include "outputstream.h"
 #include "command.h"
 
+class UpdateCommand;
+class InsertCommand;
+class FindByKeyCommand;
+
+
 class CommandWriter
 {
     public:
@@ -15,6 +20,11 @@ class CommandWriter
 
         int writeCommand(Command* cmd);
     protected:
+    private:
+	int writeUpdate(UpdateCommand* cmd, OutputStream* out);
+	int writeFindByKey(FindByKeyCommand* cmd, OutputStream* out);
+	int writeInsert(InsertCommand* cmd, OutputStream* out);
+
     private:
         OutputStream* _stream;
 };

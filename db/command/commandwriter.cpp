@@ -23,7 +23,7 @@ CommandWriter::CommandWriter(const CommandWriter& orig) {
     this->_stream = orig._stream;
 }
 
-int writeInsert(InsertCommand* cmd, OutputStream* out)  {
+int CommandWriter::writeInsert(InsertCommand* cmd, OutputStream* out)  {
     const std::string* ns = cmd->nameSpace();
     out->writeString(ns);
 
@@ -33,7 +33,7 @@ int writeInsert(InsertCommand* cmd, OutputStream* out)  {
     return 0;
 }
 
-int writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
+int CommandWriter::writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
     const std::string* ns = cmd->nameSpace();
     out->writeString(ns);
 
@@ -43,7 +43,7 @@ int writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
     return 0;
 }
 
-int writeFindByKey(FindByKeyCommand* cmd, OutputStream* out)  {
+int CommandWriter::writeFindByKey(FindByKeyCommand* cmd, OutputStream* out)  {
     std::string ns = cmd->nameSpace();
     out->writeString(&ns);
 
@@ -54,7 +54,8 @@ int writeFindByKey(FindByKeyCommand* cmd, OutputStream* out)  {
 }
 
 int CommandWriter::writeCommand(Command* cmd) {
-    _stream->writeString(&std::string("1.2.3"));
+    std::string version = "1.2.3";
+    _stream->writeString(&version);
     int type = cmd->commandType();
     _stream->writeInt(type);
 

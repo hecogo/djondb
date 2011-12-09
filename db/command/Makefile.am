@@ -12,9 +12,9 @@ else
 endif
 
 
-lib_LTLIBRARIES = lib@LIB_NAME@-@DJON_COMMAND_API_VERSION@.la
+lib_LTLIBRARIES = lib@LIB_NAME@.la
 
-lib@LIB_NAME@_@DJON_COMMAND_API_VERSION@_la_SOURCES = command.cpp \
+lib@LIB_NAME@_la_SOURCES = command.cpp \
                                                    commandreader.cpp \
                                                    commandresult.cpp \
                                                    commandwriter.cpp \
@@ -28,6 +28,12 @@ lib@LIB_NAME@_@DJON_COMMAND_API_VERSION@_la_SOURCES = command.cpp \
                                                    findbykeycommand.h \
                                                    insertcommand.h \
                                                    updatecommand.h
+
+TESTS = test-command
+check_PROGRAMS = test-command
+test_command_LDADD = lib@LIB_NAME@.la 
+test_command_CXXFLAGS = -lX11 -lXss -lrt -luuid  -lantlr3c -lcpptest -ldjon-util -ldjon-filesystem -ldjon-bson -ldjon-command $(all_includes)
+test_command_SOURCES = tests/main.cpp
 
 library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
 #library_include_HEADERS = bson.h

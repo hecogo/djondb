@@ -11,16 +11,19 @@ else
    AM_CPPFLAGS = -O2 $(all_includes)
 endif
 
-lib_LTLIBRARIES = lib@LIB_NAME@-@DJON_CLIENT_API_VERSION@.la
+lib_LTLIBRARIES = lib@LIB_NAME@.la
 
-lib@LIB_NAME@_@DJON_CLIENT_API_VERSION@_la_SOURCES = connection.cpp \
+lib@LIB_NAME@_la_SOURCES = connection.cpp \
                                                      connection.h \
                                                      connectionmanager.cpp \
                                                      connectionmanager.h \
                                                      djondb_client.h
 
-library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
-library_include_HEADERS = djondb_client.h
+TESTS = test-driverbase
+check_PROGRAMS = test-driverbase
+test_driverbase_LDADD = lib@LIB_NAME@.la  
+test_driverbase_CXXFLAGS = -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest -ldjon-client -ldjon-bson -ldjon-util -ldjon-db -ldjon-cache -ldjon-bson -ldjon-filesystem
+test_driverbase_SOURCES = tests/main.cpp
 
 @LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
 nodist_@LIB_NAME@_libinclude_HEADERS = config.h
