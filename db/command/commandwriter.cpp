@@ -44,8 +44,8 @@ int CommandWriter::writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
 }
 
 int CommandWriter::writeFindByKey(FindByKeyCommand* cmd, OutputStream* out)  {
-    std::string ns = cmd->nameSpace();
-    out->writeString(&ns);
+    std::string* ns = cmd->nameSpace();
+    out->writeString(ns);
 
     std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
     bsonout->writeBSON(*cmd->bson());

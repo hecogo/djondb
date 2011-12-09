@@ -21,14 +21,14 @@ class FindByKeyCommand : public Command
 
         virtual void writeResult(OutputStream* out) const;
 
-        void setNameSpace(std::string ns);
-        std::string nameSpace();
+        void setNameSpace(const std::string& ns);
+        std::string* nameSpace();
         void setBSON(BSONObj bson);
         BSONObj* bson() const;
     protected:
     private:
     private:
-        std::string _namespace;
+        std::string* _namespace;
         BSONObj* _bson;
 
         BSONObj* _bsonResult;

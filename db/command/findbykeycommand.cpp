@@ -20,7 +20,7 @@ FindByKeyCommand::FindByKeyCommand(const FindByKeyCommand& other)
 }
 
 void FindByKeyCommand::execute() {
-    _bsonResult = dbController()->findFirst(const_cast<char*>(nameSpace().c_str()), bson());
+    _bsonResult = dbController()->findFirst(const_cast<char*>(nameSpace()->c_str()), bson());
 }
 
 void* FindByKeyCommand::result() {
@@ -38,11 +38,11 @@ void FindByKeyCommand::writeResult(OutputStream* out) const {
     }
 }
 
-void FindByKeyCommand::setNameSpace(std::string ns) {
-    _namespace = ns;
+void FindByKeyCommand::setNameSpace(const std::string& ns) {
+    _namespace = new std::string(ns);
 }
 
-std::string FindByKeyCommand::nameSpace() {
+std::string* FindByKeyCommand::nameSpace() {
     return _namespace;
 }
 

@@ -60,6 +60,10 @@ Command* CommandReader::readCommand() {
     if (_stream->isClosed()) {
         return NULL;
     }
+	// at this moment no check has been made, but the version will
+	// allow to control that the sender has the same version of the
+	// server
+	std::string* version = _stream->readString();
     COMMANDTYPE type = static_cast<COMMANDTYPE>(_stream->readInt());
     Command* cmd = NULL;
     switch (type) {

@@ -7,6 +7,9 @@
 #include "commandwriter.h"
 #include "commandreader.h"
 #include "insertcommand.h"
+#include "updatecommand.h"
+#include "findbykeycommand.h"
+#include "util.h"
 #include <cpptest.h>
 
 #include <string>
@@ -15,6 +18,8 @@ class TestCommandSuite: public Test::Suite {
 public:
    TestCommandSuite() {
       TEST_ADD(TestCommandSuite::testInsertCommand);	
+      TEST_ADD(TestCommandSuite::testUpdateCommand);	
+      TEST_ADD(TestCommandSuite::testFindByKeyCommand);	
 	}
 
    void testInsertCommand() {
@@ -27,6 +32,82 @@ public:
 		obj.add("name", std::string("Cross"));
 		obj.add("age", 18);
 		cmd.setBSON(obj);
+
+		commandWriter->writeCommand(&cmd);
+
+		fos->close();
+		delete fos;
+		delete commandWriter;
+
+		FileInputStream* fis = new FileInputStream("test.dat", "rb");
+		CommandReader* reader = new CommandReader(fis);
+		InsertCommand* rdCmd = (InsertCommand*) reader->readCommand();
+        TEST_ASSERT(rdCmd != NULL);
+        TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
+        BSONObj* objResult = rdCmd->bson();
+        TEST_ASSERT(objResult != NULL);
+        TEST_ASSERT(objResult->has("name"));	
+        TEST_ASSERT(objResult->getString("name")->compare("Cross") == 0);
+	}
+
+    void testUpdateCommand() {
+	    FileOutputStream* fos = new FileOutputStream("test.dat", "wb");
+	   
+        CommandWriter* commandWriter = new CommandWriter(fos);
+		UpdateCommand cmd;
+		cmd.setNameSpace("test.namespace.db");
+		BSONObj obj;
+        std::string* uid = uuid();
+		obj.add("_id", *uid);
+		delete uid;
+		obj.add("name", std::string("Cross"));
+		obj.add("age", 18);
+		cmd.setBSON(obj);
+
+		commandWriter->writeCommand(&cmd);
+
+		fos->close();
+		delete fos;
+		delete commandWriter;
+
+		FileInputStream* fis = new FileInputStream("test.dat", "rb");
+		CommandReader* reader = new CommandReader(fis);
+		UpdateCommand* rdCmd = (UpdateCommand*) reader->readCommand();
+        TEST_ASSERT(rdCmd != NULL);
+        TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
+        BSONObj* objResult = rdCmd->bson();
+        TEST_ASSERT(objResult  != NULL);
+        TEST_ASSERT(objResult->has("name"));	
+        TEST_ASSERT(objResult->getString("name")->compare("Cross") == 0);
+	}
+	
+    void testFindByKeyCommand() {
+	    FileOutputStream* fos = new FileOutputStream("test.dat", "wb");
+	   
+        CommandWriter* commandWriter = new CommandWriter(fos);
+		FindByKeyCommand cmd;
+		cmd.setNameSpace("test.namespace.db");
+		BSONObj obj;
+        std::string* uid = uuid();
+		obj.add("_id", *uid);
+		cmd.setBSON(obj);
+
+		commandWriter->writeCommand(&cmd);
+
+		fos->close();
+		delete fos;
+		delete commandWriter;
+
+		FileInputStream* fis = new FileInputStream("test.dat", "rb");
+		CommandReader* reader = new CommandReader(fis);
+		FindByKeyCommand* rdCmd = (FindByKeyCommand*) reader->readCommand();
+        TEST_ASSERT(rdCmd != NULL);
+        TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
+        BSONObj* objResult = rdCmd->bson();
+        TEST_ASSERT(objResult  != NULL);
+        TEST_ASSERT(objResult->has("_id"));	
+        TEST_ASSERT(objResult->getString("_id")->compare(*uid) == 0);
+		delete uid;
 	}
 };
 
