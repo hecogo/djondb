@@ -22,7 +22,8 @@ AC_SUBST([DJON_DB_SO_VERSION], [0:1:0])
 AC_SUBST([DJON_DB_API_VERSION], [0.1])
 AC_SUBST([LIB_NAME], [djon-db])
 
-# LIBS="$X_PRE_LIBS $X_LIBS -lX11 -lXext -lXmu -lXt $X_EXTRA_LIBS -lGL -lGLU -lglut -lm"
+#LIBS="$X_PRE_LIBS $X_LIBS  -lcpptest -ldjon-bson -ldjon-util -ldjon-cache -ldjon-bson -ldjon-filesystem -lX11 -lXss -lrt -luuid -lantlr3c -lpthread" 
+#LIBS="$X_PRE_LIBS $X_LIBS  -lcpptest -ldjon-bson -ldjon-util -ldjon-cache -ldjon-bson -ldjon-filesystem -lX11 -lXss -lrt -luuid -lantlr3c -lpthread" 
 
 #hungryhacker_LDADD = ../libdinner/libdinner.la
 

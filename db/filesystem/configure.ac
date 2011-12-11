@@ -23,7 +23,7 @@ AC_SUBST([DJON_FILESYSTEM_API_VERSION], [0.1])
 AC_SUBST([LIB_NAME], [djon-filesystem])
 
 # LIBS="$X_PRE_LIBS $X_LIBS -lX11 -lXext -lXmu -lXt $X_EXTRA_LIBS -lGL -lGLU -lglut -lm"
-
+LIBS="$X_PRE_LIBS $X_LIBS -lX11 -lrt -lXss -lantlr3c -luuid"
 #hungryhacker_LDADD = ../libdinner/libdinner.la
 
 #required headers

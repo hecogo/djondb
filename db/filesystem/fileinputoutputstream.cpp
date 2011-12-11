@@ -57,14 +57,10 @@ void FileInputOutputStream::writeChars(const char *text, int len) {
     fwrite(text, 1, len, _pFile);
 }
 
-void FileInputOutputStream::writeString(const std::string* text) {
-    if (text == NULL) {
-        writeChars("", 0);
-    } else {
-        const char* c = text->c_str();
-        int l = strlen(c);
-        writeChars(c, l);
-    }
+void FileInputOutputStream::writeString(const std::string& text) {
+    const char* c = text.c_str();
+    int l = strlen(c);
+    writeChars(c, l);
 }
 
 void FileInputOutputStream::seek(long i) {

@@ -36,8 +36,7 @@ library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
 
 TESTS = test-filesystem
 check_PROGRAMS = test-filesystem
-test_filesystem_LDADD = lib@LIB_NAME@.la 
-test_filesystem_CXXFLAGS = -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest -ldjon-bson -ldjon-util
+test_filesystem_LDADD = lib@LIB_NAME@.la -lpthread -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest -ldjon-bson -ldjon-util
 test_filesystem_SOURCES = tests/main.cpp
 
 

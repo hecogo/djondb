@@ -32,7 +32,7 @@ void DBController::shutdown() {
         SpacesType space = i->second;
         std::string ns = space.ns;
         FILE_TYPE type = space.type;
-        fos->writeString(&ns);
+        fos->writeString(ns);
         fos->writeInt(static_cast<int>(type));
         space.stream->close();
     }

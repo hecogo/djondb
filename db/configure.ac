@@ -16,10 +16,11 @@ esac],
 
 AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
+AC_CONFIG_HEADERS([config.h])
     AC_PROG_CXX
     AM_PROG_LEX
     AC_PROG_YACC
     AC_PROG_LIBTOOL
 
-    AC_OUTPUT(Makefile util/Makefile bson/Makefile cache/Makefile command/Makefile filesystem/Makefile db/Makefile network/Makefile driverbase/Makefile service/Makefile)
+    AC_OUTPUT(Makefile util/Makefile bson/Makefile cache/Makefile filesystem/Makefile command/Makefile db/Makefile network/Makefile driverbase/Makefile service/Makefile)
 

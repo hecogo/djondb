@@ -27,26 +27,26 @@ public:
     TestDBSuite()
     {
         FileOutputStream fos("simple.dat", "wb");
-        fos.writeString(&std::string("1"));
-        fos.writeString(&std::string("4"));
-        fos.writeString(&std::string("11"));
-        fos.writeString(&std::string("6"));
-        fos.writeString(&std::string("15"));
-        fos.writeString(&std::string("20"));
-        fos.writeString(&std::string("18"));
-        fos.writeString(&std::string("8"));
-        fos.writeString(&std::string("19"));
-        fos.writeString(&std::string("7"));
-        fos.writeString(&std::string("13"));
-        fos.writeString(&std::string("9"));
-        fos.writeString(&std::string("14"));
-        fos.writeString(&std::string("5"));
-        fos.writeString(&std::string("17"));
-        fos.writeString(&std::string("10"));
-        fos.writeString(&std::string("12"));
-        fos.writeString(&std::string("16"));
-        fos.writeString(&std::string("12"));
-        fos.writeString(&std::string("13"));
+        fos.writeString(std::string("1"));
+        fos.writeString(std::string("4"));
+        fos.writeString(std::string("11"));
+        fos.writeString(std::string("6"));
+        fos.writeString(std::string("15"));
+        fos.writeString(std::string("20"));
+        fos.writeString(std::string("18"));
+        fos.writeString(std::string("8"));
+        fos.writeString(std::string("19"));
+        fos.writeString(std::string("7"));
+        fos.writeString(std::string("13"));
+        fos.writeString(std::string("9"));
+        fos.writeString(std::string("14"));
+        fos.writeString(std::string("5"));
+        fos.writeString(std::string("17"));
+        fos.writeString(std::string("10"));
+        fos.writeString(std::string("12"));
+        fos.writeString(std::string("16"));
+        fos.writeString(std::string("12"));
+        fos.writeString(std::string("13"));
         fos.close();
 
         TEST_ADD(TestDBSuite::testInsertWithStringId);
@@ -136,7 +136,7 @@ private:
             if (test > 0)
             {
                 __ids.push_back(new std::string(((std::string*)obj->getString("_id"))->c_str()));
-                fos.writeString(obj->getString("_id"));
+                fos.writeString(*obj->getString("_id"));
             }
             if ((x % 1000000) == 0)
             {

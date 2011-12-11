@@ -25,7 +25,7 @@ class FileOutputStream: public OutputStream
         virtual void writeDoubleIEEE (double v);
         /* Write a char */
         virtual void writeChars(const char* text, int len);
-        virtual void writeString(const std::string* text);
+        virtual void writeString(const std::string& text);
 
         virtual void seek(long);
         virtual long currentPos() const;

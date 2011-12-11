@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
-SUBDIRS = util bson cache command filesystem db network driverbase service
+SUBDIRS = util bson cache filesystem command db network driverbase service
 
 if DEBUG
    AM_CFLAGS = -g3 -O0

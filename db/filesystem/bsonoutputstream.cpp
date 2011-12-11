@@ -20,7 +20,7 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
     _outputStream->writeLong(bson.length());
     for (std::map<t_keytype, BSONContent* >::const_iterator i = bson.begin(); i != bson.end(); i++) {
         t_keytype key = i->first;
-        _outputStream->writeString(&key);
+        _outputStream->writeString(key);
         BSONContent* cont = i->second;
         _outputStream->writeLong(cont->_type);
         char* text;
@@ -43,7 +43,7 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
                 break;
             case STRING_TYPE:
                 string* str = (string*)cont->_element;
-                _outputStream->writeString(str);
+                _outputStream->writeString(*str);
                 break;
         }
     }

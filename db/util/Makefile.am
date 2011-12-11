@@ -38,8 +38,7 @@ library_include_HEADERS = util.h
 
 TESTS = test-util
 check_PROGRAMS = test-util
-test_util_LDADD = lib@LIB_NAME@.la 
-test_util_CXXFLAGS = -lX11 -lXss -lrt -luuid -lcpptest
+test_util_LDADD = lib@LIB_NAME@.la -lX11 -lXss -lrt -luuid -lcpptest
 test_util_SOURCES = tests/main.cpp
 
 

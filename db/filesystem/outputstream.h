@@ -17,7 +17,7 @@ public:
     virtual void writeDoubleIEEE (double v) = 0;
     /* Write a char */
     virtual void writeChars(const char* text, int len) = 0;
-    virtual void writeString(const std::string* text) = 0;
+    virtual void writeString(const std::string& text) = 0;
 
 };
 

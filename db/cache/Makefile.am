@@ -25,8 +25,7 @@ library_include_HEADERS = cache.h
 
 TESTS = test-cache
 check_PROGRAMS = test-cache
-test_cache_LDADD = lib@LIB_NAME@.la 
-test_cache_CXXFLAGS = -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest -ldjon-bson -ldjon-util
+test_cache_LDADD = lib@LIB_NAME@.la -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest -ldjon-bson -ldjon-util
 test_cache_SOURCES = tests/main.cpp
 
 @LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
