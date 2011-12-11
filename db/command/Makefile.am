@@ -31,8 +31,8 @@ lib@LIB_NAME@_la_SOURCES = command.cpp \
 
 TESTS = test-command
 check_PROGRAMS = test-command
-test_command_LDADD = lib@LIB_NAME@.la 
-test_command_CXXFLAGS = -lX11 -lXss -lrt -luuid  -lantlr3c -lcpptest -ldjon-util -ldjon-filesystem -ldjon-bson -ldjon-command -ldjon-db -ldjon-cache $(all_includes)
+#test_command_LDFLAGS = $(all_includes)
+test_command_LDADD = lib@LIB_NAME@.la -lcpptest -ldjon-util -ldjon-filesystem -ldjon-bson -ldjon-db -ldjon-cache -lX11 -lXss -lrt -luuid  -lantlr3c 
 test_command_SOURCES = tests/main.cpp
 
 library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@

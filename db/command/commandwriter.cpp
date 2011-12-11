@@ -25,7 +25,7 @@ CommandWriter::CommandWriter(const CommandWriter& orig) {
 
 int CommandWriter::writeInsert(InsertCommand* cmd, OutputStream* out)  {
     const std::string* ns = cmd->nameSpace();
-    out->writeString(ns);
+    out->writeString(*ns);
 
     std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
     bsonout->writeBSON(*cmd->bson());
@@ -35,7 +35,7 @@ int CommandWriter::writeInsert(InsertCommand* cmd, OutputStream* out)  {
 
 int CommandWriter::writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
     const std::string* ns = cmd->nameSpace();
-    out->writeString(ns);
+    out->writeString(*ns);
 
     std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
     bsonout->writeBSON(*cmd->bson());
@@ -45,7 +45,7 @@ int CommandWriter::writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
 
 int CommandWriter::writeFindByKey(FindByKeyCommand* cmd, OutputStream* out)  {
     std::string* ns = cmd->nameSpace();
-    out->writeString(ns);
+    out->writeString(*ns);
 
     std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
     bsonout->writeBSON(*cmd->bson());
@@ -55,7 +55,7 @@ int CommandWriter::writeFindByKey(FindByKeyCommand* cmd, OutputStream* out)  {
 
 int CommandWriter::writeCommand(Command* cmd) {
     std::string version = "1.2.3";
-    _stream->writeString(&version);
+    _stream->writeString(version);
     int type = cmd->commandType();
     _stream->writeInt(type);
 
