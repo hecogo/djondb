@@ -1,0 +1,29 @@
+AC_INIT([djondbd], [0.1], [crossleyjuan@gmail.com], [djon], [http://d-jon.com/])
+AC_PREREQ([2.59])
+AM_INIT_AUTOMAKE([1.10 -Wall no-define])
+# AC_CONFIG_SUBDIRS(dinnerd libdinner hungryhacker vdinner)
+
+AC_ARG_ENABLE(debug,
+AS_HELP_STRING([debug],
+               [enable debugging, default: no]),
+[case "${enableval}" in
+             yes) debug=true ;;
+             no)  debug=false ;;
+             *)   AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
+esac],
+[debug=false])
+
+AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
+
+AC_CONFIG_HEADERS([config.h])
+AC_PROG_CXX
+
+# LIBS="$X_PRE_LIBS $X_LIBS -lX11 -lXext -lXmu -lXt $X_EXTRA_LIBS -lGL -lGLU -lglut -lm"
+
+#hungryhacker_LDADD = ../libdinner/libdinner.la
+
+#required headers
+#AC_CHECK_HEADERS([util.h bson.h],,AC_MSG_ERROR[required header file missing])
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
