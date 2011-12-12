@@ -92,14 +92,10 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
 //    write(_socket, text, len);
 }
 
-void NetworkOutputStream::writeString(const std::string* text) {
-    if (text == NULL) {
-        writeChars("", 0);
-    } else {
-        const char* c = text->c_str();
-        int l = strlen(c);
-        writeChars(c, l);
-    }
+void NetworkOutputStream::writeString(const std::string& text) {
+    const char* c = text.c_str();
+    int l = strlen(c);
+    writeChars(c, l);
 }
 
 int NetworkOutputStream::open(const char* hostname, int port)
