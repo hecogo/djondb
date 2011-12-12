@@ -21,8 +21,7 @@ lib@LIB_NAME@_la_SOURCES = connection.cpp \
 
 TESTS = test-driverbase
 check_PROGRAMS = test-driverbase
-test_driverbase_LDADD = lib@LIB_NAME@.la  
-test_driverbase_CXXFLAGS = -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest -ldjon-client -ldjon-bson -ldjon-util -ldjon-db -ldjon-cache -ldjon-bson -ldjon-filesystem
+test_driverbase_LDADD = lib@LIB_NAME@.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
 test_driverbase_SOURCES = tests/main.cpp
 
 @LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
