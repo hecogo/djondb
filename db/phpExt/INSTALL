@@ -1,0 +1,7 @@
+commands:
+
+phpize
+./configure --enable-djonPhpExt
+make
+make install
+php -d"extension=djonPhpExt.so" test.php

@@ -124,10 +124,10 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			log->startTimeRecord();
 			__running = true;
-			Connection* conn = ConnectionManager::getConnection("local_host");
+			Connection* conn = ConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
-				cout << "Cannot connect to local_host" << endl;
+				cout << "Cannot connect to localhost" << endl;
 				exit(0);
 			}
 			FileInputStream* fisIds = new FileInputStream("results.txt", "rb");
@@ -191,10 +191,10 @@ class TestDriverBaseSuite: public Test::Suite {
 			log->startTimeRecord();
 			__running = true;
 
-			Connection* conn = ConnectionManager::getConnection("local_host");
+			Connection* conn = ConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
-				cout << "Cannot connect to local_host" << endl;
+				cout << "Cannot connect to localhost" << endl;
 				exit(0);
 			}
 			FileInputStream* fisIds = new FileInputStream("results.txt", "rb");
@@ -316,24 +316,24 @@ class TestDriverBaseSuite: public Test::Suite {
 
 		if (insert) {
 		cout << "Inserts " << inserts << endl;
-		testInsert("local_host",1243, inserts);
+		testInsert("localhost",1243, inserts);
 		}
 
 		if (finds) {
 		cout << "Finds " << endl;
-		testFinds("local_host",1243, maxfinds);
+		testFinds("localhost",1243, maxfinds);
 		}
 
 		if (updates) {
 		cout << "Updates " << endl;
-		testUpdate("local_host",1243, maxupdates);
+		testUpdate("localhost",1243, maxupdates);
 		}
 
 		if (!error) {
 		cout << "Press any key to close the connections" << endl;
 		getchar();
 		}
-		Connection* conn = ConnectionManager::getConnection("local_host");
+		Connection* conn = ConnectionManager::getConnection("localhost");
 		if (conn->isOpen()) {
 		conn->close();
 delete conn;
