@@ -238,7 +238,6 @@ int processRequest(void *arg) {
         __mapOutput.erase(itNos);
         return -1;
     }
-    std::string* version = nis->readString();
     std::auto_ptr<CommandReader> reader(new CommandReader(nis));
     // Will wait 5 secs, if no other command is available just close the connection
 //    while (nis->waitAvailable(5) > 0) {
@@ -262,7 +261,6 @@ int processRequest(void *arg) {
 //    }
 
     if (log->isDebug()) log->debug("%d Executed.", commands);
-    delete version;
 
     return 0;
 }
