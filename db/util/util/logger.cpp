@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sstream>
+#include <syslog.h>
 #define PRINT(TYPE, CLAZZ) \
   char* buffer = (char*)malloc(1000); \
   memset(buffer, 0, 1000); \
@@ -19,7 +20,8 @@
   ss << buffer; \
   result = ss.str(); \
   free(buffer); \
-  cout << TYPE << ": " << CLAZZ << ": " << result << endl;
+  syslog(LOG_INFO, result.c_str());
+//  cout << TYPE << ": " << CLAZZ << ": " << result << endl;
 
 
 
@@ -120,7 +122,7 @@ Logger* getLogger(void* clazz) {
 
 Logger::Logger(void* clazz) {
     m_clazz = clazz;
-    m_debug = false;
+    m_debug = true;
     m_info = true;
     m_warn = true;
 }

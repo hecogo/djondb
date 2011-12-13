@@ -85,7 +85,7 @@ class TestNetworkSuite: public Test::Suite {
 
 			std::vector<std::string> ids;
 			for (int x = 0; x < inserts; x++) {
-				out->writeChars("1.2.3", 5);
+				out->writeString(std::string("1.2.3"));
 
 				std::auto_ptr<InsertCommand> cmd(new InsertCommand());
 
@@ -123,7 +123,7 @@ class TestNetworkSuite: public Test::Suite {
 			}
 			fosIds->close();
 			cout << "Sending close connection command" << endl;
-			out->writeChars("1.2.3", 5);
+			out->writeString(std::string("1.2.3"));
 			out->writeInt(CLOSECONNECTION);
 			cout << "all sent" << endl;
 
@@ -139,7 +139,7 @@ class TestNetworkSuite: public Test::Suite {
 			}
 			cout << "------------------------------------------------------------" << endl;
 			cout << "Ready to close the connection" << endl;
-			//    getchar();
+			getchar();
 			__running = false;
 
 			cout << "Closing the connection" << endl;
@@ -194,7 +194,7 @@ class TestNetworkSuite: public Test::Suite {
 				delete guid;
 			}
 			cout << "Sending close connection command" << endl;
-			out->writeChars("1.2.3", 5);
+			out->writeString(std::string("1.2.3"));
 			out->writeInt(CLOSECONNECTION);
 			cout << "all sent" << endl;
 
@@ -210,7 +210,7 @@ class TestNetworkSuite: public Test::Suite {
 			}
 			cout << "------------------------------------------------------------" << endl;
 			cout << "Ready to close the connection" << endl;
-			//    getchar();
+			getchar();
 			__running = false;
 
 			cout << "Closing the connection" << endl;
@@ -309,7 +309,7 @@ class TestNetworkSuite: public Test::Suite {
 			}
 			cout << "------------------------------------------------------------" << endl;
 			cout << "Ready to close the connection" << endl;
-			//    getchar();
+			getchar();
 			__running = false;
 
 			cout << "Closing the connection" << endl;
