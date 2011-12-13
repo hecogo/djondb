@@ -3,6 +3,7 @@
 #include "updatecommand.h"
 #include "findbykeycommand.h"
 #include "bsoninputstream.h"
+#include "util.h"
 
 CommandReader::CommandReader(InputStream* is)
 {
@@ -63,8 +64,14 @@ Command* CommandReader::readCommand() {
 	// at this moment no check has been made, but the version will
 	// allow to control that the sender has the same version of the
 	// server
+	Logger* log = getLogger(NULL);
+	if (log->isDebug()) log->debug("readCommand: reading version");
 	std::string* version = _stream->readString();
+	if (log->isDebug()) log->debug("readCommand: version %s", version->c_str());
+
     COMMANDTYPE type = static_cast<COMMANDTYPE>(_stream->readInt());
+
+	 if (log->isDebug()) log->debug("readCommand: type %d", type);
     Command* cmd = NULL;
     switch (type) {
         case INSERT: // Insert
@@ -84,6 +91,7 @@ Command* CommandReader::readCommand() {
             break;
     }
     assert(cmd != NULL);
+	 delete log;
     return cmd;
 }
 

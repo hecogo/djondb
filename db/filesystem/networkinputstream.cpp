@@ -18,6 +18,7 @@
 
 const int STREAM_BUFFER_SIZE = 100000;
 
+
 NetworkInputStream::NetworkInputStream(int clientSocket)
 {
     _socket = clientSocket;
@@ -48,9 +49,11 @@ unsigned char NetworkInputStream::readChar() {
 
 /* Reads 2 bytes in the input (little endian order) */
 int NetworkInputStream::readInt () {
+	Logger* logger = getLogger(NULL);
     unsigned char c1 = readChar();
     unsigned char c2 = readChar();
     int v = c1 | c2 << 8;
+	 if (logger->isDebug()) logger->debug("NetworkInputStream::readInt %d", v);
     return v;
 }
 
@@ -83,9 +86,12 @@ char* NetworkInputStream::readChars() {
 }
 
 std::string* NetworkInputStream::readString() {
+   Logger* logger = getLogger(NULL);
     char* c = readChars();
     std::string* res = new std::string(c);
+	if (logger->isDebug()) logger->debug("NetworkInputStream::readString %s", c);
     free(c);
+	 delete logger;
     return res;
 }
 
@@ -205,6 +211,7 @@ int NetworkInputStream::fillBuffer(int timeout) {
     } else if (result == 0) {
         // Timeout
         error = true;
+		  log->error("fillBuffer: timeout");
     }
     if (!error) {
         int readed = recv(_socket, _buffer, STREAM_BUFFER_SIZE, 0);
@@ -215,6 +222,7 @@ int NetworkInputStream::fillBuffer(int timeout) {
         if (readed == 0) {
             // Nothing readed
             error = true;
+		      log->error("fillBuffer: nothing to be readed");
         }
         _bufferPos = 0;
         _bufferSize = readed;

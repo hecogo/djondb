@@ -25,6 +25,7 @@
 #include <syslog.h>
 #include <string.h>
 #include <signal.h>
+#include "config.h"
 
 #define DAEMON_NAME "djondbd"
 #define PID_FILE "/var/run/djondbd.pid"

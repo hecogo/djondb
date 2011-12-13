@@ -106,7 +106,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			}
 			cout << "------------------------------------------------------------" << endl;
 			cout << "Ready to close the connection" << endl;
-			//    getchar();
+			getchar();
 			__running = false;
 
 			//    cout << "Closing the connection" << endl;
@@ -171,7 +171,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			}
 			cout << "------------------------------------------------------------" << endl;
 			cout << "Ready to close the connection" << endl;
-			//    getchar();
+			getchar();
 			__running = false;
 
 			//    cout << "Closing the connection" << endl;
@@ -256,7 +256,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			}
 			cout << "------------------------------------------------------------" << endl;
 			cout << "Ready to close the connection" << endl;
-			//    getchar();
+			getchar();
 			__running = false;
 
 			//    cout << "Closing the connection" << endl;

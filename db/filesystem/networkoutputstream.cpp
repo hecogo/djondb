@@ -8,8 +8,11 @@
 #include <sys/ioctl.h>
 #include <netinet/tcp.h>
 #include <iostream>
+#include "util.h"
 
 using namespace std;
+
+Logger* logger = getLogger(NULL);
 
 NetworkOutputStream::NetworkOutputStream()
 {
@@ -93,9 +96,12 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
 }
 
 void NetworkOutputStream::writeString(const std::string& text) {
+	Logger* logger = getLogger(NULL);
+	if (logger->isDebug()) logger->debug("NetworkOutputStream::writeString text: %s", text.c_str());
     const char* c = text.c_str();
     int l = strlen(c);
     writeChars(c, l);
+	 delete logger;
 }
 
 int NetworkOutputStream::open(const char* hostname, int port)
