@@ -1,27 +1,34 @@
 <?php
 
+	session_start(); // start up your PHP session! 
+
 if (!extension_loaded('djonPhpExt')) {
-  echo 'Library not loaded';
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		dl('djonPhpExt.dll');
+	} else {
+		dl('djonPhpExt.so');
+	}
 }
-session_start(); // start up your PHP session! 
 
-if (isset($_SESSION['connection'])) {
-   $c = $_SESSION['connection'];
+if (!extension_loaded('djonPhpExt')) {
+	echo "Cannot load extension";
 } else {
-  echo '<p>Starting new connection</p>';
-  $c = new Connection("localhost");
-  $_SESSION['connection'] = $c;
+   $c = NULL;
+	if (isset($_SESSION['connection'])) {
+		$c = $_SESSION['connection'];
+	}
+	if (is_null($c)) {
+		echo '<p>Starting new connection</p>';
+		$c = new Connection("localhost");
+		$_SESSION['connection'] = $c;
 
+	}
+
+	$guid = uniqid();
+	$json = "{ _id: '$guid', name: 'Juan', lastName: 'Cross'}";
+
+	$c->djon_insert('a', $json);
+
+	echo '<p>Inserted</p>';
 }
-
-$guid = uniqid();
-$json = "{ _id: '1', name: 'Juan', lastName: 'Cross'}";
-
-echo $json;
-
-$c->djon_insert('a', $json);
-
-
-echo '<p>Inserted</p>';
-
 ?>

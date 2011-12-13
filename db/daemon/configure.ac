@@ -17,7 +17,7 @@ AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
 AC_CONFIG_HEADERS([config.h])
 AC_PROG_CXX
-AC_DEFINE([DEBUG], [1], [Define Debug variable])
+AM_COND_IF([DEBUG], AC_DEFINE([DEBUG], [1], [Define Debug variable]))
 
 # LIBS="$X_PRE_LIBS $X_LIBS -lX11 -lXext -lXmu -lXt $X_EXTRA_LIBS -lGL -lGLU -lglut -lm"
 

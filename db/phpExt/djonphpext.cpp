@@ -1,6 +1,7 @@
 #include "php_djonphpext.h"
 #include "../driverbase/djondb_client.h"
 #include <iostream>
+#include <syslog.h>
 
 using namespace std;
 using namespace djondb;
@@ -15,20 +16,20 @@ struct connection_object {
 
 void connection_free_storage(void *object TSRMLS_DC)
 {
-    cout << "connection_free_storage" << endl;
-    connection_object *obj = (connection_object *)object;
-    obj->conn->close();
-    delete obj->conn;
+    syslog(LOG_INFO, "free storage");
+//    connection_object *obj = (connection_object *)object;
+//    obj->conn->close();
+//    delete obj->conn;
 
-    zend_hash_destroy(obj->std.properties);
-    FREE_HASHTABLE(obj->std.properties);
+//    zend_hash_destroy(obj->std.properties);
+//    FREE_HASHTABLE(obj->std.properties);
 
-    efree(obj);
+//    efree(obj);
 }
 
 zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
 {
-    cout << "connection_create_handler" << endl;
+    syslog(LOG_INFO, "connection_create_handler" );
     zval *tmp;
     zend_object_value retval;
 
@@ -50,7 +51,7 @@ zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
 
 PHP_METHOD(Connection, __construct)
 {
-    cout << "__construct" << endl;
+    syslog(LOG_INFO, "__construct" );
     char* host;
     int host_len;
     Connection *conn = NULL;
@@ -62,95 +63,97 @@ PHP_METHOD(Connection, __construct)
 
     Connection* con = ConnectionManager::getConnection(host);
     if (con->open()) {
-        cout << "Connection open. host:" << host << endl;
-    }
-    connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
-    obj->conn = con;
+        syslog(LOG_INFO, "Connection open. host:" );
+		  connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+		  obj->conn = con;
+	 } else {
+		 syslog(LOG_INFO, "Cannot connection to the selected host" );
+	 }
 }
 
 PHP_METHOD(Connection, djon_insert)
 {
-    cout << "insert" << endl;
-    char* ns;
-    int ns_len;
-    char* json;
-    int json_len;
+	char* ns;
+	int ns_len;
+	char* json;
+	int json_len;
 
-    zval *object = getThis();
+	zval *object = getThis();
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &ns, &ns_len, &json, &json_len) == FAILURE) {
-        RETURN_NULL();
-    }
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &ns, &ns_len, &json, &json_len) == FAILURE) {
+		RETURN_NULL();
+	}
 
-    connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
-    if (!obj) {
-        cout << "obj is null" << endl;
-    }
-    Connection* conn = obj->conn;
-    if (!conn) {
-        cout << "conn is null" << endl;
-    }
-    cout << json << endl;
-    conn->insert(ns, json);
+	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+	if (!obj) {
+		syslog(LOG_INFO, "obj is null" );
+		return;
+	}
+	Connection* conn = obj->conn;
+	if (!conn) {
+		syslog(LOG_INFO, "conn is null" );
+		return;
+	}
+	conn->insert(ns, json);
 }
 
 PHP_METHOD(Connection, djon_find)
 {
-    char* ns;
-    int ns_len;
-    char* json;
-    int json_len;
+	char* ns;
+	int ns_len;
+	char* json;
+	int json_len;
 
-    zval *object = getThis();
+	zval *object = getThis();
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &ns, &ns_len, &json, &json_len) == FAILURE) {
-        RETURN_NULL();
-    }
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &ns, &ns_len, &json, &json_len) == FAILURE) {
+		RETURN_NULL();
+	}
 
-    connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
-    Connection* conn = obj->conn;
-    conn->findByKey(ns, json);
+	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+	Connection* conn = obj->conn;
+	conn->findByKey(ns, json);
 }
 
-function_entry connection_methods[] = {
-    PHP_ME(Connection,  __construct,     NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-    PHP_ME(Connection,  djon_insert,           NULL, ZEND_ACC_PUBLIC)
-    PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
-    {NULL, NULL, NULL}
-};
+	function_entry connection_methods[] = {
+		PHP_ME(Connection,  __construct,     NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+			PHP_ME(Connection,  djon_insert,           NULL, ZEND_ACC_PUBLIC)
+			PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
+			{NULL, NULL, NULL}
+	};
 
 PHP_MINIT_FUNCTION(djonPhpExt)
 {
-    cout << "minit" << endl;
-    zend_class_entry conn;
-    INIT_CLASS_ENTRY(conn, "Connection", connection_methods);
-    connection_ce = zend_register_internal_class(&conn TSRMLS_CC);
-    connection_ce->create_object = connection_create_handler;
-    memcpy(&connection_object_handlers,
-        zend_get_std_object_handlers(), sizeof(zend_object_handlers));
-    connection_object_handlers.clone_obj = NULL;
-    return SUCCESS;
+	syslog(LOG_INFO, "minit" );
+	zend_class_entry conn;
+	INIT_CLASS_ENTRY(conn, "Connection", connection_methods);
+	connection_ce = zend_register_internal_class(&conn TSRMLS_CC);
+	connection_ce->create_object = connection_create_handler;
+	memcpy(&connection_object_handlers,
+			zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+	connection_object_handlers.clone_obj = NULL;
+	return SUCCESS;
 }
 
 zend_module_entry djonPhpExt_module_entry = {
 #if ZEND_MODULE_API_NO >= 20010901
-    STANDARD_MODULE_HEADER,
+	STANDARD_MODULE_HEADER,
 #endif
-    PHP_DJONPHPEXT_EXTNAME,
-    NULL,                  /* Functions */
-    PHP_MINIT(djonPhpExt),
-    NULL,                  /* MSHUTDOWN */
-    NULL,                  /* RINIT */
-    NULL,                  /* RSHUTDOWN */
-    NULL,                  /* MINFO */
+	PHP_DJONPHPEXT_EXTNAME,
+	NULL,                  /* Functions */
+	PHP_MINIT(djonPhpExt),
+	NULL,                  /* MSHUTDOWN */
+	NULL,                  /* RINIT */
+	NULL,                  /* RSHUTDOWN */
+	NULL,                  /* MINFO */
 #if ZEND_MODULE_API_NO >= 20010901
-    PHP_DJONPHPEXT_EXTVER,
+	PHP_DJONPHPEXT_EXTVER,
 #endif
-    STANDARD_MODULE_PROPERTIES
+	STANDARD_MODULE_PROPERTIES
 };
 
 #ifdef COMPILE_DL_DJONPHPEXT
-extern "C" {
-ZEND_GET_MODULE(djonPhpExt)
-}
+	extern "C" {
+		ZEND_GET_MODULE(djonPhpExt)
+	}
 #endif

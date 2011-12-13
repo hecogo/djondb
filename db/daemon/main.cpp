@@ -3,7 +3,7 @@
  *   * linux daemon written in C.
  *    *
  *     * To use this code, search for 'TODO' and follow the directions.
- * 
+ *
  *       * To compile this file:
  *        *      gcc -o [daemonname] thisfile.c
  *         *
@@ -82,12 +82,16 @@ void signal_handler(int sig) {
 			exit(0);
 			break;
 		case SIGTERM:
-			syslog(LOG_WARNING, "Received SIGTERM signal.");
+        case SIGINT:
+        case SIGKILL:
+        case SIGSTOP:
+			syslog(LOG_WARNING, "Received SIGTERM | SIGINT signal.");
 			service_shutdown();
 			__stopRunning = true;
 
 			exit(0);
 			break;
+
 		default:
 			syslog(LOG_WARNING, "Unhandled signal (%d) %s", strsignal(sig));
 			break;
@@ -120,6 +124,8 @@ int main(int argc, char *argv[]) {
 	signal(SIGHUP, signal_handler);
 	signal(SIGTERM, signal_handler);
 	signal(SIGINT, signal_handler);
+	signal(SIGKILL, signal_handler);
+	signal(SIGSTOP, signal_handler);
 	signal(SIGQUIT, signal_handler);
 
 	int c;
