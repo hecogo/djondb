@@ -16,6 +16,7 @@ AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
 # AC_CONFIG_SUBDIRS(dinnerd libdinner hungryhacker vdinner)
 AC_CONFIG_HEADERS([config.h])
+AM_COND_IF([DEBUG], AC_DEFINE([DEBUG], [1], [Define Debug variable]))
 LT_INIT([disable-static])
 AC_PROG_CXX
 AC_SUBST([DJON_UTIL_SO_VERSION], [0:1:0])

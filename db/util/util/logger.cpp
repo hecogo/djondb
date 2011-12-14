@@ -8,6 +8,9 @@
 #include <string.h>
 #include <sstream>
 #include <syslog.h>
+#include "config.h"
+
+#ifdef DEBUG
 #define PRINT(TYPE, CLAZZ) \
   char* buffer = (char*)malloc(1000); \
   memset(buffer, 0, 1000); \
@@ -21,6 +24,10 @@
   result = ss.str(); \
   free(buffer); \
   syslog(LOG_INFO, result.c_str());
+#endif
+#ifndef DEBUG
+#define PRINT(TYPE, CLAZZ) 
+#endif
 //  cout << TYPE << ": " << CLAZZ << ": " << result << endl;
 
 
