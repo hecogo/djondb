@@ -29,8 +29,7 @@ void connection_free_storage(void *object TSRMLS_DC)
 
 zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
 {
-    syslog(LOG_INFO, "connection_create_handler" );
-    zval *tmp;
+    syslog(LOG_INFO, "connection_create_handler" ); zval *tmp;
     zend_object_value retval;
 
     connection_object *obj = (connection_object *)emalloc(sizeof(connection_object));
@@ -52,23 +51,6 @@ zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
 PHP_METHOD(Connection, __construct)
 {
     syslog(LOG_INFO, "__construct" );
-    char* host;
-    int host_len;
-    Connection *conn = NULL;
-    zval *object = getThis();
-
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &host, &host_len) == FAILURE) {
-        RETURN_NULL();
-    }
-
-    Connection* con = ConnectionManager::getConnection(host);
-    if (con->open()) {
-        syslog(LOG_INFO, "Connection open. host:" );
-		  connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
-		  obj->conn = con;
-	 } else {
-		 syslog(LOG_INFO, "Cannot connection to the selected host" );
-	 }
 }
 
 PHP_METHOD(Connection, djon_insert)
@@ -97,6 +79,32 @@ PHP_METHOD(Connection, djon_insert)
 	conn->insert(ns, json);
 }
 
+PHP_METHOD(Connection, djon_isconnected)
+{
+	char* ns;
+	int ns_len;
+	char* json;
+	int json_len;
+
+	zval *object = getThis();
+
+	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+	if (!obj) {
+		syslog(LOG_INFO, "obj is null" );
+		RETURN_FALSE;
+	}
+	Connection* conn = obj->conn;
+	if (!conn) {
+		syslog(LOG_INFO, "conn is null" );
+		RETURN_FALSE;
+	}
+	if (conn->isOpen()) {
+		RETURN_TRUE;
+	} else {
+		RETURN_FALSE;
+	}
+}
+
 PHP_METHOD(Connection, djon_connect)
 {
 	char* host;
@@ -107,11 +115,17 @@ PHP_METHOD(Connection, djon_connect)
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &host, &host_len) == FAILURE) {
         RETURN_NULL();
     }
+	 connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+
+	 if (obj->conn != NULL) {
+		 obj->conn->close();
+		 delete obj->conn;
+		 obj->conn = NULL;
+	 }
 
 	 Connection* con = ConnectionManager::getConnection(host);
 	 if (con->isOpen() || con->open()) {
 		 syslog(LOG_INFO, "Connection open. host:" );
-		 connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
 		 obj->conn = con;
 	 } else {
 		 syslog(LOG_INFO, "Cannot connection to the selected host" );
@@ -140,6 +154,7 @@ function_entry connection_methods[] = {
 	PHP_ME(Connection,  __construct,     NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
 		PHP_ME(Connection,  djon_insert,           NULL, ZEND_ACC_PUBLIC)
 		PHP_ME(Connection,  djon_connect,           NULL, ZEND_ACC_PUBLIC)
+		PHP_ME(Connection,  djon_isconnected,           NULL, ZEND_ACC_PUBLIC)
 		PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
 		{NULL, NULL, NULL}
 };
