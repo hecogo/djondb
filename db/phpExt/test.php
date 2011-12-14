@@ -19,11 +19,12 @@ if (!extension_loaded('djonPhpExt')) {
 	}
 	if (is_null($c)) {
 		echo '<p>Starting new connection</p>';
-		$c = new Connection("localhost");
+		$c = new Connection();
 		$_SESSION['connection'] = $c;
 
 	}
 
+	$c->djon_connect("localhost");
 	$guid = uniqid();
 	$json = "{ _id: '$guid', name: 'Juan', lastName: 'Cross'}";
 

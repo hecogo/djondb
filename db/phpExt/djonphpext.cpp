@@ -17,14 +17,14 @@ struct connection_object {
 void connection_free_storage(void *object TSRMLS_DC)
 {
     syslog(LOG_INFO, "free storage");
-//    connection_object *obj = (connection_object *)object;
-//    obj->conn->close();
-//    delete obj->conn;
+    connection_object *obj = (connection_object *)object;
+    obj->conn->close();
+    delete obj->conn;
 
-//    zend_hash_destroy(obj->std.properties);
-//    FREE_HASHTABLE(obj->std.properties);
+    zend_hash_destroy(obj->std.properties);
+    FREE_HASHTABLE(obj->std.properties);
 
-//    efree(obj);
+    efree(obj);
 }
 
 zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
@@ -97,6 +97,27 @@ PHP_METHOD(Connection, djon_insert)
 	conn->insert(ns, json);
 }
 
+PHP_METHOD(Connection, djon_connect)
+{
+	char* host;
+    int host_len;
+    Connection *conn = NULL;
+    zval *object = getThis();
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &host, &host_len) == FAILURE) {
+        RETURN_NULL();
+    }
+
+	 Connection* con = ConnectionManager::getConnection(host);
+	 if (con->isOpen() || con->open()) {
+		 syslog(LOG_INFO, "Connection open. host:" );
+		 connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+		 obj->conn = con;
+	 } else {
+		 syslog(LOG_INFO, "Cannot connection to the selected host" );
+	 }
+}
+
 PHP_METHOD(Connection, djon_find)
 {
 	char* ns;
@@ -115,12 +136,13 @@ PHP_METHOD(Connection, djon_find)
 	conn->findByKey(ns, json);
 }
 
-	function_entry connection_methods[] = {
-		PHP_ME(Connection,  __construct,     NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-			PHP_ME(Connection,  djon_insert,           NULL, ZEND_ACC_PUBLIC)
-			PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
-			{NULL, NULL, NULL}
-	};
+function_entry connection_methods[] = {
+	PHP_ME(Connection,  __construct,     NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+		PHP_ME(Connection,  djon_insert,           NULL, ZEND_ACC_PUBLIC)
+		PHP_ME(Connection,  djon_connect,           NULL, ZEND_ACC_PUBLIC)
+		PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
+		{NULL, NULL, NULL}
+};
 
 PHP_MINIT_FUNCTION(djonPhpExt)
 {
@@ -153,7 +175,7 @@ zend_module_entry djonPhpExt_module_entry = {
 };
 
 #ifdef COMPILE_DL_DJONPHPEXT
-	extern "C" {
-		ZEND_GET_MODULE(djonPhpExt)
-	}
+extern "C" {
+	ZEND_GET_MODULE(djonPhpExt)
+}
 #endif
