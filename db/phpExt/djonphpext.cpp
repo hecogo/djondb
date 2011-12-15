@@ -27,6 +27,7 @@ void connection_free_storage(void *object TSRMLS_DC)
 //    FREE_HASHTABLE(obj->std.properties);
 
 //    efree(obj);
+//    test
 }
 
 zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
