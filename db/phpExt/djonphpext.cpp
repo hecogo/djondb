@@ -9,6 +9,8 @@ using namespace djondb;
 zend_object_handlers connection_object_handlers;
 zend_class_entry *connection_ce;
 
+Connection* __conn = NULL;
+
 struct connection_object {
     zend_object std;
     Connection *conn;
@@ -17,14 +19,14 @@ struct connection_object {
 void connection_free_storage(void *object TSRMLS_DC)
 {
     syslog(LOG_INFO, "free storage");
-    connection_object *obj = (connection_object *)object;
-    obj->conn->close();
-    delete obj->conn;
+//    connection_object *obj = (connection_object *)object;
+//    obj->conn->close();
+//    delete obj->conn;
 
-    zend_hash_destroy(obj->std.properties);
-    FREE_HASHTABLE(obj->std.properties);
+//    zend_hash_destroy(obj->std.properties);
+//    FREE_HASHTABLE(obj->std.properties);
 
-    efree(obj);
+//    efree(obj);
 }
 
 zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
@@ -71,7 +73,7 @@ PHP_METHOD(Connection, djon_insert)
 		syslog(LOG_INFO, "obj is null" );
 		return;
 	}
-	Connection* conn = obj->conn;
+	Connection* conn = __conn; //bj->conn;
 	if (!conn) {
 		syslog(LOG_INFO, "conn is null" );
 		return;
@@ -93,7 +95,7 @@ PHP_METHOD(Connection, djon_isconnected)
 		syslog(LOG_INFO, "obj is null" );
 		RETURN_FALSE;
 	}
-	Connection* conn = obj->conn;
+	Connection* conn = __conn;//obj->conn;
 	if (!conn) {
 		syslog(LOG_INFO, "conn is null" );
 		RETURN_FALSE;
@@ -107,6 +109,7 @@ PHP_METHOD(Connection, djon_isconnected)
 
 PHP_METHOD(Connection, djon_connect)
 {
+		syslog(LOG_INFO, "djon_connect" );
 	char* host;
     int host_len;
     Connection *conn = NULL;
@@ -117,13 +120,16 @@ PHP_METHOD(Connection, djon_connect)
     }
 	 connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
 
-	 if (obj->conn != NULL) {
-		 obj->conn->close();
-		 delete obj->conn;
-		 obj->conn = NULL;
-	 }
+//	 if (obj->conn != NULL) {
+//		 obj->conn->close();
+//		 delete obj->conn;
+//		 obj->conn = NULL;
+//	 }
 
-	 Connection* con = ConnectionManager::getConnection(host);
+	 if (__conn == NULL) {
+		 __conn		= ConnectionManager::getConnection(host);
+	 }
+	 Connection* con = __conn;
 	 if (con->isOpen() || con->open()) {
 		 syslog(LOG_INFO, "Connection open. host:" );
 		 obj->conn = con;
@@ -146,18 +152,18 @@ PHP_METHOD(Connection, djon_find)
 	}
 
 	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
-	Connection* conn = obj->conn;
+	Connection* conn = __conn;//obj->conn;
 	conn->findByKey(ns, json);
 }
 
-function_entry connection_methods[] = {
-	PHP_ME(Connection,  __construct,     NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-		PHP_ME(Connection,  djon_insert,           NULL, ZEND_ACC_PUBLIC)
-		PHP_ME(Connection,  djon_connect,           NULL, ZEND_ACC_PUBLIC)
-		PHP_ME(Connection,  djon_isconnected,           NULL, ZEND_ACC_PUBLIC)
-		PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
-		{NULL, NULL, NULL}
-};
+	function_entry connection_methods[] = {
+		PHP_ME(Connection,  __construct,     NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+			PHP_ME(Connection,  djon_insert,           NULL, ZEND_ACC_PUBLIC)
+			PHP_ME(Connection,  djon_connect,           NULL, ZEND_ACC_PUBLIC)
+			PHP_ME(Connection,  djon_isconnected,           NULL, ZEND_ACC_PUBLIC)
+			PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
+			{NULL, NULL, NULL}
+	};
 
 PHP_MINIT_FUNCTION(djonPhpExt)
 {
@@ -190,7 +196,7 @@ zend_module_entry djonPhpExt_module_entry = {
 };
 
 #ifdef COMPILE_DL_DJONPHPEXT
-extern "C" {
-	ZEND_GET_MODULE(djonPhpExt)
-}
+	extern "C" {
+		ZEND_GET_MODULE(djonPhpExt)
+	}
 #endif
