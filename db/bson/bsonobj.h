@@ -16,19 +16,6 @@ typedef std::string t_keytype;
     content->_element = vval; \
     _elements.insert(pair<t_keytype, BSONContent* >(kkey, content));
 
-#define SEARCHBSON(key,ttype) \
-    BSONContent* content; \
-    for (std::map<t_keytype, BSONContent* >::const_iterator it = _elements.begin(); it != _elements.end(); it++) { \
-        t_keytype itKey = it->first; \
-        if (itKey.compare(key) == 0) { \
-            content = it->second; \
-            if (content->_type != ttype) { \
-               cout << "The type " << content->_type << " does not match the requested STRING for key2: " << key << endl; \
-               throw "type does not match"; \
-            } \
-            break; \
-        } \
-    }
 
 enum BSONTYPE {
     INT_TYPE,
@@ -84,6 +71,8 @@ class BSONObj
         int length() const;
 
     protected:
+    private:
+        BSONContent* find(t_keytype, BSONTYPE) const;
     private:
         std::map<t_keytype, BSONContent* > _elements;
 };

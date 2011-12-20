@@ -25,12 +25,12 @@ options {
    };
    
    struct Stack* _stack;
-   char* str_name;
-   int str_type;
-   void* str_value;
+//   char* str_name;
+//   int str_type;
+//   void* str_value;
+   int _temp;
    
    void push(struct BSONStruct* element) {
-        printf("doing push\n");
    	_stack->_element = element;
    	struct Stack* lastElement = (struct Stack*)malloc(sizeof(struct Stack));
    	lastElement->_last = _stack;
@@ -38,48 +38,48 @@ options {
    }
    
    struct BSONStruct* pop() {
-        printf("doing pop\n");
-        struct BSONStruct* result = _stack->_element;
-        if (result == NULL) {
-            return NULL;
-        }
         struct Stack* stack = _stack->_last;
         free(_stack);
         _stack = stack;
-        return _stack;
+        if (_stack != NULL) {
+            return _stack->_element;
+        } else {
+            return NULL;
+        }
    }
  }
 
 start_point returns [void* val]
         @init{
-           printf("start_point\n");
+           _temp = 0;
 	   bson_root = NULL;
 	   bson_current = NULL;
 	   _stack = (struct Stack*)malloc(sizeof(struct Stack));
-           printf("stack\n");
+	   _stack->_last = NULL;
+	   _stack->_element = NULL;
 	}
 		: object_expr EOF {
-		printf("ending start_point \n");
 		$val = bson_root;
 		};
 	
-object_expr
+object_expr returns [struct BSONStruct* val]
 @init{
-          printf("@init object_expr\n");
 	  if (bson_root != NULL) {
-	        printf("pushing object_expr\n");
 	   	push(bson_root);
 	   	bson_root = NULL;
 	   }
 }	
 	:  LBRAN pair (COMMA pair)* RBRAN 
 	{
-	    printf("ending object_expr\n");
+	    $val = bson_root;
 	    struct BSONStruct* temp = pop();
-	    if (temp != NULL)
+	    if (temp != NULL) {
 	       bson_root = temp;
-
-	    printf("ending pair\n");
+	       bson_current = bson_root;
+	       while (bson_current->next != NULL) {
+	          bson_current =bson_current->next ;
+	       }
+	     }
 	};
 
 array_expr
@@ -87,14 +87,13 @@ array_expr
 	
 pair
 	: name COLON value {
-	     printf("name: \%s COLON value\n", $name.text->chars);
              struct BSONStruct* element = (struct BSONStruct*)malloc(sizeof(struct BSONStruct));
              element->next = NULL;
-             element->name = (char*)malloc(strlen(str_name)+1);
-             memset(element->name, 0, strlen(str_name) + 1);
-             memcpy(element->name, str_name, strlen(str_name));
-             element->type = str_type;
-             element->value = str_value;
+             element->name = (char*)malloc(strlen($name.val)+1);
+             memset(element->name, 0, strlen($name.val) + 1);
+             memcpy(element->name, $name.val, strlen($name.val));
+             element->type = $value.type;
+             element->value = $value.val;
              if (bson_root == NULL) {
                 bson_root = element;
                 bson_current = bson_root;
@@ -104,49 +103,41 @@ pair
              }
 	};
 	
-name
+name returns [char* val]
 	:	ID {
-	     str_name = $ID.text->chars;
+	     $val = $ID.text->chars;
 	};
 
-value
+value returns [void* val, int type]
 	:	
 	(INT 
 	{ 
-	  str_type = 1;
-	  int* valInt = malloc(sizeof(int));
+	  $type = 1;
+	  $val = malloc(sizeof(int));
 	  char* t = $INT.text->chars;
-	  *valInt = atoi(t);
-	  
-	  str_value = valInt;
+	  *(int*)$val = atoi(t);
 	}
 	| FLOAT 
 	{ 
-	  str_type = 2;
-	  float* valFloat = malloc(sizeof(float));
+	  $type = 2;
+	  $val = malloc(sizeof(float));
 	  char* t2 = $FLOAT.text->chars;
-	  *valFloat = atof(t2);
-	  
-	  str_value = valFloat;
+	  *(float*)$val = atof(t2);
 	}
 	| STRING 
 	{ 
-	  str_type = 3;
+	  $type = 3;
 	  char* t3 = $STRING.text->chars;
-	  char* text = malloc(strlen(t3) + 1);
-	  memset(text, 0, strlen(t3) + 1);
-	  memcpy(text, t3, strlen(t3));
-	  
-	  str_value = text;
+	  // Dont copy the quotes
+	  char* temp = malloc(strlen(t3)-1);
+	  memset(temp, 0, strlen(t3) -1);
+	  strncpy(temp, t3+1, strlen(t3)-2); //, strlen(t3)
+	  $val = temp;
 	}
 	| object_expr 
 	{
-	     printf("object_expr: \%s\n", $object_expr.text->chars);
-	  if (bson_root != NULL) {
-	        printf("pushing object_expr\n");
-	   	push(bson_root);
-	   	bson_root = NULL;
-	   }
+	  $type = 4;
+	  $val = $object_expr.val;
 	}
 	| array_expr);
 

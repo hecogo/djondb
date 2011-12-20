@@ -13,7 +13,9 @@ public:
     {
         TEST_ADD(TestBSONSuite::testBSON)
         TEST_ADD(TestBSONSuite::testCopyBSON)
-        TEST_ADD(TestBSONSuite::testParser)
+        TEST_ADD(TestBSONSuite::testParserSimple)
+        TEST_ADD(TestBSONSuite::testParserRelation)
+        TEST_ADD(TestBSONSuite::testParserDoubleRelation)
     }
 
 private:
@@ -94,9 +96,25 @@ private:
         delete obj;
     }
 
-    void testParser()
+    void testParserSimple()
     {
-        BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25}");//, rel1: {innertext: 'inner text'}
+        BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25}");
+		  cout << "aqui" << endl;
+        TEST_ASSERT(obj->getInt("age") != NULL);
+        TEST_ASSERT(*obj->getInt("age") == 1);
+        TEST_ASSERT(obj->getChars("name") != NULL);
+        TEST_ASSERT(strcmp(obj->getChars("name"), "John") == 0);
+
+        TEST_ASSERT(obj->getDouble("salary") != NULL);
+        TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
+
+        delete obj;
+    }
+    
+	 void testParserRelation()
+    {
+        BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: {innertext: 'inner text'}}");
+		  cout << "aqui" << endl;
         TEST_ASSERT(obj->getInt("age") != NULL);
         TEST_ASSERT(*obj->getInt("age") == 1);
         TEST_ASSERT(obj->getChars("name") != NULL);
@@ -108,6 +126,26 @@ private:
 		  TEST_ASSERT(obj->getBSON("rel1") != NULL);
 		  TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
 
+        delete obj;
+    }
+	 
+	 void testParserDoubleRelation()
+    {
+        BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: {innertext: 'inner text', innerrel1: {innertext:'text2'}}}");
+		  cout << "aqui" << endl;
+        TEST_ASSERT(obj->getInt("age") != NULL);
+        TEST_ASSERT(*obj->getInt("age") == 1);
+        TEST_ASSERT(obj->getChars("name") != NULL);
+        TEST_ASSERT(strcmp(obj->getChars("name"), "John") == 0);
+
+        TEST_ASSERT(obj->getDouble("salary") != NULL);
+        TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
+
+		  TEST_ASSERT(obj->getBSON("rel1") != NULL);
+		  TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
+
+		  TEST_ASSERT(obj->getBSON("rel1")->getBSON("innerrel1") != NULL);
+		  TEST_ASSERT(obj->getBSON("rel1")->getBSON("innerrel1")->getString("innertext")->compare("text2") == 0);
         delete obj;
     }
 };

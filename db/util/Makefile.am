@@ -3,11 +3,17 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 if DEBUG
    AM_CFLAGS = -g3 -O0
-   AM_CXXFLAGS = -g3 -O0
+   DB_XXFLAGS = -g3 -O0
 else
    AM_CFLAGS = -O2
-   AM_CXXFLAGS = -O2
+   DB_XXFLAGS = -O2
 endif
+
+if PROFILE
+	PF_XXFLAGS = -pg   
+endif
+
+AM_CXXFLAGS = ${PF_XXFLAGS} ${DB_XXFLAGS} 
 
 lib_LTLIBRARIES = lib@LIB_NAME@.la
 
