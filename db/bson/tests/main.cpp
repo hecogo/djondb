@@ -1,5 +1,5 @@
 #include <iostream>
-#include "bson.h"
+#include "../bson.h"
 #include <string>
 #include <string.h>
 #include <cpptest.h>
@@ -27,6 +27,11 @@ private:
         obj->add("long", 1L);
         obj->add("double", 1.1);
 
+		  BSONObj rel;
+		  rel.add("innertext", std::string("inner text"));
+		  obj->add("rel1", rel);
+
+
         TEST_ASSERT(obj->getInt("int") != NULL);
         TEST_ASSERT(*obj->getInt("int") == 1);
 
@@ -42,7 +47,9 @@ private:
         TEST_ASSERT(obj->getDouble("double") != NULL);
         TEST_ASSERT(*obj->getDouble("double") == 1.1);
 
-        delete obj;
+        TEST_ASSERT(obj->getBSON("rel1") != NULL);
+		  TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
+		  delete obj;
     }
 
     void testCopyBSON()
@@ -54,6 +61,10 @@ private:
         objOrig->add("char*", (char*)"char*");
         objOrig->add("long", 1L);
         objOrig->add("double", 1.1);
+
+		  BSONObj rel;
+		  rel.add("innertext", std::string("inner text"));
+		  objOrig->add("rel1", rel);
 
 
         BSONObj* obj = new BSONObj(*objOrig);
@@ -75,12 +86,17 @@ private:
         TEST_ASSERT(obj->getDouble("double") != NULL);
         TEST_ASSERT(*obj->getDouble("double") == 1.1);
 
+        BSONObj* temp = obj->getBSON("rel1");
+		  TEST_ASSERT(temp != NULL);
+        TEST_ASSERT(obj->getBSON("rel1")->getString("innertext") != NULL);
+		  TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
+
         delete obj;
     }
 
     void testParser()
     {
-        BSONObj* obj = BSONParser::parse("{ age: 1, name: 'John', salary: 3500.25}");
+        BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25}");//, rel1: {innertext: 'inner text'}
         TEST_ASSERT(obj->getInt("age") != NULL);
         TEST_ASSERT(*obj->getInt("age") == 1);
         TEST_ASSERT(obj->getChars("name") != NULL);
@@ -88,6 +104,10 @@ private:
 
         TEST_ASSERT(obj->getDouble("salary") != NULL);
         TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
+
+		  TEST_ASSERT(obj->getBSON("rel1") != NULL);
+		  TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
+
         delete obj;
     }
 };

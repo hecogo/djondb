@@ -31,6 +31,9 @@ BSONContent::~BSONContent() {
         case DOUBLE_TYPE:
             delete ((double*)_element);
             break;
+		  case BSON_TYPE:
+				delete ((BSONObj*)_element);
+				break;
         default:
             break;
     }
@@ -46,6 +49,8 @@ BSONContent::BSONContent(const BSONContent& orig) {
     int i;
     long l;
     double d;
+	 BSONObj* bson;
+	 BSONObj* internalBson;
     switch (this->_type) {
         case STRING_TYPE:
             this->_element = new std::string(*(std::string*)orig._element);
@@ -74,6 +79,11 @@ BSONContent::BSONContent(const BSONContent& orig) {
             *internalDouble = d;
             this->_element = internalDouble;
             break;
+		  case BSON_TYPE:
+			   bson = (BSONObj*)orig._element;
+				internalBson = new BSONObj(*bson);
+				this->_element = internalBson;
+				break;
         default:
             break;
     }
@@ -128,7 +138,7 @@ void BSONObj::add(t_keytype key, std::string val) {
     BSONCONTENT_FILL(key, STRING_TYPE, internalValue);
 }
 
-void BSONObj::add(t_keytype key, BSONObj val) {
+void BSONObj::add(t_keytype key, const BSONObj& val) {
     BSONObj* internalValue = new BSONObj(val);
     BSONCONTENT_FILL(key, BSON_TYPE, internalValue);
 }

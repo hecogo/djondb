@@ -3,6 +3,11 @@ grammar JSONGrammar;
 options {
 	language = C;
 }
+@parser::includes {
+//#include <stdlib.h>
+   #include <stdlib.h>
+   #include <stdio.h>
+}
 @postinclude
  {
    struct BSONStruct {
@@ -14,26 +19,67 @@ options {
    struct BSONStruct* bson_root;
    struct BSONStruct* bson_current;
    
+   struct Stack {
+       struct Stack* _last;
+       struct BSONStruct* _element;
+   };
+   
+   struct Stack* _stack;
    char* str_name;
    int str_type;
    void* str_value;
+   
+   void push(struct BSONStruct* element) {
+        printf("doing push\n");
+   	_stack->_element = element;
+   	struct Stack* lastElement = (struct Stack*)malloc(sizeof(struct Stack));
+   	lastElement->_last = _stack;
+   	_stack = lastElement;
+   }
+   
+   struct BSONStruct* pop() {
+        printf("doing pop\n");
+        struct BSONStruct* result = _stack->_element;
+        if (result == NULL) {
+            return NULL;
+        }
+        struct Stack* stack = _stack->_last;
+        free(_stack);
+        _stack = stack;
+        return _stack;
+   }
  }
-@parser::includes {
-//#include <stdlib.h>
-}
 
 start_point returns [void* val]
         @init{
+           printf("start_point\n");
 	   bson_root = NULL;
 	   bson_current = NULL;
+	   _stack = (struct Stack*)malloc(sizeof(struct Stack));
+           printf("stack\n");
 	}
 		: object_expr EOF {
+		printf("ending start_point \n");
 		$val = bson_root;
 		};
 	
-object_expr	
+object_expr
+@init{
+          printf("@init object_expr\n");
+	  if (bson_root != NULL) {
+	        printf("pushing object_expr\n");
+	   	push(bson_root);
+	   	bson_root = NULL;
+	   }
+}	
 	:  LBRAN pair (COMMA pair)* RBRAN 
 	{
+	    printf("ending object_expr\n");
+	    struct BSONStruct* temp = pop();
+	    if (temp != NULL)
+	       bson_root = temp;
+
+	    printf("ending pair\n");
 	};
 
 array_expr
@@ -41,6 +87,7 @@ array_expr
 	
 pair
 	: name COLON value {
+	     printf("name: \%s COLON value\n", $name.text->chars);
              struct BSONStruct* element = (struct BSONStruct*)malloc(sizeof(struct BSONStruct));
              element->next = NULL;
              element->name = (char*)malloc(strlen(str_name)+1);
@@ -91,7 +138,17 @@ value
 	  memcpy(text, t3, strlen(t3));
 	  
 	  str_value = text;
-	}| object_expr | array_expr);
+	}
+	| object_expr 
+	{
+	     printf("object_expr: \%s\n", $object_expr.text->chars);
+	  if (bson_root != NULL) {
+	        printf("pushing object_expr\n");
+	   	push(bson_root);
+	   	bson_root = NULL;
+	   }
+	}
+	| array_expr);
 
 ID  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
     ;
