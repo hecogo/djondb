@@ -60,6 +60,7 @@ public:
         TEST_ADD(TestDBSuite::testMassiveInsert);
         TEST_ADD(TestDBSuite::testFinds);
 		  TEST_ADD(TestDBSuite::testInsertComplexBSON);
+		  TEST_ADD(TestDBSuite::testFindsByFilter);
 
         controller.shutdown();
     }
@@ -77,6 +78,7 @@ private:
 
     void testInsertWithStringId()
     {
+		 cout << "testInsertWithStringId" << endl;
         BSONObj obj;
         std::string* id = uuid();
         obj.add("_id", *id);
@@ -91,6 +93,7 @@ private:
 
     void testInsertWithCharId()
     {
+		 cout << "testInsertWithCharId" << endl;
         BSONObj obj;
         std::string* id = uuid();
         obj.add("_id", id->c_str());
@@ -105,6 +108,7 @@ private:
 
     void testInsertWithoutId()
     {
+		 cout << "testInsertWithoutId" << endl;
         BSONObj obj;
         obj.add("name", "cross");
         BSONObj* res = controller.insert("sp1.customer", &obj);
@@ -114,6 +118,7 @@ private:
     }
 
     void testInsertComplexBSON() {
+		 cout << "testInsertComplexBSON" << endl;
 		 BSONObj obj;
 		 obj.add("int", 1);
 		 obj.add("char", "test");
@@ -131,6 +136,7 @@ private:
 
 	 void testMassiveInsert()
     {
+		 cout << "testMassiveInsert" << endl;
         int inserts = 1000;
         std::auto_ptr<Logger> log(getLogger(NULL));
 
@@ -181,7 +187,7 @@ private:
 
     void testFinds()
     {
-
+        cout << "testFinds" << endl;
 
         std::auto_ptr<Logger> log(getLogger(NULL));
 
@@ -214,9 +220,28 @@ private:
         }
     }
 
+    void testFindsByFilter()
+    {
+		 cout << "testFindsByFilter" << endl;
+		 // Insert some data
+		 //
+		 BSONObj* obj;
+		 std::string customer = "{name: 'Juan', lastName:'Crossley'}";
+		 obj = BSONParser::parse(customer);
+		 controller.insert("find.filter", obj);
+       delete obj;
+
+		 BSONObj* filter = BSONParser::parse("{lastName: 'Crossley'}");
+
+		 // Starting find by filter
+		 std::vector<BSONObj*> found = controller.find("find.filter",*filter);
+		 TEST_ASSERT(found.size() > 1); 
+		 delete filter;
+   }
+
     void testFindPrevious()
     {
-
+        cout << "testFindPrevious" << endl;
         std::auto_ptr<Logger> log(getLogger(NULL));
 
         FileInputStream fis("temp.txt", "rb");
@@ -313,6 +338,7 @@ private:
 
     void testSimpleIndex()
     {
+		 cout << "testSimpleIndex" << endl;
         FileInputStream fis("simple.dat", "rb");
         std::vector<std::string> ids;
         while (!fis.eof())
@@ -327,6 +353,7 @@ private:
 
     void testComplexIndex()
     {
+		 cout << "testComplexIndex" << endl;
         FileInputStream fis("guids.txt", "rb");
         std::vector<std::string> ids;
         while (!fis.eof())

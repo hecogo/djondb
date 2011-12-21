@@ -40,3 +40,7 @@ make
 sudo make install
 cd ..
 
+cd shell;rm -rf obj;mkdir obj;cd obj
+../configure; make clean;make
+cd ../..
+
