@@ -16,14 +16,18 @@ BSONInputStream::~BSONInputStream()
 BSONObj* BSONInputStream::readBSON() const {
     BSONObj* obj = new BSONObj();
     int elements = _inputStream->readLong();
+	 BSONInputStream* bis;
     for (int x = 0; x < elements; x++) {
         std::auto_ptr<string> key(_inputStream->readString());
 
         int type = _inputStream->readLong();
         void* data = NULL;
+		  BSONObj* inner;
         switch (type) {
             case BSON_TYPE:
-                // Unsupported yet;
+					 inner = readBSON();
+					 obj->add(*key.get(), *inner);
+					 delete inner;
                 break;
             case INT_TYPE:
                 obj->add(*key.get(), _inputStream->readInt());

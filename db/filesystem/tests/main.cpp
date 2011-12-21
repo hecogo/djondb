@@ -19,6 +19,7 @@ public:
         TEST_ADD(TestFileSystemSuite::testFileOutputStream);
         TEST_ADD(TestFileSystemSuite::testFileInputStream);
         TEST_ADD(TestFileSystemSuite::testBSONStreams);
+        TEST_ADD(TestFileSystemSuite::testBSONStreamsComplex);
     }
 
 private:
@@ -78,6 +79,75 @@ private:
         TEST_ASSERT(*obj->getDouble("double") == 1.1);
 
         fis->close();
+    }
+
+    void testBSONStreamsComplex()
+    {
+        std::auto_ptr<FileOutputStream> fos(new FileOutputStream("bson.txt", "wb"));
+        std::auto_ptr<BSONOutputStream> bsonOut(new BSONOutputStream(fos.get()));
+
+        std::auto_ptr<BSONObj> obj(new BSONObj());
+        // Add in
+        obj->add("int", 1);
+        obj->add("string", std::string("test"));
+        obj->add("char*", (char*)"char*");
+        obj->add("long", 1L);
+        obj->add("double", 1.1);
+
+		  BSONObj inner;
+        inner.add("int", 1);
+        inner.add("string", std::string("test"));
+        inner.add("char*", (char*)"char*");
+        inner.add("long", 1L);
+        inner.add("double", 1.1);
+
+		  obj->add("inner", inner);
+
+        bsonOut->writeBSON(*obj);
+
+        fos->close();
+
+        obj.release();
+
+        std::auto_ptr<FileInputStream> fis(new FileInputStream("bson.txt", "rb"));
+        std::auto_ptr<BSONInputStream> bsonIn(new BSONInputStream(fis.get()));
+
+        obj = std::auto_ptr<BSONObj>(bsonIn->readBSON());
+
+        TEST_ASSERT(obj->getInt("int") != NULL);
+        TEST_ASSERT(*obj->getInt("int") == 1);
+
+        TEST_ASSERT(obj->getString("string") != NULL);
+        TEST_ASSERT(((std::string*)obj->getString("string"))->compare("test") == 0);
+
+        TEST_ASSERT(obj->getChars("char*") != NULL);
+        TEST_ASSERT(strcmp((char*) obj->getChars("char*"), "char*") == 0);
+
+        TEST_ASSERT(obj->getLong("long") != NULL);
+        TEST_ASSERT(*obj->getLong("long") == 1L);
+
+        TEST_ASSERT(obj->getDouble("double") != NULL);
+        TEST_ASSERT(*obj->getDouble("double") == 1.1);
+
+        BSONObj* innerTest = obj->getBSON("inner");
+		  TEST_ASSERT(innerTest != NULL);
+	     
+		  TEST_ASSERT(innerTest->getInt("int") != NULL);
+        TEST_ASSERT(*innerTest->getInt("int") == 1);
+
+        TEST_ASSERT(innerTest->getString("string") != NULL);
+        TEST_ASSERT(((std::string*)innerTest->getString("string"))->compare("test") == 0);
+
+        TEST_ASSERT(innerTest->getChars("char*") != NULL);
+        TEST_ASSERT(strcmp((char*) innerTest->getChars("char*"), "char*") == 0);
+
+        TEST_ASSERT(innerTest->getLong("long") != NULL);
+        TEST_ASSERT(*innerTest->getLong("long") == 1L);
+
+        TEST_ASSERT(innerTest->getDouble("double") != NULL);
+        TEST_ASSERT(*innerTest->getDouble("double") == 1.1);
+
+		  fis->close();
     }
 
 };

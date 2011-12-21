@@ -24,9 +24,11 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
         BSONContent* cont = i->second;
         _outputStream->writeLong(cont->_type);
         char* text;
+		  BSONObj* inner;
         switch (cont->_type) {
             case BSON_TYPE:
-                // Unsupported yet;
+                inner = (BSONObj*)cont->_element;
+					 writeBSON(*inner); 
                 break;
             case INT_TYPE:
                 _outputStream->writeInt(*((int*)cont->_element));
