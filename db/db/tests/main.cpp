@@ -59,6 +59,7 @@ public:
         TEST_ADD(TestDBSuite::testFindPrevious);
         TEST_ADD(TestDBSuite::testMassiveInsert);
         TEST_ADD(TestDBSuite::testFinds);
+		  TEST_ADD(TestDBSuite::testInsertComplexBSON);
 
         controller.shutdown();
     }
@@ -112,7 +113,23 @@ private:
         delete res;
     }
 
-    void testMassiveInsert()
+    void testInsertComplexBSON() {
+		 BSONObj obj;
+		 obj.add("int", 1);
+		 obj.add("char", "test");
+
+		 BSONObj inner;
+		 inner.add("int", 2);
+		 inner.add("char", "testInner");
+		 obj.add("inner", inner);
+
+		 BSONObj* res = controller.insert("sp1.customer", &obj);
+       TEST_ASSERT(res != NULL);
+       TEST_ASSERT(res->has("_id"));
+		 delete res;
+ 	 }
+
+	 void testMassiveInsert()
     {
         int inserts = 1000;
         std::auto_ptr<Logger> log(getLogger(NULL));
