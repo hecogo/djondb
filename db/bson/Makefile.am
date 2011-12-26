@@ -15,6 +15,9 @@ lib_LTLIBRARIES = lib@LIB_NAME@.la
 
 lib@LIB_NAME@_la_SOURCES = bsonobj.cpp \
                            bsonobj.h \
+									bsoncontent.h \
+									defs.h \
+									bsoncontent.cpp \
                            bson.h \
                            bsonparser.cpp \
                            bsonparser.h \
@@ -27,8 +30,9 @@ library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
 library_include_HEADERS = bson.h
 
 TESTS = test-bson
+bin_PROGRAMS = test-bson
 check_PROGRAMS = test-bson
-test_bson_LDADD = lib@LIB_NAME@.la -lX11 -lXss -lrt -luuid  -lantlr3c -lcpptest
+test_bson_LDADD = lib@LIB_NAME@.la -ldjon-util -lX11 -lXss -lrt -luuid   -lantlr3c -lcpptest
 test_bson_SOURCES = tests/main.cpp
 
 @LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include

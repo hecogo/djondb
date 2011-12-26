@@ -20,6 +20,21 @@ IndexFactory::~IndexFactory()
     }
 }
 
+bool IndexFactory::containsIndex(const char* ns, BSONObj key) {
+    std::stringstream ss;
+    ss << "ns:" << ns << ":";
+    for (std::map<t_keytype, BSONContent* >::const_iterator i = key.begin(); i != key.end(); i++) {
+        ss << i->first << ";";
+    }
+    std::string skey = ss.str();
+    map<std::string, IndexAlgorithm*>::iterator iIndex = _indexes.find(skey);
+    if (iIndex == _indexes.end()) {
+		 return false;
+    } else {
+		 return true;
+	 }
+}
+
 IndexAlgorithm* IndexFactory::index(const char* ns, BSONObj key) {
     std::stringstream ss;
     ss << "ns:" << ns << ":";

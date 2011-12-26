@@ -17,6 +17,7 @@ class IndexFactory
 
         static IndexFactory indexFactory;
         IndexAlgorithm* index(const char* ns, BSONObj key);
+		  bool containsIndex(const char* ns, BSONObj key);
     protected:
     private:
         IndexFactory();

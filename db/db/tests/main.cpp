@@ -16,6 +16,7 @@
 #include "fileoutputstream.h"
 #include "fileinputstream.h"
 #include "bplusindex.cpp"
+#include "indexfactory.h"
 #include "math.h"
 #include <cpptest.h>
 
@@ -26,6 +27,11 @@ class TestDBSuite: public Test::Suite
 public:
     TestDBSuite()
     {
+		 remove("sp1.customer.dat");
+		 remove("sp1.customer.idx");
+		 remove("find.filter.dat");
+		 remove("find.filter.idx");
+
         FileOutputStream fos("simple.dat", "wb");
         fos.writeString(std::string("1"));
         fos.writeString(std::string("4"));
@@ -54,6 +60,7 @@ public:
         TEST_ADD(TestDBSuite::testInsertWithoutId);
         TEST_ADD(TestDBSuite::testSimpleIndex);
         TEST_ADD(TestDBSuite::testComplexIndex);
+        TEST_ADD(TestDBSuite::testIndexFactory);
         controller.initialize();
 
         TEST_ADD(TestDBSuite::testFindPrevious);
@@ -225,18 +232,30 @@ private:
 		 cout << "testFindsByFilter" << endl;
 		 // Insert some data
 		 //
-		 BSONObj* obj;
-		 std::string customer = "{name: 'Juan', lastName:'Crossley'}";
-		 obj = BSONParser::parse(customer);
-		 controller.insert("find.filter", obj);
-       delete obj;
+		 controller.insert("find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+		 controller.insert("find.filter", BSONParser::parse("{name: 'Pepe', lastName:'Crossley'}"));
+		 controller.insert("find.filter", BSONParser::parse("{name: 'Juan', lastName:'Smith'}"));
+		 controller.insert("find.filter", BSONParser::parse("{name: 'Juan', lastName:'Clark'}"));
+		 controller.insert("find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+		 controller.insert("find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+		 controller.insert("find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+		 controller.insert("find.filter", BSONParser::parse("{name: 'Juan', lastName:'Last'}"));
 
 		 BSONObj* filter = BSONParser::parse("{lastName: 'Crossley'}");
 
 		 // Starting find by filter
 		 std::vector<BSONObj*> found = controller.find("find.filter",*filter);
-		 TEST_ASSERT(found.size() > 1); 
+		 TEST_ASSERT(found.size() == 5); 
 		 delete filter;
+		 
+		 found = controller.find("find.filter", *BSONParser::parse("{name: 'Juan'}"));
+		 TEST_ASSERT(found.size() == 7); 
+		 
+		 found = controller.find("find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Smith'}"));
+		 TEST_ASSERT(found.size() == 1); 
+		 
+		 found = controller.find("find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Last'}"));
+		 TEST_ASSERT(found.size() == 1); 
    }
 
     void testFindPrevious()
@@ -366,6 +385,33 @@ private:
         testIndex(ids);
     }
 
+	 void testIndexFactory() {
+		cout << "testIndexFactory" << endl;
+		BSONObj test;
+		test.add("_id", "1");
+
+		IndexAlgorithm* index = IndexFactory::indexFactory.index("ns.a", test);
+		TEST_ASSERT(index != NULL);
+
+		// Let's check if the factory returns the same instance for the same key
+		IndexAlgorithm* indexCompare = IndexFactory::indexFactory.index("ns.a", test);
+		TEST_ASSERT(index == indexCompare);
+
+		// Let's change the keys and test if a new IndexAlgorithm will be returned
+		BSONObj test2;
+		test2.add("key", "a");
+		IndexAlgorithm* indexCompare2 = IndexFactory::indexFactory.index("ns.a", test2);
+		TEST_ASSERT(index != indexCompare2);
+
+		// Checking the contains method
+      bool res = IndexFactory::indexFactory.containsIndex("ns.a", test);
+		TEST_ASSERT(res);
+
+		BSONObj test3;
+		test3.add("nkey", "b");
+      bool res2 = IndexFactory::indexFactory.containsIndex("ns.a", test3);
+		TEST_ASSERT(!res2);
+	 }
 };
 
 enum OutputType

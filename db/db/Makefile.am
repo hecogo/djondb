@@ -35,4 +35,3 @@ test_db_SOURCES = tests/main.cpp
 nodist_@LIB_NAME@_libinclude_HEADERS = config.h
 
 
-

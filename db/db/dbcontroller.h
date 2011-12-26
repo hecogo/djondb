@@ -45,6 +45,7 @@ class DBController
     private:
         std::map<std::string, SpacesType>  _spaces;
         StreamType* open(std::string ns, FILE_TYPE type);
+		  std::vector<BSONObj*> findFullScan(char* ns, const BSONObj& filter);
 
     private:
         long checkStructure(BSONObj* bson);

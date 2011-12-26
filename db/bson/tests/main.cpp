@@ -16,6 +16,7 @@ public:
         TEST_ADD(TestBSONSuite::testParserSimple)
         TEST_ADD(TestBSONSuite::testParserRelation)
         TEST_ADD(TestBSONSuite::testParserDoubleRelation)
+        TEST_ADD(TestBSONSuite::testComparison)
     }
 
 private:
@@ -148,6 +149,18 @@ private:
 		  TEST_ASSERT(obj->getBSON("rel1")->getBSON("innerrel1")->getString("innertext")->compare("text2") == 0);
         delete obj;
     }
+
+	 void testComparison() {
+		 // This method will test comparison from contents of two BSONObj
+		 
+		 BSONObj* obj1 = BSONParser::parse("{int: 1, double: 2, text: 'name'}");
+		 BSONObj* obj2 = BSONParser::parse("{int: 1, double: 2, text: 'name'}");
+
+		 TEST_ASSERT(*obj1->getContent("int") == *obj2->getContent("int"));
+		 TEST_ASSERT(*obj1->getContent("double") == *obj2->getContent("double"));
+		 TEST_ASSERT(*obj1->getContent("text") == *obj2->getContent("text"));
+		 TEST_ASSERT(!(*obj1->getContent("text") == *obj2->getContent("double")));
+	 }
 };
 
 enum OutputType
