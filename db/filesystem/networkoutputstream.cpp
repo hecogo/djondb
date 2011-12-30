@@ -96,12 +96,12 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
 }
 
 void NetworkOutputStream::writeString(const std::string& text) {
-	Logger* logger = getLogger(NULL);
-	if (logger->isDebug()) logger->debug("NetworkOutputStream::writeString text: %s", text.c_str());
+	//Logger* logger = getLogger(NULL);
+	//if (logger->isDebug()) logger->debug("NetworkOutputStream::writeString text: %s", text.c_str());
     const char* c = text.c_str();
     int l = strlen(c);
     writeChars(c, l);
-	 delete logger;
+	 //delete logger;
 }
 
 int NetworkOutputStream::open(const char* hostname, int port)
@@ -113,12 +113,12 @@ int NetworkOutputStream::open(const char* hostname, int port)
     portno = port;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
-//        log->error("ERROR opening socket");
+        logger->error("ERROR opening socket");
         return -1;
     }
     server = gethostbyname(hostname);
     if (server == NULL) {
-//        log->error("ERROR, no such host\n");
+        logger->error("ERROR, no such host\n");
         return -1;
     }
     bzero((char *) & serv_addr, sizeof (serv_addr));
@@ -129,7 +129,7 @@ int NetworkOutputStream::open(const char* hostname, int port)
     serv_addr.sin_port = htons(portno);
 
     if (connect(sockfd, (sockaddr *) & serv_addr, sizeof (serv_addr)) < 0) {
-//        log->error("ERROR connecting");
+        logger->error("ERROR connecting");
         return -1;
     }
     _socket = sockfd;

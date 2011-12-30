@@ -22,10 +22,10 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
         t_keytype key = i->first;
         _outputStream->writeString(key);
         BSONContent* cont = i->second;
-        _outputStream->writeLong(cont->_type);
+        _outputStream->writeLong(cont->type());
         char* text;
 		  BSONObj* inner;
-        switch (cont->_type) {
+        switch (cont->type()) {
             case BSON_TYPE:
                 inner = (BSONObj*)cont->_element;
 					 writeBSON(*inner); 

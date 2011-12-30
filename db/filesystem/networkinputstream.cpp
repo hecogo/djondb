@@ -49,11 +49,11 @@ unsigned char NetworkInputStream::readChar() {
 
 /* Reads 2 bytes in the input (little endian order) */
 int NetworkInputStream::readInt () {
-	Logger* logger = getLogger(NULL);
+//	Logger* logger = getLogger(NULL);
     unsigned char c1 = readChar();
     unsigned char c2 = readChar();
     int v = c1 | c2 << 8;
-	 if (logger->isDebug()) logger->debug("NetworkInputStream::readInt %d", v);
+//	 if (logger->isDebug()) logger->debug("NetworkInputStream::readInt %d", v);
     return v;
 }
 
@@ -86,12 +86,12 @@ char* NetworkInputStream::readChars() {
 }
 
 std::string* NetworkInputStream::readString() {
-   Logger* logger = getLogger(NULL);
+   //Logger* logger = getLogger(NULL);
     char* c = readChars();
     std::string* res = new std::string(c);
-	if (logger->isDebug()) logger->debug("NetworkInputStream::readString %s", c);
+	//if (logger->isDebug()) logger->debug("NetworkInputStream::readString %s", c);
     free(c);
-	 delete logger;
+	 //delete logger;
     return res;
 }
 

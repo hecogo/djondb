@@ -63,6 +63,7 @@ v8::Handle<v8::Value> Load(const v8::Arguments& args);
 v8::Handle<v8::Value> Quit(const v8::Arguments& args);
 v8::Handle<v8::Value> Version(const v8::Arguments& args);
 v8::Handle<v8::Value> insert(const v8::Arguments& args);
+v8::Handle<v8::Value> fuuid(const v8::Arguments& args);
 v8::Handle<v8::Value> connect(const v8::Arguments& args);
 v8::Handle<v8::String> ReadFile(const char* name);
 void ReportException(v8::TryCatch* handler);
@@ -113,6 +114,8 @@ v8::Persistent<v8::Context> CreateShellContext() {
   global->Set(v8::String::New("version"), v8::FunctionTemplate::New(Version));
   // Bind the 'db.insert' function
   global->Set(v8::String::New("insert"), v8::FunctionTemplate::New(insert));
+  // Bind the 'db.uuid' function
+  global->Set(v8::String::New("uuid"), v8::FunctionTemplate::New(fuuid));
   // Bind the 'db.connect' function
   global->Set(v8::String::New("connect"), v8::FunctionTemplate::New(connect));
 
@@ -135,7 +138,21 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 
     __djonConnection->insert(std::string(ns), std::string(json));
 
-    printf("insert executed\n");
+    //printf("insert executed\n");
+}
+
+v8::Handle<v8::Value> fuuid(const v8::Arguments& args) {
+    if (args.Length() > 0) {
+        v8::ThrowException(v8::String::New("usage: db.uuid()"));
+    }
+
+	 std::string* suid = uuid();
+    v8::String::Utf8Value str();
+   
+	 const char* tmp = suid->c_str(); 
+	 delete suid; 
+	 
+	 return v8::String::New(tmp);
 }
 
 v8::Handle<v8::Value> connect(const v8::Arguments& args) {
