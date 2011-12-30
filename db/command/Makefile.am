@@ -12,9 +12,9 @@ else
 endif
 
 
-lib_LTLIBRARIES = lib@LIB_NAME@.la
+lib_LTLIBRARIES = libdjon-command.la
 
-lib@LIB_NAME@_la_SOURCES = command.cpp \
+libdjon_command_la_SOURCES = command.cpp \
                                                    commandreader.cpp \
                                                    commandresult.cpp \
                                                    commandwriter.cpp \
@@ -32,12 +32,12 @@ lib@LIB_NAME@_la_SOURCES = command.cpp \
 TESTS = test-command
 check_PROGRAMS = test-command
 #test_command_LDFLAGS = $(all_includes)
-test_command_LDADD = lib@LIB_NAME@.la -lcpptest -ldjon-util -ldjon-filesystem -ldjon-bson -ldjon-db -ldjon-cache -lX11 -lXss -lrt -luuid  -lantlr3c 
+test_command_LDADD = libdjon-command.la -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid  -lantlr3c -lcpptest 
 test_command_SOURCES = tests/main.cpp
 
-library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
+library_includedir=$(includedir)/djon-command-1.0/djon-command
 #library_include_HEADERS = bson.h
 
-@LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
-nodist_@LIB_NAME@_libinclude_HEADERS = config.h
+djon_command_libincludedir = $(libdir)/djon-command-1.0/include
+#nodist_djon_command_libinclude_HEADERS = config.h
 

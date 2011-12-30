@@ -11,9 +11,9 @@ else
    AM_CPPFLAGS = -O2 $(all_includes)
 endif
 
-lib_LTLIBRARIES = lib@LIB_NAME@.la
+lib_LTLIBRARIES = libdjon-client.la
 
-lib@LIB_NAME@_la_SOURCES = connection.cpp \
+libdjon_client_la_SOURCES = connection.cpp \
                                                      connection.h \
                                                      connectionmanager.cpp \
                                                      connectionmanager.h \
@@ -21,8 +21,8 @@ lib@LIB_NAME@_la_SOURCES = connection.cpp \
 
 TESTS = test-driverbase
 check_PROGRAMS = test-driverbase
-test_driverbase_LDADD = lib@LIB_NAME@.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
+test_driverbase_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
 test_driverbase_SOURCES = tests/main.cpp
 
-@LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
-nodist_@LIB_NAME@_libinclude_HEADERS = config.h
+djon_client_libincludedir = $(libdir)/djon-client-1.0/include
+#nodist_djon_client_libinclude_HEADERS = config.h

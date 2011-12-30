@@ -11,22 +11,22 @@ else
    AM_CPPFLAGS = -O2 $(all_includes)
 endif
 
-lib_LTLIBRARIES = lib@LIB_NAME@.la
+lib_LTLIBRARIES = libdjon-network.la
 
-lib@LIB_NAME@_la_SOURCES = networkservice.cpp \
+libdjon_network_la_SOURCES = networkservice.cpp \
                            network.h \
                            networkservice.h
 
-library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
+library_includedir=$(includedir)/djon-network-1.0/djon-network
 library_include_HEADERS = network.h
 
 TESTS = test-network
 check_PROGRAMS = test-network
-test_network_LDADD = lib@LIB_NAME@.la -ldjon-command -ldjon-filesystem -ldjon-util -ldjon-bson -ldjon-db -ldjon-cache -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
+test_network_LDADD = libdjon-network.la -ldjon-command -ldjon-filesystem -ldjon-util -ldjon-bson -ldjon-db -ldjon-cache -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
 test_network_SOURCES = tests/main.cpp
 
-@LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
-nodist_@LIB_NAME@_libinclude_HEADERS = config.h
+djon_network_libincludedir = $(libdir)/djon-network-1.0/include
+#nodist_djon_network_libinclude_HEADERS = config.h
 
 
 

@@ -11,9 +11,9 @@ else
    AM_CPPFLAGS = -O2 $(all_includes)
 endif
 
-lib_LTLIBRARIES = lib@LIB_NAME@.la
+lib_LTLIBRARIES = libdjon-bson.la
 
-lib@LIB_NAME@_la_SOURCES = bsonobj.cpp \
+libdjon_bson_la_SOURCES = bsonobj.cpp \
                            bsonobj.h \
 									bsoncontent.h \
 									defs.h \
@@ -26,14 +26,14 @@ lib@LIB_NAME@_la_SOURCES = bsonobj.cpp \
                            JSONGrammarParser.c \
                            JSONGrammarParser.h
 
-library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
+library_includedir=$(includedir)/djon-bson-1.0/djon-bson
 library_include_HEADERS = bson.h
 
 TESTS = test-bson
 bin_PROGRAMS = test-bson
 check_PROGRAMS = test-bson
-test_bson_LDADD = lib@LIB_NAME@.la -ldjon-util -lX11 -lXss -lrt -luuid   -lantlr3c -lcpptest
+test_bson_LDADD = libdjon-bson.la -ldjon-util -lX11 -lXss -lrt -luuid   -lantlr3c -lcpptest
 test_bson_SOURCES = tests/main.cpp
 
-@LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
-nodist_@LIB_NAME@_libinclude_HEADERS = config.h
+djon_bson_libincludedir = $(libdir)/djon-bson-1.0/include
+#nodist_djon_bson_libinclude_HEADERS = config.h

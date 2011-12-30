@@ -11,21 +11,21 @@ else
    AM_CPPFLAGS = -O2 $(all_includes)
 endif
 
-lib_LTLIBRARIES = lib@LIB_NAME@.la
+lib_LTLIBRARIES = libdjon-service.la
 
-lib@LIB_NAME@_la_SOURCES = service.h \
+libdjon_service_la_SOURCES = service.h \
                            service.cpp
 
 TESTS = test-service
 check_PROGRAMS = test-service
-test_service_LDADD = lib@LIB_NAME@.la -ldjon-network -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
+test_service_LDADD = libdjon-service.la -ldjon-network -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
 test_service_SOURCES = tests/main.cpp
 
-library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
+library_includedir=$(includedir)/djon-service-1.0/djon-service
 library_include_HEADERS = service.h
 
-@LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
-nodist_@LIB_NAME@_libinclude_HEADERS = config.h
+djon_service_libincludedir = $(libdir)/djon-service-1.0/include
+#nodist_djon_service_libinclude_HEADERS = config.h
 
 
 

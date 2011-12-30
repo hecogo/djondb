@@ -32,9 +32,8 @@ AM_COND_IF([DEBUG], AC_DEFINE([DEBUG], [1], [Define Debug variable]))
 AM_COND_IF([PROFILE], AC_DEFINE([PROFILE], [1], [Define Profile variable]))
 LT_INIT([disable-static])
 AC_PROG_CXX
-AC_SUBST([DJON_UTIL_SO_VERSION], [0:1:0])
-AC_SUBST([DJON_UTIL_API_VERSION], [0.1])
-AC_SUBST([LIB_NAME], [djon-util])
+# AC_SUBST([DJON_UTIL_SO_VERSION], [0:1:0])
+# AC_SUBST([DJON_UTIL_API_VERSION], [0.1])
 
 # LIBS="$X_PRE_LIBS $X_LIBS -lX11 -lXext -lXmu -lXt $X_EXTRA_LIBS -lGL -lGLU -lglut -lm"
 

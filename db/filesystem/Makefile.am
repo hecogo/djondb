@@ -11,9 +11,9 @@ else
    AM_CPPFLAGS = -O2 $(all_includes)
 endif
 
-lib_LTLIBRARIES = lib@LIB_NAME@.la
+lib_LTLIBRARIES = libdjon-filesystem.la
 
-lib@LIB_NAME@_la_SOURCES = bsoninputstream.cpp \
+libdjon_filesystem_la_SOURCES = bsoninputstream.cpp \
                                                          bsonoutputstream.cpp \
                                                          fileinputoutputstream.cpp \
                                                          fileinputstream.cpp \
@@ -31,16 +31,16 @@ lib@LIB_NAME@_la_SOURCES = bsoninputstream.cpp \
                                                          networkoutputstream.h \
                                                          outputstream.h
 
-library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
+library_includedir=$(includedir)/djon-filesystem-1.0/djon-filesystem
 #library_include_HEADERS = bson.h
 
 TESTS = test-filesystem
 check_PROGRAMS = test-filesystem
-test_filesystem_LDADD = lib@LIB_NAME@.la -lpthread -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest -ldjon-bson -ldjon-util
+test_filesystem_LDADD = libdjon-filesystem.la -ldjon-bson -ldjon-util -lpthread -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
 test_filesystem_SOURCES = tests/main.cpp
 
 
-@LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
-nodist_@LIB_NAME@_libinclude_HEADERS = config.h
+djon_filesystem_libincludedir = $(libdir)/djon-filesystem-1.0/include
+#nodist_djon_filesystem_libinclude_HEADERS = config.h
 
 

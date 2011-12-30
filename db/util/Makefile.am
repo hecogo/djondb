@@ -15,9 +15,9 @@ endif
 
 AM_CXXFLAGS = ${PF_XXFLAGS} ${DB_XXFLAGS} 
 
-lib_LTLIBRARIES = lib@LIB_NAME@.la
+lib_LTLIBRARIES = libdjon-util.la
 
-lib@LIB_NAME@_la_SOURCES = util.cpp \
+libdjon_util_la_SOURCES = util.cpp \
                                                    util/fileutil.cpp \
                                                    util/version.cpp \
                                                    util/threads.cpp \
@@ -38,17 +38,17 @@ lib@LIB_NAME@_la_SOURCES = util.cpp \
                                                    util/threads.h \
                                                    defs.h
 
-library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
+library_includedir=$(includedir)/djon-util-1.0/djon-util
 library_include_HEADERS = util.h
 
 
 TESTS = test-util
 check_PROGRAMS = test-util
-test_util_LDADD = lib@LIB_NAME@.la -lX11 -lXss -lrt -luuid -lcpptest
+test_util_LDADD = libdjon-util.la -lX11 -lXss -lrt -luuid -lcpptest
 test_util_SOURCES = tests/main.cpp
 
 
-@LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
-# nodist_@LIB_NAME@_libinclude_HEADERS = config.h
+djon_util_libincludedir = $(libdir)/djon-util-1.0/include
+# nodist_djon_util_libinclude_HEADERS = config.h
 
 

@@ -5,7 +5,7 @@ AC_INIT(djondb, 1.0, crossleyjuan@gmail.com)
     AM_INIT_AUTOMAKE
 
 AC_ARG_ENABLE(debug,
-AS_HELP_STRING([--enable-debug],
+AS_HELP_STRING([debug],
                [enable debugging, default: no]),
 [case "${enableval}" in
              yes) debug=true ;;
@@ -16,7 +16,19 @@ esac],
 
 AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
-#AC_CONFIG_HEADERS([config.h])
+AC_ARG_ENABLE(profile,
+AS_HELP_STRING([profile],
+               [enable profiling, default: no]),
+[case "${enableval}" in
+             yes) profile=true ;;
+             no)  profile=false ;;
+             *)   AC_MSG_ERROR([bad value ${enableval} for --enable-profile]) ;;
+esac],
+[profile=false])
+
+AM_CONDITIONAL(PROFILE, test x"$profile" = x"true")
+
+AC_CONFIG_HEADERS([config.h])
     AC_PROG_CXX
     AC_PROG_LIBTOOL
 

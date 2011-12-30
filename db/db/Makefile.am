@@ -11,9 +11,9 @@ else
    AM_CPPFLAGS = -O2 $(all_includes)
 endif
 
-lib_LTLIBRARIES = lib@LIB_NAME@.la
+lib_LTLIBRARIES = libdjon-db.la
 
-lib@LIB_NAME@_la_SOURCES = bplusindex.cpp \
+libdjon_db_la_SOURCES = bplusindex.cpp \
                                                  dbcontroller.cpp \
                                                  indexfactory.cpp \
                                                  indexmanager.cpp \
@@ -23,15 +23,15 @@ lib@LIB_NAME@_la_SOURCES = bplusindex.cpp \
                                                  index.h \
                                                  indexmanager.h
 
-library_includedir=$(includedir)/@LIB_NAME@-1.0/@LIB_NAME@
+library_includedir=$(includedir)/djon-db-1.0/djon-db
 #library_include_HEADERS = bson.h
 
 TESTS = test-db
 check_PROGRAMS = test-db
-test_db_LDADD = lib@LIB_NAME@.la -ldjon-bson -ldjon-util -ldjon-db -ldjon-cache -ldjon-bson -ldjon-filesystem -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
+test_db_LDADD = libdjon-db.la -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
 test_db_SOURCES = tests/main.cpp
 
-@LIB_NAME@_libincludedir = $(libdir)/@LIB_NAME@-1.0/include
-nodist_@LIB_NAME@_libinclude_HEADERS = config.h
+djon_db_libincludedir = $(libdir)/djon-db-1.0/include
+#nodist_djon_db_libinclude_HEADERS = config.h
 
 

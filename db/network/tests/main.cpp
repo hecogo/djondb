@@ -85,7 +85,6 @@ class TestNetworkSuite: public Test::Suite {
 
 			std::vector<std::string> ids;
 			for (int x = 0; x < inserts; x++) {
-				out->writeString(std::string("1.2.3"));
 
 				std::auto_ptr<InsertCommand> cmd(new InsertCommand());
 
@@ -172,9 +171,7 @@ class TestNetworkSuite: public Test::Suite {
 				count = maxfinds;
 			}
 			cout << "Records to find: " << count << endl;
-			std::string version("1.2.3");
 			for (x =0; x < count; x++) {
-				out->writeString(version);
 				std::string* guid = fisIds->readString();
 				std::auto_ptr<FindByKeyCommand> cmd(new FindByKeyCommand());
 
@@ -243,11 +240,9 @@ class TestNetworkSuite: public Test::Suite {
 				count = maxupdates;
 			}
 			cout << "Records to update: " << count << endl;
-			std::string version("1.2.3");
 
 			std::vector<std::string> idsUpdated;
 			for (x =0; x < count; x++) {
-				out->writeString(version);
 				std::auto_ptr<std::string> guid(fisIds->readString());
 				std::auto_ptr<UpdateCommand> cmd(new UpdateCommand());
 
@@ -277,7 +272,6 @@ class TestNetworkSuite: public Test::Suite {
 			cout << "Executing a verification" << endl;
 
 			for (std::vector<std::string>::iterator i = idsUpdated.begin(); i != idsUpdated.end(); i++) {
-				out->writeString(version);
 				std::string guid = *i;
 
 				std::auto_ptr<FindByKeyCommand> cmd (new FindByKeyCommand());
