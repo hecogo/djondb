@@ -18,18 +18,16 @@ if (!extension_loaded('djonPhpExt')) {
 		$c = $_SESSION['connection'];
 	}
 	if (is_null($c)) {
-		echo '<p>Starting new connection</p>';
 		$c = new Connection();
 		$_SESSION['connection'] = $c;
 
+		$c->djon_connect("localhost");
 	}
 
-	$c->djon_connect("localhost");
 	$guid = uniqid();
-	$json = "{ _id: '$guid', name: 'Juan', lastName: 'Cross'}";
 
-	$c->djon_insert('a', $json);
+	$json = $_POST['data'];
 
-	echo '<p>Inserted</p>';
+	$c->djon_insert('test.demo', $json);
 }
 ?>
