@@ -6,7 +6,7 @@
 
 class UpdateCommand;
 class InsertCommand;
-class FindByKeyCommand;
+class FindCommand;
 
 
 class CommandWriter
@@ -22,7 +22,7 @@ class CommandWriter
     protected:
     private:
 	int writeUpdate(UpdateCommand* cmd, OutputStream* out);
-	int writeFindByKey(FindByKeyCommand* cmd, OutputStream* out);
+	int writeFind(FindCommand* cmd, OutputStream* out);
 	int writeInsert(InsertCommand* cmd, OutputStream* out);
 
     private:

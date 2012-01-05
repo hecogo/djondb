@@ -1,7 +1,7 @@
 #include "commandwriter.h"
 #include "insertcommand.h"
 #include "updatecommand.h"
-#include "findbykeycommand.h"
+#include "findcommand.h"
 #include "bsonoutputstream.h"
 #include <memory>
 #include <iostream>
@@ -43,7 +43,7 @@ int CommandWriter::writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
     return 0;
 }
 
-int CommandWriter::writeFindByKey(FindByKeyCommand* cmd, OutputStream* out)  {
+int CommandWriter::writeFind(FindCommand* cmd, OutputStream* out)  {
     std::string* ns = cmd->nameSpace();
     out->writeString(*ns);
 
@@ -67,8 +67,8 @@ int CommandWriter::writeCommand(Command* cmd) {
         case UPDATE: // Update
             ret = writeUpdate((UpdateCommand*)cmd, _stream);
             break;
-        case FINDBYKEY:
-            ret = writeFindByKey((FindByKeyCommand*)cmd, _stream);
+        case FIND:
+            ret = writeFind((FindCommand*)cmd, _stream);
             break;
         case CLOSECONNECTION: // Nothing to be done
             break;

@@ -31,5 +31,5 @@ if (!extension_loaded('djonPhpExt')) {
 
 	$c->djon_insert('test.demo', $text);
 }
-print 'done';
+print '{ "result": "done"}';
 ?>

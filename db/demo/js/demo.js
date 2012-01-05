@@ -1,3 +1,9 @@
+function loadResult(post, msg) {
+	post.empty();
+
+	$("<h1>Clasificado guardado</h1>").appendTo(post);
+}
+
 function loadPost(post, data) {
 	post.empty();
 
@@ -10,8 +16,7 @@ function loadPost(post, data) {
 	var descrip = $("<textarea id='description' />");
 	addRow(post, 'Descripcion:', descrip);
 
-	var button = $("<input type=button />");
-	button.text('Submit');
+	var button = $("<input type=button value='Enviar' />");
 	button.bind("click", function() {
 		data.title = title.val();
 		data.price = price.val();
@@ -25,7 +30,7 @@ function loadPost(post, data) {
 			dataType: "json",
 			context: document.body
 		}).done(function(msg) {
-			alert('done');
+			loadResult(post, msg);
 		});
 
 	});

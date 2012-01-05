@@ -2,6 +2,7 @@
 #define CONNECTION_H
 
 #include <string>
+#include <vector>
 #include "bson.h"
 
 class NetworkOutputStream;
@@ -28,6 +29,8 @@ namespace djondb {
             bool insert(const std::string& ns, const std::string& json);
             bool insert(const std::string& ns, const BSONObj& obj);
             BSONObj* findByKey(const std::string& ns, const std::string& id);
+				std::vector<BSONObj*> find(const std::string& ns, const std::string& filter);
+            std::vector<BSONObj*> find(const std::string& ns, const BSONObj& bsonFilter);
             bool update(const std::string& ns, const std::string& json);
             bool update(const std::string& ns, const BSONObj& bson);
 

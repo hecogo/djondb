@@ -4,7 +4,7 @@
 #include "networkoutputstream.h"
 #include "commandwriter.h"
 #include "insertcommand.h"
-#include "findbykeycommand.h"
+#include "findcommand.h"
 #include "updatecommand.h"
 #include "bsoninputstream.h"
 #include "connectionmanager.h"
@@ -48,8 +48,7 @@ bool Connection::open() {
     }
 }
 
-void Connection::close() {
-    ConnectionManager::releaseConnection(this);
+void Connection::close() { ConnectionManager::releaseConnection(this);
     _open = false;
 }
 
@@ -109,22 +108,50 @@ bool Connection::update(const std::string& ns, const BSONObj& obj) {
 }
 
 BSONObj* Connection::findByKey(const std::string& ns, const std::string& id) {
+	Logger* log = getLogger(NULL);
+
     BSONObj filter;
     filter.add("_id", id);
 
-    FindByKeyCommand cmd;
-    cmd.setBSON(filter);
+	if (log->isDebug()) log->debug("executing findByKey on: %s using the filter: %s", ns.c_str(), filter.toChar());
+
+	 std::vector<BSONObj*> result = find(ns, filter);
+
+    BSONObj* res = NULL;
+    if (result.size() == 1) {
+        BSONInputStream is(_inputStream);
+        res = is.readBSON();
+    } else {
+		 if (result.size() > 1) {
+ 		 	 throw "The result contains more than 1 result";
+		 }
+	 }
+	 delete log;
+    return res;
+}
+
+std::vector<BSONObj*> Connection::find(const std::string& ns, const std::string& filter) {
+
+	BSONObj* bsonFilter = BSONParser::parse(filter);
+
+	std::vector<BSONObj*> result = find(ns, *bsonFilter);
+	delete bsonFilter;
+	return result;
+}
+
+std::vector<BSONObj*> Connection::find(const std::string& ns, const BSONObj& bsonFilter) {
+    FindCommand cmd;
+    cmd.setBSON(bsonFilter);
     cmd.setNameSpace(ns);
     _commandWriter->writeCommand(&cmd);
 
-    int results = _inputStream->readInt();
-    BSONObj* res = NULL;
-    if (results > 0) {
-        BSONInputStream is(_inputStream);
-        res = is.readBSON();
-    }
-    return res;
+	 BSONInputStream is(_inputStream);
+
+	 std::vector<BSONObj*> result = is.readBSONArray();
+
+    return result;
 }
+
 
 bool Connection::isOpen() const {
     return _open;

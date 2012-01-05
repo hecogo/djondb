@@ -1,7 +1,7 @@
 #include "commandreader.h"
 #include "insertcommand.h"
 #include "updatecommand.h"
-#include "findbykeycommand.h"
+#include "findcommand.h"
 #include "bsoninputstream.h"
 #include "util.h"
 
@@ -44,8 +44,8 @@ UpdateCommand* parseUpdate(InputStream* is)  {
     return command;
 }
 
-FindByKeyCommand* parseFindByKey(InputStream* is)  {
-    FindByKeyCommand* command = new FindByKeyCommand();
+FindCommand* parseFind(InputStream* is)  {
+    FindCommand* command = new FindCommand();
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
@@ -80,8 +80,8 @@ Command* CommandReader::readCommand() {
         case UPDATE: // Update
             cmd = parseUpdate(_stream);
             break;
-        case FINDBYKEY:
-            cmd = parseFindByKey(_stream);
+        case FIND:
+            cmd = parseFind(_stream);
             break;
         case CLOSECONNECTION: // Insert
             cmd = new CloseCommand();

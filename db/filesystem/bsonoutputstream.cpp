@@ -51,3 +51,10 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
     }
 }
 
+void BSONOutputStream::writeBSONArray(const std::vector<BSONObj*>& array) {
+	_outputStream->writeLong(array.size());
+	for (std::vector<BSONObj*>::const_iterator i = array.begin(); i != array.end(); i++) {
+		BSONObj* obj = *i;
+		writeBSON(*obj);
+	}
+}

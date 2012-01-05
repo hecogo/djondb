@@ -9,7 +9,7 @@
 #include "bsonoutputstream.h"
 #include "bsoninputstream.h"
 #include "insertcommand.h"
-#include "findbykeycommand.h"
+#include "findcommand.h"
 #include "updatecommand.h"
 #include "bson.h"
 #include "defs.h"
@@ -173,7 +173,7 @@ class TestNetworkSuite: public Test::Suite {
 			cout << "Records to find: " << count << endl;
 			for (x =0; x < count; x++) {
 				std::string* guid = fisIds->readString();
-				std::auto_ptr<FindByKeyCommand> cmd(new FindByKeyCommand());
+				std::auto_ptr<FindCommand> cmd(new FindCommand());
 
 				BSONObj obj;
 				obj.add("_id", *guid);
@@ -274,7 +274,7 @@ class TestNetworkSuite: public Test::Suite {
 			for (std::vector<std::string>::iterator i = idsUpdated.begin(); i != idsUpdated.end(); i++) {
 				std::string guid = *i;
 
-				std::auto_ptr<FindByKeyCommand> cmd (new FindByKeyCommand());
+				std::auto_ptr<FindCommand> cmd (new FindCommand());
 
 				BSONObj obj;
 				obj.add("_id", guid);

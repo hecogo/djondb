@@ -12,8 +12,7 @@ class OutputStream;
 enum COMMANDTYPE {
     INSERT,
     UPDATE,
-    FINDBYKEY,
-    FINDBYFILTER,
+    FIND,
     CLOSECONNECTION
 };
 

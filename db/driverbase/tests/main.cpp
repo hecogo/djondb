@@ -43,6 +43,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ADD(TestDriverBaseSuite::testInsert);
 			TEST_ADD(TestDriverBaseSuite::testFinds);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
+			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
 		}
 
 		void testInsert() {
@@ -120,9 +121,8 @@ class TestDriverBaseSuite: public Test::Suite {
 			int maxfinds = 1;
 			Logger* log = getLogger(NULL);
 
-			cout << "Starting " << endl;
+			cout << "Starting testFinds" << endl;
 
-			log->startTimeRecord();
 			__running = true;
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
@@ -130,56 +130,61 @@ class TestDriverBaseSuite: public Test::Suite {
 				cout << "Cannot connect to localhost" << endl;
 				exit(0);
 			}
-			FileInputStream* fisIds = new FileInputStream("results.txt", "rb");
-			int x = 0;
-			int count = fisIds->readInt();
-			if ((maxfinds > -1) && (count > maxfinds)) {
-				count = maxfinds;
-			}
-			cout << "Records to find: " << count << endl;
 
-			for (x =0; x < count; x++) {
-				std::string* guid = fisIds->readString();
+			BSONObj test;
+			std::string* guid = uuid();
+			test.add("_id", *guid);
+			test.add("int", 1);
+			test.add("long", 10L);
+			test.add("char", "testing");
 
-				std::auto_ptr<BSONObj> resObj(conn->findByKey("driverbase.test", *guid));
+			conn->insert("driver.test", test);
 
-				TEST_ASSERT(resObj.get() != NULL);
-				TEST_ASSERT(resObj->has("_id"));
-				TEST_ASSERT(resObj->has("content"));
+			log->debug("Data inserted");
 
-				char* temp = (char*)malloc(2000);
-					memset(temp, 0, 2000);
-				memset(temp, 'a', 1999);
-				TEST_ASSERT(strcmp(resObj->getChars("content"), temp) == 0);
-				free(temp);
-				if ((count > 9) && (x % (count / 10)) == 0) {
-					cout << x << " Records received" << endl;
-				}
-				delete guid;
-			}
-			cout << "all sent" << endl;
+			BSONObj* objResult = conn->findByKey("driver.test", *guid);
 
-			log->stopTimeRecord();
+			TEST_ASSERT(objResult != NULL);
+			TEST_ASSERT(objResult->has("int"));
+			TEST_ASSERT(*objResult->getInt("int") == 1);
+			TEST_ASSERT(objResult->has("long"));
+			TEST_ASSERT(*objResult->getLong("long") == 10);
+			TEST_ASSERT(objResult->has("char"));
+			TEST_ASSERT(strcmp(objResult->getChars("char"), "testing") == 0);
 
-			DTime rec = log->recordedTime();
-
-			int secs = rec.totalSecs();
-			cout<< "finds " << count << ", time: " << rec.toChar() << endl;
-
-			if (secs > 0) {
-				cout << "Throughput: " << (count / secs) << " ops." << endl;
-			}
-			cout << "------------------------------------------------------------" << endl;
-			cout << "Ready to close the connection" << endl;
-			//getchar();
 			__running = false;
 
-			//    cout << "Closing the connection" << endl;
-			//    conn->close();
-			//
-			//    delete conn;
-
 			delete(log);
+		}
+
+		void testFindByFilter() {
+			// Insert record to search for
+
+			BSONObj obj;
+			obj.add("name", "Test");
+
+			Connection* conn = ConnectionManager::getConnection("localhost");
+
+			if (!conn->open()) {
+				cout << "Cannot connect to localhost" << endl;
+				exit(0);
+			}
+	
+			conn->insert("test.filter", obj);
+
+			// doing search
+			//
+
+		   std::vector<BSONObj*> result = conn->find("test.filter", obj);			
+			TEST_ASSERT(result.size() > 0);
+
+			BSONObj* objR = *result.begin();
+			TEST_ASSERT(objR != NULL);
+			TEST_ASSERT(objR->has("name"));
+			TEST_ASSERT(strcmp(objR->getChars("name"), "Test") == 0);
+
+			delete objR;
+
 		}
 
 		void testUpdate() {

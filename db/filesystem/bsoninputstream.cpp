@@ -1,16 +1,19 @@
 #include "bsoninputstream.h"
 #include "inputstream.h"
 #include "bson.h"
+#include "util.h"
 
 #include <memory>
 
 BSONInputStream::BSONInputStream(InputStream* is)
 {
     _inputStream = is;
+	 _log = getLogger(NULL);
 }
 
 BSONInputStream::~BSONInputStream()
 {
+	delete _log;
 }
 
 BSONObj* BSONInputStream::readBSON() const {
@@ -51,4 +54,18 @@ BSONObj* BSONInputStream::readBSON() const {
         }
     }
     return obj;
+}
+
+std::vector<BSONObj*> BSONInputStream::readBSONArray() const {
+	if (_log->isDebug()) _log->debug("readBSONArray");
+	int elements = _inputStream->readLong();
+	std::vector<BSONObj*> result;
+
+	for (int x= 0; x < elements; x++) {
+		BSONObj* obj = readBSON();
+		result.push_back(obj);
+	}
+
+	return result;
+
 }

@@ -18,14 +18,14 @@ libdjon_command_la_SOURCES = command.cpp \
                                                    commandreader.cpp \
                                                    commandresult.cpp \
                                                    commandwriter.cpp \
-                                                   findbykeycommand.cpp \
+                                                   findcommand.cpp \
                                                    insertcommand.cpp \
                                                    updatecommand.cpp \
                                                    command.h \
                                                    commandreader.h \
                                                    commandresult.h \
                                                    commandwriter.h \
-                                                   findbykeycommand.h \
+                                                   findcommand.h \
                                                    insertcommand.h \
                                                    updatecommand.h
 
