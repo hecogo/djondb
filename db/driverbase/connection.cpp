@@ -8,6 +8,7 @@
 #include "updatecommand.h"
 #include "bsoninputstream.h"
 #include "connectionmanager.h"
+#include "util.h"
 
 using namespace djondb;
 
@@ -73,9 +74,12 @@ void Connection::internalClose() {
 }
 
 bool Connection::insert(const std::string& ns, const std::string& json) {
+	Logger* log = getLogger(NULL);
+	if (log->isDebug()) log->debug("insert command. ns: %s, json: %s", ns.c_str(), json.c_str());
     BSONObj* obj = BSONParser::parse(json);
     bool result = insert(ns, *obj);
     delete obj;
+	 delete log;
     return result;
 }
 

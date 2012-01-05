@@ -21,9 +21,9 @@ if (!extension_loaded('djonPhpExt')) {
 		$c = new Connection();
 		$_SESSION['connection'] = $c;
 
-		$c->djon_connect("localhost");
 	}
 
+		$c->djon_connect("localhost");
 	$guid = uniqid();
 
 	$json = $_POST['data'];

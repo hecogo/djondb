@@ -28,8 +28,13 @@ esac],
 
 AM_CONDITIONAL(PROFILE, test x"$profile" = x"true")
 
+# AC_CONFIG_SUBDIRS(dinnerd libdinner hungryhacker vdinner)
 AC_CONFIG_HEADERS([config.h])
-    AC_PROG_CXX
+AM_COND_IF([DEBUG], AC_DEFINE([DEBUG], [1], [Define Debug variable]))
+AM_COND_IF([PROFILE], AC_DEFINE([PROFILE], [1], [Define Profile variable]))
+
+
+AC_PROG_CXX
     AC_PROG_LIBTOOL
 
     AC_OUTPUT(Makefile util/Makefile bson/Makefile cache/Makefile filesystem/Makefile db/Makefile command/Makefile network/Makefile driverbase/Makefile service/Makefile daemon/Makefile)

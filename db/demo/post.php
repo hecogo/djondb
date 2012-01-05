@@ -1,7 +1,6 @@
 <?php
 
 	session_start(); // start up your PHP session! 
-
 if (!extension_loaded('djonPhpExt')) {
 	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 		dl('djonPhpExt.dll');
@@ -21,10 +20,10 @@ if (!extension_loaded('djonPhpExt')) {
 		$c = new Connection();
 		$_SESSION['connection'] = $c;
 
-		$c->djon_connect("localhost");
 	}
 
-	$guid = uniqid();
+		$c->djon_connect("localhost");
+//	$guid = uniqid();
 
 	$data = $_POST['data'];
 
@@ -32,4 +31,5 @@ if (!extension_loaded('djonPhpExt')) {
 
 	$c->djon_insert('test.demo', $text);
 }
+print 'done';
 ?>

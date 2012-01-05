@@ -10,26 +10,25 @@ function loadPost(post, data) {
 	var descrip = $("<textarea id='description' />");
 	addRow(post, 'Descripcion:', descrip);
 
-   var button = $("<input type=button />");
+	var button = $("<input type=button />");
 	button.text('Submit');
 	button.bind("click", function() {
-			data.title = title.val();
-			data.price = price.val();
-			data.place = place.val();
-			data.description = descrip.val();
-			var entry = { data: data };
-			$.ajax({
-url: "post.php",
-data: entry,
-type: 'POST',
-dataType: "json",
-context: document.body,
-sucesss: function(data) {
-alert(data);
-}
-});
+		data.title = title.val();
+		data.price = price.val();
+		data.place = place.val();
+		data.description = descrip.val();
+		var entry = { data: data };
+		$.ajax({
+			url: "post.php",
+			data: entry,
+			type: 'POST',
+			dataType: "json",
+			context: document.body
+		}).done(function() {
+			alert('done');
+		});
 
-			});
+	});
 	button.appendTo(post);
 }
 
@@ -43,9 +42,9 @@ function loadCategories(post, data) {
 		addRow(post, 'Categoria:', sel);
 
 		sel.bind("click", function() {
-				data.category = sel.val();
-				loadPost(post, data);
-				});
+			data.category = sel.val();
+			loadPost(post, data);
+		});
 	}	
 }
 
@@ -60,12 +59,12 @@ function preparePost() {
 
 	var data = {}; // this will hold the post information
 	sel.bind("click", function() {
-			data.type = sel.val();
-			loadCategories(post, data);
-			});
+		data.type = sel.val();
+		loadCategories(post, data);
+	});
 
 }
 
 $(document).ready(function() {
-		preparePost();
-		});
+	preparePost();
+});
