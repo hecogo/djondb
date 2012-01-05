@@ -24,7 +24,7 @@ function loadPost(post, data) {
 			type: 'POST',
 			dataType: "json",
 			context: document.body
-		}).done(function() {
+		}).done(function(msg) {
 			alert('done');
 		});
 
