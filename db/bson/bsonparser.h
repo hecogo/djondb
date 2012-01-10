@@ -13,7 +13,7 @@ class BSONParser
         /** Default destructor */
         virtual ~BSONParser();
 
-        static BSONObj* parse(const std::string& sbson);
+        static BSONObj* parse(char* sbson);
 
     protected:
     private:

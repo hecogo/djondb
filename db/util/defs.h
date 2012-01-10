@@ -22,7 +22,7 @@
 #endif
 */
 
-#define VERSION "1.2.20110726"
+//#define VERSION "1.2.20110726"
 
 // #define TESTING
 

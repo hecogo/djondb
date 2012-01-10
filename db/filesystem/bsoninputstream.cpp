@@ -17,12 +17,15 @@ BSONInputStream::~BSONInputStream()
 }
 
 BSONObj* BSONInputStream::readBSON() const {
+	Logger* log = getLogger(NULL);
     BSONObj* obj = new BSONObj();
     int elements = _inputStream->readLong();
+	 if (log->isDebug()) log->debug("BSONInputStream::readBSON elements: %d", elements);
 	 BSONInputStream* bis;
     for (int x = 0; x < elements; x++) {
         std::auto_ptr<string> key(_inputStream->readString());
 
+	     if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s", key->c_str());
         int type = _inputStream->readLong();
         void* data = NULL;
 		  BSONObj* inner;
@@ -57,15 +60,16 @@ BSONObj* BSONInputStream::readBSON() const {
 }
 
 std::vector<BSONObj*> BSONInputStream::readBSONArray() const {
-	if (_log->isDebug()) _log->debug("readBSONArray");
+	if (_log->isDebug()) _log->debug(3, "BSONInputStream::readBSONArray");
 	int elements = _inputStream->readLong();
+	if (_log->isDebug()) _log->debug(3, "elements read: %d", elements);
 	std::vector<BSONObj*> result;
 
 	for (int x= 0; x < elements; x++) {
 		BSONObj* obj = readBSON();
+		if (_log->isDebug()) _log->debug(3, "obj: %s", obj->toChar());
 		result.push_back(obj);
 	}
 
 	return result;
-
 }

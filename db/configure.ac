@@ -16,6 +16,20 @@ esac],
 
 AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
+AC_ARG_ENABLE(log,
+AS_HELP_STRING([log],
+               [enable logging, default: no]),
+[case "${enableval}" in
+             0) log=0 ;;
+             1)  log=1 ;;
+             2)  log=2 ;;
+             3)  log=3 ;;
+             *)   AC_MSG_ERROR([bad value ${enableval} for --enable-log]) ;;
+esac],
+[log=false])
+
+AM_CONDITIONAL(DETAIL, test x"$log" != x"false")
+
 AC_ARG_ENABLE(profile,
 AS_HELP_STRING([profile],
                [enable profiling, default: no]),
@@ -31,6 +45,7 @@ AM_CONDITIONAL(PROFILE, test x"$profile" = x"true")
 # AC_CONFIG_SUBDIRS(dinnerd libdinner hungryhacker vdinner)
 AC_CONFIG_HEADERS([config.h])
 AM_COND_IF([DEBUG], AC_DEFINE([DEBUG], [1], [Define Debug variable]))
+AM_COND_IF([DETAIL], AC_DEFINE_UNQUOTED([DETAIL], $log, [Define log detail 3 - Maximum, 2 - medium, 1 - low, 0 - normal]))
 AM_COND_IF([PROFILE], AC_DEFINE([PROFILE], [1], [Define Profile variable]))
 
 

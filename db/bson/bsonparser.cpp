@@ -76,7 +76,7 @@ BSONObj* convertStruct(struct BSONStruct* param) {
 	return obj;
 }
 
-BSONObj* BSONParser::parse(const std::string& sbson) {
+BSONObj* BSONParser::parse(char* sbson) {
 	// Now we declare the ANTLR related local variables we need.
 	// Note that unless you are convinced you will never need thread safe
 	// versions for your project, then you should always create such things
@@ -168,10 +168,10 @@ BSONObj* BSONParser::parse(const std::string& sbson) {
 	// (Use antlr38BitFileStreamNew for UTF16 input).
 	//
 	// antlr3AsciiFileStreamNew((pANTLR3_UINT8) "/home/cross/test.json");
-	input  =  antlr3NewAsciiStringInPlaceStream((pANTLR3_UINT8)sbson.c_str(),  (ANTLR3_UINT32) sbson.length(), NULL);
+	input  =  antlr3NewAsciiStringInPlaceStream((pANTLR3_UINT8)sbson,  (ANTLR3_UINT32) strlen(sbson), NULL);
 
 	// The input will be created successfully, providing that there is enough
-	// memory and the file exists etc
+	// memory and the file exists etcř
 	//
 	if ( input == NULL )
 	{

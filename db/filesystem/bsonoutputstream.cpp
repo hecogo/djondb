@@ -2,6 +2,7 @@
 
 #include "outputstream.h"
 #include "bson.h"
+#include "util.h"
 #include <string.h>
 
 BSONOutputStream::BSONOutputStream(OutputStream* out)
@@ -17,9 +18,12 @@ BSONOutputStream::~BSONOutputStream()
 
 
 void BSONOutputStream::writeBSON(const BSONObj& bson) {
+	Logger* log = getLogger(NULL);
+	if (log->isDebug()) log->debug("BSONOutputStream::writeBSON bson elements: %d", bson.length());
     _outputStream->writeLong(bson.length());
     for (std::map<t_keytype, BSONContent* >::const_iterator i = bson.begin(); i != bson.end(); i++) {
         t_keytype key = i->first;
+		  if (log->isDebug()) log->debug("BSONOutputStream::writeBSON name: %s", key.c_str());
         _outputStream->writeString(key);
         BSONContent* cont = i->second;
         _outputStream->writeLong(cont->type());
@@ -49,12 +53,16 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
                 break;
         }
     }
+	 delete log;
 }
 
 void BSONOutputStream::writeBSONArray(const std::vector<BSONObj*>& array) {
+	Logger* log = getLogger(NULL);
+	if (log->isDebug()) log->debug("BSONOutputStream::writeBSONArray elements: %d", array.size());
 	_outputStream->writeLong(array.size());
 	for (std::vector<BSONObj*>::const_iterator i = array.begin(); i != array.end(); i++) {
 		BSONObj* obj = *i;
 		writeBSON(*obj);
 	}
+	delete log;
 }

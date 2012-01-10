@@ -3,7 +3,6 @@
 	<FileVersion major="1" minor="6" />
 	<Project>
 		<Option title="driverbase" />
-		<Option makefile_is_custom="1" />
 		<Option execution_dir="obj" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
@@ -17,11 +16,11 @@
 		</MakeCommands>
 		<Build>
 			<Target title="all">
-				<Option output="libdjon-client" prefix_auto="1" extension_auto="1" />
+				<Option output="djon-client" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
-				<Option type="3" />
+				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option createDefFile="1" />
+				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
@@ -53,17 +52,34 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-g" />
 			<Add directory="../command" />
 			<Add directory="../cache" />
 			<Add directory="../filesystem" />
 			<Add directory="../bson" />
 			<Add directory="../util" />
+			<Add directory="../driverbase" />
+			<Add directory="../obj" />
 		</Compiler>
+		<Linker>
+			<Add library="djon-command" />
+			<Add library="djon-db" />
+			<Add library="djon-cache" />
+			<Add library="djon-filesystem" />
+			<Add library="djon-bson" />
+			<Add library="djon-util" />
+			<Add library="rt" />
+			<Add library="Xss" />
+			<Add library="antlr3c" />
+			<Add library="uuid" />
+			<Add library="cpptest" />
+		</Linker>
 		<Unit filename="connection.cpp" />
 		<Unit filename="connection.h" />
 		<Unit filename="connectionmanager.cpp" />
 		<Unit filename="connectionmanager.h" />
 		<Unit filename="djondb_client.h" />
+		<Unit filename="tests/main.cpp" />
 		<Extensions>
 			<envvars />
 			<code_completion />

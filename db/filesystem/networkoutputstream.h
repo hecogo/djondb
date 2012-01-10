@@ -1,6 +1,7 @@
 #ifndef NETWORKOUTPUTSTREAM_H
 #define NETWORKOUTPUTSTREAM_H
 #include "outputstream.h"
+#include "util.h"
 
 class NetworkOutputStream: public OutputStream
 {
@@ -34,7 +35,7 @@ class NetworkOutputStream: public OutputStream
     protected:
     private:
         int _socket;
-
+        Logger* _logger;
 };
 
 #endif // NETWORKOUTPUTSTREAM_H

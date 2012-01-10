@@ -87,6 +87,14 @@ bool Connection::insert(const std::string& ns, const BSONObj& bson) {
     cmd.setBSON(bson);
     cmd.setNameSpace(ns);
     _commandWriter->writeCommand(&cmd);
+
+	 // When the bson didnt contain an id the server will return a bson with it
+	 if (!bson.has("_id")) {
+		 BSONInputStream tmpIS(_inputStream);
+		 tmpIS.readBSON(); 
+		 // drop it
+		 // temporal solution, later I will need to do something with the return
+	 }
     return true;
 }
 
@@ -119,8 +127,7 @@ BSONObj* Connection::findByKey(const std::string& ns, const std::string& id) {
 
     BSONObj* res = NULL;
     if (result.size() == 1) {
-        BSONInputStream is(_inputStream);
-        res = is.readBSON();
+        res = *result.begin();
     } else {
 		 if (result.size() > 1) {
  		 	 throw "The result contains more than 1 result";
@@ -140,6 +147,7 @@ std::vector<BSONObj*> Connection::find(const std::string& ns, const std::string&
 }
 
 std::vector<BSONObj*> Connection::find(const std::string& ns, const BSONObj& bsonFilter) {
+	Logger* log = getLogger(NULL);
     FindCommand cmd;
     cmd.setBSON(bsonFilter);
     cmd.setNameSpace(ns);
@@ -149,6 +157,7 @@ std::vector<BSONObj*> Connection::find(const std::string& ns, const BSONObj& bso
 
 	 std::vector<BSONObj*> result = is.readBSONArray();
 
+	 delete log;
     return result;
 }
 

@@ -287,6 +287,9 @@ std::vector<BSONObj*> DBController::findFullScan(char* ns, const BSONObj& filter
 }
 
 std::vector<BSONObj*> DBController::find(char* ns, const BSONObj& filter) {
+	Logger* log = getLogger(NULL);
+	if (log->isDebug()) log->debug("find: %s, filter: %s", ns, filter.toChar());
+
 	std::vector<BSONObj*> result;
 	if (filter.has("_id")) {
 		std::string* id = filter.getString("_id");
@@ -318,6 +321,7 @@ std::vector<BSONObj*> DBController::find(char* ns, const BSONObj& filter) {
 		result = findFullScan(ns, filter);
 	}
 
+	delete log;
 	return result;
 }
 

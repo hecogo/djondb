@@ -3,7 +3,7 @@
 
 #include "fileoutputstream.h"
 #include "fileinputstream.h"
-
+#include "config.h"
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,6 +44,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ADD(TestDriverBaseSuite::testFinds);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
+//			TEST_ADD(TestDriverBaseSuite::testTemp);
 		}
 
 		void testInsert() {
@@ -74,7 +75,7 @@ class TestDriverBaseSuite: public Test::Suite {
 				}
 				//        obj->add("name", "John");
 				char* temp = (char*)malloc(2000);
-					memset(temp, 0, 2000);
+				memset(temp, 0, 2000);
 				memset(temp, 'a', 1999);
 				int len = strlen(temp);
 				obj.add("content", temp);
@@ -160,8 +161,9 @@ class TestDriverBaseSuite: public Test::Suite {
 		void testFindByFilter() {
 			// Insert record to search for
 
-			BSONObj obj;
-			obj.add("name", "Test");
+			BSONObj* obj = BSONParser::parse("{name: 'Test'}");
+
+			//delete id;
 
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
@@ -169,13 +171,16 @@ class TestDriverBaseSuite: public Test::Suite {
 				cout << "Cannot connect to localhost" << endl;
 				exit(0);
 			}
-	
-			conn->insert("test.filter", obj);
+
+			conn->insert("test.filter2", *obj);
 
 			// doing search
 			//
 
-		   std::vector<BSONObj*> result = conn->find("test.filter", obj);			
+			cout << "Testbyfilter" << endl;
+			BSONObj objfilter;
+			objfilter.add("name", "Test");
+			std::vector<BSONObj*> result = conn->find("test.filter2", objfilter);			
 			TEST_ASSERT(result.size() > 0);
 
 			BSONObj* objR = *result.begin();
@@ -183,12 +188,44 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ASSERT(objR->has("name"));
 			TEST_ASSERT(strcmp(objR->getChars("name"), "Test") == 0);
 
+			char* temp = objR->toChar();
+			cout << "obj: " << temp << endl;
 			delete objR;
 
 		}
 
+		void testTemp() {
+			Connection* conn = ConnectionManager::getConnection("localhost");
+
+			if (!conn->open()) {
+				cout << "Cannot connect to localhost" << endl;
+				exit(0);
+			}
+
+			cout << "TestTemp" << endl;
+			BSONObj objfilter;
+			objfilter.add("type", "2");
+			std::vector<BSONObj*> result = conn->find("test.demo", objfilter);			
+			TEST_ASSERT(result.size() > 0);
+
+			if (result.size() > 0) {
+				cout << "TestTem2p, result: " << result.size() << endl;
+				BSONObj* objR = *result.begin();
+				/*
+					TEST_ASSERT(objR != NULL);
+					TEST_ASSERT(objR->has("name"));
+					TEST_ASSERT(strcmp(objR->getChars("name"), "Test") == 0);
+
+*/
+				char* temp = objR->toChar();
+				cout << "obj: " << temp << endl;
+				delete objR;
+			}
+
+		}
+
 		void testUpdate() {
-         int maxupdates = 1;
+			int maxupdates = 1;
 			Logger* log = getLogger(NULL);
 
 			cout << "Starting " << endl;
@@ -219,7 +256,7 @@ class TestDriverBaseSuite: public Test::Suite {
 
 				idsUpdated.push_back(*guid.get());
 				char* temp = (char*)malloc(100);
-					memset(temp, 0, 100);
+				memset(temp, 0, 100);
 				memset(temp, 'b', 99);
 				int len = strlen(temp);
 				obj.add("content", temp);
@@ -246,7 +283,7 @@ class TestDriverBaseSuite: public Test::Suite {
 				TEST_ASSERT(resObj->has("content"));
 
 				char* temp = (char*)malloc(100);
-					memset(temp, 0, 100);
+				memset(temp, 0, 100);
 				memset(temp, 'b', 99);
 				TEST_ASSERT(strcmp(resObj->getChars("content"), temp) == 0);
 				free(temp);
@@ -350,81 +387,81 @@ delete conn;
 
 enum OutputType
 {
-    Compiler,
-    Html,
-    TextTerse,
-    TextVerbose
+	Compiler,
+	Html,
+	TextTerse,
+	TextVerbose
 };
 
-static void
+	static void
 usage()
 {
-    cout << "usage: mytest [MODE]\n"
-         << "where MODE may be one of:\n"
-         << "  --compiler\n"
-         << "  --html\n"
-         << "  --text-terse (default)\n"
-         << "  --text-verbose\n";
-    exit(0);
+	cout << "usage: mytest [MODE]\n"
+		<< "where MODE may be one of:\n"
+		<< "  --compiler\n"
+		<< "  --html\n"
+		<< "  --text-terse (default)\n"
+		<< "  --text-verbose\n";
+	exit(0);
 }
 
-static auto_ptr<Test::Output>
+	static auto_ptr<Test::Output>
 cmdline(int argc, char* argv[])
 {
-    if (argc > 2)
-        usage(); // will not return
+	if (argc > 2)
+		usage(); // will not return
 
-    Test::Output* output = 0;
+	Test::Output* output = 0;
 
-    if (argc == 1)
-        output = new Test::TextOutput(Test::TextOutput::Verbose);
-    else
-    {
-        const char* arg = argv[1];
-        if (strcmp(arg, "--compiler") == 0)
-            output = new Test::CompilerOutput;
-        else if (strcmp(arg, "--html") == 0)
-            output =  new Test::HtmlOutput;
-        else if (strcmp(arg, "--text-terse") == 0)
-            output = new Test::TextOutput(Test::TextOutput::Terse);
-        else if (strcmp(arg, "--text-verbose") == 0)
-            output = new Test::TextOutput(Test::TextOutput::Verbose);
-        else
-        {
-            cout << "invalid commandline argument: " << arg << endl;
-            usage(); // will not return
-        }
-    }
+	if (argc == 1)
+		output = new Test::TextOutput(Test::TextOutput::Verbose);
+	else
+	{
+		const char* arg = argv[1];
+		if (strcmp(arg, "--compiler") == 0)
+			output = new Test::CompilerOutput;
+		else if (strcmp(arg, "--html") == 0)
+			output =  new Test::HtmlOutput;
+		else if (strcmp(arg, "--text-terse") == 0)
+			output = new Test::TextOutput(Test::TextOutput::Terse);
+		else if (strcmp(arg, "--text-verbose") == 0)
+			output = new Test::TextOutput(Test::TextOutput::Verbose);
+		else
+		{
+			cout << "invalid commandline argument: " << arg << endl;
+			usage(); // will not return
+		}
+	}
 
-    return auto_ptr<Test::Output>(output);
+	return auto_ptr<Test::Output>(output);
 }
 
 // Main test program
 //
 int main(int argc, char* argv[])
 {
-    try
-    {
-        // Demonstrates the ability to use multiple test suites
-        //
-        Test::Suite ts;
-        ts.add(auto_ptr<Test::Suite>(new TestDriverBaseSuite));
-//        ts.add(auto_ptr<Test::Suite>(new CompareTestSuite));
-//        ts.add(auto_ptr<Test::Suite>(new ThrowTestSuite));
+	try
+	{
+		// Demonstrates the ability to use multiple test suites
+		//
+		Test::Suite ts;
+		ts.add(auto_ptr<Test::Suite>(new TestDriverBaseSuite));
+		//        ts.add(auto_ptr<Test::Suite>(new CompareTestSuite));
+		//        ts.add(auto_ptr<Test::Suite>(new ThrowTestSuite));
 
-        // Run the tests
-        //
-        auto_ptr<Test::Output> output(cmdline(argc, argv));
-        ts.run(*output, true);
+		// Run the tests
+		//
+		auto_ptr<Test::Output> output(cmdline(argc, argv));
+		ts.run(*output, true);
 
-        Test::HtmlOutput* const html = dynamic_cast<Test::HtmlOutput*>(output.get());
-        if (html)
-            html->generate(cout, true, "MyTest");
-    }
-    catch (...)
-    {
-        cout << "unexpected exception encountered\n";
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
+		Test::HtmlOutput* const html = dynamic_cast<Test::HtmlOutput*>(output.get());
+		if (html)
+			html->generate(cout, true, "MyTest");
+	}
+	catch (...)
+	{
+		cout << "unexpected exception encountered\n";
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
 }

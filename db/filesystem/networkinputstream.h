@@ -2,6 +2,7 @@
 #define NETWORKINPUTSTREAM_H
 
 #include "inputstream.h"
+#include "util.h"
 #include <string>
 
 class NetworkInputStream : public InputStream
@@ -44,6 +45,7 @@ class NetworkInputStream : public InputStream
     private:
         int _socket;
         bool _open;
+		  Logger* _logger;
 
     private:
         int checkStatus();

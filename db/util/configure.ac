@@ -29,6 +29,7 @@ AM_CONDITIONAL(PROFILE, test x"$profile" = x"true")
 # AC_CONFIG_SUBDIRS(dinnerd libdinner hungryhacker vdinner)
 AC_CONFIG_HEADERS([config.h])
 AM_COND_IF([DEBUG], AC_DEFINE([DEBUG], [1], [Define Debug variable]))
+AM_COND_IF([DEBUG], AC_DEFINE([DETAIL], [3], [Define log detail 3 - Maximum, 2 - medium, 1 - low, 0 - normal]))
 AM_COND_IF([PROFILE], AC_DEFINE([PROFILE], [1], [Define Profile variable]))
 LT_INIT([disable-static])
 AC_PROG_CXX

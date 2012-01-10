@@ -2,6 +2,7 @@
 #include "../driverbase/djondb_client.h"
 #include <iostream>
 #include <syslog.h>
+#include <sstream>
 
 using namespace std;
 using namespace djondb;
@@ -79,6 +80,7 @@ PHP_METHOD(Connection, djon_insert)
 		syslog(LOG_INFO, "conn is null" );
 		return;
 	}
+	syslog(LOG_INFO, "json: %s", json);
 	conn->insert(ns, json);
 }
 
@@ -172,7 +174,22 @@ PHP_METHOD(Connection, djon_findByFilter)
 
 	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
 	Connection* conn = __conn;//obj->conn;
-	conn->findByKey(ns, json);
+	std::vector<BSONObj*> result = conn->find(ns, json);
+
+	std::stringstream ss;
+	ss << "[";
+	for (std::vector<BSONObj*>::iterator i = result.begin(); i != result.end(); i++) {
+		BSONObj* obj = *i;
+		if (i != result.begin()) {
+			ss << ", ";
+		}
+		syslog(LOG_INFO, "obj: %s", obj->toChar());
+		ss << obj->toChar();
+	}
+	ss << "]";
+	std::string s = ss.str();
+	// duplicate the string and return it
+	RETURN_STRING(s.c_str(), 1);
 }
 
 
@@ -182,6 +199,7 @@ PHP_METHOD(Connection, djon_findByFilter)
 			PHP_ME(Connection,  djon_connect,           NULL, ZEND_ACC_PUBLIC)
 			PHP_ME(Connection,  djon_isconnected,           NULL, ZEND_ACC_PUBLIC)
 			PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
+			PHP_ME(Connection,  djon_findByFilter,      NULL, ZEND_ACC_PUBLIC)
 			{NULL, NULL, NULL}
 	};
 

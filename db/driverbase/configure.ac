@@ -12,7 +12,6 @@ AS_HELP_STRING([debug],
              *)   AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
 esac],
 [debug=false])
-
 AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
 AC_ARG_ENABLE(profile,
@@ -24,15 +23,13 @@ AS_HELP_STRING([profile],
              *)   AC_MSG_ERROR([bad value ${enableval} for --enable-profile]) ;;
 esac],
 [profile=false])
-
-AM_CONDITIONAL(PROFILE, test x"$profile" = x"true")
-
-# AC_CONFIG_SUBDIRS(dinnerd libdinner hungryhacker vdinner)
+AM_CONDITIONAL(PROFILE, test x"$profile" = x"true") # AC_CONFIG_SUBDIRS(dinnerd libdinner hungryhacker vdinner)
 AC_CONFIG_HEADERS([config.h])
 AM_COND_IF([DEBUG], AC_DEFINE([DEBUG], [1], [Define Debug variable]))
 AM_COND_IF([PROFILE], AC_DEFINE([PROFILE], [1], [Define Profile variable]))
 
 LT_INIT([disable-static])
+
 AC_PROG_CXX
 AC_SUBST([DJON_CLIENT_SO_VERSION], [0:1:0])
 AC_SUBST([DJON_CLIENT_API_VERSION], [0.1])

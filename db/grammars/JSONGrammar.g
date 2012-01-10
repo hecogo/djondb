@@ -3,6 +3,7 @@ grammar JSONGrammar;
 options {
 	language = C;
 }
+
 @parser::includes {
 //#include <stdlib.h>
    #include <stdlib.h>
@@ -104,7 +105,7 @@ pair
 	};
 	
 name returns [char* val]
-	:	ID | ('"' ID '"') | ('\'' ID '\'') {
+	:	ID {
 	     $val = $ID.text->chars;
 	};
 

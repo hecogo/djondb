@@ -20,6 +20,7 @@ class Logger {
         bool m_info;
         bool m_warn;
         void* m_clazz;
+		  int _detail;
 
         int _interval;
         #ifdef LINUX
@@ -38,6 +39,7 @@ class Logger {
         bool isInfo();
         bool isWarn();
         void debug(string message, ...);
+        void debug(int detail, string message, ...);
         void error(string error, ...);
         void error(exception ex);
         void info(string message, ...);
