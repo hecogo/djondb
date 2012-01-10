@@ -8,7 +8,7 @@
 #include <string.h>
 #include <sstream>
 #include <syslog.h>
-#include "config.h"
+#include "../defs.h"
 
 #ifdef DEBUG
 #define PRINT(TYPE, CLAZZ) \
@@ -23,8 +23,8 @@ std::stringstream ss; \
 ss << buffer; \
 result = ss.str(); \
 free(buffer); \
-cout << TYPE << ": " << CLAZZ << ": " << result << endl;
-//  syslog(LOG_INFO, result.c_str());
+syslog(LOG_DEBUG, result.c_str());
+//cout << TYPE << ": " << CLAZZ << ": " << result << endl;
 #endif
 #ifndef DEBUG
 #define PRINT(TYPE, CLAZZ) 

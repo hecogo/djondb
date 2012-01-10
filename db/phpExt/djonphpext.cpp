@@ -59,6 +59,7 @@ PHP_METHOD(Connection, __construct)
 
 PHP_METHOD(Connection, djon_insert)
 {
+    syslog(LOG_INFO, "djon_insert" );
 	char* ns;
 	int ns_len;
 	char* json;

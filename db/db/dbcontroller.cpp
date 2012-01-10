@@ -20,13 +20,16 @@ using namespace std;
 
 DBController::DBController()
 {
+	_logger = getLogger(NULL);
 }
 
 DBController::~DBController()
 {
+	delete _logger;
 }
 
 void DBController::shutdown() {
+	if (_logger->isInfo()) _logger->info("DBController shutting down");
 	std::auto_ptr<FileOutputStream> fos(new FileOutputStream("djondb.dat", "wb"));
 	for (std::map<std::string, SpacesType>::iterator i = _spaces.begin(); i != _spaces.end(); i++) {
 		SpacesType space = i->second;
@@ -40,6 +43,7 @@ void DBController::shutdown() {
 }
 
 void DBController::initialize() {
+	if (_logger->isInfo()) _logger->info("DBController initializing");
 	std::auto_ptr<FileInputStream> fis(new FileInputStream("djondb.dat", "rb"));
 	while (!fis->eof()) {
 		std::auto_ptr<std::string> ns(fis->readString());
@@ -85,6 +89,8 @@ long DBController::checkStructure(BSONObj* obj) {
 }
 
 void DBController::writeBSON(StreamType* stream, BSONObj* obj) {
+	if (_logger->isDebug()) _logger->debug(3, "DBController is writing bson to disc: %s", obj->toChar());
+
 	auto_ptr<BSONOutputStream> out(new BSONOutputStream(stream));
 	out->writeBSON(*obj);
 	stream->flush();
@@ -93,15 +99,17 @@ void DBController::writeBSON(StreamType* stream, BSONObj* obj) {
 BSONObj* DBController::readBSON(StreamType* stream) {
 	auto_ptr<BSONInputStream> is(new BSONInputStream(stream));
 	BSONObj* res = is->readBSON();
+	if (_logger->isDebug()) _logger->debug(3, "DBController read bson from disc: %s", res->toChar());
 	return res;
 }
 
 BSONObj* DBController::insert(char* ns, BSONObj* obj) {
-	Logger* log = getLogger(NULL);
+	if (_logger->isDebug()) _logger->debug(2, "DBController::insert ns: %s, bson: %s", ns, obj->toChar());
 	StreamType* streamData = open(std::string(ns), DATA_FTYPE);
 
 	BSONObj* result = NULL;
 	if (!obj->has("_id")) {
+		if (_logger->isDebug()) _logger->debug(2, "BSON does not contain an id, DBController is creating one");
 		string* tid = uuid();
 		std::string key("_id");
 		obj->add(key, *tid);
@@ -130,12 +138,11 @@ BSONObj* DBController::insert(char* ns, BSONObj* obj) {
 		CacheManager::objectCache()->add(*id, new BSONObj(*obj));
 	}
 
-	delete log;
 	return result;
 }
 
 void DBController::update(char* ns, BSONObj* obj) {
-	Logger* log = getLogger(NULL);
+	if (_logger->isDebug()) _logger->debug(2, "DBController::update ns: %s, bson: %s", ns, obj->toChar());
 	StreamType* streamData = open(std::string(ns), DATA_FTYPE);
 
 	//    long crcStructure = checkStructure(obj);
@@ -151,7 +158,6 @@ void DBController::update(char* ns, BSONObj* obj) {
 	std::string* id = obj->getString("_id");
 
 	CacheManager::objectCache()->add(*id, new BSONObj(*obj));
-	delete log;
 }
 
 StreamType* DBController::open(std::string ns, FILE_TYPE type) {
@@ -240,7 +246,7 @@ void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
 }
 
 std::vector<BSONObj*> DBController::findFullScan(char* ns, const BSONObj& filter) {
-
+	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan ns: %s, bsonFilter: %s", ns, filter.toChar());
 	std::stringstream ss;
 	ss << ns << ".dat";
 
@@ -260,6 +266,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* ns, const BSONObj& filter
 		if (readed->has(keyname)) {
 			BSONContent* content = readed->getContent(keyname);
 			if (*content == *testVal) {
+				if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), readed->toChar());
 				result.push_back(readed);
 			}
 		}
@@ -276,6 +283,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* ns, const BSONObj& filter
 			if (obj->has(keyname)) {
 				BSONContent* content = obj->getContent(keyname);
 				if (*content == *testVal) {
+					if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), obj->toChar());
 					rsTmp.push_back(obj);
 				}
 			}
@@ -287,8 +295,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* ns, const BSONObj& filter
 }
 
 std::vector<BSONObj*> DBController::find(char* ns, const BSONObj& filter) {
-	Logger* log = getLogger(NULL);
-	if (log->isDebug()) log->debug("find: %s, filter: %s", ns, filter.toChar());
+	if (_logger->isDebug()) _logger->debug(2, "DBController::find ns: %s, bsonFilter: %s", ns, filter.toChar());
 
 	std::vector<BSONObj*> result;
 	if (filter.has("_id")) {
@@ -314,6 +321,7 @@ std::vector<BSONObj*> DBController::find(char* ns, const BSONObj& filter) {
 			input->seek(index->posData);
 
 			BSONObj* obj = readBSON(input);
+			if (_logger->isDebug()) _logger->debug(2, "found a match using _id: %s", obj->toChar());
 			result.push_back(obj);
 			input->close();
 		}
@@ -321,11 +329,11 @@ std::vector<BSONObj*> DBController::find(char* ns, const BSONObj& filter) {
 		result = findFullScan(ns, filter);
 	}
 
-	delete log;
 	return result;
 }
 
 BSONObj* DBController::findFirst(char* ns, BSONObj* filter) {
+	if (_logger->isDebug()) _logger->debug(2, "DBController::findFirst ns: %s, bsonFilter: %s", ns, filter->toChar());
 	std::string* id = filter->getString("_id");
 	if (CacheManager::objectCache()->containsKey(*id)) {
 		return (*CacheManager::objectCache())[*id];

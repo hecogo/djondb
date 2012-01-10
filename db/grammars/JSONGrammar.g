@@ -105,7 +105,7 @@ pair
 	};
 	
 name returns [char* val]
-	:	ID {
+	:	ID| ('"'  ID'"') | ('\'' ID '\'') {
 	     $val = $ID.text->chars;
 	};
 

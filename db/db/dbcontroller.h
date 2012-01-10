@@ -9,6 +9,7 @@ class FileInputOutputStream;
 class FileInputStream;
 class BSONObj;
 class Command;
+class Logger;
 
 enum FILE_TYPE {
     DATA_FTYPE,
@@ -46,6 +47,7 @@ class DBController
         std::map<std::string, SpacesType>  _spaces;
         StreamType* open(std::string ns, FILE_TYPE type);
 		  std::vector<BSONObj*> findFullScan(char* ns, const BSONObj& filter);
+		  Logger* _logger;
 
     private:
         long checkStructure(BSONObj* bson);

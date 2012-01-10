@@ -15,9 +15,9 @@ class TestBSONSuite : public Test::Suite
 				TEST_ADD(TestBSONSuite::testCopyBSON)
 				TEST_ADD(TestBSONSuite::testParserSimple)
 				TEST_ADD(TestBSONSuite::testToChar)
-				//        TEST_ADD(TestBSONSuite::testParserRelation)
-				//        TEST_ADD(TestBSONSuite::testParserDoubleRelation)
-				//        TEST_ADD(TestBSONSuite::testComparison)
+				TEST_ADD(TestBSONSuite::testParserRelation)
+				TEST_ADD(TestBSONSuite::testParserDoubleRelation)
+				TEST_ADD(TestBSONSuite::testComparison)
 		}
 
 	private:
@@ -108,7 +108,6 @@ class TestBSONSuite : public Test::Suite
 			obj.add("double", 1.1);
 
 			char* json = obj.toChar();
-			cout << json << endl;
 			TEST_ASSERT(strcmp(json, "{ char*:'char*',double:'1.1',int:'1',long:'1',string:'test'} ") == 0);
 
 			free(json);
@@ -126,6 +125,11 @@ class TestBSONSuite : public Test::Suite
 			TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
 
 			delete obj;
+
+			BSONObj* obj2 = BSONParser::parse("{\"type\":\"2\",\"category\":\"1\",\"title\":\"test\",\"price\":\"asdf\",\"place\":\"asdf\",\"description\":\"asdf\"}");
+			cout << obj2->toChar() << endl;
+			TEST_ASSERT(obj->has("type"));
+			delete obj2;
 		}
 
 		void testParserRelation()
@@ -148,7 +152,6 @@ class TestBSONSuite : public Test::Suite
 		void testParserDoubleRelation()
 		{
 			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: {innertext: 'inner text', innerrel1: {innertext:'text2'}}}");
-			cout << "aqui" << endl;
 			TEST_ASSERT(obj->getInt("age") != NULL);
 			TEST_ASSERT(*obj->getInt("age") == 1);
 			TEST_ASSERT(obj->getChars("name") != NULL);

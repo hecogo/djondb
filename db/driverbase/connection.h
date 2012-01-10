@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "bson.h"
+#include "util.h"
 
 class NetworkOutputStream;
 class NetworkInputStream;
@@ -44,6 +45,7 @@ namespace djondb {
 
             std::string _host;
             bool _open;
+				Logger* _logger;
     };
 
 }
