@@ -10,8 +10,8 @@ FileOutputStream::FileOutputStream(char* fileName, const char* flags) {
 }
 
 FileOutputStream::~FileOutputStream() {
-    free(_pFile);
     close();
+    free(_pFile);
 }
 
 /* Write 1 byte in the output */

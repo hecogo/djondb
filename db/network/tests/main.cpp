@@ -58,9 +58,9 @@ class TestNetworkSuite: public Test::Suite {
 			_host = "localhost";
 			_port = 1243;
 
-			TEST_ADD(TestNetworkSuite::testInsert);
-			TEST_ADD(TestNetworkSuite::testFinds);
-			TEST_ADD(TestNetworkSuite::testUpdate);
+			//TEST_ADD(TestNetworkSuite::testInsert);
+			//TEST_ADD(TestNetworkSuite::testFinds);
+		//	TEST_ADD(TestNetworkSuite::testUpdate);
 		}
 
 		void testInsert() {

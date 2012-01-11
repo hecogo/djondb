@@ -16,6 +16,7 @@ function prepareShow() {
 			$("<td>" + elem.title + "</td>").appendTo(row);
 			$("<td>" + elem.price + "</td>").appendTo(row);
 			$("<td>" + elem.place + "</td>").appendTo(row);
+			$("<td>" + elem.description + "</td>").appendTo(row);
 		});
 	});
 
