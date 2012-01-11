@@ -11,13 +11,14 @@ class TestBSONSuite : public Test::Suite
 	public:
 		TestBSONSuite()
 		{
-			TEST_ADD(TestBSONSuite::testBSON)
-				TEST_ADD(TestBSONSuite::testCopyBSON)
-				TEST_ADD(TestBSONSuite::testParserSimple)
-				TEST_ADD(TestBSONSuite::testToChar)
-				TEST_ADD(TestBSONSuite::testParserRelation)
-				TEST_ADD(TestBSONSuite::testParserDoubleRelation)
-				TEST_ADD(TestBSONSuite::testComparison)
+			TEST_ADD(TestBSONSuite::testBSON);
+			TEST_ADD(TestBSONSuite::testCopyBSON);
+			TEST_ADD(TestBSONSuite::testParserTrivial);
+			TEST_ADD(TestBSONSuite::testParserSimple);
+			TEST_ADD(TestBSONSuite::testToChar);
+			TEST_ADD(TestBSONSuite::testParserRelation);
+			TEST_ADD(TestBSONSuite::testParserDoubleRelation);
+			TEST_ADD(TestBSONSuite::testComparison);
 		}
 
 	private:
@@ -108,7 +109,8 @@ class TestBSONSuite : public Test::Suite
 			obj.add("double", 1.1);
 
 			char* json = obj.toChar();
-			TEST_ASSERT(strcmp(json, "{ char*:'char*',double:'1.1',int:'1',long:'1',string:'test'} ") == 0);
+			cout << json << endl;
+			TEST_ASSERT(strcmp(json, "{ \"char*\" :\"char*\",\"double\" :1.1,\"int\" :1,\"long\" :1,\"string\" :\"test\"} ") == 0);
 
 			free(json);
 		}
@@ -125,12 +127,22 @@ class TestBSONSuite : public Test::Suite
 			TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
 
 			delete obj;
+		}
+
+		void testParserTrivial()
+		{
+			BSONObj* obj = BSONParser::parse("{age: '1'}");
+			TEST_ASSERT(obj->getChars("age") != NULL);
+			TEST_ASSERT(strcmp(obj->getChars("age"), "1") == 0);
+
+			delete obj;
 
 			BSONObj* obj2 = BSONParser::parse("{\"type\":\"2\",\"category\":\"1\",\"title\":\"test\",\"price\":\"asdf\",\"place\":\"asdf\",\"description\":\"asdf\"}");
 			cout << obj2->toChar() << endl;
 			TEST_ASSERT(obj->has("type"));
 			delete obj2;
 		}
+
 
 		void testParserRelation()
 		{

@@ -1,6 +1,6 @@
 <?php
 
-session_start(); // start up your PHP session! 
+	session_start(); // start up your PHP session! 
 if (!extension_loaded('djonPhpExt')) {
 	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
 		dl('djonPhpExt.dll');
@@ -12,10 +12,18 @@ if (!extension_loaded('djonPhpExt')) {
 if (!extension_loaded('djonPhpExt')) {
 	echo "Cannot load extension";
 } else {
-	$c = new Connection();
+   $c = NULL;
+	if (isset($_SESSION['connection'])) {
+		$c = $_SESSION['connection'];
+	}
+	if (is_null($c)) {
+		$c = new Connection();
+		$_SESSION['connection'] = $c;
 
-	$c->djon_connect("localhost");
-	//	$guid = uniqid();
+	}
+
+		$c->djon_connect("localhost");
+//	$guid = uniqid();
 
 	$data = $_POST['data'];
 
@@ -23,5 +31,5 @@ if (!extension_loaded('djonPhpExt')) {
 
 	$c->djon_insert('test.demo', $text);
 }
-print '{ "result": "done"}';
+print 'done';
 ?>

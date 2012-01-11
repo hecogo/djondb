@@ -7,16 +7,17 @@ class BSONObj;
 
 class BSONParser
 {
-    public:
-        /** Default constructor */
-        BSONParser();
-        /** Default destructor */
-        virtual ~BSONParser();
+	public:
+		/** Default constructor */
+		BSONParser();
+		/** Default destructor */
+		virtual ~BSONParser();
 
-        static BSONObj* parse(const std::string& sbson);
+		static BSONObj* parse(const std::string& sbson);
 
-    protected:
-    private:
+	protected:
+	private:
+		static BSONObj* parseBSON(const char* c, int& pos);
 };
 
 #endif // BSONPARSER_H
