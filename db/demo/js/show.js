@@ -11,6 +11,7 @@ function prepareShow() {
 	.done(function(data) {
 		data = jQuery.parseJSON(data);
 		var table = $("<table />").appendTo(show);
+		$("<th><tr><td>Titulo</td><td>Precio</td><td>Lugar</td><td>Descripcion</td></tr></th>").appendTo(table);
 		$.each(data, function(index, elem) {
 			var row = $("<tr />").appendTo(table);	
 			$("<td>" + elem.title + "</td>").appendTo(row);

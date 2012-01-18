@@ -1,3 +1,4 @@
+
 function loadResult(post, msg) {
 	post.empty();
 
@@ -16,12 +17,31 @@ function loadPost(post, data) {
 	var descrip = $("<textarea id='description' />");
 	addRow(post, 'Descripcion:', descrip);
 
+	var rooms = null;
+	if (data.category == 'casa' || data.category == 'apartamento') {
+		rooms = $("<input id='rooms' type='text' />");
+		addRow(post, 'Cuartos', rooms);
+	}
+	var pisos = null;
+	if (data.category == 'casa') {
+		pisos = $("<input id='floors' type='text' />");
+		addRow(post, 'Pisos', pisos);
+	}
+	var area = null;
+	if (data.category == 'lote') {
+		area = $("<input id='area' type='text' />");
+		addRow(post, 'Area', area);
+	}
+
 	var button = $("<input type=button value='Enviar' />");
 	button.bind("click", function() {
 		data.title = title.val();
 		data.price = price.val();
 		data.place = place.val();
 		data.description = descrip.val();
+		if (rooms != null) data.rooms = rooms.val();
+		if (pisos != null) data.pisos = pisos.val();
+		if (area != null) data.area = area.val();
 		var entry = { data: data };
 		$.ajax({
 			url: "post.php",
@@ -39,14 +59,16 @@ function loadPost(post, data) {
 
 function loadCategories(post, data) {
 	post.empty();
-	if (data.type == '2') {
+	if (data.type == '1') {
 		var sel = $("<select />");
-		addOption(sel, 1, 'antiguedades');
-		addOption(sel, 2, 'arte');
-		addOption(sel, 3, 'bicicletas');
-		addRow(post, 'Categoria:', sel);
+		addOption(sel, 'casa', 'Casa');
+		addOption(sel, 'apartamento', 'Apartamento');
+		addOption(sel, 'lote', 'Lote');
+		addRow(post, 'Tipo de inmueble:', sel);
 
-		sel.bind("click", function() {
+		$("<input type='button' value='Siguiente' />")
+			.appendTo(post)
+			.bind("click", function() {
 			data.category = sel.val();
 			loadPost(post, data);
 		});
@@ -59,7 +81,6 @@ function preparePost() {
 
 	var sel = $("<select></select>");
 	addOption(sel, 1, 'Venta de casa');
-	addOption(sel, 2, 'Venta');
 	addRow(post, 'Elige el tipo de anuncio', sel);
 
 	var data = {}; // this will hold the post information
