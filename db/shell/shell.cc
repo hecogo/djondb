@@ -33,6 +33,8 @@
 #include <stdlib.h>
 
 #include "djondb_client.h"
+#include <vector>
+#include <sstream>
 
 #ifdef COMPRESS_STARTUP_DATA_BZ2
 #error Using compressed startup data is not supported for this sample
@@ -58,6 +60,7 @@ bool ExecuteString(v8::Handle<v8::String> source,
                    bool print_result,
                    bool report_exceptions);
 v8::Handle<v8::Value> Print(const v8::Arguments& args);
+v8::Handle<v8::Value> find(const v8::Arguments& args);
 v8::Handle<v8::Value> Read(const v8::Arguments& args);
 v8::Handle<v8::Value> Load(const v8::Arguments& args);
 v8::Handle<v8::Value> Quit(const v8::Arguments& args);
@@ -67,7 +70,6 @@ v8::Handle<v8::Value> fuuid(const v8::Arguments& args);
 v8::Handle<v8::Value> connect(const v8::Arguments& args);
 v8::Handle<v8::String> ReadFile(const char* name);
 void ReportException(v8::TryCatch* handler);
-
 
 static bool run_shell;
 
@@ -104,6 +106,8 @@ v8::Persistent<v8::Context> CreateShellContext() {
   v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
   // Bind the global 'print' function to the C++ Print callback.
   global->Set(v8::String::New("print"), v8::FunctionTemplate::New(Print));
+  // Bind the gloabl 'find' function to the C++ Find callback.
+  global->Set(v8::String::New("find"), v8::FunctionTemplate::New(find));
   // Bind the global 'read' function to the C++ Read callback.
   global->Set(v8::String::New("read"), v8::FunctionTemplate::New(Read));
   // Bind the global 'load' function to the C++ Load callback.
@@ -137,6 +141,39 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
     const char* json = ToCString(strJson);
 
     __djonConnection->insert(std::string(ns), std::string(json));
+
+    //printf("insert executed\n");
+}
+
+v8::Handle<v8::Value> find(const v8::Arguments& args) {
+    if (args.Length() < 2) {
+        v8::ThrowException(v8::String::New("usage: db.find(namespace, json)"));
+    }
+
+    if (__djonConnection == NULL) {
+        v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+    }
+    v8::HandleScope handle_scope;
+    v8::String::Utf8Value str(args[0]);
+    const char* ns = ToCString(str);
+    v8::String::Utf8Value strJson(args[1]);
+    const char* json = ToCString(strJson);
+
+	 std::vector<BSONObj*> result = __djonConnection->find(std::string(ns), std::string(json));
+
+	std::stringstream ss;
+	ss << "[";
+	for (std::vector<BSONObj*>::const_iterator i = result.begin(); i != result.end(); i++) {
+		BSONObj* obj = *i;
+		if (i != result.begin()) {
+			ss << ", ";
+		}
+		ss << obj->toChar();
+	}
+	ss << "]";
+
+	std::string sresult = ss.str();
+	printf("%s", sresult.c_str());
 
     //printf("insert executed\n");
 }
