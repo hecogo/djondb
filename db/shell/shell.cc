@@ -55,9 +55,9 @@ v8::Persistent<v8::Context> CreateShellContext();
 void RunShell(v8::Handle<v8::Context> context);
 int RunMain(int argc, char* argv[]);
 bool ExecuteString(v8::Handle<v8::String> source,
-                   v8::Handle<v8::Value> name,
-                   bool print_result,
-                   bool report_exceptions);
+		v8::Handle<v8::Value> name,
+		bool print_result,
+		bool report_exceptions);
 v8::Handle<v8::Value> Print(const v8::Arguments& args);
 v8::Handle<v8::Value> find(const v8::Arguments& args);
 v8::Handle<v8::Value> Read(const v8::Arguments& args);
@@ -75,83 +75,105 @@ static bool run_shell;
 
 
 int main(int argc, char* argv[]) {
-  v8::V8::SetFlagsFromCommandLine(&argc, argv, true);
-  run_shell = (argc == 1);
-  v8::HandleScope handle_scope;
-  v8::Persistent<v8::Context> context = CreateShellContext();
-  if (context.IsEmpty()) {
-    printf("Error creating context\n");
-    return 1;
-  }
-  context->Enter();
-  int result = RunMain(argc, argv);
-  if (run_shell) RunShell(context);
-  context->Exit();
-  context.Dispose();
-  v8::V8::Dispose();
-  return result;
+	v8::V8::SetFlagsFromCommandLine(&argc, argv, true);
+	run_shell = (argc == 1);
+	v8::HandleScope handle_scope;
+	v8::Persistent<v8::Context> context = CreateShellContext();
+	if (context.IsEmpty()) {
+		printf("Error creating context\n");
+		return 1;
+	}
+	context->Enter();
+	int result = RunMain(argc, argv);
+	if (run_shell) RunShell(context);
+	context->Exit();
+	context.Dispose();
+	v8::V8::Dispose();
+	return result;
 }
 
 
 // Extracts a C string from a V8 Utf8Value.
 const char* ToCString(const v8::String::Utf8Value& value) {
-  return *value ? *value : "<string conversion failed>";
+	return *value ? *value : "<string conversion failed>";
 }
 
 
 // Creates a new execution environment containing the built-in
 // functions.
 v8::Persistent<v8::Context> CreateShellContext() {
-  // Create a template for the global object.
-  v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
-  // Bind the global 'print' function to the C++ Print callback.
-  global->Set(v8::String::New("print"), v8::FunctionTemplate::New(Print));
-  // Bind the gloabl 'find' function to the C++ Find callback.
-  global->Set(v8::String::New("find"), v8::FunctionTemplate::New(find));
-  // Bind the global 'read' function to the C++ Read callback.
-  global->Set(v8::String::New("read"), v8::FunctionTemplate::New(Read));
-  // Bind the global 'load' function to the C++ Load callback.
-  global->Set(v8::String::New("load"), v8::FunctionTemplate::New(Load));
-  // Bind the 'quit' function
-  global->Set(v8::String::New("quit"), v8::FunctionTemplate::New(Quit));
-  // Bind the 'version' function
-  global->Set(v8::String::New("version"), v8::FunctionTemplate::New(Version));
-  // Bind the 'db.insert' function
-  global->Set(v8::String::New("insert"), v8::FunctionTemplate::New(insert));
-  // Bind the 'db.uuid' function
-  global->Set(v8::String::New("uuid"), v8::FunctionTemplate::New(fuuid));
-  // Bind the 'db.connect' function
-  global->Set(v8::String::New("connect"), v8::FunctionTemplate::New(connect));
-  // Bind the 'db.help' function
-  global->Set(v8::String::New("help"), v8::FunctionTemplate::New(help));
+	// Create a template for the global object.
+	v8::Handle<v8::ObjectTemplate> global = v8::ObjectTemplate::New();
+	// Bind the global 'print' function to the C++ Print callback.
+	global->Set(v8::String::New("print"), v8::FunctionTemplate::New(Print));
+	// Bind the gloabl 'find' function to the C++ Find callback.
+	global->Set(v8::String::New("find"), v8::FunctionTemplate::New(find));
+	// Bind the global 'read' function to the C++ Read callback.
+	global->Set(v8::String::New("read"), v8::FunctionTemplate::New(Read));
+	// Bind the global 'load' function to the C++ Load callback.
+	global->Set(v8::String::New("load"), v8::FunctionTemplate::New(Load));
+	// Bind the 'quit' function
+	global->Set(v8::String::New("quit"), v8::FunctionTemplate::New(Quit));
+	// Bind the 'version' function
+	global->Set(v8::String::New("version"), v8::FunctionTemplate::New(Version));
+	// Bind the 'db.insert' function
+	global->Set(v8::String::New("insert"), v8::FunctionTemplate::New(insert));
+	// Bind the 'db.uuid' function
+	global->Set(v8::String::New("uuid"), v8::FunctionTemplate::New(fuuid));
+	// Bind the 'db.connect' function
+	global->Set(v8::String::New("connect"), v8::FunctionTemplate::New(connect));
+	// Bind the 'db.help' function
+	global->Set(v8::String::New("help"), v8::FunctionTemplate::New(help));
 
-  return v8::Context::New(NULL, global);
+	return v8::Context::New(NULL, global);
+}
+
+const char* toJson(const v8::Local<v8::Object>& obj) {
+	std::stringstream ss;
+	ss << "{";
+	v8::Local<v8::Array> propertyNames = obj->GetPropertyNames();
+
+	for (int x = 0; x < propertyNames->Length(); x++) {
+		if (x != 0) {
+			ss << ", ";
+		}
+		v8::String::Utf8Value name(propertyNames->Get(x));
+		ss << "\"" << ToCString(name) << "\":";
+		v8::Local<v8::Value> val = obj->GetInternalField(x);
+		if (val->IsObject()) {
+			ss << toJson(val->ToObject());
+		} else {
+			ss << "\"" << ToCString(v8::String::Utf8Value(val)) << "\"";
+		}
+	}
+
+	ss << "}";
+
+	const char* result = ss.str().c_str();
+	return result;
 }
 
 v8::Handle<v8::Value> insert(const v8::Arguments& args) {
-    if (args.Length() < 2) {
-        v8::ThrowException(v8::String::New("usage: db.insert(namespace, json)"));
-    }
+	if (args.Length() < 2) {
+		v8::ThrowException(v8::String::New("usage: db.insert(namespace, json)"));
+	}
 
-    v8::HandleScope handle_scope;
-    v8::String::Utf8Value str(args[0]);
-    const char* ns = ToCString(str);
-	 const char* json;
-	 if (args[1]->IsObject()) {
+	v8::HandleScope handle_scope;
+	v8::String::Utf8Value str(args[0]);
+	const char* ns = ToCString(str);
+	const char* json;
+	if (args[1]->IsObject()) {
+		json = toJson(args[1]->ToObject());
+	} else {
+		json = ToCString(v8::String::Utf8Value(args[1]));
+	}
 
-	 } else {
-	 }
-	 v8::String::Utf8Value strJson(args[1]);
-	 = ToCString(strJson);
-	 printf(json);
-	 return v8::String::New("");
+	if (__djonConnection == NULL) {
+		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+	}
+	__djonConnection->insert(std::string(ns), std::string(json));
 
-	 if (__djonConnection == NULL) {
-		 v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
-	 }
-	 __djonConnection->insert(std::string(ns), std::string(json));
-
-	 //printf("insert executed\n");
+	return v8::String::New("");
 }
 
 v8::Handle<v8::Value> help(const v8::Arguments& args) {
@@ -179,8 +201,12 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value str(args[0]);
 	const char* ns = ToCString(str);
-	v8::String::Utf8Value strJson(args[1]);
-	const char* json = ToCString(strJson);
+	const char* json;
+	if (args[1]->IsObject()) {
+		json = toJson(args[1]->ToObject());
+	} else {
+		json = ToCString(v8::String::Utf8Value(args[1]));
+	}
 
 	std::vector<BSONObj*> result = __djonConnection->find(std::string(ns), std::string(json));
 
@@ -198,7 +224,7 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	std::string sresult = ss.str();
 	printf("%s", sresult.c_str());
 
-	//printf("insert executed\n");
+	return v8::String::New(sresult.c_str());
 }
 
 v8::Handle<v8::Value> fuuid(const v8::Arguments& args) {
@@ -234,6 +260,7 @@ v8::Handle<v8::Value> connect(const v8::Arguments& args) {
 		__djonConnection->close();
 		__djonConnection = NULL;
 	}
+	return v8::String::New("");
 }
 
 // The callback that is invoked by v8 whenever the JavaScript 'print'
