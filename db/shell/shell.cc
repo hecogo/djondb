@@ -222,7 +222,6 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	ss << "]";
 
 	std::string sresult = ss.str();
-	printf("%s", sresult.c_str());
 
 	return v8::String::New(sresult.c_str());
 }
@@ -427,6 +426,7 @@ void RunShell(v8::Handle<v8::Context> context) {
 
 	std::stringstream ss;
 	bool line = false;
+	const char* lastCmd = "";
 	while (true) {
 		char buffer[kBufferSize];
 		if (!line) {
@@ -438,8 +438,16 @@ void RunShell(v8::Handle<v8::Context> context) {
 		char* str = fgets(buffer, kBufferSize, stdin);
 		if (str == NULL) break;
 		if (str[0] == '~') {
-			system("vi .tmp.sw");
-			str = getFile(".tmp.sw");
+			system("vi .tmp.js");
+			lastCmd = getFile(".tmp.js");
+			printf("Buffer loaded.\n");
+			continue;
+		} else if (str[0] == '.') {
+			if ((lastCmd == NULL) || (strlen(lastCmd) == 0)) {
+				lastCmd = getFile(".tmp.js");
+				printf("Buffer loaded.\n");
+			}
+			str = const_cast<char*>(lastCmd);
 		} else 
 			if (str[strlen(str) - 2] == '\\') {
 				str[strlen(str) - 2] = ' '; 
@@ -448,8 +456,10 @@ void RunShell(v8::Handle<v8::Context> context) {
 		ss << str;
 		if (!line) {
 			v8::HandleScope handle_scope;
-			const char* cmd = ss.str().c_str();
+			std::string sCmd = ss.str();
+			const char* cmd = sCmd.c_str();
 			ss.str("");
+			lastCmd = cmd;
 			ExecuteString(v8::String::New(cmd), name, true, true);
 		}
 	}

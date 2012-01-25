@@ -1,23 +1,27 @@
-function a() {
+function execute() {
    connect('localhost');
 
-   var n = { name: 'John',
-				 lastName: 'Smith',
-             inner: {
-                       a: '1',
-                       b: '2'
-                    }  
-            };
+   var a = {
+        name: 'test',
+        lastName: 'last'
+	};
 
-   insert('ns', n);
+  insert('space', a);
+  acomplex = {
+        name: 'test',
+        lastName: 'last',
+		  inner: {
+			  innerName: 'iName',
+			  innerLastName: 'iLastName'
+		  }
 
-   print("inserted");
-   
-  var t = { name: 'John' };
-   
-   print('doing search');
-   var result = find('ns', t);
-   print(result);
+	};
+
+  insert('space', acomplex);
+
+  var temp = find('space', { name: 'test' });
+
+  print("Found ", temp);
 }
 
-a();
+execute();
