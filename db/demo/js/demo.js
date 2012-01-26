@@ -41,9 +41,9 @@ function loadCategories(post, data) {
 	post.empty();
 	if (data.type == '2') {
 		var sel = $("<select />");
-		addOption(sel, 1, 'antiguedades');
-		addOption(sel, 2, 'arte');
-		addOption(sel, 3, 'bicicletas');
+		addOption(sel, 1, 'computadores');
+		addOption(sel, 2, 'automoviles');
+		addOption(sel, 3, 'casas');
 		addRow(post, 'Categoria:', sel);
 
 		sel.bind("click", function() {
@@ -58,8 +58,8 @@ function preparePost() {
 
 
 	var sel = $("<select></select>");
-	addOption(sel, 1, 'Venta de casa');
-	addOption(sel, 2, 'Venta');
+	addOption(sel, 1, 'Venta');
+	addOption(sel, 2, 'Alquiler');
 	addRow(post, 'Elige el tipo de anuncio', sel);
 
 	var data = {}; // this will hold the post information
