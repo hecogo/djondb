@@ -257,38 +257,47 @@ std::vector<BSONObj*> DBController::findFullScan(char* ns, const BSONObj& filter
 
 	BSONInputStream* bis = new BSONInputStream(fis);
 	std::map<t_keytype, BSONContent* >::const_iterator testValIter = filter.begin();
-	BSONContent* testVal = testValIter->second;
-	t_keytype keyname = testValIter->first;
+	if (testValIter != filter.end()) {
+		BSONContent* testVal = testValIter->second;
+		t_keytype keyname = testValIter->first;
 
-	// the first filter will be done over the file
-	while (!fis->eof()) {
-		BSONObj* readed = bis->readBSON();
-		if (readed->has(keyname)) {
-			BSONContent* content = readed->getContent(keyname);
-			if (*content == *testVal) {
-				if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), readed->toChar());
-				result.push_back(readed);
-			}
-		}
-	}
-
-	// now filter the results with the other keys
-	testValIter++;
-	for ( ;testValIter != filter.end(); testValIter++) {
-		std::vector<BSONObj*> rsTmp;
-		testVal = testValIter->second;
-		keyname = testValIter->first;
-		for (std::vector<BSONObj*>::iterator i = result.begin(); i != result.end(); i++) {
-			BSONObj* obj = *i;
-			if (obj->has(keyname)) {
-				BSONContent* content = obj->getContent(keyname);
+		// the first filter will be done over the file
+		while (!fis->eof()) {
+			BSONObj* readed = bis->readBSON();
+			if (readed->has(keyname)) {
+				BSONContent* content = readed->getContent(keyname);
 				if (*content == *testVal) {
-					if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), obj->toChar());
-					rsTmp.push_back(obj);
+					if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), readed->toChar());
+					result.push_back(readed);
 				}
 			}
 		}
-		result = rsTmp;
+
+		// now filter the results with the other keys
+		testValIter++;
+		for ( ;testValIter != filter.end(); testValIter++) {
+			std::vector<BSONObj*> rsTmp;
+			testVal = testValIter->second;
+			keyname = testValIter->first;
+			for (std::vector<BSONObj*>::iterator i = result.begin(); i != result.end(); i++) {
+				BSONObj* obj = *i;
+				if (obj->has(keyname)) {
+					BSONContent* content = obj->getContent(keyname);
+					if (*content == *testVal) {
+						if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), obj->toChar());
+						rsTmp.push_back(obj);
+					}
+				}
+			}
+			result = rsTmp;
+		}
+	} else { // All the records will be included, the filter is empty
+		if (_logger->isDebug()) _logger->debug(2, "the filter is empty, all the records will be included from namespace: %s", ns);
+		while (!fis->eof()) {
+			BSONObj* readed = bis->readBSON();
+			result.push_back(readed);
+		}
+
 	}
 
 	return result;

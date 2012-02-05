@@ -78,10 +78,10 @@ BSONObj* convertStruct(struct BSONStruct* param) {
 
 BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 	BSONObj* res = new BSONObj();
-	int state = 0;
+	int state = 0; // 0 - nothing, 1 - name, 2- value
 	char buffer[256];
-	char* name;
-	void* value;
+	char* name = NULL;
+	void* value = NULL;
 	int len = 0;
 	BSONTYPE type;
 	int stringOpen = 0; // 0 - closed
@@ -103,46 +103,50 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 			continue;
 		}
 		if (c[x] == '}' || c[x] == ',') {
-			if (type != BSON_TYPE) {
-				value = (char*)malloc(len+1); 
-				memset(value, 0, len + 1);
-				strcpy((char*)value, buffer);
-			}
-			len = 0;
-			memset(buffer, 0, 256);
-			switch (type) {
-				case INT_TYPE:{
-									  int iVal = atoi((char*)value);
-									  res->add(name, iVal);
-									  break;
-								  }
-				case DOUBLE_TYPE: {
-											double dVal = atof((char*)value);
-											res->add(name, dVal);
-											break;
-										}
-				case STRING_TYPE:
-										{
-											res->add(name, (char*)value);
-											break;
-										}
-				case BSON_TYPE:
-										{
-											res->add(name, *((BSONObj*)value));
-											delete (BSONObj*)value;
-										}
+			if (name != NULL) {
+				if (type != BSON_TYPE) {
+					value = (char*)malloc(len+1); 
+					memset(value, 0, len + 1);
+					strcpy((char*)value, buffer);
+				}
+				len = 0;
+				memset(buffer, 0, 256);
+				switch (type) {
+					case INT_TYPE:{
+										  int iVal = atoi((char*)value);
+										  res->add(name, iVal);
+										  break;
+									  }
+					case DOUBLE_TYPE: {
+												double dVal = atof((char*)value);
+												res->add(name, dVal);
+												break;
+											}
+					case STRING_TYPE:
+											{
+												res->add(name, (char*)value);
+												break;
+											}
+					case BSON_TYPE:
+											{
+												res->add(name, *((BSONObj*)value));
+												delete (BSONObj*)value;
+											}
 
-			}
-			free(name);
-			if (type != BSON_TYPE) {
-				free(value);
-			}
-			if (c[x] == '}')
-				break;
-			else {
-				state = 1; // name
-				type = INT_TYPE;
-				continue;
+				}
+				free(name);
+				name = NULL;
+				if (type != BSON_TYPE) {
+					free(value);
+					value = NULL;
+				}
+				if (c[x] == '}')
+					break;
+				else {
+					state = 1; // name
+					type = INT_TYPE;
+					continue;
+				}
 			}
 		}
 		if (c[x] == ':') {

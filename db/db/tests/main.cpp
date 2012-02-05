@@ -248,6 +248,9 @@ private:
 		 TEST_ASSERT(found.size() == 5); 
 		 delete filter;
 		 
+		 found = controller.find("find.filter", *BSONParser::parse("{}"));
+		 TEST_ASSERT(found.size() == 8); 
+		 
 		 found = controller.find("find.filter", *BSONParser::parse("{name: 'Juan'}"));
 		 TEST_ASSERT(found.size() == 7); 
 		 

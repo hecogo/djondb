@@ -117,6 +117,9 @@ class TestBSONSuite : public Test::Suite
 
 		void testParserSimple()
 		{
+			BSONObj* testEmpty = BSONParser::parse("{}");
+			TEST_ASSERT(testEmpty->length() == 0);
+
 			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25}");
 			TEST_ASSERT(obj->getInt("age") != NULL);
 			TEST_ASSERT(*obj->getInt("age") == 1);
@@ -139,7 +142,7 @@ class TestBSONSuite : public Test::Suite
 
 			BSONObj* obj2 = BSONParser::parse("{\"type\":\"2\",\"category\":\"1\",\"title\":\"test\",\"price\":\"asdf\",\"place\":\"asdf\",\"description\":\"asdf\"}");
 			cout << obj2->toChar() << endl;
-			TEST_ASSERT(obj->has("type"));
+			TEST_ASSERT(obj2->has("type"));
 			delete obj2;
 		}
 
