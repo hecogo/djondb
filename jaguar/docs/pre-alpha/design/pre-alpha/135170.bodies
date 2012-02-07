@@ -1,3 +1,0 @@
-class EntityNotFoundException
-!!!150914.cpp!!!	what() : char
-    return message->c_str();

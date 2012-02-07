@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module codename="com.sinco.designer.projecteditor">
-    <module_version install_time="1224047686966" last="true" origin="installer" specification_version="1.0">
-        <file crc="1583986658" name="config/Modules/com-sinco-designer-projecteditor.xml"/>
-        <file crc="381793993" name="modules/com-sinco-designer-projecteditor.jar"/>
-    </module_version>
-</module>

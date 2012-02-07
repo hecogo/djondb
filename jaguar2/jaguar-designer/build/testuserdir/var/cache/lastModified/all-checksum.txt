@@ -1,6 +1,0 @@
-/usr/local/netbeans-6.1/platform8=1223427413000
-/home/cross/workspace/jaguar2/jaguar-designer/build/cluster=1223914221000
-/usr/local/netbeans-6.1/ide9=1223914221000
-/usr/local/netbeans-6.1/java2=1223914221000
-/usr/local/netbeans-6.1/nb6.1=1223914221000
-/home/cross/workspace/jaguar2/jaguar-designer/build/testuserdir=1223914221000
