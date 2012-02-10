@@ -9,9 +9,11 @@ Prerequisites
 
 autotools (automake, autoreconf, make)
 libxss-dev
-librt
+libc6
 libv8-dev (google javascript engine)
 libX11-dev
+uuid-dev
+
 
 Compilation
 ========================================
