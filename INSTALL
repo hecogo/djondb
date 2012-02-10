@@ -14,6 +14,12 @@ libv8-dev (google javascript engine)
 libX11-dev
 uuid-dev
 
+In debian/Ubuntu you can use:
+
+> sudo apt-get install autoconf libxss-dev libc6 libv8-dev  libX11-dev uuid-dev
+
+to install the required libraries in one shot.
+
 
 Compilation
 ========================================
