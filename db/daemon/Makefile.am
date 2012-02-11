@@ -13,5 +13,5 @@ endif
 
 bin_PROGRAMS = djondbd
 djondbd_SOURCES = main.cpp
-djondbd_LDADD = -ldjon-service -ldjon-network -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
+djondbd_LDADD = -ldjon-service -ldjon-network -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid
 

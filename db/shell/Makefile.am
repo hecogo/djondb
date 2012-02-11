@@ -21,5 +21,5 @@ AM_CXXFLAGS = ${PF_XXFLAGS} ${DB_XXFLAGS} ${all_includes}
 
 bin_PROGRAMS = djon-shell
 djon_shell_SOURCES = shell.cpp 
-djon_shell_LDADD = -ldjon-service -ldjon-client -ldjon-network -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lantlr3c -lX11 -lXss -lrt -luuid -lv8
+djon_shell_LDADD = -ldjon-service -ldjon-client -ldjon-network -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lv8
 

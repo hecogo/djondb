@@ -21,16 +21,12 @@
 #include "bsonobj.h"
 #include "JSONGrammarParser.h"
 #include "JSONGrammarLexer.h"
-#include <antlr3.h>
-#include <antlr3stringstream.h>
-#include <antlr3filestream.h>
 
 
 struct BSONStruct {
 	char* name;
 	int type;
-	void* value;
-	struct BSONStruct* next;
+	void* value; struct BSONStruct* next;
 };
 
 BSONParser::BSONParser()

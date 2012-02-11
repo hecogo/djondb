@@ -19,7 +19,7 @@ libdjon_client_la_SOURCES= connection.cpp \
                                                      djondb_client.h
 TESTS = test-driverbase
 check_PROGRAMS = test-driverbase
-test_driverbase_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
+test_driverbase_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest
 test_driverbase_SOURCES = tests/main.cpp
 
 djon_client_libincludedir = $(libdir)/djon-client-1.0/include

@@ -36,7 +36,7 @@ library_includedir=$(includedir)/djon-filesystem-1.0/djon-filesystem
 
 TESTS = test-filesystem
 check_PROGRAMS = test-filesystem
-test_filesystem_LDADD = libdjon-filesystem.la -ldjon-bson -ldjon-util -lpthread -lX11 -lXss -lrt -luuid -lantlr3c -lcpptest 
+test_filesystem_LDADD = libdjon-filesystem.la -ldjon-bson -ldjon-util -lpthread -lX11 -lXss -lrt -luuid -lcpptest
 test_filesystem_SOURCES = tests/main.cpp
 
 
