@@ -20,7 +20,7 @@ libdjon_bson_la_SOURCES = bsonobj.cpp \
 									bsoncontent.cpp \
                            bson.h \
                            bsonparser.cpp \
-                           bsonparser.h 
+                           bsonparser.h
 
 library_includedir=$(includedir)/djon-bson-1.0/djon-bson
 library_include_HEADERS = bson.h

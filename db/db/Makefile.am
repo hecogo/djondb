@@ -28,7 +28,7 @@ library_includedir=$(includedir)/djon-db-1.0/djon-db
 
 TESTS = test-db
 check_PROGRAMS = test-db
-test_db_LDADD = libdjon-db.la -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest 
+test_db_LDADD = libdjon-db.la -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest
 test_db_SOURCES = tests/main.cpp
 
 djon_db_libincludedir = $(libdir)/djon-db-1.0/include

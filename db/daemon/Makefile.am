@@ -13,5 +13,5 @@ endif
 
 bin_PROGRAMS = djondbd
 djondbd_SOURCES = main.cpp
-djondbd_LDADD = -ldjon-service -ldjon-network -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid  
+djondbd_LDADD = $(top_builddir)/service/libdjon-service.la $(top_builddir)/network/libdjon-network.la $(top_builddir)/command/libdjon-command.la $(top_builddir)/db/libdjon-db.la $(top_builddir)/filesystem/libdjon-filesystem.la $(top_builddir)/cache/libdjon-cache.la $(top_builddir)/bson/libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lXss -lrt -luuid
 
