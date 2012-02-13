@@ -1,6 +1,6 @@
-Jaguar DB
+djondb
 
-Jaguar DB is an implementation of a NoSQL Model, the following are the goals to be achieved:
+djodb is an implementation of a NoSQL Model, the following are the goals to be achieved:
 
 1. Fast DB
 2. Horizontal Scale Up
@@ -10,7 +10,7 @@ Jaguar DB is an implementation of a NoSQL Model, the following are the goals to 
 
 Modules
 
-the Jaguar project is big, that's why all the components are breakdown into subprojects to keep the concepts as separated as possible,
+the djodb project is big, that's why all the components are breakdown into subprojects to keep the concepts as separated as possible,
 this approach keep the mantainance easy and allow each component to grow independent from the others, also it provides a way to test
 each component separatedly from the others.
 
