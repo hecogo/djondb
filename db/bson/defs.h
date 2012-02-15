@@ -13,6 +13,7 @@ enum BSONTYPE {
     PTRCHAR_TYPE,
     STRING_TYPE,
     BSON_TYPE,
+	 ARRAY_TYPE,
     UNKNOWN_TYPE
 //    PTR
 };

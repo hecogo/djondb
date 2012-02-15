@@ -35,6 +35,7 @@ class TestBSONSuite : public Test::Suite
 			TEST_ADD(TestBSONSuite::testParserSimple);
 			TEST_ADD(TestBSONSuite::testToChar);
 			TEST_ADD(TestBSONSuite::testParserRelation);
+			TEST_ADD(TestBSONSuite::testParserCollection);
 			TEST_ADD(TestBSONSuite::testParserDoubleRelation);
 			TEST_ADD(TestBSONSuite::testComparison);
 		}
@@ -164,10 +165,27 @@ class TestBSONSuite : public Test::Suite
 			delete obj2;
 		}
 
-
 		void testParserRelation()
 		{
 			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: {innertext: 'inner text'}}");
+			TEST_ASSERT(obj->getInt("age") != NULL);
+			TEST_ASSERT(*obj->getInt("age") == 1);
+			TEST_ASSERT(obj->getChars("name") != NULL);
+			TEST_ASSERT(strcmp(obj->getChars("name"), "John") == 0);
+
+			TEST_ASSERT(obj->getDouble("salary") != NULL);
+			TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
+
+			TEST_ASSERT(obj->getBSON("rel1") != NULL);
+			TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
+
+			delete obj;
+		}
+
+
+		void testParserCollection()
+		{
+			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: [{innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'} ] }");
 			TEST_ASSERT(obj->getInt("age") != NULL);
 			TEST_ASSERT(*obj->getInt("age") == 1);
 			TEST_ASSERT(obj->getChars("name") != NULL);

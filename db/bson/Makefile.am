@@ -15,6 +15,8 @@ lib_LTLIBRARIES = libdjon-bson.la
 
 libdjon_bson_la_SOURCES = bsonobj.cpp \
                            bsonobj.h \
+									bsonarrayobj.cpp \
+									bsonarrayobj.h \
 									bsoncontent.h \
 									defs.h \
 									bsoncontent.cpp \
