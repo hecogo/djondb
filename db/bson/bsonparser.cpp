@@ -19,6 +19,7 @@
 #include "bsonparser.h"
 
 #include "bsonobj.h"
+#include "bsonarrayobj.h"
 #include "JSONGrammarParser.h"
 #include "JSONGrammarLexer.h"
 
@@ -213,6 +214,32 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 	}
 	pos = x;
 	return res;
+}
+
+BSONArrayObj* BSONParser::parseArray(const std::string& sbson) {
+	const char* chrs = sbson.c_str();
+	BSONArrayObj* result = NULL;
+	int pos = 0;
+	while (chrs[pos] == ' ') {
+		pos++;
+	}
+	if (chrs[pos] != '[') {
+		// error
+	} else {
+		result = new BSONArrayObj();
+	}
+
+	while ((pos < strlen(chrs)) && (chrs[pos] != ']')) {
+		while ((pos < strlen(chrs)) && (chrs[pos] != '{'))
+			pos++;
+		if (chrs[pos] == '{') {
+			BSONObj* bson = parseBSON(chrs, pos);
+			result->add(*bson);
+			delete bson;
+		}
+		pos++;
+	}	
+	return result;
 }
 
 BSONObj* BSONParser::parse(const std::string& sbson) {

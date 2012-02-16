@@ -36,6 +36,7 @@ class TestBSONSuite : public Test::Suite
 			TEST_ADD(TestBSONSuite::testToChar);
 			TEST_ADD(TestBSONSuite::testParserRelation);
 			TEST_ADD(TestBSONSuite::testParserCollection);
+			TEST_ADD(TestBSONSuite::testParserArray);
 			TEST_ADD(TestBSONSuite::testParserDoubleRelation);
 			TEST_ADD(TestBSONSuite::testComparison);
 		}
@@ -55,6 +56,14 @@ class TestBSONSuite : public Test::Suite
 			rel.add("innertext", std::string("inner text"));
 			obj->add("rel1", rel);
 
+			BSONArrayObj array;
+			BSONObj b1;
+			b1.add("b1", "test");
+			array.add(b1);
+			BSONObj b2;
+			b2.add("b1", "test2");
+			array.add(b2);
+			obj->add("array", array);
 
 			TEST_ASSERT(obj->getInt("int") != NULL);
 			TEST_ASSERT(*obj->getInt("int") == 1);
@@ -73,6 +82,17 @@ class TestBSONSuite : public Test::Suite
 
 			TEST_ASSERT(obj->getBSON("rel1") != NULL);
 			TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
+			
+			TEST_ASSERT(obj->getBSONArray("array") != NULL);
+			BSONArrayObj* arrayR = obj->getBSONArray("array");
+			TEST_ASSERT(arrayR != NULL);
+			TEST_ASSERT(arrayR->length() == 2);
+
+			BSONObj* el1 = arrayR->get(0);
+			TEST_ASSERT(el1 != NULL);
+			
+			BSONObj* el2 = arrayR->get(1);
+			TEST_ASSERT(el2 != NULL);
 			delete obj;
 		}
 
@@ -90,6 +110,14 @@ class TestBSONSuite : public Test::Suite
 			rel.add("innertext", std::string("inner text"));
 			objOrig->add("rel1", rel);
 
+			BSONArrayObj array;
+			BSONObj b1;
+			b1.add("b1", "test");
+			array.add(b1);
+			BSONObj b2;
+			b2.add("b1", "test2");
+			array.add(b2);
+			objOrig->add("array", array);
 
 			BSONObj* obj = new BSONObj(*objOrig);
 			delete objOrig;
@@ -115,6 +143,16 @@ class TestBSONSuite : public Test::Suite
 			TEST_ASSERT(obj->getBSON("rel1")->getString("innertext") != NULL);
 			TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
 
+			TEST_ASSERT(obj->getBSONArray("array") != NULL);
+			BSONArrayObj* arrayR = obj->getBSONArray("array");
+			TEST_ASSERT(arrayR != NULL);
+			TEST_ASSERT(arrayR->length() == 2);
+
+			BSONObj* el1 = arrayR->get(0);
+			TEST_ASSERT(el1 != NULL);
+			
+			BSONObj* el2 = arrayR->get(1);
+			TEST_ASSERT(el2 != NULL);
 			delete obj;
 		}
 
@@ -181,6 +219,29 @@ class TestBSONSuite : public Test::Suite
 
 			delete obj;
 		}
+
+		void testParserArray()
+		{
+			BSONArrayObj* array = BSONParser::parseArray("[{age: 1, name: 'John', salary: 3500.25, rel1: {innertext: 'inner text'}}, {age: 2, name: 'John2', salary: 23500.25, rel1: {innertext: 'inner text2'}}]");
+			TEST_ASSERT(array != NULL);
+			TEST_ASSERT(array->length() == 2);
+
+			BSONObj* obj = array->get(0);
+			TEST_ASSERT(obj != NULL);
+			TEST_ASSERT(obj->getInt("age") != NULL);
+			TEST_ASSERT(*obj->getInt("age") == 1);
+			TEST_ASSERT(obj->getChars("name") != NULL);
+			TEST_ASSERT(strcmp(obj->getChars("name"), "John") == 0);
+
+			TEST_ASSERT(obj->getDouble("salary") != NULL);
+			TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
+
+			TEST_ASSERT(obj->getBSON("rel1") != NULL);
+			TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
+
+			delete obj;
+		}
+
 
 
 		void testParserCollection()

@@ -8,7 +8,7 @@
 //  Revision:  none
 //  Compiler:  gcc
 //
-//  Author:  YOUR NAME (),
+//  Author:  Juan Pablo Crossley (crossleyjuan@gmail.com),
 //
 // License:
 //
@@ -24,16 +24,24 @@
 // =====================================================================================
 
 #include "bsonarrayobj.h"
+#include <sstream>
+#include <string>
+#include <stdlib.h>
+#include "bsonobj.h"
 
 BSONArrayObj::BSONArrayObj() {
 }
 
 BSONArrayObj::~BSONArrayObj() {
-
+	for (std::vector<BSONObj*>::iterator i = _elements.begin(); i != _elements.end(); i++) {
+		BSONObj* element = *i;
+	   delete element;	
+	}
+	_elements.clear();
 }
 
 BSONArrayObj::BSONArrayObj(const BSONArrayObj& orig) {
-	for (std::vector<BSONObj*>::iterator i = orig._elements.begin(); i != orig._elements.end(); i++) {
+	for (std::vector<BSONObj*>::const_iterator i = orig._elements.begin(); i != orig._elements.end(); i++) {
 		BSONObj* element = *i;
 		BSONObj* copy = new BSONObj(*element);
 		this->_elements.push_back(copy);
@@ -49,5 +57,23 @@ void BSONArrayObj::add(const BSONObj& obj) {
 }
 
 BSONObj* BSONArrayObj::get(int index) const {
-	return _elements.get(index);
+	return _elements.at(index);
+}
+
+char* BSONArrayObj::toChar() const {
+	std::stringstream ss;
+	ss << "[";
+	for (std::vector<BSONObj*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
+		BSONObj* element = *i;
+		ss << element->toChar();
+		if (i != _elements.end()) {
+			ss << ", ";
+		}
+	}
+	std::string sres = ss.str();
+	char* result = (char*)malloc(sres.length() + 1);
+	memset(result, 0, sres.length() + 1);
+	strcpy(result, sres.c_str());
+
+	return result;
 }

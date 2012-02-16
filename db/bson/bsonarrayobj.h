@@ -27,6 +27,7 @@
 #define BSONARRAYOBJ_H_INCLUDED
 
 #include <vector>
+class BSONObj;
 
 class BSONArrayObj {
 public:
@@ -37,9 +38,9 @@ public:
 	int length() const;
 	void add(const BSONObj& obj);
 	BSONObj* get(int index) const;
-
+   char* toChar() const;
 
 private:
 	std::vector<BSONObj*> _elements;
-}
+};
 #endif // BSONARRAYOBJ_H_INCLUDED

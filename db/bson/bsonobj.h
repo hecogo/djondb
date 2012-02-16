@@ -7,6 +7,7 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <string.h>
+#include "bsonarrayobj.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ class BSONObj
         void add(t_keytype, char*);
         void add(t_keytype, std::string);
         void add(t_keytype, const BSONObj&);
+        void add(t_keytype, const BSONArrayObj&);
 
         bool has(t_keytype) const;
 
@@ -40,6 +42,7 @@ class BSONObj
         char* getChars(t_keytype) const;
         std::string* getString(t_keytype) const;
         BSONObj* getBSON(t_keytype) const;
+        BSONArrayObj* getBSONArray(t_keytype) const;
         void* get(t_keytype) const;
         BSONContent* getContent(t_keytype) const;
         BSONContent* getContent(t_keytype, BSONTYPE) const;
