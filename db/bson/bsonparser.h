@@ -4,6 +4,7 @@
 #include <string>
 
 class BSONObj;
+class BSONArrayObj;
 
 class BSONParser
 {
@@ -14,6 +15,7 @@ class BSONParser
 		virtual ~BSONParser();
 
 		static BSONObj* parse(const std::string& sbson);
+		static BSONArrayObj* parse(const std::string& sbson);
 
 	protected:
 	private:
