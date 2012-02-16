@@ -83,10 +83,17 @@ void BSONObj::add(t_keytype key, const BSONObj& val) {
 	BSONCONTENT_FILL(key, BSON_TYPE, internalValue);
 }
 
+void BSONObj::add(t_keytype key, const BSONArrayObj& val) {
+	BSONArrayObj* internalValue = new BSONArrayObj(val);
+	BSONCONTENT_FILL(key, BSONARRAY_TYPE, internalValue);
+}
+
+
 char* BSONObj::toChar() const {
 	std::stringstream ss;
 	ss << "{ ";
 	bool first = true;
+	BSONArrayObj* array;
 	for (std::map<t_keytype, BSONContent* >::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
 		if (!first) {
 			ss << ",";
@@ -98,6 +105,9 @@ char* BSONObj::toChar() const {
 		switch (content->type())  {
 			case BSON_TYPE:
 				ss << ((BSONObj*)content->_element)->toChar();
+				break;
+			case BSONARRAY_TYPE:
+				ss << ((BSONArrayObj*)content->_element)->toChar();
 				break;
 			case INT_TYPE:
 				ss << *((int*)content->_element);
@@ -192,6 +202,16 @@ BSONObj* BSONObj::getBSON(t_keytype key) const {
 	BSONContent* content = getContent(key, BSON_TYPE);
 	if (content != NULL) {
 		BSONObj* res = (BSONObj*)content->_element;
+		return res;
+	} else {
+		return NULL;
+	}
+}
+
+BSONArrayObj* BSONObj::getBSONArray(t_keytype key) const {
+	BSONContent* content = getContent(key, BSONARRAY_TYPE);
+	if (content != NULL) {
+		BSONArrayObj* res = (BSONArrayObj*)content->_element;
 		return res;
 	} else {
 		return NULL;

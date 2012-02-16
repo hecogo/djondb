@@ -18,6 +18,7 @@
 
 #include "bsoncontent.h"
 #include "bsonobj.h"
+#include "bsonarrayobj.h"
 #include "util.h"
 #include <stdlib.h>
 
@@ -46,6 +47,9 @@ BSONContent::~BSONContent() {
 		case BSON_TYPE:
 			delete ((BSONObj*)_element);
 			break;
+		case BSONARRAY_TYPE:
+			delete ((BSONArrayObj*)_element); 
+			break;
 		default:
 			break;
 	}
@@ -63,6 +67,8 @@ BSONContent::BSONContent(const BSONContent& orig) {
 	double d;
 	BSONObj* bson;
 	BSONObj* internalBson;
+	BSONArrayObj* bsonArray;
+	BSONArrayObj* internalBsonArray;
 	switch (this->_type) {
 		case STRING_TYPE:
 			this->_element = new std::string(*(std::string*)orig._element);
@@ -95,6 +101,11 @@ BSONContent::BSONContent(const BSONContent& orig) {
 			bson = (BSONObj*)orig._element;
 			internalBson = new BSONObj(*bson);
 			this->_element = internalBson;
+			break;
+		case BSONARRAY_TYPE:
+			bsonArray = (BSONArrayObj*)orig._element;
+			internalBsonArray = new BSONArrayObj(*bsonArray);
+			this->_element = internalBsonArray;
 			break;
 		default:
 			break;
@@ -150,6 +161,7 @@ bool BSONContent::operator ==(const BSONContent& content) {
 					}
 					break;
 				case BSON_TYPE:
+				case BSONARRAY_TYPE:
 					return false;
 					break;
 				default:
