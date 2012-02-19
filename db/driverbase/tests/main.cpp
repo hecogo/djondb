@@ -22,6 +22,7 @@
 #include "fileoutputstream.h"
 #include "fileinputstream.h"
 #include "config.h"
+#include "util.h"
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,7 +63,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ADD(TestDriverBaseSuite::testFinds);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
-//			TEST_ADD(TestDriverBaseSuite::testTemp);
+			TEST_ADD(TestDriverBaseSuite::testPerformance);
 		}
 
 		void testInsert() {
@@ -212,34 +213,47 @@ class TestDriverBaseSuite: public Test::Suite {
 
 		}
 
-		void testTemp() {
+		void testPerformance() {
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
-			if (!conn->open()) {
-				cout << "Cannot connect to localhost" << endl;
-				exit(0);
+			// 1k inserts
+			//
+			Logger* log = getLogger(NULL);
+			log->startTimeRecord();
+			BSONObj obj;
+			char* text = (char*)malloc(1001);
+			memset(text, 0, 1001);
+			memset(text, 'a', 1000);
+
+			obj.add("text", text);
+
+			int tests[] = { 1000, 10000, 1000000, 10000000};
+			for (int i = 0; i < 4; i++) {
+				cout << "Testing performance over: " << tests[i] << " inserts" << endl;
+				for (int x = 0; x < tests[i]; x++) {
+					conn->insert("test.performance", obj);
+				}
+
+				log->stopTimeRecord();
+
+				DTime time = log->recordedTime();
+
+				if ((time.totalSecs() > 0) && ((tests[i] / time.totalSecs()) < 16000))  {
+					TEST_FAIL("Performance is not good enough");
+					break;
+				} else {
+					if (time.totalSecs() > 0) {
+						cout << "Performance over: " ;/// << tests[i] << " inserts:" << (tests[i] / time.totalSecs()) << endl;
+					} else {
+						cout << "Total time is not enough to do some calculations" << endl;
+					}
+				}
 			}
 
-			cout << "TestTemp" << endl;
-			BSONObj objfilter;
-			objfilter.add("type", "2");
-			std::vector<BSONObj*> result = conn->find("test.demo", objfilter);			
-			TEST_ASSERT(result.size() > 0);
+			conn->close();
 
-			if (result.size() > 0) {
-				cout << "TestTem2p, result: " << result.size() << endl;
-				BSONObj* objR = *result.begin();
-				/*
-					TEST_ASSERT(objR != NULL);
-					TEST_ASSERT(objR->has("name"));
-					TEST_ASSERT(strcmp(objR->getChars("name"), "Test") == 0);
-
-*/
-				char* temp = objR->toChar();
-				cout << "obj: " << temp << endl;
-				delete objR;
-			}
-
+			free(text);
+			delete log;
 		}
 
 		void testUpdate() {
