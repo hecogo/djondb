@@ -227,10 +227,13 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			obj.add("text", text);
 
-			int tests[] = { 1000, 10000, 1000000, 10000000};
-			for (int i = 0; i < 4; i++) {
+			int tests[] = { 10, 100, 1000, 10000, 1000000, 10000000};
+			for (int i = 0; i < 6; i++) {
 				cout << "Testing performance over: " << tests[i] << " inserts" << endl;
 				for (int x = 0; x < tests[i]; x++) {
+					std::string* uid = uuid();
+					obj.add("_id", *uid);
+					delete uid;
 					conn->insert("test.performance", obj);
 				}
 
@@ -238,15 +241,14 @@ class TestDriverBaseSuite: public Test::Suite {
 
 				DTime time = log->recordedTime();
 
+				if (time.totalSecs() > 0) {
+					cout << "Performance over: " << tests[i] << " inserts:" << (tests[i] / time.totalSecs()) << endl;
+				} else {
+					cout << "Total time is not enough to do some calculations" << endl;
+				}
 				if ((time.totalSecs() > 0) && ((tests[i] / time.totalSecs()) < 16000))  {
 					TEST_FAIL("Performance is not good enough");
 					break;
-				} else {
-					if (time.totalSecs() > 0) {
-						cout << "Performance over: " ;/// << tests[i] << " inserts:" << (tests[i] / time.totalSecs()) << endl;
-					} else {
-						cout << "Total time is not enough to do some calculations" << endl;
-					}
 				}
 			}
 
