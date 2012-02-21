@@ -2,30 +2,30 @@
 function loadResult(post, msg) {
 	post.empty();
 
-	$("<h1>Clasificado guardado</h1>").appendTo(post);
+	$("<h1>Classified saved</h1>").appendTo(post);
 }
 
 function loadPost(post, data) {
 	post.empty();
 
 	var title = $("<input id='title' type='text'>");
-	addRow(post, 'Titulo:', title);
+	addRow(post, 'Title:', title);
 	var price = $("<input id='price' type='text'>");
-	addRow(post, 'Precio:', price);
+	addRow(post, 'Price:', price);
 	var place = $("<input id='place' type='text'>");
-	addRow(post, 'Lugar::', place);
+	addRow(post, 'Place:', place);
 	var descrip = $("<textarea id='description' />");
-	addRow(post, 'Descripcion:', descrip);
+	addRow(post, 'Description:', descrip);
 
 	var rooms = null;
 	if (data.category == 'casa' || data.category == 'apartamento') {
 		rooms = $("<input id='rooms' type='text' />");
-		addRow(post, 'Cuartos', rooms);
+		addRow(post, 'Rooms', rooms);
 	}
 	var pisos = null;
 	if (data.category == 'casa') {
 		pisos = $("<input id='floors' type='text' />");
-		addRow(post, 'Pisos', pisos);
+		addRow(post, 'Floors', pisos);
 	}
 	var area = null;
 	if (data.category == 'lote') {
@@ -33,7 +33,7 @@ function loadPost(post, data) {
 		addRow(post, 'Area', area);
 	}
 
-	var button = $("<input type=button value='Enviar' />");
+	var button = $("<input type=button value='Submit' />");
 	button.bind("click", function() {
 		data.title = title.val();
 		data.price = price.val();
@@ -61,12 +61,12 @@ function loadCategories(post, data) {
 	post.empty();
 	if (data.type == '1') {
 		var sel = $("<select />");
-		addOption(sel, 'casa', 'Casa');
-		addOption(sel, 'apartamento', 'Apartamento');
-		addOption(sel, 'lote', 'Lote');
-		addRow(post, 'Tipo de inmueble:', sel);
+		addOption(sel, 'casa', 'House');
+		addOption(sel, 'apartamento', 'Apartment');
+		addOption(sel, 'lote', 'Plot');
+		addRow(post, 'Type:', sel);
 
-		$("<input type='button' value='Siguiente' />")
+		$("<input type='button' value='Next' />")
 			.appendTo(post)
 			.bind("click", function() {
 			data.category = sel.val();
@@ -80,8 +80,8 @@ function preparePost() {
 
 
 	var sel = $("<select></select>");
-	addOption(sel, 1, 'Venta de casa');
-	addRow(post, 'Elige el tipo de anuncio', sel);
+	addOption(sel, 1, 'House for sale');
+	addRow(post, 'Pick the type of classified', sel);
 
 	var data = {}; // this will hold the post information
 	sel.bind("click", function() {

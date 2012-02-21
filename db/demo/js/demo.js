@@ -1,22 +1,22 @@
 function loadResult(post, msg) {
 	post.empty();
 
-	$("<h1>Clasificado guardado</h1>").appendTo(post);
+	$("<h1>Classified saved</h1>").appendTo(post);
 }
 
 function loadPost(post, data) {
 	post.empty();
 
 	var title = $("<input id='title' type='text'>");
-	addRow(post, 'Titulo:', title);
+	addRow(post, 'Title:', title);
 	var price = $("<input id='price' type='text'>");
-	addRow(post, 'Precio:', price);
+	addRow(post, 'Price:', price);
 	var place = $("<input id='place' type='text'>");
-	addRow(post, 'Lugar::', place);
+	addRow(post, 'Place:', place);
 	var descrip = $("<textarea id='description' />");
-	addRow(post, 'Descripcion:', descrip);
+	addRow(post, 'Description:', descrip);
 
-	var button = $("<input type=button value='Enviar' />");
+	var button = $("<input type=button value='Submit' />");
 	button.bind("click", function() {
 		data.title = title.val();
 		data.price = price.val();
@@ -41,10 +41,10 @@ function loadCategories(post, data) {
 	post.empty();
 	if (data.type == '2') {
 		var sel = $("<select />");
-		addOption(sel, 1, 'computadores');
-		addOption(sel, 2, 'automoviles');
-		addOption(sel, 3, 'casas');
-		addRow(post, 'Categoria:', sel);
+		addOption(sel, 1, 'Computers');
+		addOption(sel, 2, 'Cars');
+		addOption(sel, 3, 'Houses');
+		addRow(post, 'Category:', sel);
 
 		sel.bind("click", function() {
 			data.category = sel.val();
@@ -58,9 +58,9 @@ function preparePost() {
 
 
 	var sel = $("<select></select>");
-	addOption(sel, 1, 'Venta');
-	addOption(sel, 2, 'Alquiler');
-	addRow(post, 'Elige el tipo de anuncio', sel);
+	addOption(sel, 1, 'Sell');
+	addOption(sel, 2, 'Rent');
+	addRow(post, 'Pick a type', sel);
 
 	var data = {}; // this will hold the post information
 	sel.bind("click", function() {
