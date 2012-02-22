@@ -15,7 +15,7 @@ class BSONParser
 		virtual ~BSONParser();
 
 		static BSONObj* parse(const std::string& sbson);
-		static BSONArrayObj* parse(const std::string& sbson);
+		static BSONArrayObj* parseArray(const std::string& sbson);
 
 	protected:
 	private:
