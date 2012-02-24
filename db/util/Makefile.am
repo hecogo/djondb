@@ -36,6 +36,8 @@ libdjon_util_la_SOURCES = util.cpp \
                                                    util/version.h \
                                                    util/stringfunctions.h \
                                                    util/threads.h \
+																	util/settings.cpp \
+																	util/settings.h \
                                                    defs.h
 
 library_includedir=$(includedir)/djon-util-1.0/djon-util
