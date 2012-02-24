@@ -18,6 +18,11 @@
 
 #include "threads.h"
 #include <iostream>
+#include "../defs.h"
+#ifdef WINDOWS
+	#include <Windows.h>
+	#include <time.h>
+#endif
 
 int m_numtreads;
 
@@ -28,7 +33,6 @@ Thread::Thread(void *(*run)(void* arg)) {
 }
 
 void Thread::start(void* arg) {
-    internal = m_numtreads;
     int rc = pthread_create(&internal, NULL, runFunction, (void*)arg);
     if (rc) {
         throw "Error creating the thread";
@@ -44,6 +48,33 @@ Thread::~Thread() {
 }
 
 
+void Thread::sleep(int mili) {
+	struct timespec timeToWait;
+	struct timeval now;
+	int rt;
+
+	int currentsecs;
+	int currentusecs;
+#ifndef WINDOWS
+	gettimeofday(&now,NULL);
+	currentsecs = now.tv_sec;
+	currentusecs = now.tv_usec;
+#else
+	SYSTEMTIME st;
+	GetSystemTime(&st);
+	currentsecs = st.wSecond;
+	currentusecs = st.wMilliseconds / 1000; // 10^(-9)
+#endif
+	timeToWait.tv_sec = currentsecs;
+	timeToWait.tv_nsec = (currentusecs*1000) + mili;
+
+	pthread_mutex_t fakeMutex = PTHREAD_MUTEX_INITIALIZER;
+	pthread_cond_t fakeCond = PTHREAD_COND_INITIALIZER;	pthread_mutex_lock(&fakeMutex);
+
+	rt = pthread_cond_timedwait(&fakeCond, &fakeMutex, &timeToWait);
+	pthread_mutex_unlock(&fakeMutex);
+}
+
 /*
 static void Thread::mutex_lock() {
     if (!m_mutexInitalized) {
@@ -57,3 +88,4 @@ static void Thread::mutex_unlock() {
     pthread_mutex_unlock(&m_mutex_t);
 }
 */
+

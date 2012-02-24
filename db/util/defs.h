@@ -1,13 +1,17 @@
 #ifndef DEFS_H_INCLUDED
 #define DEFS_H_INCLUDED
 
-#include "config.h"
-
 #ifdef _WIN32
 #define WINDOWS
 #endif
 #ifdef __linux
 #define LINUX
+#endif
+
+#ifndef _WIN32
+#include "config.h"
+#else
+#define PACKAGE_VERSION "0.1"
 #endif
 
 /*

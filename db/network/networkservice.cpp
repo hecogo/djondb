@@ -17,10 +17,6 @@
 // *********************************************************************************************************************
 
 #include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <fcntl.h>
 #include <iostream>
 #include <sstream>
 #include <map>
@@ -36,12 +32,23 @@
 #include <stdlib.h>
 #include <boost/shared_ptr.hpp>
 #include <memory>
-
-#include <sys/wait.h>
+#ifndef WINDOWS
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <fcntl.h>
+#else
+	#include <winsock.h>
+#endif
+//#include <sys/wait.h>
 
 #include "defs.h"
 //#include "dbjaguar.h"
 
+// Windows does not have this definition
+#ifndef socklen_t
+	#define socklen_t int
+#endif
 
 #define SERVER_PORT 1243
 
@@ -97,11 +104,14 @@ void NetworkService::stop() { //throw (NetworkException*) {
         cout << "Stop requested but still working" << endl;
     }
     while (processing) {
-        sleep(1);
+		Thread::sleep(1000);
     }
     __dbController->shutdown();
-
+#ifndef WINDOWS
     int res = close(sock);
+#else
+    int res = closesocket(sock);
+#endif
     if (res != 0) {
         log->error("The close method returned: " + toString(res));
     }
@@ -115,7 +125,7 @@ void *startSocketListener(void* arg) {
     sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     if (sock < 0) {
-        log->error("Error creating the socked");
+		log->error(std::string("Error creating the socked"));
     }
 
     fd_set master;    // master file descriptor list
@@ -130,19 +140,35 @@ void *startSocketListener(void* arg) {
     addr.sin_addr.s_addr = INADDR_ANY; // Server address, any to take the current ip address of the host
     int reuse = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *) & reuse, sizeof (reuse)) < 0) {
-        log->error("Setting SO_REUSEADDR error");
+		log->error(std::string("Setting SO_REUSEADDR error"));
     }
 
     if (bind(sock, (sockaddr *) &addr, sizeof (addr)) < 0) {
-        log->error("Error binding");
+		log->error(std::string("Error binding"));
     }
     listen(sock, 5);
     log->info("Accepting new connections");
     running = true;
+
     // Sets the nonblocking option for this socket
-    int currentFlag = fcntl(sock, F_GETFD);
-    currentFlag = currentFlag | O_NONBLOCK;
-    fcntl(sock, F_SETFL, currentFlag);
+	int flags;
+
+	/* If they have O_NONBLOCK, use the Posix way to do it */
+#if defined(O_NONBLOCK)
+	/* Fixme: O_NONBLOCK is defined but broken on SunOS 4.1.x and AIX 3.2.5. */
+	if (-1 == (flags = fcntl(_socket, F_GETFL, 0)))
+		flags = 0;
+	fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+#else
+#ifndef WINDOWS
+	/* Otherwise, use the old way of doing it */
+	flags = 1;
+	ioctl(sock, FIOBIO, &flags);
+#else
+	u_long f = 1;
+	ioctlsocket(sock, FIONBIO, &f);
+#endif
+#endif
 
     processing = false;
     int fdmax = sock;

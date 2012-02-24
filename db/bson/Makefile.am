@@ -30,7 +30,7 @@ library_include_HEADERS = bson.h
 TESTS = test-bson
 bin_PROGRAMS = test-bson
 check_PROGRAMS = test-bson
-test_bson_LDADD = libdjon-bson.la -ldjon-util -lX11 -lXss -lrt -luuid   -lcpptest
+test_bson_LDADD = libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lXss -lrt -luuid   -lcpptest
 test_bson_SOURCES = tests/main.cpp
 
 djon_bson_libincludedir = $(libdir)/djon-bson-1.0/include
