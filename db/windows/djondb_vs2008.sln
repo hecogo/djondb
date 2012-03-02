@@ -23,6 +23,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "daemon", "..\daemon\daemon.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "windowsservice", "..\windowsservice\windowsservice.vcproj", "{B56B5055-FA68-4771-9782-EE6C732ACC9A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "djondbservice", "..\djondbservice\djondbservice.vcproj", "{DE97FF8C-823E-4807-9F84-D7728B32D78E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathFuncLib", "..\..\..\..\Users\Cross\Documents\Visual Studio 2008\Projects\StaticTest\MathFuncLib\MathFuncLib.vcproj", "{56A8E79B-05EF-40A9-BC2D-EEF6DFBF9DF0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestWindows", "TestWindows\TestWindows.vcproj", "{6F5E7319-240A-4D59-8E01-572500244407}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "djondb_win", "..\djondb_win\djondb_win.vcproj", "{6CE5F68C-E601-4021-9E44-5A0575BC87D2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shell", "..\shell\shell.vcproj", "{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -73,6 +83,26 @@ Global
 		{B56B5055-FA68-4771-9782-EE6C732ACC9A}.Debug|Win32.Build.0 = Debug|Win32
 		{B56B5055-FA68-4771-9782-EE6C732ACC9A}.Release|Win32.ActiveCfg = Release|Win32
 		{B56B5055-FA68-4771-9782-EE6C732ACC9A}.Release|Win32.Build.0 = Release|Win32
+		{DE97FF8C-823E-4807-9F84-D7728B32D78E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DE97FF8C-823E-4807-9F84-D7728B32D78E}.Debug|Win32.Build.0 = Debug|Win32
+		{DE97FF8C-823E-4807-9F84-D7728B32D78E}.Release|Win32.ActiveCfg = Release|Win32
+		{DE97FF8C-823E-4807-9F84-D7728B32D78E}.Release|Win32.Build.0 = Release|Win32
+		{56A8E79B-05EF-40A9-BC2D-EEF6DFBF9DF0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{56A8E79B-05EF-40A9-BC2D-EEF6DFBF9DF0}.Debug|Win32.Build.0 = Debug|Win32
+		{56A8E79B-05EF-40A9-BC2D-EEF6DFBF9DF0}.Release|Win32.ActiveCfg = Release|Win32
+		{56A8E79B-05EF-40A9-BC2D-EEF6DFBF9DF0}.Release|Win32.Build.0 = Release|Win32
+		{6F5E7319-240A-4D59-8E01-572500244407}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6F5E7319-240A-4D59-8E01-572500244407}.Debug|Win32.Build.0 = Debug|Win32
+		{6F5E7319-240A-4D59-8E01-572500244407}.Release|Win32.ActiveCfg = Release|Win32
+		{6F5E7319-240A-4D59-8E01-572500244407}.Release|Win32.Build.0 = Release|Win32
+		{6CE5F68C-E601-4021-9E44-5A0575BC87D2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6CE5F68C-E601-4021-9E44-5A0575BC87D2}.Debug|Win32.Build.0 = Debug|Win32
+		{6CE5F68C-E601-4021-9E44-5A0575BC87D2}.Release|Win32.ActiveCfg = Release|Win32
+		{6CE5F68C-E601-4021-9E44-5A0575BC87D2}.Release|Win32.Build.0 = Release|Win32
+		{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}.Debug|Win32.Build.0 = Debug|Win32
+		{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}.Release|Win32.ActiveCfg = Release|Win32
+		{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

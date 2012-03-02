@@ -25,6 +25,8 @@
 #endif
 
 int m_numtreads;
+bool Thread::m_mutexInitalized;
+pthread_mutex_t Thread::m_mutex_t;
 
 Thread::Thread(void *(*run)(void* arg)) {
     runFunction = run;
@@ -48,7 +50,7 @@ Thread::~Thread() {
 }
 
 
-void Thread::sleep(int mili) {
+void Thread::sleep(int milisecs) {
 	struct timespec timeToWait;
 	struct timeval now;
 	int rt;
@@ -66,7 +68,7 @@ void Thread::sleep(int mili) {
 	currentusecs = st.wMilliseconds / 1000; // 10^(-9)
 #endif
 	timeToWait.tv_sec = currentsecs;
-	timeToWait.tv_nsec = (currentusecs*1000) + mili;
+	timeToWait.tv_nsec = (currentusecs*1000) + milisecs;
 
 	pthread_mutex_t fakeMutex = PTHREAD_MUTEX_INITIALIZER;
 	pthread_cond_t fakeCond = PTHREAD_COND_INITIALIZER;	pthread_mutex_lock(&fakeMutex);
@@ -75,8 +77,8 @@ void Thread::sleep(int mili) {
 	pthread_mutex_unlock(&fakeMutex);
 }
 
-/*
-static void Thread::mutex_lock() {
+
+void Thread::mutex_lock() {
     if (!m_mutexInitalized) {
         pthread_mutex_init(&m_mutex_t, NULL);
         m_mutexInitalized = true;
@@ -84,8 +86,7 @@ static void Thread::mutex_lock() {
     pthread_mutex_lock(&m_mutex_t);
 }
 
-static void Thread::mutex_unlock() {
+void Thread::mutex_unlock() {
     pthread_mutex_unlock(&m_mutex_t);
 }
-*/
 

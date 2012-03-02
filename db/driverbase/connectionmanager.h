@@ -3,6 +3,14 @@
 
 #include <map>
 #include <string>
+#include "util.h"
+
+#ifdef WINDOWS
+   #define LibraryExport   __declspec( dllexport )
+#else
+   #define LibraryExport
+#endif
+
 
 namespace djondb {
     class Connection;
@@ -12,7 +20,7 @@ namespace djondb {
         int _references;
     };
 
-    class ConnectionManager
+    class LibraryExport ConnectionManager
     {
         public:
             /** Default constructor */

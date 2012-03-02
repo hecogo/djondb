@@ -10,6 +10,11 @@
 #endif
 #ifdef WINDOWS
 	#include <Windows.h>
+	#include <winsock.h>
+	//struct timeval {
+	//		long    tv_sec;         /* seconds */
+	//		long    tv_usec;        /* and microseconds */
+	//};
 #endif
 
 using namespace std;
