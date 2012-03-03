@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\development\pthreads.2;C:\workspace\djondb\db\util;C:\development\boost_1_49_0;C:\workspace\djondb\db\bson;C:\workspace\djondb\db\driverbase;C:\workspace\v8_readonly\include"
+				AdditionalIncludeDirectories="D:\workspace\v8\include;C:\development\pthreads.2;..\util;C:\development\boost_1_49_0;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -60,11 +60,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="WS2_32.lib Rpcrt4.lib v8.lib driverbase.lib bson.lib util.lib"
+				AdditionalDependencies="v8.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\bson\Debug;C:\workspace\v8_readonly;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug"
+				AdditionalLibraryDirectories="..\bson\Debug;D:\workspace\v8\build\Debug\lib;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug"
 				IgnoreAllDefaultLibraries="false"
-				IgnoreDefaultLibraryNames="MSVCRT"
+				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -163,6 +163,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{8D4F581B-05E3-41D3-8EF3-DF77FE97E40B}"
+			RelativePathToProject="..\driverbase\driverbase.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

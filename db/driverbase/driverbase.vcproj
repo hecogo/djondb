@@ -62,6 +62,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="Rpcrt4.lib Ws2_32.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib"
 				AdditionalLibraryDirectories="..\network\Debug;..\windows\Debug;..\command\Debug;..\db\Debug;..\filesystem\Debug;..\cache\Debug;..\bson\Debug;..\util\Debug;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib"
+				GenerateDebugInformation="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -145,6 +146,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{926BE9D3-3A05-40AB-83EA-40F4D940F23C}"
+			RelativePathToProject="..\filesystem\filesystem.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

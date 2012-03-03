@@ -51,22 +51,19 @@ Thread::~Thread() {
 
 
 void Thread::sleep(int milisecs) {
+#ifndef WINDOWS
 	struct timespec timeToWait;
 	struct timeval now;
 	int rt;
 
 	int currentsecs;
 	int currentusecs;
-#ifndef WINDOWS
-	gettimeofday(&now,NULL);
-	currentsecs = now.tv_sec;
-	currentusecs = now.tv_usec;
-#else
+
 	SYSTEMTIME st;
 	GetSystemTime(&st);
 	currentsecs = st.wSecond;
 	currentusecs = st.wMilliseconds / 1000; // 10^(-9)
-#endif
+
 	timeToWait.tv_sec = currentsecs;
 	timeToWait.tv_nsec = (currentusecs*1000) + milisecs;
 
@@ -75,6 +72,9 @@ void Thread::sleep(int milisecs) {
 
 	rt = pthread_cond_timedwait(&fakeCond, &fakeMutex, &timeToWait);
 	pthread_mutex_unlock(&fakeMutex);
+#else
+	System::Threading::Thread::CurrentThread->Sleep(milisecs);
+#endif
 }
 
 

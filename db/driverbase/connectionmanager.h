@@ -35,6 +35,8 @@ namespace djondb {
         protected:
         private:
             static std::map<std::string, struct ConnectionReference> _connections;
+
+			static bool __initialized;
     };
 }
 

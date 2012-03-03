@@ -122,7 +122,25 @@ void NetworkService::stop() { //throw (NetworkException*) {
 }
 
 void *startSocketListener(void* arg) {
-    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+#ifdef WINDOWS
+    WORD wVersionRequested;
+    WSADATA wsaData;
+    int err;
+
+/* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
+    wVersionRequested = MAKEWORD(2, 2);
+
+    err = WSAStartup(wVersionRequested, &wsaData);
+    if (err != 0) {
+        /* Tell the user that we could not find a usable */
+        /* Winsock DLL.                                  */
+        printf("WSAStartup failed with error: %d\n", err);
+        return NULL;
+    }
+#endif
+
+	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     if (sock < 0) {
 		log->error(std::string("Error creating the socked"));
@@ -239,6 +257,10 @@ void *startSocketListener(void* arg) {
     }
 
     log->info("Thread stopped");
+
+#ifdef WINDOWS
+	WSACleanup();
+#endif
 //    pthread_exit(arg);
     return NULL;
 }
