@@ -92,6 +92,8 @@ int getdir (const char* dir, vector<char*> &files, const char* extension)
     strcpy(fileextension+1, extension);
 
 #ifndef WINDOWS
+	 DIR *dp;
+	 struct dirent *dirp;
     while ((dirp = readdir(dp)) != NULL) {
         char* currentFile (dirp->d_name);
         if (endsWith(currentFile, fileextension)) {

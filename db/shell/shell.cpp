@@ -273,9 +273,9 @@ v8::Handle<v8::Value> connect(const v8::Arguments& args) {
 	}
 	__djonConnection = ConnectionManager::getConnection(server);
 	if (__djonConnection->open()) {
-		printf("Connected to %s\n", server);
+		printf("Connected to %s\n", server.c_str());
 	} else {
-		printf("Could not connect to: %s\n", server);
+		printf("Could not connect to: %s\n", server.c_str());
 		__djonConnection->close();
 		__djonConnection = NULL;
 	}

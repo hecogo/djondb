@@ -21,8 +21,10 @@
 #include "../defs.h"
 #ifdef WINDOWS
 	#include <Windows.h>
-	#include <time.h>
+#else
+   #include <sys/time.h>
 #endif
+#include <time.h>
 
 int m_numtreads;
 bool Thread::m_mutexInitalized;
@@ -59,13 +61,10 @@ void Thread::sleep(int milisecs) {
 	int currentsecs;
 	int currentusecs;
 
-	SYSTEMTIME st;
-	GetSystemTime(&st);
-	currentsecs = st.wSecond;
-	currentusecs = st.wMilliseconds / 1000; // 10^(-9)
+	gettimeofday(&now, NULL);
 
-	timeToWait.tv_sec = currentsecs;
-	timeToWait.tv_nsec = (currentusecs*1000) + milisecs;
+	timeToWait.tv_sec = now.tv_sec + (milisecs / 1000);
+	timeToWait.tv_nsec = (now.tv_usec *1000);
 
 	pthread_mutex_t fakeMutex = PTHREAD_MUTEX_INITIALIZER;
 	pthread_cond_t fakeCond = PTHREAD_COND_INITIALIZER;	pthread_mutex_lock(&fakeMutex);

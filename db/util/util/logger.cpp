@@ -26,11 +26,11 @@
 #include <string.h>
 #include <sstream>
 #include "../defs.h"
-#ifndef _WIN32
+#ifndef WINDOWS
 #include <syslog.h>
 #endif
 
-#ifndef _WIN32
+#ifndef WINDOWS
 #define WRITE(TYPE, TEXT) \
 	syslog(LOG_DEBUG, result.c_str());
 #else
@@ -50,7 +50,7 @@
 		ss << buffer; \
 		result = ss.str(); \
 		free(buffer); \
-		WRITE(TYPE);
+		WRITE(TYPE, result);
 #endif
 
 #ifndef DEBUG

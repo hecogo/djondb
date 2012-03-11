@@ -164,14 +164,14 @@ int NetworkOutputStream::open(const char* hostname, int port)
 	}
 	memset((char *) & serv_addr, 0, sizeof (serv_addr));
 	serv_addr.sin_family = AF_INET;
+#ifdef WINDOWS
 	serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-	/*
-	memcpy((char *) & serv_addr.sin_addr.s_addr,
+#else
+  	memcpy((char *) & serv_addr.sin_addr.s_addr,
 			(char *) server->h_addr,
 			server->h_length);
-			*/
+#endif
 	serv_addr.sin_port = htons(portno);
-
 	if (connect(sockfd, (sockaddr *) & serv_addr, sizeof (serv_addr)) < 0) {
 		int error;
 #ifdef WINDOWS
