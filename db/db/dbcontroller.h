@@ -49,6 +49,8 @@ class DBController
 		  std::vector<BSONObj*> findFullScan(char* ns, const BSONObj& filter);
 		  Logger* _logger;
 
+		  std::string _dataDir;
+
     private:
         long checkStructure(BSONObj* bson);
         void updateIndex(char* ns, BSONObj* bson, long filePos);

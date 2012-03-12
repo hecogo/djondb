@@ -103,6 +103,10 @@ std::string toString(int a) {
 }
 
 bool endsWith(const char* text, const char* end) {
+	return endsWith(const_cast<char*>(text), const_cast<char*>(end));
+}
+/* 
+bool endsWith(const char* text, const char* end) {
     if (strlen(end) > strlen(text)) {
         return false;
     }
@@ -113,7 +117,7 @@ bool endsWith(const char* text, const char* end) {
     }
     return true;
 }
-
+*/
 std::vector<string> split(const string str, string token) {
 //    char* s = (char*) malloc(str.size());
     const char* delim = token.c_str();
@@ -144,3 +148,31 @@ long countChar(const char* s, const char c) {
     return num;
 }
 
+std::vector<std::string> splitLines(std::string str) {
+	std::vector<std::string> lines;
+	std::stringstream ss;
+	bool line = false;
+	int chars = 0;
+	for (int i = 0; i < str.length(); i++) {
+		char c = str[i];
+		if (!((c == 10) || (c == 13))) {
+			ss << (char)c;
+			line = true;
+			chars++;
+		} else {
+			if (line) {
+				if (c > 0) {
+					lines.push_back(ss.str());
+					ss.str("");
+					line = false;
+					chars = 0;
+				}
+			}
+		}
+	}
+	if (chars > 0) {
+		lines.push_back(ss.str());
+	}
+
+	return lines;
+}

@@ -25,6 +25,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #ifndef WINDOWS
 #include <dirent.h>
 #include <errno.h>
@@ -141,4 +142,23 @@ bool existDir(const char* dir) {
 	exists = Directory::Exists(folder);
 #endif //#ifndef WINDOWS
     return exists;
+}
+
+bool makeDir(const char* dir) {
+
+	std::vector<std::string> dirs = split(dir, "/");
+	std::stringstream ss;
+
+	ss << "/";
+	for (std::vector<std::string>::const_iterator it = dirs.begin(); it != dirs.end(); it++) {
+		std::string cdir = *it;
+		ss << cdir << "/";
+
+		std::string currentdir = ss.str();
+
+		if (!existDir(currentdir.c_str())) {
+			mkdir(currentdir.c_str(), 0777);
+		}
+	}
+	return true;
 }

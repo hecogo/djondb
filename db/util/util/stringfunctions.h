@@ -23,5 +23,7 @@ std::string toString(int a);
 std::vector<std::string> split(std::string str, std::string token);
 long countChar(const char* s, const char c);
 
+std::vector<std::string> splitLines(std::string);
+
 #endif	/* _STRINGFUNCTIONS_H */
 
