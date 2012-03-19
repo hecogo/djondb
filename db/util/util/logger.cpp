@@ -185,7 +185,10 @@ Logger::Logger(void* clazz) {
 	*/
 
 void Logger::debug(string message, ...) {
-	PRINT("DEBUG", m_clazz);
+	// default debug behaviour is maximum detail
+	if (_detail >= 3) {
+		PRINT("DEBUG", m_clazz);
+	}
 }
 
 void Logger::debug(int detail, string message, ...) {

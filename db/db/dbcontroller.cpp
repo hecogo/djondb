@@ -61,14 +61,21 @@ void DBController::shutdown() {
 }
 
 void DBController::initialize() {
-	if (_logger->isInfo()) _logger->info("DBController initializing");
-
 	std::string dataDir = getSetting("DATA_DIR");
 	if ((dataDir.length() > 0) && !endsWith(dataDir.c_str(), "/")) {
-		_dataDir = dataDir + "/";
+		dataDir = dataDir + "/";
 	} else {
-		_dataDir = dataDir;
+		dataDir = dataDir;
 	}
+
+	initialize(dataDir);
+}
+
+
+void DBController::initialize(std::string dataDir) {
+	if (_logger->isInfo()) _logger->info("DBController initializing");
+
+	_dataDir = dataDir;
 
 	if (_logger->isDebug()) _logger->debug(0, "data dir = %s", _dataDir.c_str());
 
@@ -347,15 +354,14 @@ std::vector<BSONObj*> DBController::find(char* ns, const BSONObj& filter) {
 		Index* index = impl->find(indexBSON);
 
 		if (index != NULL) {
-			char fileName[255];
-			memset(fileName, 0, 255);
-			strcat(fileName, ns);
-			strcat(fileName, ".");
-			strcat(fileName, "dat");
-
 			StreamType* out = open(ns, DATA_FTYPE);
 			out->flush();
 			//    out->close();
+
+			std::stringstream ss;
+			ss << _dataDir << ns << ".dat";
+
+			std::string fileName = ss.str();
 
 			StreamType* input = new StreamType(fileName, "rb");
 			input->seek(index->posData);

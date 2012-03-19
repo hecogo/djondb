@@ -33,6 +33,7 @@ class DBController
         virtual ~DBController();
 
         void initialize();
+        void initialize(std::string dataDir);
         void shutdown();
 
         bool close(char* ns);
