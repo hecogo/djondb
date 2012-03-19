@@ -537,7 +537,7 @@ void ReportException(v8::TryCatch* try_catch) {
 		v8::String::Utf8Value filename(message->GetScriptResourceName());
 		std::string filename_string = ToCString(filename);
 		int linenum = message->GetLineNumber();
-		printf("%s:%i: %s\n", filename_string.c_str(), linenum, exception_string);
+		printf("%s:%i: %s\n", filename_string.c_str(), linenum, exception_string.c_str());
 		// Print line of source code.
 		v8::String::Utf8Value sourceline(message->GetSourceLine());
 		std::string sourceline_string = ToCString(sourceline);
