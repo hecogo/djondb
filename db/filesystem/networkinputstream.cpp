@@ -26,11 +26,17 @@
 #include <string.h>
 #include <sstream>
 #include <iostream>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#ifndef _WIN32
+  #include <sys/types.h>
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+  #include <sys/ioctl.h>
+#else
+  #include <winsock.h>         // For socket(), connect(), send(), and recv()
+  typedef int socklen_t;
+  typedef char raw_type;       // Type used for raw data on this platform
+#endif
 #include <fcntl.h>
-#include <sys/ioctl.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -141,7 +147,11 @@ bool NetworkInputStream::eof() {
 }
 
 void NetworkInputStream::closeStream() {
+#ifdef _WIN32
+    ::closesocket(_socket);
+#else
 	close(_socket);
+#endif
 	_open = false;
 }
 
@@ -188,7 +198,7 @@ int NetworkInputStream::readData(void* data, int len) {
 		if ((_bufferSize - _bufferPos) < read) {
 			read = _bufferSize - _bufferPos;
 		}
-		memcpy(data + readed, _buffer + _bufferPos, read);
+		memcpy((char*)data + readed, _buffer + _bufferPos, read);
 		_bufferPos += read;
 		//        int read = recv(_socket, data, len, 0);
 		//        // the connection could be closed
@@ -217,9 +227,14 @@ int NetworkInputStream::setNonblocking() {
 		flags = 0;
 	return fcntl(_socket, F_SETFL, flags | O_NONBLOCK);
 #else
+#ifndef WINDOWS
 	/* Otherwise, use the old way of doing it */
 	flags = 1;
 	return ioctl(_socket, FIOBIO, &flags);
+#else
+	u_long f = 1;
+	return ioctlsocket(_socket, FIONBIO, &f);
+#endif
 #endif
 }
 
@@ -244,7 +259,7 @@ int NetworkInputStream::fillBuffer(int timeout) {
 	} else if (result == 0) {
 		// Timeout
 		error = true;
-		log->error("fillBuffer: timeout");
+		log->error(std::string("fillBuffer: timeout"));
 	}
 	if (!error) {
 		int readed = recv(_socket, _buffer, STREAM_BUFFER_SIZE, 0);
@@ -255,7 +270,7 @@ int NetworkInputStream::fillBuffer(int timeout) {
 		if (readed == 0) {
 			// Nothing readed
 			error = true;
-			log->error("fillBuffer: nothing to be readed");
+			log->error(std::string("fillBuffer: nothing to be readed"));
 		}
 		_bufferPos = 0;
 		_bufferSize = readed;

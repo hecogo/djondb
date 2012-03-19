@@ -48,7 +48,7 @@ DBController::~DBController()
 
 void DBController::shutdown() {
 	if (_logger->isInfo()) _logger->info("DBController shutting down");
-	std::auto_ptr<FileOutputStream> fos(new FileOutputStream("djondb.dat", "wb"));
+	std::auto_ptr<FileOutputStream> fos(new FileOutputStream(const_cast<char*>( (_dataDir + "djondb.dat").c_str()), "wb"));
 	for (std::map<std::string, SpacesType>::iterator i = _spaces.begin(); i != _spaces.end(); i++) {
 		SpacesType space = i->second;
 		std::string ns = space.ns;
@@ -61,8 +61,28 @@ void DBController::shutdown() {
 }
 
 void DBController::initialize() {
+	std::string dataDir = getSetting("DATA_DIR");
+	if ((dataDir.length() > 0) && !endsWith(dataDir.c_str(), "/")) {
+		dataDir = dataDir + "/";
+	} else {
+		dataDir = dataDir;
+	}
+
+	initialize(dataDir);
+}
+
+
+void DBController::initialize(std::string dataDir) {
 	if (_logger->isInfo()) _logger->info("DBController initializing");
-	std::auto_ptr<FileInputStream> fis(new FileInputStream("djondb.dat", "rb"));
+
+	_dataDir = dataDir;
+
+	if (_logger->isDebug()) _logger->debug(0, "data dir = %s", _dataDir.c_str());
+
+	if (!existDir(_dataDir.c_str())) {
+		makeDir(_dataDir.c_str());
+	}
+	std::auto_ptr<FileInputStream> fis(new FileInputStream((_dataDir + "djondb.dat").c_str(), "rb"));
 	while (!fis->eof()) {
 		std::auto_ptr<std::string> ns(fis->readString());
 		FILE_TYPE type = static_cast<FILE_TYPE>(fis->readInt());
@@ -207,7 +227,7 @@ StreamType* DBController::open(std::string ns, FILE_TYPE type) {
 	if (stream != NULL) {
 		return stream;
 	}
-	StreamType* output = new StreamType(fileName, "ab+");
+	StreamType* output = new StreamType(_dataDir + fileName, "ab+");
 	SpacesType space;
 	space.ns = ns;
 	space.stream = output;
@@ -266,7 +286,7 @@ void DBController::insertIndex(char* ns, BSONObj* bson, long filePos) {
 std::vector<BSONObj*> DBController::findFullScan(char* ns, const BSONObj& filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan ns: %s, bsonFilter: %s", ns, filter.toChar());
 	std::stringstream ss;
-	ss << ns << ".dat";
+	ss << _dataDir << ns << ".dat";
 
 	std::string filename = ss.str();
 
@@ -334,15 +354,14 @@ std::vector<BSONObj*> DBController::find(char* ns, const BSONObj& filter) {
 		Index* index = impl->find(indexBSON);
 
 		if (index != NULL) {
-			char fileName[255];
-			memset(fileName, 0, 255);
-			strcat(fileName, ns);
-			strcat(fileName, ".");
-			strcat(fileName, "dat");
-
 			StreamType* out = open(ns, DATA_FTYPE);
 			out->flush();
 			//    out->close();
+
+			std::stringstream ss;
+			ss << _dataDir << ns << ".dat";
+
+			std::string fileName = ss.str();
 
 			StreamType* input = new StreamType(fileName, "rb");
 			input->seek(index->posData);

@@ -6,13 +6,19 @@
 #include "bson.h"
 #include "util.h"
 
+#ifdef WINDOWS
+   #define LibraryExport   __declspec( dllexport )
+#else
+   #define LibraryExport
+#endif
+
 class NetworkOutputStream;
 class NetworkInputStream;
 class CommandWriter;
 
 namespace djondb {
 
-    class Connection
+    class LibraryExport Connection
     {
         public:
             /** Default constructor */

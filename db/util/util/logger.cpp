@@ -25,25 +25,34 @@
 #include <stdio.h>
 #include <string.h>
 #include <sstream>
-#include <syslog.h>
 #include "../defs.h"
-
-#ifdef DEBUG
-#define PRINT(TYPE, CLAZZ) \
-	char* buffer = (char*)malloc(1000); \
-memset(buffer, 0, 1000); \
-va_list args; \
-va_start (args, message); \
-vsprintf (buffer, message.c_str(), args); \
-va_end(args); \
-std::string result; \
-std::stringstream ss; \
-ss << buffer; \
-result = ss.str(); \
-free(buffer); \
-syslog(LOG_DEBUG, result.c_str());
-//cout << TYPE << ": " << CLAZZ << ": " << result << endl;
+#ifndef WINDOWS
+#include <syslog.h>
 #endif
+
+#ifndef WINDOWS
+#define WRITE(TYPE, TEXT) \
+	syslog(LOG_DEBUG, result.c_str());
+#else
+#define WRITE(TYPE, TEXT) \
+	cout << TYPE << ": " << CLAZZ << ": " << result << endl;
+#endif
+#ifdef DEBUG
+	#define PRINT(TYPE, CLAZZ) \
+		char* buffer = (char*)malloc(1000); \
+		memset(buffer, 0, 1000); \
+		va_list args; \
+		va_start (args, message); \
+		vsprintf (buffer, message.c_str(), args); \
+		va_end(args); \
+		std::string result; \
+		std::stringstream ss; \
+		ss << buffer; \
+		result = ss.str(); \
+		free(buffer); \
+		WRITE(TYPE, result);
+#endif
+
 #ifndef DEBUG
 #define PRINT(TYPE, CLAZZ) 
 #endif
@@ -176,7 +185,10 @@ Logger::Logger(void* clazz) {
 	*/
 
 void Logger::debug(string message, ...) {
-	PRINT("DEBUG", m_clazz);
+	// default debug behaviour is maximum detail
+	if (_detail >= 3) {
+		PRINT("DEBUG", m_clazz);
+	}
 }
 
 void Logger::debug(int detail, string message, ...) {
@@ -216,13 +228,21 @@ bool Logger::isWarn() {
 }
 
 void Logger::startTimeRecord() {
+#ifndef _WIN32
 	int interval = CLOCK_REALTIME;// CLOCK_PROCESS_CPUTIME_ID;
+#else
+	int interval = 0;// CLOCK_PROCESS_CPUTIME_ID;
+#endif
 
 	clock_gettime(interval, &_ts1);
 }
 
 void Logger::stopTimeRecord() {
+#ifndef _WIN32
 	int interval = CLOCK_REALTIME;// CLOCK_PROCESS_CPUTIME_ID;
+#else
+	int interval = 0;// CLOCK_PROCESS_CPUTIME_ID;
+#endif
 	clock_gettime(interval, &_ts2);
 }
 

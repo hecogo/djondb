@@ -39,11 +39,17 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <unistd.h>
-#include <syslog.h>
 #include <string.h>
 #include <signal.h>
-#include "config.h"
+#ifdef _WIN32
+	#define WINDOWS
+#else
+	#include "config.h"
+#endif
+#ifndef WINDOWS
+	#include <unistd.h>
+	#include <syslog.h>
+#endif
 
 #define DAEMON_NAME "djondbd"
 #define PID_FILE "/var/run/djondbd.pid"

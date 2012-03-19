@@ -17,17 +17,31 @@
 // *********************************************************************************************************************
 
 #include "networkoutputstream.h"
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
+
 #include <string.h>
 #include <fcntl.h>
-#include <sys/ioctl.h>
-#include <netinet/tcp.h>
 #include <iostream>
 #include "util.h"
 #include <assert.h>
+#ifndef _WIN32
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/ioctl.h>
+#include <netdb.h>
+#include <netinet/tcp.h>
+#endif
+
+#ifndef WINDOWS
+	int __sendFlags_networkoutput = MSG_NOSIGNAL;
+#else
+	int __sendFlags_networkoutput = MSG_DONTROUTE;
+#endif
+
+// Windows does not define this flag
+#ifndef SHUT_RDWR
+	#define SHUT_RDWR 2 // SD_BOTH
+#endif
 
 using namespace std;
 
@@ -56,7 +70,7 @@ NetworkOutputStream::NetworkOutputStream(const NetworkOutputStream& origin) {
 /* Write 1 byte in the output */
 void NetworkOutputStream::writeChar (unsigned char v)
 {
-	send(_socket, &v, 1, MSG_NOSIGNAL);
+	send(_socket, (const char*)&v, 1, __sendFlags_networkoutput);
 	//    write(_socket, &v, 1);
 }
 
@@ -83,14 +97,14 @@ void NetworkOutputStream::writeLong (long v)
 /* Write a 4 byte float in the output */
 void NetworkOutputStream::writeFloatIEEE (float v)
 {
-	send(_socket, &v, sizeof(v), MSG_NOSIGNAL);
+	send(_socket, (const char*)&v, sizeof(v), __sendFlags_networkoutput);
 	//    write(_socket, &v, sizeof(v));
 }
 
 /* Write a 8 byte double in the output */
 void NetworkOutputStream::writeDoubleIEEE (double v)
 {
-	send(_socket, &v, sizeof(v), MSG_NOSIGNAL);
+	send(_socket, (const char*)&v, sizeof(v), __sendFlags_networkoutput);
 	//    write(_socket, &v, sizeof(v));
 
 }
@@ -115,7 +129,7 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
 		pos += size;
 		int sent = 0;
 		while (sent < size) {
-			sent += send(_socket, &buffer[sent], size - sent, MSG_NOSIGNAL);
+			sent += send(_socket, &buffer[sent], size - sent, __sendFlags_networkoutput);
 			//            sent += write(_socket, &buffer[sent], size - sent);
 		}
 	}
@@ -140,23 +154,32 @@ int NetworkOutputStream::open(const char* hostname, int port)
 	portno = port;
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
-		_logger->error("ERROR opening socket");
+		_logger->error(std::string("ERROR opening socket"));
 		return -1;
 	}
 	server = gethostbyname(hostname);
 	if (server == NULL) {
-		_logger->error("ERROR, no such host\n");
+		_logger->error(std::string("ERROR, no such host\n"));
 		return -1;
 	}
-	bzero((char *) & serv_addr, sizeof (serv_addr));
+	memset((char *) & serv_addr, 0, sizeof (serv_addr));
 	serv_addr.sin_family = AF_INET;
-	bcopy((char *) server->h_addr,
-			(char *) & serv_addr.sin_addr.s_addr,
+#ifdef WINDOWS
+	serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+#else
+  	memcpy((char *) & serv_addr.sin_addr.s_addr,
+			(char *) server->h_addr,
 			server->h_length);
+#endif
 	serv_addr.sin_port = htons(portno);
-
 	if (connect(sockfd, (sockaddr *) & serv_addr, sizeof (serv_addr)) < 0) {
-		_logger->error("ERROR connecting");
+		int error;
+#ifdef WINDOWS
+		error = WSAGetLastError();
+#else
+		error = 0;
+#endif
+		_logger->error("ERROR connecting: %d", error);
 		return -1;
 	}
 	_socket = sockfd;
@@ -166,11 +189,16 @@ int NetworkOutputStream::open(const char* hostname, int port)
 
 void NetworkOutputStream::closeStream() {
 	shutdown(_socket, SHUT_RDWR);
+#ifndef WINDOWS
 	close(_socket);
+#else
+	closesocket(_socket);
+#endif
 }
 
 int NetworkOutputStream::setNonblocking() {
 	int flags;
+
 	/* If they have O_NONBLOCK, use the Posix way to do it */
 #if defined(O_NONBLOCK)
 	/* Fixme: O_NONBLOCK is defined but broken on SunOS 4.1.x and AIX 3.2.5. */
@@ -178,9 +206,14 @@ int NetworkOutputStream::setNonblocking() {
 		flags = 0;
 	return fcntl(_socket, F_SETFL, flags | O_NONBLOCK);
 #else
+#ifndef WINDOWS
 	/* Otherwise, use the old way of doing it */
 	flags = 1;
 	return ioctl(_socket, FIOBIO, &flags);
+#else
+	u_long f = 1;
+	return ioctlsocket(_socket, FIONBIO, &f);
+#endif
 #endif
 }
 

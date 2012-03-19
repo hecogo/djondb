@@ -25,8 +25,15 @@
 #include <sstream>
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/stat.h>
+#ifndef WINDOWS
 #include <dirent.h>
 #include <errno.h>
+#else
+using namespace System;
+using namespace System::IO;
+using namespace System::Runtime::InteropServices;
+#endif
 #include <string.h>
 #include <stdlib.h>
 
@@ -75,20 +82,19 @@ int writeFile(const std::string& fileName, const std::string& text, bool append)
 
 int getdir (const char* dir, vector<char*> &files, const char* extension)
 {
-    DIR *dp;
-    struct dirent *dirp;
-    if((dp  = opendir(dir)) == NULL) {
+	if (!existDir(dir)) {
         setLastError(1, "Error opening the dir: %s", dir);
         return 1;
-    }
-
+	}
     int len = strlen(extension) + 2;
     char* fileextension = (char*)malloc(len);
-
     memset(fileextension, 0, len);
     fileextension[0] = '.';
     strcpy(fileextension+1, extension);
 
+#ifndef WINDOWS
+	 DIR *dp;
+	 struct dirent *dirp;
     while ((dirp = readdir(dp)) != NULL) {
         char* currentFile (dirp->d_name);
         if (endsWith(currentFile, fileextension)) {
@@ -96,7 +102,17 @@ int getdir (const char* dir, vector<char*> &files, const char* extension)
         }
     }
     closedir(dp);
-
+#else
+	String^ folder = Marshal::PtrToStringAnsi((IntPtr) (char *) dir);;
+   array<String^>^ arrFiles = Directory::GetFiles( folder );
+   for (int i=0; i<arrFiles->Length; i++) {
+      String^ file = arrFiles[i];
+	  char* currentFile = (char*)(void*)Marshal::StringToHGlobalAnsi(file);
+      if (endsWith(currentFile, fileextension)) {
+		files.push_back(strcpy(currentFile));
+	  }
+   }
+#endif // #ifndef WINDOWS
     free(fileextension);
     return 0;
 }
@@ -115,10 +131,34 @@ bool existFile(const char* fileName) {
 }
 
 bool existDir(const char* dir) {
+	bool exists = true;
+#ifndef WINDOWS
     DIR *dp;
-    bool exists = true;
     if((dp  = opendir(dir)) == NULL) {
         exists = false;
     }
+#else 
+	String^ folder = Marshal::PtrToStringAnsi((IntPtr) (char *) dir);;
+	exists = Directory::Exists(folder);
+#endif //#ifndef WINDOWS
     return exists;
+}
+
+bool makeDir(const char* dir) {
+
+	std::vector<std::string> dirs = split(dir, "/");
+	std::stringstream ss;
+
+	ss << "/";
+	for (std::vector<std::string>::const_iterator it = dirs.begin(); it != dirs.end(); it++) {
+		std::string cdir = *it;
+		ss << cdir << "/";
+
+		std::string currentdir = ss.str();
+
+		if (!existDir(currentdir.c_str())) {
+			mkdir(currentdir.c_str(), 0777);
+		}
+	}
+	return true;
 }

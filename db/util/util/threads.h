@@ -31,6 +31,8 @@ public:
 
     static void mutex_lock();
     static void mutex_unlock();
+	static void sleep(int milisecs);
 };
+
 
 #endif

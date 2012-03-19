@@ -23,6 +23,7 @@
 NetworkService* __service;
 
 int service_restart() {
+	return 0;
 }
 
 int service_startup() {
@@ -31,11 +32,14 @@ int service_startup() {
     }
     __service = new NetworkService();
     __service->start();
+	return 0;
 }
 
 int service_shutdown() {
     __service->stop();
+	return 0;
 }
 
 int service_status() {
+	return 0;
 }

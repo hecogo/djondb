@@ -20,21 +20,44 @@
 
 #include "connection.h"
 
+#ifdef WINDOWS
+	#include <winsock.h>
+#endif
 using namespace djondb;
 
 std::map<std::string, ConnectionReference> ConnectionManager::_connections;
+bool ConnectionManager::__initialized = false;
 
 ConnectionManager::ConnectionManager()
 {
-    //ctor
 }
 
 ConnectionManager::~ConnectionManager()
 {
-    //dtor
+#ifdef WINDOWS
+	WSACleanup();
+#endif
 }
 
 Connection* ConnectionManager::getConnection(std::string host) {
+#ifdef WINDOWS
+	if (!__initialized) {
+		WORD wVersionRequested;
+		WSADATA wsaData;
+		int err;
+
+	/* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
+		wVersionRequested = MAKEWORD(2, 2);
+
+		err = WSAStartup(wVersionRequested, &wsaData);
+		if (err != 0) {
+			/* Tell the user that we could not find a usable */
+			/* Winsock DLL.                                  */
+			printf("WSAStartup failed with error: %d\n", err);
+		}
+		__initialized = true;
+	}
+#endif
     std::map<std::string, ConnectionReference>::iterator i = _connections.find(host);
     if (i != _connections.end()) {
         ConnectionReference reference = i->second;

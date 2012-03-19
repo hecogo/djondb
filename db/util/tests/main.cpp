@@ -20,7 +20,7 @@
 #include "util.h"
 #include <string.h>
 #include <stdlib.h>
-
+#include <stdio.h>
 #include <cpptest.h>
 
 
@@ -34,6 +34,8 @@ public:
         TEST_ADD(TestUtilSuite::testTimes)
         TEST_ADD(TestUtilSuite::testStrings)
         TEST_ADD(TestUtilSuite::testUUID);
+        TEST_ADD(TestUtilSuite::testSettings);
+        TEST_ADD(TestUtilSuite::testFileUtils);
     }
 
 private:
@@ -94,7 +96,8 @@ private:
         TEST_ASSERT(com);
         com = endsWith("test.ss", "test");
         TEST_ASSERT(!com);
-
+		  TEST_ASSERT(endsWith("test/", "/"));
+		 
         // tokenizer
         std::vector<std::string*>* token = tokenizer("test,other,and 1 more", ",");
         TEST_ASSERT(token->size() == 3);
@@ -127,6 +130,12 @@ private:
         //Count char
         long c = countChar("testing.this.component.!", '.');
         TEST_ASSERT(c == 3);
+
+		  std::vector<std::string> spl = splitLines("test1\r\ntest2");
+		  TEST_ASSERT(spl.size() == 2);
+		  std::string t1 = spl[1];
+		  TEST_ASSERT(spl[0].compare("test1") == 0);
+		  TEST_ASSERT(spl[1].compare("test2") == 0);
     }
 
     void testUUID()
@@ -136,6 +145,19 @@ private:
         delete u;
     }
 
+	 void testSettings() {
+		 std::string folder = getSetting("DATA_DIR");
+
+		 TEST_ASSERT(folder.compare("/var/djondb") == 0);
+	 }
+
+	 void testFileUtils() {
+		 //test mkdir
+
+		 makeDir("/tmp/test/test2");
+
+		 TEST_ASSERT(existDir("/tmp/test/test2"));
+	 }
 };
 //// Tests unconditional fail TEST_ASSERTs
 ////

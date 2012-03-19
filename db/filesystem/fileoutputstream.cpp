@@ -85,8 +85,8 @@ long FileOutputStream::crc32(int pos) {
     bufferSize -= pos;
     seek(pos);
 
-    char buffer[bufferSize];
-    memset(buffer, 0, bufferSize);
+    char* buffer = (char*)malloc(bufferSize+1);
+    memset(buffer, 0, bufferSize + 1);
     fread(buffer, 1, bufferSize, _pFile);
 
     boost::crc_32_type crc;
@@ -96,6 +96,7 @@ long FileOutputStream::crc32(int pos) {
 
     // back to the original position
     seek(originalPos);
+	free(buffer);
     return result;
 }
 
