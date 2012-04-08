@@ -394,3 +394,24 @@ BSONObj* DBController::findFirst(char* ns, BSONObj* filter) {
 	}
 }
 
+bool DBController::dropNamespace(char* ns) {
+	StreamType* stream = NULL;
+	bool result = false;
+	for (map<std::string, SpacesType>::iterator it = _spaces.begin(); it != _spaces.end(); it++) {
+		std::string key = it->first;
+		std::string filename = key.substr(0, key.find_last_of("."));
+
+		if (filename.compare(ns) == 0) {
+			SpacesType space = it->second;
+			
+			// drops the file
+			if (remove((_dataDir + key).c_str()) != 0) {
+				result = false;
+				break;
+			}
+			_spaces.erase(it);
+			result = true;
+		}
+	}
+	return result;
+}

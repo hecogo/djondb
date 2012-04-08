@@ -44,13 +44,11 @@ class Transaction {
 		Transaction(const Transaction& orig);
 		virtual ~Transaction();
 
-		void commitTransaction();
-		void dropTransaction();
-
 		void insert(InsertCommand* cmd);
-		void update(UpdateCommand* cmd);
+		bool update(UpdateCommand* cmd);
 		std::vector<BSONObj*> find(FindCommand* cmd);
 
+		std::map<std::string, Command*> commit();
 	private:
 		Command* copyCommand(Command* cmd);
 		void insertCommand(std::string ns, Command* cmd);

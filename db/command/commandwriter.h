@@ -7,26 +7,27 @@
 class UpdateCommand;
 class InsertCommand;
 class FindCommand;
-
+class DropnamespaceCommand;
 
 class CommandWriter
 {
-    public:
-        /** Default constructor */
-        CommandWriter(OutputStream* out);
-        CommandWriter(const CommandWriter& orig);
-        /** Default destructor */
-        virtual ~CommandWriter();
+	public:
+		/** Default constructor */
+		CommandWriter(OutputStream* out);
+		CommandWriter(const CommandWriter& orig);
+		/** Default destructor */
+		virtual ~CommandWriter();
 
-        int writeCommand(Command* cmd);
-    protected:
-    private:
-	int writeUpdate(UpdateCommand* cmd, OutputStream* out);
-	int writeFind(FindCommand* cmd, OutputStream* out);
-	int writeInsert(InsertCommand* cmd, OutputStream* out);
+		int writeCommand(Command* cmd);
+	protected:
+	private:
+		int writeUpdate(UpdateCommand* cmd, OutputStream* out);
+		int writeFind(FindCommand* cmd, OutputStream* out);
+		int writeInsert(InsertCommand* cmd, OutputStream* out);
+		int writeDropnamespace(DropnamespaceCommand* cmd, OutputStream* out);
 
-    private:
-        OutputStream* _stream;
+	private:
+		OutputStream* _stream;
 };
 
 #endif // COMMANDWRITER_H

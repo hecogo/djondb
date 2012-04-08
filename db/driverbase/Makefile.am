@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-all_includes = -I$(srcdir)/../bson -I$(srcdir)/../util -I$(srcdir)/../filesystem -I$(srcdir)/../command
+all_includes = -I$(srcdir)/../bson -I$(srcdir)/../util -I$(srcdir)/../filesystem -I$(srcdir)/../command -I$(srcdir)/../tx
 
 if DEBUG
    AM_CFLAGS = -g3 -O0 $(all_includes)
@@ -19,7 +19,7 @@ libdjon_client_la_SOURCES= connection.cpp \
                                                      djondb_client.h
 TESTS = test-driverbase
 check_PROGRAMS = test-driverbase
-test_driverbase_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest
+test_driverbase_LDADD = libdjon-client.la -ldjon-tx -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest
 test_driverbase_SOURCES = tests/main.cpp
 
 djon_client_libincludedir = $(libdir)/djon-client-1.0/include

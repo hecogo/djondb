@@ -39,6 +39,7 @@ class DBController
         bool close(char* ns);
 
         BSONObj* insert(char* ns, BSONObj* bson);
+		  bool dropNamespace(char* ns);
         void update(char* ns, BSONObj* bson);
         std::vector<BSONObj*> find(char* ns, const BSONObj& filter);
         BSONObj* findFirst(char* ns, BSONObj* filter);

@@ -78,6 +78,7 @@ bool ExecuteString(v8::Handle<v8::String> source,
 		bool report_exceptions);
 v8::Handle<v8::Value> Print(const v8::Arguments& args);
 v8::Handle<v8::Value> find(const v8::Arguments& args);
+v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args);
 v8::Handle<v8::Value> Read(const v8::Arguments& args);
 v8::Handle<v8::Value> Load(const v8::Arguments& args);
 v8::Handle<v8::Value> Quit(const v8::Arguments& args);
@@ -126,6 +127,8 @@ v8::Persistent<v8::Context> CreateShellContext() {
 	global->Set(v8::String::New("print"), v8::FunctionTemplate::New(Print));
 	// Bind the gloabl 'find' function to the C++ Find callback.
 	global->Set(v8::String::New("find"), v8::FunctionTemplate::New(find));
+	// Bind the gloabl 'dropNamespace' function to the C++ Find callback.
+	global->Set(v8::String::New("dropNamespace"), v8::FunctionTemplate::New(dropNamespace));
 	// Bind the global 'read' function to the C++ Read callback.
 	global->Set(v8::String::New("read"), v8::FunctionTemplate::New(Read));
 	// Bind the global 'load' function to the C++ Load callback.
@@ -196,6 +199,29 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 	return v8::String::New("");
 }
 
+v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
+	if (args.Length() < 1) {
+		v8::ThrowException(v8::String::New("usage: db.dropNamespace(namespace)"));
+	}
+
+	v8::HandleScope handle_scope;
+	v8::String::Utf8Value str(args[0]);
+	;
+	std::string ns = ToCString(str);
+
+	if (__djonConnection == NULL) {
+		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+	}
+	bool result = __djonConnection->dropNamespace(ns);
+
+	if (result) {
+		printf("ns dropped: %s", ns.c_str());
+	} else {
+		printf("ns cannot be dropped: %s", ns.c_str());
+	}
+	return v8::String::New("");
+}
+
 v8::Handle<v8::Value> help(const v8::Arguments& args) {
 	if (args.Length() > 0) {
 		v8::String::Utf8Value str(args[0]);
@@ -206,6 +232,7 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 		printf("find(namespace, filter)\n");
 		printf("load(file)\n");
 		printf("print(text)\n");
+		printf("dropNamespace(namespace)\n");
 	}
 	return v8::Undefined();
 }

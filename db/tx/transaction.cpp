@@ -54,21 +54,13 @@ Transaction::~Transaction() {
 	_commands.clear();
 }
 
-void Transaction::commitTransaction() {
-
-}
-
-void Transaction::dropTransaction() {
-
-}
-
 void Transaction::insert(InsertCommand* cmd) {
 	_controller->insert(const_cast<char*>(cmd->nameSpace()->c_str()), cmd->bson());
 
 	insertCommand(*cmd->nameSpace(), cmd);
 }
 
-void Transaction::update(UpdateCommand* cmd) {
+bool Transaction::update(UpdateCommand* cmd) {
 	_controller->update(const_cast<char*>(cmd->nameSpace()->c_str()), cmd->bson());
 	
 	insertCommand(*cmd->nameSpace(), cmd);
@@ -102,4 +94,8 @@ Command* Transaction::copyCommand(Command* cmd) {
 
 void Transaction::insertCommand(std::string ns, Command* cmd) {
 	_commands.insert(pair<std::string, Command*>(ns, copyCommand(cmd)));
+}
+
+std::map<std::string, Command*> Transaction::commit() {
+	return _commands;
 }

@@ -22,11 +22,13 @@
 #include "networkoutputstream.h"
 #include "commandwriter.h"
 #include "insertcommand.h"
+#include "dropnamespacecommand.h"
 #include "findcommand.h"
 #include "updatecommand.h"
 #include "bsoninputstream.h"
 #include "connectionmanager.h"
 #include "util.h"
+#include "tx.h"
 
 using namespace djondb;
 
@@ -193,4 +195,126 @@ bool Connection::isOpen() const {
 
 std::string Connection::host() const {
 	return _host;
+}
+
+
+/* Transacted methods */
+
+Transaction* Connection::beginTransaction(bool longterm) {
+	Transaction* trans = TransactionManager::transactionManager()->beginTransaction(longterm);
+	return trans;
+}
+
+Transaction* Connection::beginTransaction() {
+	Transaction* trans = TransactionManager::transactionManager()->beginTransaction();
+	return trans;
+}
+
+Transaction* Connection::loadTransaction(std::string id) {
+	Transaction* trans = TransactionManager::transactionManager()->loadTransaction(id);
+	return trans;
+}
+
+void Connection::commitTransaction(Transaction* trans) {
+	std::map<std::string, Command*> cmds = trans->commit();
+
+	for (std::map<std::string, Command*>::const_iterator i = cmds.begin(); i != cmds.end(); i++) {
+		Command* cmd = i->second;
+		_commandWriter->writeCommand(cmd);
+		delete cmd;
+	}
+}
+
+void Connection::rollbackTransaction(Transaction* trans) {
+
+}
+
+bool Connection::insert(Transaction* trans, const std::string& ns, const std::string& json) {
+	BSONObj* obj = BSONParser::parse(json);
+	bool result = insert(trans, ns, *obj);
+	delete obj;
+	return result;
+}
+
+bool Connection::insert(Transaction* trans, const std::string& ns, const BSONObj& obj) {
+	if (_logger->isDebug()) _logger->debug(2, "Insert command with transaction. ns: %s, bson: %s", ns.c_str(), obj.toChar());
+	InsertCommand cmd;
+	cmd.setBSON(obj);
+	cmd.setNameSpace(ns);
+	trans->insert(&cmd);
+	return true;
+}
+
+BSONObj* Connection::findByKey(Transaction* trans, const std::string& ns, const std::string& id) {
+	if (_logger->isDebug()) _logger->debug("executing findByKey ns: %s id: %s", ns.c_str(), id.c_str());
+
+	BSONObj filter;
+	filter.add("_id", id);
+
+	std::vector<BSONObj*> result = find(trans, ns, filter);
+
+	BSONObj* res = NULL;
+	if (result.size() == 1) {
+		if (_logger->isDebug()) _logger->debug(2, "findByKey found 1 result");
+		res = *result.begin();
+	} else {
+		if (result.size() > 1) {
+			throw "The result contains more than 1 result";
+		}
+
+		/*  If the record is not in the transacted values, then go to the DB */
+		if (result.size() == 0) {
+			res = findByKey(ns, id);
+		}
+	}
+	return res;
+}
+
+std::vector<BSONObj*> Connection::find(Transaction* trans, const std::string& ns, const std::string& filter) {
+	BSONObj* obj = BSONParser::parse(filter);
+
+	std::vector<BSONObj*> result = find(trans, ns, *obj);
+
+	delete obj;
+	return result;
+}
+
+std::vector<BSONObj*> Connection::find(Transaction* trans, const std::string& ns, const BSONObj& bsonFilter) {
+	FindCommand cmd;
+	cmd.setBSON(bsonFilter);
+	cmd.setNameSpace(ns);
+
+	std::vector<BSONObj*> result = trans->find(&cmd);
+
+	return result;
+}
+
+bool Connection::update(Transaction* trans, const std::string& ns, const std::string& json) {
+	BSONObj* obj = BSONParser::parse(json);
+
+	bool result = update(trans, ns, *obj);
+	
+	delete obj;
+	return result;
+}
+
+bool Connection::update(Transaction* trans, const std::string& ns, const BSONObj& bson) {
+	_logger->error("Not implemented yet");
+	assert(false);
+/* 	
+	assert(false);
+	UpdateCommand cmd;
+	cmd.setBSON(bson);
+	cmd.setNameSpace(ns);
+
+	trans->update(&cmd);
+	*/
+}
+
+bool Connection::dropNamespace(const std::string& ns) {
+	DropnamespaceCommand cmd;
+
+	cmd.setNameSpace(ns);
+
+	_commandWriter->writeCommand(&cmd);
 }

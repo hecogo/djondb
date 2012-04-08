@@ -18,6 +18,7 @@
 
 #include "commandreader.h"
 #include "insertcommand.h"
+#include "dropnamespacecommand.h"
 #include "updatecommand.h"
 #include "findcommand.h"
 #include "bsoninputstream.h"
@@ -46,6 +47,15 @@ InsertCommand* parseInsert(InputStream* is)  {
 
     delete ns;
     delete obj;
+    return command;
+}
+
+DropnamespaceCommand* parseDropnamespace(InputStream* is)  {
+    DropnamespaceCommand* command = new DropnamespaceCommand();
+    std::string* ns = is->readString();
+    command->setNameSpace(*ns);
+
+    delete ns;
     return command;
 }
 
@@ -100,6 +110,9 @@ Command* CommandReader::readCommand() {
             break;
         case FIND:
             cmd = parseFind(_stream);
+            break;
+        case DROPNAMESPACE:
+            cmd = parseDropnamespace(_stream);
             break;
         case CLOSECONNECTION: // Insert
             cmd = new CloseCommand();

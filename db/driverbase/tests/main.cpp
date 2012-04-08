@@ -63,7 +63,25 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ADD(TestDriverBaseSuite::testFinds);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
-			TEST_ADD(TestDriverBaseSuite::testPerformance);
+//			TEST_ADD(TestDriverBaseSuite::testPerformance);
+
+			TEST_ADD(TestDriverBaseSuite::testDropNamespace);
+			//TEST_ADD(TestDriverBaseSuite::testTransactions);
+		}
+
+		void testDropNamespace() {
+			Connection* conn = ConnectionManager::getConnection("localhost");
+
+			conn->insert("testdrop.namespace", "{ name: 'Test' }");
+
+			bool result = conn->dropNamespace("testdrop.namespace");
+
+			TEST_ASSERT(result);
+
+			BSONObj filter;
+			std::vector<BSONObj*> testresult = conn->find("testdrop.namespace", filter);
+
+			TEST_ASSERT(testresult.size() == 0);
 		}
 
 		void testInsert() {
@@ -341,81 +359,17 @@ class TestDriverBaseSuite: public Test::Suite {
 			//    delete conn;
 			delete(log);
 		}
-		/*
-			int main(int argc, char* args[])
-			{
-		//    NetworkService service;
-		//    service.start();
-		//
-		int inserts;
-		bool insert = false;
-		bool finds = false;
-		bool updates = false;
-		bool error = false;
-		int maxfinds = -1;
-		int maxupdates = -1;
-		if (argc < 2) {
-		cout << "No command specified" << endl;
-		error = true;
-		}
-		for (int x = 1; x < argc; x++) {
-		if (strncmp(args[x], "--insert", 8) == 0) {
-		insert = true;
-		char* val = strchr(args[x], '=');
-		if (val == NULL) {
-		cout << "Incorrect syntax, expected --insert=xxx" << endl;
-		error = true;
-		} else {
-		inserts = atoi(val + 1);
-		}
-		} else if (strncmp(args[x], "--finds", 7) == 0) {
-		finds = true;
-		char* val = strchr(args[x], '=');
-		if (val != NULL) {
-		maxfinds = atoi(val+1);
-		}
-		} else if (strncmp(args[x], "--updates", 9) == 0) {
-		updates = true;
-		char* val = strchr(args[x], '=');
-		if (val != NULL) {
-		maxupdates = atoi(val+1);
-		}
-		} else {
-		cout << "Incorrect command " << args[x] << endl;
-		error = true;
-		}
-		}
-		if (error) {
-		cout << "Usage: test-network [--inserts=xxxx] [--finds[=maxfinds] ] [--update[=maxupdates] ]" << endl;
-		return;
-		}
 
-		if (insert) {
-		cout << "Inserts " << inserts << endl;
-		testInsert("localhost",1243, inserts);
-		}
 
-		if (finds) {
-		cout << "Finds " << endl;
-		testFinds("localhost",1243, maxfinds);
-		}
+		void testTransactions() {
 
-		if (updates) {
-		cout << "Updates " << endl;
-		testUpdate("localhost",1243, maxupdates);
-		}
+			Connection* conn = ConnectionManager::getConnection("localhost");
 
-		if (!error) {
-		cout << "Press any key to close the connections" << endl;
-		getchar();
+			// Testing short term transaction
+			Transaction* trans = conn->beginTransaction();
+
+			conn->insert("test.trans", "{ name: 'John', lastName: 'Smith', clientId: '123456' }");
 		}
-		Connection* conn = ConnectionManager::getConnection("localhost");
-		if (conn->isOpen()) {
-		conn->close();
-delete conn;
-}
-}
-*/
 };
 
 
