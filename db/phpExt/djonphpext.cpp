@@ -178,6 +178,27 @@ PHP_METHOD(Connection, djon_find)
 	conn->findByKey(ns, json);
 }
 
+PHP_METHOD(Connection, djon_dropNamespace)
+{
+	char* ns;
+	int ns_len;
+
+	zval *object = getThis();
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &ns, &ns_len) == FAILURE) {
+		RETURN_NULL();
+	}
+
+	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+	Connection* conn = __conn;//obj->conn;
+	bool result = conn->dropNamespace(ns);
+	if (result) {
+		RETURN_TRUE;
+	} else {
+		RETURN_FALSE;
+	}
+}
+
 PHP_METHOD(Connection, djon_findByFilter)
 {
 	char* ns;
@@ -219,6 +240,7 @@ PHP_METHOD(Connection, djon_findByFilter)
 			PHP_ME(Connection,  djon_isconnected,           NULL, ZEND_ACC_PUBLIC)
 			PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
 			PHP_ME(Connection,  djon_findByFilter,      NULL, ZEND_ACC_PUBLIC)
+			PHP_ME(Connection,  djon_dropNamespace,      NULL, ZEND_ACC_PUBLIC)
 			{NULL, NULL, NULL}
 	};
 
