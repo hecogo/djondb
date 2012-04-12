@@ -17,6 +17,10 @@ libdjon_tx_la_SOURCES = transactionmanager.cpp \
 								transactionmanager.h \
 								transaction.cpp \
 								transaction.h \
+								transactionlong.cpp \
+								transactionlong.h \
+								transactionshort.cpp \
+								transactionshort.h \
 								tx.h
 
 #library_includedir=$(includedir)/djon-db-1.0/djon-db

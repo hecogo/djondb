@@ -40,15 +40,19 @@ class FileOutputStream;
 
 class Transaction {
 	public:
-		Transaction(DBController* controller, bool longterm);
+		Transaction(bool longterm);
 		Transaction(const Transaction& orig);
 		virtual ~Transaction();
 
-		void insert(InsertCommand* cmd);
-		bool update(UpdateCommand* cmd);
-		std::vector<BSONObj*> find(FindCommand* cmd);
+		virtual void insert(InsertCommand* cmd) = 0;
+		virtual bool update(UpdateCommand* cmd) = 0;
+		virtual std::vector<BSONObj*> find(FindCommand* cmd) = 0;
 
-		std::map<std::string, Command*> commit();
+		virtual std::map<std::string, Command*> commit() = 0;
+
+	protected:
+		std::map<std::string, Command*> commands() const;
+
 	private:
 		Command* copyCommand(Command* cmd);
 		void insertCommand(std::string ns, Command* cmd);
@@ -56,9 +60,6 @@ class Transaction {
 	private:
 		std::map<std::string, Command*> _commands;
 		bool _longterm;
-		DBController* _controller;
-
-		FileOutputStream* _stream;
 };
 
 #endif // TRANSACTION_INCLUDED_H

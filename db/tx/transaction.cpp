@@ -30,14 +30,11 @@
 #include "findcommand.h"
 #include "db.h"
 
-Transaction::Transaction(DBController* controller, bool longterm) {
+Transaction::Transaction(bool longterm) {
 	_longterm = longterm;
-	_stream = NULL;
-	_controller = controller;
 }
 
 Transaction::Transaction(const Transaction& orig) {
-	this->_stream = orig._stream;
 	this->_longterm = _longterm;
 
 	for (std::map<std::string, Command*>::const_iterator i = orig._commands.begin(); i != orig._commands.end(); i++) {
@@ -52,22 +49,6 @@ Transaction::~Transaction() {
 	}
 
 	_commands.clear();
-}
-
-void Transaction::insert(InsertCommand* cmd) {
-	_controller->insert(const_cast<char*>(cmd->nameSpace()->c_str()), cmd->bson());
-
-	insertCommand(*cmd->nameSpace(), cmd);
-}
-
-bool Transaction::update(UpdateCommand* cmd) {
-	_controller->update(const_cast<char*>(cmd->nameSpace()->c_str()), cmd->bson());
-	
-	insertCommand(*cmd->nameSpace(), cmd);
-}
-
-std::vector<BSONObj*> Transaction::find(FindCommand* cmd) {
-	return _controller->find(const_cast<char*>(cmd->nameSpace()->c_str()), *cmd->bson());
 }
 
 Command* Transaction::copyCommand(Command* cmd) {
@@ -96,6 +77,6 @@ void Transaction::insertCommand(std::string ns, Command* cmd) {
 	_commands.insert(pair<std::string, Command*>(ns, copyCommand(cmd)));
 }
 
-std::map<std::string, Command*> Transaction::commit() {
+std::map<std::string, Command*> Transaction::commands() const {
 	return _commands;
 }

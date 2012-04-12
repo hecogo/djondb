@@ -53,10 +53,8 @@ TransactionManager::TransactionManager(const TransactionManager& orig) {
 
 Transaction* TransactionManager::beginTransaction(bool longterm) {
 	std::string* id = uuid();
-	DBController* controller = new DBController();
-	controller->initialize("tran" + *id);
 
-	Transaction* tran = new Transaction(controller, longterm);
+	Transaction* tran = new Transaction(longterm);
 	_transactions.insert(pair<std::string, Transaction*>(*id, tran));
 	delete id;
 
