@@ -44,21 +44,6 @@ namespace djondb {
 
 				bool dropNamespace(const std::string& ns);
 
-				/*  Transacted methods  */
-  				Transaction* beginTransaction();
-  				Transaction* beginTransaction(bool longterm);
-  				Transaction* loadTransaction(std::string id);
-				void commitTransaction(Transaction* trans);
-				void rollbackTransaction(Transaction* trans);
-
-				bool insert(Transaction* trans, const std::string& ns, const std::string& json);
-				bool insert(Transaction* trans, const std::string& ns, const BSONObj& obj);
-				BSONObj* findByKey(Transaction* trans, const std::string& ns, const std::string& id);
-				std::vector<BSONObj*> find(Transaction* trans, const std::string& ns, const std::string& filter);
-				std::vector<BSONObj*> find(Transaction* trans, const std::string& ns, const BSONObj& bsonFilter);
-				bool update(Transaction* trans, const std::string& ns, const std::string& json);
-				bool update(Transaction* trans, const std::string& ns, const BSONObj& bson);
-
 				std::string host() const;
 
 		  protected:
