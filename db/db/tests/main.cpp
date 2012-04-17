@@ -73,12 +73,12 @@ public:
         fos.writeString(std::string("13"));
         fos.close();
 
-        TEST_ADD(TestDBSuite::testInsertWithStringId);
-        TEST_ADD(TestDBSuite::testInsertWithCharId);
-        TEST_ADD(TestDBSuite::testInsertWithoutId);
         TEST_ADD(TestDBSuite::testSimpleIndex);
         TEST_ADD(TestDBSuite::testComplexIndex);
         TEST_ADD(TestDBSuite::testIndexFactory);
+        TEST_ADD(TestDBSuite::testInsertWithStringId);
+        TEST_ADD(TestDBSuite::testInsertWithCharId);
+        TEST_ADD(TestDBSuite::testInsertWithoutId);
         controller.initialize();
 
         TEST_ADD(TestDBSuite::testFindPrevious);

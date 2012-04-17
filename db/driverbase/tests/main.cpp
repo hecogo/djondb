@@ -59,8 +59,8 @@ class TestDriverBaseSuite: public Test::Suite {
 		TestDriverBaseSuite() {
 			_host = "localhost";
 			_port = 1243;
-			TEST_ADD(TestDriverBaseSuite::testInsert);
 			TEST_ADD(TestDriverBaseSuite::testFinds);
+			TEST_ADD(TestDriverBaseSuite::testInsert);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
 //			TEST_ADD(TestDriverBaseSuite::testPerformance);

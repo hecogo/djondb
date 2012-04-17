@@ -204,12 +204,12 @@ void DBController::update(char* db, char* ns, BSONObj* obj) {
 	CacheManager::objectCache()->add(*id, new BSONObj(*obj));
 }
 
-StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
-	std::string filedir = _dataDir + "/" + db;
+StreamType* DBController::open(const std::string& db, const std::string& ns, FILE_TYPE type) {
+	std::string filedir = concatStrings(_dataDir, db);
 	if (!existDir(filedir.c_str())) {
 		makeDir(filedir.c_str());
 	}
-	filedir = filedir + "/";
+	filedir = concatStrings(filedir, "/");
 
 	std::stringstream ss;
 	ss << ns << ".";
@@ -247,7 +247,8 @@ StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 	if (stream != NULL) {
 		return stream;
 	}
-	StreamType* output = new StreamType(filedir + fileName, "ab+");
+	std::string streamfile = concatStrings(filedir, fileName);
+	StreamType* output = new StreamType(streamfile, "ab+");
 	SpacesType space;
 	space.ns = ns;
 	space.stream = output;

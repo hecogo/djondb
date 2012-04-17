@@ -27,6 +27,9 @@ FileInputOutputStream::FileInputOutputStream(std::string fileName, const char* f
     _pFile = fopen(fileName.c_str(), flags);
 
     // Position the cursor at the end of the file
+	 if (_pFile == NULL) {
+		 cout << "here we go" << endl;
+	 }
     fseek(_pFile, 0, SEEK_END);
     _fileName = fileName;
     _open = true;
