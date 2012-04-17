@@ -22,6 +22,8 @@ class FindCommand : public Command
 
         virtual void writeResult(OutputStream* out) const;
 
+        void setDB(const std::string& db);
+        const std::string* DB() const;
         void setNameSpace(const std::string& ns);
         std::string* nameSpace() const;
         void setBSON(BSONObj bson);
@@ -30,6 +32,7 @@ class FindCommand : public Command
     private:
     private:
         std::string* _namespace;
+        std::string* _db;
         BSONObj* _bson;
 
 		  std::vector<BSONObj*> _result;

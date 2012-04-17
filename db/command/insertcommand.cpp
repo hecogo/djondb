@@ -31,13 +31,14 @@ InsertCommand::InsertCommand(const InsertCommand& orig)
 }
 
 InsertCommand::~InsertCommand() {
+    delete(_db);
     delete(_namespace);
     delete(_bson);
 }
 
 void InsertCommand::execute() {
     const char* ns = _namespace->c_str();
-    _bsonResult = dbController()->insert(const_cast<char*>(ns), _bson);
+    _bsonResult = dbController()->insert(const_cast<char*>(_db->c_str()), const_cast<char*>(ns), _bson);
 }
 
 void* InsertCommand::result() {
@@ -65,3 +66,12 @@ void InsertCommand::setBSON(const BSONObj bson) {
 BSONObj* InsertCommand::bson() const {
     return _bson;
 }
+
+void InsertCommand::setDB(const std::string& db) {
+    _db = new std::string(db);
+}
+
+const std::string* InsertCommand::DB() const {
+    return _db;
+}
+

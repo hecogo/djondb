@@ -36,27 +36,27 @@ class DBController
         void initialize(std::string dataDir);
         void shutdown();
 
-        bool close(char* ns);
+        bool close(char* db, char* ns);
 
-        BSONObj* insert(char* ns, BSONObj* bson);
-		  bool dropNamespace(char* ns);
-        void update(char* ns, BSONObj* bson);
-        std::vector<BSONObj*> find(char* ns, const BSONObj& filter);
-        BSONObj* findFirst(char* ns, BSONObj* filter);
+        BSONObj* insert(char* db, char* ns, BSONObj* bson);
+		  bool dropNamespace(char* db, char* ns);
+        void update(char* db, char* ns, BSONObj* bson);
+        std::vector<BSONObj*> find(char* db, char* ns, const BSONObj& filter);
+        BSONObj* findFirst(char* db, char* ns, BSONObj* filter);
         BSONObj* readBSON(StreamType* stream);
     protected:
     private:
-        std::map<std::string, SpacesType>  _spaces;
-        StreamType* open(std::string ns, FILE_TYPE type);
-		  std::vector<BSONObj*> findFullScan(char* ns, const BSONObj& filter);
+		  std::map<std::string, std::map<std::string, SpacesType> > _spaces;
+        StreamType* open(std::string db, std::string ns, FILE_TYPE type);
+		  std::vector<BSONObj*> findFullScan(char* db, char* ns, const BSONObj& filter);
 		  Logger* _logger;
 
 		  std::string _dataDir;
 
     private:
         long checkStructure(BSONObj* bson);
-        void updateIndex(char* ns, BSONObj* bson, long filePos);
-        void insertIndex(char* ns, BSONObj* bson, long filePos);
+        void updateIndex(char* db, char* ns, BSONObj* bson, long filePos);
+        void insertIndex(char* db, char* ns, BSONObj* bson, long filePos);
         void writeBSON(StreamType* stream, BSONObj* obj);
 };
 

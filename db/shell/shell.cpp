@@ -175,44 +175,46 @@ std::string toJson(const v8::Local<v8::Object>& obj) {
 }
 
 v8::Handle<v8::Value> insert(const v8::Arguments& args) {
-	if (args.Length() < 2) {
-		v8::ThrowException(v8::String::New("usage: db.insert(namespace, json)"));
+	if (args.Length() < 3) {
+		v8::ThrowException(v8::String::New("usage: db.insert(db, namespace, json)"));
 	}
 
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value str(args[0]);
-	;
-	std::string ns = ToCString(str);
+	std::string db = ToCString(str);
+	v8::String::Utf8Value str2(args[1]);
+	std::string ns = ToCString(str2);
 	std::string json;
-	if (args[1]->IsObject()) {
-		json = toJson(args[1]->ToObject());
+	if (args[2]->IsObject()) {
+		json = toJson(args[2]->ToObject());
 	} else {
-		v8::String::Utf8Value sjson(args[1]);
+		v8::String::Utf8Value sjson(args[2]);
 		json = ToCString(sjson);
 	}
 
 	if (__djonConnection == NULL) {
 		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
 	}
-	__djonConnection->insert(ns, json);
+	__djonConnection->insert(db, ns, json);
 
 	return v8::String::New("");
 }
 
 v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
-	if (args.Length() < 1) {
-		v8::ThrowException(v8::String::New("usage: db.dropNamespace(namespace)"));
+	if (args.Length() < 2) {
+		v8::ThrowException(v8::String::New("usage: db.dropNamespace(db, namespace)"));
 	}
 
 	v8::HandleScope handle_scope;
-	v8::String::Utf8Value str(args[0]);
-	;
+	v8::String::Utf8Value strDB(args[0]);
+	std::string db = ToCString(strDB);
+	v8::String::Utf8Value str(args[1]);
 	std::string ns = ToCString(str);
 
 	if (__djonConnection == NULL) {
 		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
 	}
-	bool result = __djonConnection->dropNamespace(ns);
+	bool result = __djonConnection->dropNamespace(db, ns);
 
 	if (result) {
 		printf("ns dropped: %s", ns.c_str());
@@ -228,34 +230,36 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 		std::string cmd = ToCString(str);
 	} else {
 		printf("connect(host)\n");
-		printf("insert(namespace, json)\n");
-		printf("find(namespace, filter)\n");
+		printf("insert(db, namespace, json)\n");
+		printf("find(db, namespace, filter)\n");
 		printf("load(file)\n");
 		printf("print(text)\n");
-		printf("dropNamespace(namespace)\n");
+		printf("dropNamespace(db, namespace)\n");
 	}
 	return v8::Undefined();
 }
 
 v8::Handle<v8::Value> find(const v8::Arguments& args) {
-	if (args.Length() < 2) {
-		v8::ThrowException(v8::String::New("usage: db.find(namespace, json)"));
+	if (args.Length() < 3) {
+		v8::ThrowException(v8::String::New("usage: db.find(db, namespace, json)"));
 	}
 
 	if (__djonConnection == NULL) {
 		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
 	}
 	v8::HandleScope handle_scope;
-	v8::String::Utf8Value str(args[0]);
+	v8::String::Utf8Value strDB(args[0]);
+	std::string db = ToCString(strDB);
+	v8::String::Utf8Value str(args[1]);
 	std::string ns = ToCString(str);
 	std::string json;
-	if (args[1]->IsObject()) {
-		json = toJson(args[1]->ToObject());
+	if (args[2]->IsObject()) {
+		json = toJson(args[2]->ToObject());
 	} else {
-		json = ToCString(v8::String::Utf8Value(args[1]));
+		json = ToCString(v8::String::Utf8Value(args[2]));
 	}
 
-	std::vector<BSONObj*> result = __djonConnection->find(ns, json);
+	std::vector<BSONObj*> result = __djonConnection->find(db, ns, json);
 
 	std::stringstream ss;
 	ss << "[";

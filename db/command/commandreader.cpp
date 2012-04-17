@@ -39,6 +39,8 @@ CommandReader::~CommandReader()
 
 InsertCommand* parseInsert(InputStream* is)  {
     InsertCommand* command = new InsertCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
@@ -46,21 +48,27 @@ InsertCommand* parseInsert(InputStream* is)  {
     command->setBSON(*obj);
 
     delete ns;
+    delete db;
     delete obj;
     return command;
 }
 
 DropnamespaceCommand* parseDropnamespace(InputStream* is)  {
     DropnamespaceCommand* command = new DropnamespaceCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
 
+    delete db;
     delete ns;
     return command;
 }
 
 UpdateCommand* parseUpdate(InputStream* is)  {
     UpdateCommand* command = new UpdateCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
@@ -68,12 +76,15 @@ UpdateCommand* parseUpdate(InputStream* is)  {
     command->setBSON(*obj);
 
     delete ns;
+    delete db;
     delete obj;
     return command;
 }
 
 FindCommand* parseFind(InputStream* is)  {
     FindCommand* command = new FindCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
@@ -81,6 +92,7 @@ FindCommand* parseFind(InputStream* is)  {
     command->setBSON(*obj);
 
     delete obj;
+    delete db;
     delete ns;
     return command;
 }

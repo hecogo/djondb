@@ -72,14 +72,14 @@ class TestDriverBaseSuite: public Test::Suite {
 		void testDropNamespace() {
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
-			conn->insert("testdrop.namespace", "{ name: 'Test' }");
+			conn->insert("db", "testdrop.namespace", "{ name: 'Test' }");
 
-			bool result = conn->dropNamespace("testdrop.namespace");
+			bool result = conn->dropNamespace("db", "testdrop.namespace");
 
 			TEST_ASSERT(result);
 
 			BSONObj filter;
-			std::vector<BSONObj*> testresult = conn->find("testdrop.namespace", filter);
+			std::vector<BSONObj*> testresult = conn->find("db", "testdrop.namespace", filter);
 
 			TEST_ASSERT(testresult.size() == 0);
 		}
@@ -118,7 +118,7 @@ class TestDriverBaseSuite: public Test::Suite {
 				obj.add("content", temp);
 				free(temp);
 
-				conn->insert("driverbase.test", obj);
+				conn->insert("db", "driverbase.test", obj);
 
 				if ((inserts > 9) && (x % (inserts / 10)) == 0) {
 					cout << x << " Records sent" << endl;
@@ -176,11 +176,11 @@ class TestDriverBaseSuite: public Test::Suite {
 			test.add("long", 10L);
 			test.add("char", "testing");
 
-			conn->insert("driver.test", test);
+			conn->insert("db", "driver.test", test);
 
 			log->debug("Data inserted");
 
-			BSONObj* objResult = conn->findByKey("driver.test", *guid);
+			BSONObj* objResult = conn->findByKey("db", "driver.test", *guid);
 
 			TEST_ASSERT(objResult != NULL);
 			TEST_ASSERT(objResult->has("int"));
@@ -209,7 +209,7 @@ class TestDriverBaseSuite: public Test::Suite {
 				exit(0);
 			}
 
-			conn->insert("test.filter2", *obj);
+			conn->insert("db", "test.filter2", *obj);
 
 			// doing search
 			//
@@ -217,7 +217,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			cout << "Testbyfilter" << endl;
 			BSONObj objfilter;
 			objfilter.add("name", "Test");
-			std::vector<BSONObj*> result = conn->find("test.filter2", objfilter);			
+			std::vector<BSONObj*> result = conn->find("db", "test.filter2", objfilter);			
 			TEST_ASSERT(result.size() > 0);
 
 			BSONObj* objR = *result.begin();
@@ -252,7 +252,7 @@ class TestDriverBaseSuite: public Test::Suite {
 					std::string* uid = uuid();
 					obj.add("_id", *uid);
 					delete uid;
-					conn->insert("test.performance", obj);
+					conn->insert("db", "test.performance", obj);
 				}
 
 				log->stopTimeRecord();
@@ -314,7 +314,7 @@ class TestDriverBaseSuite: public Test::Suite {
 				obj.add("content", temp);
 				free(temp);
 
-				conn->update("driverbase.test", obj);
+				conn->update("db", "driverbase.test", obj);
 
 				if ((count > 9) && (x % (count / 10)) == 0) {
 					cout << x << " Records received" << endl;
@@ -328,7 +328,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			for (std::vector<std::string>::iterator i = idsUpdated.begin(); i != idsUpdated.end(); i++) {
 				std::string guid = *i;
 
-				std::auto_ptr<BSONObj> resObj(conn->findByKey("driverbase.test", guid));
+				std::auto_ptr<BSONObj> resObj(conn->findByKey("db", "driverbase.test", guid));
 
 				TEST_ASSERT(resObj.get() != NULL);
 				TEST_ASSERT(resObj->has("_id"));
@@ -361,15 +361,6 @@ class TestDriverBaseSuite: public Test::Suite {
 		}
 
 
-		void testTransactions() {
-
-			Connection* conn = ConnectionManager::getConnection("localhost");
-
-			// Testing short term transaction
-			Transaction* trans = conn->beginTransaction();
-
-			conn->insert("test.trans", "{ name: 'John', lastName: 'Smith', clientId: '123456' }");
-		}
 };
 
 

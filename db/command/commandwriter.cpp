@@ -43,6 +43,7 @@ CommandWriter::CommandWriter(const CommandWriter& orig) {
 }
 
 int CommandWriter::writeInsert(InsertCommand* cmd, OutputStream* out)  {
+    out->writeString(*cmd->DB());
     const std::string* ns = cmd->nameSpace();
     out->writeString(*ns);
 
@@ -53,6 +54,7 @@ int CommandWriter::writeInsert(InsertCommand* cmd, OutputStream* out)  {
 }
 
 int CommandWriter::writeDropnamespace(DropnamespaceCommand* cmd, OutputStream* out)  {
+    out->writeString(*cmd->DB());
     const std::string* ns = cmd->nameSpace();
     out->writeString(*ns);
 
@@ -60,6 +62,7 @@ int CommandWriter::writeDropnamespace(DropnamespaceCommand* cmd, OutputStream* o
 }
 
 int CommandWriter::writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
+    out->writeString(*cmd->DB());
     const std::string* ns = cmd->nameSpace();
     out->writeString(*ns);
 
@@ -70,6 +73,7 @@ int CommandWriter::writeUpdate(UpdateCommand* cmd, OutputStream* out)  {
 }
 
 int CommandWriter::writeFind(FindCommand* cmd, OutputStream* out)  {
+    out->writeString(*cmd->DB());
     std::string* ns = cmd->nameSpace();
     out->writeString(*ns);
 

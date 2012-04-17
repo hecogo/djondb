@@ -98,17 +98,18 @@ void Connection::internalClose() {
 	}
 }
 
-bool Connection::insert(const std::string& ns, const std::string& json) {
-	if (_logger->isDebug()) _logger->debug(2, "Insert command. ns: %s, json: %s", ns.c_str(), json.c_str());
+bool Connection::insert(const std::string& db, const std::string& ns, const std::string& json) {
+	if (_logger->isDebug()) _logger->debug(2, "Insert command. db: %s, ns: %s, json: %s", db.c_str(), ns.c_str(), json.c_str());
 	BSONObj* obj = BSONParser::parse(json);
-	bool result = insert(ns, *obj);
+	bool result = insert(db, ns, *obj);
 	delete obj;
 	return result;
 }
 
-bool Connection::insert(const std::string& ns, const BSONObj& bson) {
-	if (_logger->isDebug()) _logger->debug(2, "Insert command. ns: %s, bson: %s", ns.c_str(), bson.toChar());
+bool Connection::insert(const std::string& db, const std::string& ns, const BSONObj& bson) {
+	if (_logger->isDebug()) _logger->debug(2, "Insert command. db: %s, ns: %s, bson: %s", db.c_str(), ns.c_str(), bson.toChar());
 	InsertCommand cmd;
+	cmd.setDB(db);
 	cmd.setBSON(bson);
 	cmd.setNameSpace(ns);
 	_commandWriter->writeCommand(&cmd);
@@ -124,18 +125,19 @@ bool Connection::insert(const std::string& ns, const BSONObj& bson) {
 	return true;
 }
 
-bool Connection::update(const std::string& ns, const std::string& json) {
-	if (_logger->isDebug()) _logger->debug(2, "Update command. ns: %s, json: %s", ns.c_str(), json.c_str());
+bool Connection::update(const std::string& db, const std::string& ns, const std::string& json) {
+	if (_logger->isDebug()) _logger->debug(2, "Update command. db: %s, ns: %s, json: %s", db.c_str(), ns.c_str(), json.c_str());
 	BSONObj* obj = BSONParser::parse(json);
-	bool result = update(ns, *obj);
+	bool result = update(db, ns, *obj);
 	delete obj;
 	return result;
 }
 
-bool Connection::update(const std::string& ns, const BSONObj& obj) {
-	if (_logger->isDebug()) _logger->debug(2, "Update command. ns: %s, bson: %s", ns.c_str(), obj.toChar());
+bool Connection::update(const std::string& db, const std::string& ns, const BSONObj& obj) {
+	if (_logger->isDebug()) _logger->debug(2, "Update command. db: %s, ns: %s, bson: %s", db.c_str(), ns.c_str(), obj.toChar());
 	UpdateCommand cmd;
 	cmd.setBSON(obj);
+	cmd.setDB(db);
 	cmd.setNameSpace(ns);
 
 	_commandWriter->writeCommand(&cmd);
@@ -143,13 +145,13 @@ bool Connection::update(const std::string& ns, const BSONObj& obj) {
 	return true;
 }
 
-BSONObj* Connection::findByKey(const std::string& ns, const std::string& id) {
-	if (_logger->isDebug()) _logger->debug("executing findByKey ns: %s id: %s", ns.c_str(), id.c_str());
+BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& id) {
+	if (_logger->isDebug()) _logger->debug("executing findByKey db: %s, ns: %s id: %s", db.c_str(), ns.c_str(), id.c_str());
 
 	BSONObj filter;
 	filter.add("_id", id);
 
-	std::vector<BSONObj*> result = find(ns, filter);
+	std::vector<BSONObj*> result = find(db, ns, filter);
 
 	BSONObj* res = NULL;
 	if (result.size() == 1) {
@@ -163,20 +165,21 @@ BSONObj* Connection::findByKey(const std::string& ns, const std::string& id) {
 	return res;
 }
 
-std::vector<BSONObj*> Connection::find(const std::string& ns, const std::string& filter) {
-	if (_logger->isDebug()) _logger->debug("executing find ns: %s, filter: %s", ns.c_str(), filter.c_str());
+std::vector<BSONObj*> Connection::find(const std::string& db, const std::string& ns, const std::string& filter) {
+	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, filter: %s", db.c_str(), ns.c_str(), filter.c_str());
 
 	BSONObj* bsonFilter = BSONParser::parse(filter);
 
-	std::vector<BSONObj*> result = find(ns, *bsonFilter);
+	std::vector<BSONObj*> result = find(db, ns, *bsonFilter);
 	delete bsonFilter;
 	return result;
 }
 
-std::vector<BSONObj*> Connection::find(const std::string& ns, const BSONObj& bsonFilter) {
-	if (_logger->isDebug()) _logger->debug("executing find ns: %s, bsonFilter: %s", ns.c_str(), bsonFilter.toChar());
+std::vector<BSONObj*> Connection::find(const std::string& db, const std::string& ns, const BSONObj& bsonFilter) {
+	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, bsonFilter: %s", db.c_str(), ns.c_str(), bsonFilter.toChar());
 	FindCommand cmd;
 	cmd.setBSON(bsonFilter);
+	cmd.setDB(db);
 	cmd.setNameSpace(ns);
 	_commandWriter->writeCommand(&cmd);
 
@@ -197,9 +200,10 @@ std::string Connection::host() const {
 }
 
 
-bool Connection::dropNamespace(const std::string& ns) {
+bool Connection::dropNamespace(const std::string& db, const std::string& ns) {
 	DropnamespaceCommand cmd;
 
+	cmd.setDB(db);
 	cmd.setNameSpace(ns);
 
 	_commandWriter->writeCommand(&cmd);
