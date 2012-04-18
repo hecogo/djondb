@@ -98,7 +98,7 @@ private:
 private:
     void testInsert(BSONObj* o)
     {
-        BSONObj* res = controller.insert("db", "sp1.customer", o);
+        BSONObj* res = controller.insert("dbtest", "sp1.customer", o);
         delete res;
     }
 
@@ -110,7 +110,7 @@ private:
         obj.add("_id", *id);
         obj.add("name", "cross");
         delete id;
-        BSONObj* res = controller.insert("db", "sp1.customer", &obj);
+        BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
         if (res != NULL)
         {
             delete res;
@@ -125,7 +125,7 @@ private:
         obj.add("_id", id->c_str());
         obj.add("name", "cross");
         delete id;
-        BSONObj* res = controller.insert("db", "sp1.customer", &obj);
+        BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
         if (res != NULL)
         {
             delete res;
@@ -137,7 +137,7 @@ private:
 		 cout << "testInsertWithoutId" << endl;
         BSONObj obj;
         obj.add("name", "cross");
-        BSONObj* res = controller.insert("db", "sp1.customer", &obj);
+        BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
         TEST_ASSERT(res != NULL);
         TEST_ASSERT(res->has("_id"));
         delete res;
@@ -154,7 +154,7 @@ private:
 		 inner.add("char", "testInner");
 		 obj.add("inner", inner);
 
-		 BSONObj* res = controller.insert("db", "sp1.customer", &obj);
+		 BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
        TEST_ASSERT(res != NULL);
        TEST_ASSERT(res->has("_id"));
 		 delete res;
@@ -225,7 +225,7 @@ private:
 
             BSONObj obj;
             obj.add("_id", *id);
-            BSONObj* res = controller.findFirst("db", "sp1.customer", &obj);
+            BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
             std::string* id2 = res->getString("_id");
             if ((id2 == NULL) || (id2->compare(*id) != 0))
             {
@@ -251,32 +251,32 @@ private:
 		 cout << "testFindsByFilter" << endl;
 		 // Insert some data
 		 //
-		 controller.insert("db", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
-		 controller.insert("db", "find.filter", BSONParser::parse("{name: 'Pepe', lastName:'Crossley'}"));
-		 controller.insert("db", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Smith'}"));
-		 controller.insert("db", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Clark'}"));
-		 controller.insert("db", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
-		 controller.insert("db", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
-		 controller.insert("db", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
-		 controller.insert("db", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Last'}"));
+		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Pepe', lastName:'Crossley'}"));
+		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Smith'}"));
+		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Clark'}"));
+		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Last'}"));
 
 		 BSONObj* filter = BSONParser::parse("{lastName: 'Crossley'}");
 
 		 // Starting find by filter
-		 std::vector<BSONObj*> found = controller.find("db", "find.filter",*filter);
+		 std::vector<BSONObj*> found = controller.find("dbtest", "find.filter",*filter);
 		 TEST_ASSERT(found.size() == 5); 
 		 delete filter;
 		 
-		 found = controller.find("db", "find.filter", *BSONParser::parse("{}"));
+		 found = controller.find("dbtest", "find.filter", *BSONParser::parse("{}"));
 		 TEST_ASSERT(found.size() == 8); 
 		 
-		 found = controller.find("db", "find.filter", *BSONParser::parse("{name: 'Juan'}"));
+		 found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan'}"));
 		 TEST_ASSERT(found.size() == 7); 
 		 
-		 found = controller.find("db", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Smith'}"));
+		 found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Smith'}"));
 		 TEST_ASSERT(found.size() == 1); 
 		 
-		 found = controller.find("db", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Last'}"));
+		 found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Last'}"));
 		 TEST_ASSERT(found.size() == 1); 
    }
 
@@ -301,7 +301,7 @@ private:
 
             BSONObj obj;
             obj.add("_id", *id);
-            BSONObj* res = controller.findFirst("db", "sp1.customer", &obj);
+            BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
             if (res == NULL)
             {
                 TEST_FAIL("Looking for a previous id does not returned any match");
@@ -412,26 +412,26 @@ private:
 		BSONObj test;
 		test.add("_id", "1");
 
-		IndexAlgorithm* index = IndexFactory::indexFactory.index("db", "ns.a", test);
+		IndexAlgorithm* index = IndexFactory::indexFactory.index("dbtest", "ns.a", test);
 		TEST_ASSERT(index != NULL);
 
 		// Let's check if the factory returns the same instance for the same key
-		IndexAlgorithm* indexCompare = IndexFactory::indexFactory.index("db", "ns.a", test);
+		IndexAlgorithm* indexCompare = IndexFactory::indexFactory.index("dbtest", "ns.a", test);
 		TEST_ASSERT(index == indexCompare);
 
 		// Let's change the keys and test if a new IndexAlgorithm will be returned
 		BSONObj test2;
 		test2.add("key", "a");
-		IndexAlgorithm* indexCompare2 = IndexFactory::indexFactory.index("db", "ns.a", test2);
+		IndexAlgorithm* indexCompare2 = IndexFactory::indexFactory.index("dbtest", "ns.a", test2);
 		TEST_ASSERT(index != indexCompare2);
 
 		// Checking the contains method
-      bool res = IndexFactory::indexFactory.containsIndex("db", "ns.a", test);
+      bool res = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", test);
 		TEST_ASSERT(res);
 
 		BSONObj test3;
 		test3.add("nkey", "b");
-      bool res2 = IndexFactory::indexFactory.containsIndex("db", "ns.a", test3);
+      bool res2 = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", test3);
 		TEST_ASSERT(!res2);
 	 }
     
@@ -441,14 +441,14 @@ private:
 		 BSONObj obj;
 		 obj.add("name", "Test");
 
-		 BSONObj* res = controller.insert("db", "ns.drop", &obj);
+		 BSONObj* res = controller.insert("dbtest", "ns.drop", &obj);
 
-		 bool result = controller.dropNamespace("db", "ns.drop");
+		 bool result = controller.dropNamespace("dbtest", "ns.drop");
 		 TEST_ASSERT(result);
 
 		 BSONObj filter;
 
-		 std::vector<BSONObj*> finds = controller.find("db", "ns.drop", filter);
+		 std::vector<BSONObj*> finds = controller.find("dbtest", "ns.drop", filter);
 
 		 TEST_ASSERT(finds.size() == 0);
 		 delete res;

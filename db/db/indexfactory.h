@@ -24,7 +24,7 @@ class IndexFactory
 
     private:
 
-        map<std::string, map<std::string, IndexAlgorithm*> > _indexes;
+        map<std::string, map<std::string, IndexAlgorithm*>* > _indexes;
 };
 
 #endif // INDEXFACTORY_H

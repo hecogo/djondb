@@ -46,8 +46,8 @@ class DBController
         BSONObj* readBSON(StreamType* stream);
     protected:
     private:
-		  std::map<std::string, std::map<std::string, SpacesType> > _spaces;
-        StreamType* open(const std::string& db, const std::string& ns, FILE_TYPE type);
+		  std::map<std::string, std::map<std::string, SpacesType>* > _spaces;
+        StreamType* open(std::string db, std::string ns, FILE_TYPE type);
 		  std::vector<BSONObj*> findFullScan(char* db, char* ns, const BSONObj& filter);
 		  Logger* _logger;
 

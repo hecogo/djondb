@@ -28,7 +28,7 @@ if (!extension_loaded('djonPhpExt')) {
 	$guid = uniqid();
 	$json = "{ _id: '$guid', name: 'Juan', lastName: 'Cross'}";
 
-	$c->djon_insert('a', $json);
+	$c->djon_insert('phpdb', 'a', $json);
 
 	echo '<p>Inserted</p>';
 }

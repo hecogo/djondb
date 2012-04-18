@@ -11,7 +11,7 @@ class FileInputOutputStream: public InputStream, public OutputStream
 {
     public:
         FileInputOutputStream(const FileInputOutputStream& other);
-        FileInputOutputStream(const std::string fileName, const char* flags);
+        FileInputOutputStream(const std::string& fileName, const char* flags);
         virtual ~FileInputOutputStream();
 
         virtual unsigned char readChar();

@@ -49,10 +49,10 @@ DBController::~DBController()
 void DBController::shutdown() {
 	if (_logger->isInfo()) _logger->info("DBController shutting down");
 	std::auto_ptr<FileOutputStream> fos(new FileOutputStream(const_cast<char*>( (_dataDir + "djondb.dat").c_str()), "wb"));
-	for (std::map<std::string, std::map<std::string, SpacesType> >::iterator idb = _spaces.begin(); idb != _spaces.end(); idb++) {
+	for (std::map<std::string, std::map<std::string, SpacesType>* >::iterator idb = _spaces.begin(); idb != _spaces.end(); idb++) {
 		std::string db = idb->first;
-		std::map<std::string, SpacesType> spaces = idb->second;
-		for (std::map<std::string, SpacesType>::iterator i = spaces.begin(); i != spaces.end(); i++) {
+		std::map<std::string, SpacesType>* spaces = idb->second;
+		for (std::map<std::string, SpacesType>::iterator i = spaces->begin(); i != spaces->end(); i++) {
 			SpacesType space = i->second;
 			std::string ns = space.ns;
 			FILE_TYPE type = space.type;
@@ -61,6 +61,7 @@ void DBController::shutdown() {
 			fos->writeInt(static_cast<int>(type));
 			space.stream->close();
 		}
+		delete spaces;
 	}
 	fos->close();
 }
@@ -149,7 +150,9 @@ BSONObj* DBController::readBSON(StreamType* stream) {
 
 BSONObj* DBController::insert(char* db, char* ns, BSONObj* obj) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::insert ns: %s, bson: %s", ns, obj->toChar());
-	StreamType* streamData = open(std::string(db), std::string(ns), DATA_FTYPE);
+	std::string sdb(db);
+	std::string sns(ns);
+	StreamType* streamData = open(sdb, sns, DATA_FTYPE);
 
 	BSONObj* result = NULL;
 	if (!obj->has("_id")) {
@@ -204,7 +207,7 @@ void DBController::update(char* db, char* ns, BSONObj* obj) {
 	CacheManager::objectCache()->add(*id, new BSONObj(*obj));
 }
 
-StreamType* DBController::open(const std::string& db, const std::string& ns, FILE_TYPE type) {
+StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 	std::string filedir = concatStrings(_dataDir, db);
 	if (!existDir(filedir.c_str())) {
 		makeDir(filedir.c_str());
@@ -228,15 +231,16 @@ StreamType* DBController::open(const std::string& db, const std::string& ns, FIL
 	std::string fileName = ss.str();
 	StreamType* stream = NULL;
 
-	map<std::string, SpacesType> spaces;
-	map<std::string, map<std::string, SpacesType> >::iterator itDB = _spaces.find(db);
+	map<std::string, SpacesType>* spaces = NULL;
+	map<std::string, map<std::string, SpacesType>* >::iterator itDB = _spaces.find(db);
 	if (itDB == _spaces.end()) {
-		_spaces.insert(pair<std::string, map<std::string, SpacesType> >(db, spaces));
+		spaces = new map<std::string, SpacesType>();
+		_spaces.insert(pair<std::string, map<std::string, SpacesType>* >(db, spaces));
 	} else {
 		spaces = itDB->second;
 	}
 
-	for (map<std::string, SpacesType>::iterator it = spaces.begin(); it != spaces.end(); it++) {
+	for (map<std::string, SpacesType>::iterator it = spaces->begin(); it != spaces->end(); it++) {
 		std::string key = it->first;
 		if (key.compare(fileName) == 0) {
 			SpacesType space = it->second;
@@ -253,23 +257,23 @@ StreamType* DBController::open(const std::string& db, const std::string& ns, FIL
 	space.ns = ns;
 	space.stream = output;
 	space.type = type;
-	spaces.insert(pair<std::string, SpacesType>(fileName, space));
+	spaces->insert(pair<std::string, SpacesType>(fileName, space));
 	return output;
 }
 
 bool DBController::close(char* db, char* ns) {
-	map<std::string, map<std::string, SpacesType> >::iterator itDb = _spaces.find(std::string(db));
+	map<std::string, map<std::string, SpacesType>* >::iterator itDb = _spaces.find(std::string(db));
 	if (itDb != _spaces.end()) {
-		map<std::string, SpacesType> spaces = itDb->second;
-		map<std::string, SpacesType>::iterator it = spaces.find(std::string(ns));
-		if (it != spaces.end()) {
+		map<std::string, SpacesType>* spaces = itDb->second;
+		map<std::string, SpacesType>::iterator it = spaces->find(std::string(ns));
+		if (it != spaces->end()) {
 			SpacesType space = it->second;
 
 			StreamType* stream = space.stream;
 			stream->close();
 			delete(stream);
 			stream = 0;
-			spaces.erase(it);
+			spaces->erase(it);
 		}
 	}
 	return true;
@@ -428,26 +432,28 @@ BSONObj* DBController::findFirst(char* db, char* ns, BSONObj* filter) {
 bool DBController::dropNamespace(char* db, char* ns) {
 	StreamType* stream = NULL;
 	bool result = false;
-	for (map<std::string, map<std::string, SpacesType> >::iterator itDB = _spaces.begin(); itDB != _spaces.end(); itDB++) {
-		std::string db = itDB->first;
-		map<std::string, SpacesType> spaces = itDB->second;
-		for (map<std::string, SpacesType>::iterator it = spaces.begin(); it != spaces.end(); it++) {
-			std::string key = it->first;
-			std::string filename = key.substr(0, key.find_last_of("."));
+	map<std::string, map<std::string, SpacesType>* >::iterator itspaces = _spaces.find(std::string(db));
+	if (itspaces == _spaces.end()) {
+		return false;
+	}
+	map<std::string, SpacesType>* spaces = itspaces->second;
 
-			if (filename.compare(ns) == 0) {
-				SpacesType space = it->second;
+	for (map<std::string, SpacesType>::iterator it = spaces->begin(); it != spaces->end(); it++) {
+		std::string key = it->first;
+		std::string filename = key.substr(0, key.find_last_of("."));
 
-				std::string filedir = _dataDir + "/" + std::string(db) + "/";
+		if (filename.compare(ns) == 0) {
+			SpacesType space = it->second;
 
-				// drops the file
-				if (remove((filedir + key).c_str()) != 0) {
-					result = false;
-					break;
-				}
-				spaces.erase(it);
-				result = true;
+			std::string filedir = _dataDir + std::string(db) + "/";
+
+			// drops the file
+			if (remove((filedir + key).c_str()) != 0) {
+				result = false;
+				break;
 			}
+			spaces->erase(it);
+			result = true;
 		}
 	}
 	return result;

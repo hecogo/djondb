@@ -23,11 +23,12 @@
 #include <stdlib.h>
 #include <sstream>
 
-FileInputOutputStream::FileInputOutputStream(std::string fileName, const char* flags) {
+FileInputOutputStream::FileInputOutputStream(const std::string& fileName, const char* flags) {
     _pFile = fopen(fileName.c_str(), flags);
 
     // Position the cursor at the end of the file
 	 if (_pFile == NULL) {
+		 perror("Error");
 		 cout << "here we go" << endl;
 	 }
     fseek(_pFile, 0, SEEK_END);
