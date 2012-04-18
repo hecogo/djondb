@@ -19,7 +19,7 @@ if (!extension_loaded('djonPhpExt')) {
 
 	$filter = '{ type: "'.$type.'"}';
 
-	$jsonResult = $c->djon_findByFilter('test.demo', $filter);
+	$jsonResult = $c->djon_findByFilter('djonlistdb', 'test.demo', $filter);
 
 	print $jsonResult;
 }

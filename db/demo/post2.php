@@ -29,7 +29,7 @@ if (!extension_loaded('djonPhpExt')) {
 
 	$text = json_encode($data);
 
-	$c->djon_insert('test.demo', $text);
+	$c->djon_insert('djonlistdb', 'test.demo', $text);
 }
 print 'done';
 ?>
