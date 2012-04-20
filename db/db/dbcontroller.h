@@ -52,8 +52,10 @@ class DBController
 		  Logger* _logger;
 
 		  std::string _dataDir;
+		  bool _initialized;
 
     private:
+		  void saveDatabases();
         long checkStructure(BSONObj* bson);
         void updateIndex(char* db, char* ns, BSONObj* bson, long filePos);
         void insertIndex(char* db, char* ns, BSONObj* bson, long filePos);

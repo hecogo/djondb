@@ -48,6 +48,15 @@ DBController::~DBController()
 
 void DBController::shutdown() {
 	if (_logger->isInfo()) _logger->info("DBController shutting down");
+	saveDatabases();
+}
+
+void DBController::saveDatabases() {
+	if (_logger->isInfo()) _logger->debug(2, "DBController::saveDatabases");
+
+	if (!_initialized) {
+		return;
+	}
 	std::auto_ptr<FileOutputStream> fos(new FileOutputStream(const_cast<char*>( (_dataDir + "djondb.dat").c_str()), "wb"));
 	for (std::map<std::string, std::map<std::string, SpacesType>* >::iterator idb = _spaces.begin(); idb != _spaces.end(); idb++) {
 		std::string db = idb->first;
@@ -75,6 +84,7 @@ void DBController::initialize() {
 	}
 
 	initialize(dataDir);
+	_initialized = true;
 }
 
 
@@ -258,6 +268,7 @@ StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 	space.stream = output;
 	space.type = type;
 	spaces->insert(pair<std::string, SpacesType>(fileName, space));
+
 	return output;
 }
 
