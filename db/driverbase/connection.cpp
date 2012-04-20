@@ -108,14 +108,22 @@ bool Connection::insert(const std::string& db, const std::string& ns, const std:
 
 bool Connection::insert(const std::string& db, const std::string& ns, const BSONObj& bson) {
 	if (_logger->isDebug()) _logger->debug(2, "Insert command. db: %s, ns: %s, bson: %s", db.c_str(), ns.c_str(), bson.toChar());
+	BSONObj obj(bson);
 	InsertCommand cmd;
 	cmd.setDB(db);
-	cmd.setBSON(bson);
+	if (!obj.has("_id")) {
+		std::string* id = uuid();
+		obj.add("_id", *id);
+		delete id;
+	}
+	cmd.setBSON(obj);
 	cmd.setNameSpace(ns);
 	_commandWriter->writeCommand(&cmd);
 
 	// When the bson didnt contain an id the server will return a bson with it
-	if (!bson.has("_id")) {
+	// At this moment this will never occur, but I will leave this code for later
+	// use
+	if (!obj.has("_id")) {
 		if (_logger->isDebug()) _logger->debug(2, "Server answered with a new id, dropping it");
 		BSONInputStream tmpIS(_inputStream);
 		tmpIS.readBSON(); 
