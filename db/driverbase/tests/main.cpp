@@ -63,7 +63,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ADD(TestDriverBaseSuite::testInsert);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
-//			TEST_ADD(TestDriverBaseSuite::testPerformance);
+			TEST_ADD(TestDriverBaseSuite::testPerformance);
 
 			TEST_ADD(TestDriverBaseSuite::testDropNamespace);
 			//TEST_ADD(TestDriverBaseSuite::testTransactions);

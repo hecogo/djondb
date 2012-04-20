@@ -37,7 +37,7 @@ class BPlusIndex: public IndexAlgorithm
         BPlusIndex();
         virtual ~BPlusIndex();
 
-        virtual Index* add(const BSONObj& elem, long filePos);
+        virtual void add(const BSONObj& elem, long filePos, long indexPos);
         virtual Index* find(const BSONObj& elem);
         virtual void remove(const BSONObj& elem);
     protected:
@@ -45,8 +45,8 @@ class BPlusIndex: public IndexAlgorithm
         Bucket* _head;
 
     private:
-        bool insertElement(Index* elem);
-        BucketElement* findBucketElement(Bucket* start, Index* idx, bool create);
+        bool insertElement(const Index& elem);
+        BucketElement* findBucketElement(Bucket* start, const Index& idx, bool create);
         void initializeBucket(Bucket* const element);
         void initializeBucketElement(BucketElement* const elem);
 

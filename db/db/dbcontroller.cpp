@@ -117,8 +117,7 @@ void DBController::initialize(std::string dataDir) {
 				}
 				long indexPos = stream->readLong();
 				long posData = stream->readLong();
-				Index* index = impl->add(*obj, posData);
-				index->indexPos = indexPos;
+				impl->add(*obj, posData, indexPos);
 				delete obj;
 			}
 			stream->seek(currentPos);
@@ -313,14 +312,14 @@ void DBController::insertIndex(char* db, char* ns, BSONObj* bson, long filePos) 
 	std::string* id = bson->getString("_id");
 	indexBSON.add("_id", *id);
 	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, indexBSON);
-	Index* index = impl->add(indexBSON, filePos);
-
+	
 	StreamType* out = open(std::string(db), std::string(ns), INDEX_FTYPE);
-	index->indexPos = out->currentPos();
-	BSONObj* key = index->key;
-	writeBSON(out, key);
-	out->writeLong(index->indexPos);
-	out->writeLong(index->posData);
+	
+	impl->add(indexBSON, filePos, out->currentPos());
+
+	writeBSON(out, &indexBSON);
+	out->writeLong(out->currentPos());
+	out->writeLong(filePos);
 }
 
 std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const BSONObj& filter) {

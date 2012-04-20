@@ -26,6 +26,7 @@
 
 #include "settings.h"
 #include <map>
+#include <stdlib.h>
 #include "fileutil.h"
 #include "stringfunctions.h" 
 
@@ -33,7 +34,8 @@ std::map<std::string, std::string> __settingsValues;
 bool __settingsLoaded;
 
 void readSettings() {
-   std::string content = std::string(readFile("/etc/djondb.conf"));
+	char* ccont = readFile("/etc/djondb.conf");
+   std::string content = std::string(ccont);
 
 	std::vector<std::string> lines = splitLines(content);
 	for (std::vector<std::string>::const_iterator i = lines.begin(); i != lines.end(); i++) {
@@ -44,6 +46,7 @@ void readSettings() {
 	   __settingsValues.insert(std::pair<std::string, std::string>(key, value));
 	}
 	__settingsLoaded = true;
+	free(ccont);
 }
 
 std::string getSetting(std::string key) {
