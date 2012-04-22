@@ -24,6 +24,11 @@
 
 using namespace std;
 
+BSONContent::BSONContent() {
+	this->_element = NULL;
+	this->_type = NULL_TYPE;
+}
+
 BSONContent::~BSONContent() {
 	if (!_element) {
 		return;
@@ -169,5 +174,75 @@ bool BSONContent::operator ==(const BSONContent& content) {
 			}
 			return result;
 		}	
+	}
+}
+
+BSONContent::operator int*() {
+	if (_type == INT_TYPE) {
+		int* content = new int(*(int*)_element);
+		return content; 
+	} else {
+		return NULL;
+	}
+}
+
+BSONContent::operator long*() {
+	if (_type == LONG_TYPE) {
+		long* content = new long(*(long*)_element);
+		return content; 
+	} else {
+		return NULL;
+	}
+
+}
+
+BSONContent::operator double*() {
+	if (_type == DOUBLE_TYPE) {
+		double* content = new double(*(double*)_element);
+		return content; 
+	} else {
+		return NULL;
+	}
+}
+
+BSONContent::operator char*() {
+	if (_type == PTRCHAR_TYPE) {
+		char* content = (char*)_element;
+		char* result = (char*)malloc(strlen(content + 1));
+		memset(result, 0, strlen(content + 1));
+		memcpy(result, content, strlen(content));
+		return result; 
+	} else {
+		return NULL;
+	}
+}
+
+BSONContent::operator std::string*() {
+	if (_type == STRING_TYPE) {
+		std::string* content = new std::string(*(std::string*)_element);
+		return content; 
+	} else if (_type == PTRCHAR_TYPE) {
+		std::string* result = new std::string((char*)_element);
+		return result;
+	} else {
+		return NULL;
+	}
+}
+
+BSONContent::operator BSONObj*() {
+	if (_type == BSON_TYPE) {
+		BSONObj* content = new BSONObj(*(BSONObj*)_element);
+		return content; 
+	} else {
+		return NULL;
+	}
+}
+
+BSONContent::operator BSONArrayObj*() {
+	if (_type == BSONARRAY_TYPE) {
+		BSONArrayObj* content = new BSONArrayObj(*(BSONArrayObj*)_element);
+		return content; 
+	} else {
+		return NULL;
 	}
 }

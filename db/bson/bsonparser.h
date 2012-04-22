@@ -20,6 +20,7 @@ class BSONParser
 	protected:
 	private:
 		static BSONObj* parseBSON(const char* c, int& pos);
+		static BSONArrayObj* parseArray(const char* chrs, int& pos);
 };
 
 #endif // BSONPARSER_H

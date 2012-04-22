@@ -39,11 +39,14 @@ class TestBSONSuite : public Test::Suite
 			TEST_ADD(TestBSONSuite::testParserArray);
 			TEST_ADD(TestBSONSuite::testParserDoubleRelation);
 			TEST_ADD(TestBSONSuite::testComparison);
+			TEST_ADD(TestBSONSuite::testAutocasting);
+			TEST_ADD(TestBSONSuite::testXPath);
 		}
 
 	private:
 		void testBSON()
 		{
+			cout << "testBSON" << endl;
 			BSONObj* obj = new BSONObj();
 			// Add in
 			obj->add("int", 1);
@@ -98,6 +101,8 @@ class TestBSONSuite : public Test::Suite
 
 		void testCopyBSON()
 		{
+			cout << "testCopyBSON" << endl;
+
 			BSONObj* objOrig = new BSONObj();
 			// Add in
 			objOrig->add("int", 1);
@@ -158,6 +163,8 @@ class TestBSONSuite : public Test::Suite
 
 		void testToChar()
 		{
+			cout << "testToChar" << endl;
+
 			BSONObj obj;
 			obj.add("int", 1);
 			obj.add("string", std::string("test"));
@@ -166,7 +173,6 @@ class TestBSONSuite : public Test::Suite
 			obj.add("double", 1.1);
 
 			char* json = obj.toChar();
-			cout << json << endl;
 			TEST_ASSERT(strcmp(json, "{ \"char*\" :\"char*\",\"double\" :1.1,\"int\" :1,\"long\" :1,\"string\" :\"test\"} ") == 0);
 
 			free(json);
@@ -174,6 +180,8 @@ class TestBSONSuite : public Test::Suite
 
 		void testParserSimple()
 		{
+			cout << "testParserSimple" << endl;
+
 			BSONObj* testEmpty = BSONParser::parse("{}");
 			TEST_ASSERT(testEmpty->length() == 0);
 
@@ -191,6 +199,8 @@ class TestBSONSuite : public Test::Suite
 
 		void testParserTrivial()
 		{
+			cout << "testParserTrivial" << endl;
+
 			BSONObj* obj = BSONParser::parse("{age: '1'}");
 			TEST_ASSERT(obj->getChars("age") != NULL);
 			TEST_ASSERT(strcmp(obj->getChars("age"), "1") == 0);
@@ -198,13 +208,14 @@ class TestBSONSuite : public Test::Suite
 			delete obj;
 
 			BSONObj* obj2 = BSONParser::parse("{\"type\":\"2\",\"category\":\"1\",\"title\":\"test\",\"price\":\"asdf\",\"place\":\"asdf\",\"description\":\"asdf\"}");
-			cout << obj2->toChar() << endl;
 			TEST_ASSERT(obj2->has("type"));
 			delete obj2;
 		}
 
 		void testParserRelation()
 		{
+			cout << "testParserRelation" << endl;
+
 			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: {innertext: 'inner text'}}");
 			TEST_ASSERT(obj->getInt("age") != NULL);
 			TEST_ASSERT(*obj->getInt("age") == 1);
@@ -222,6 +233,8 @@ class TestBSONSuite : public Test::Suite
 
 		void testParserArray()
 		{
+			cout << "testParserArray" << endl;
+
 			BSONArrayObj* array = BSONParser::parseArray("[{age: 1, name: 'John', salary: 3500.25, rel1: {innertext: 'inner text'}}, {age: 2, name: 'John2', salary: 23500.25, rel1: {innertext: 'inner text2'}}]");
 			TEST_ASSERT(array != NULL);
 			TEST_ASSERT(array->length() == 2);
@@ -243,9 +256,10 @@ class TestBSONSuite : public Test::Suite
 		}
 
 
-
 		void testParserCollection()
 		{
+			cout << "testParserCollection" << endl;
+
 			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: [{innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'} ] }");
 			TEST_ASSERT(obj->getInt("age") != NULL);
 			TEST_ASSERT(*obj->getInt("age") == 1);
@@ -255,14 +269,18 @@ class TestBSONSuite : public Test::Suite
 			TEST_ASSERT(obj->getDouble("salary") != NULL);
 			TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
 
-			TEST_ASSERT(obj->getBSON("rel1") != NULL);
-			TEST_ASSERT(obj->getBSON("rel1")->getString("innertext")->compare("inner text") == 0);
+			TEST_ASSERT(obj->getBSONArray("rel1") != NULL);
+			TEST_ASSERT(obj->getBSONArray("rel1")->length() == 4);
+			TEST_ASSERT(obj->getBSONArray("rel1")->get(0)->getChars("innertext") != NULL);
+			TEST_ASSERT(strcmp(obj->getBSONArray("rel1")->get(0)->getChars("innertext"), "inner text") == 0);
 
 			delete obj;
 		}
 
 		void testParserDoubleRelation()
 		{
+			cout << "testParserDoubleRelation" << endl;
+
 			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: {innertext: 'inner text', innerrel1: {innertext:'text2'}}}");
 			TEST_ASSERT(obj->getInt("age") != NULL);
 			TEST_ASSERT(*obj->getInt("age") == 1);
@@ -281,6 +299,8 @@ class TestBSONSuite : public Test::Suite
 		}
 
 		void testComparison() {
+			cout << "testComparison" << endl;
+
 			// This method will test comparison from contents of two BSONObj
 
 			BSONObj* obj1 = BSONParser::parse("{int: 1, double: 2, text: 'name'}");
@@ -291,6 +311,62 @@ class TestBSONSuite : public Test::Suite
 			TEST_ASSERT(*obj1->getContent("text") == *obj2->getContent("text"));
 			TEST_ASSERT(!(*obj1->getContent("text") == *obj2->getContent("double")));
 		}
+
+		void testAutocasting() {
+			cout << "testAutocasting" << endl;
+
+			BSONObj o;
+			o.add("long", 1L);
+			o.add("double", 2.0);
+			o.add("int", 1);
+			o.add("char*", (char*)"Test");
+			o.add("string", "String");
+
+			BSONObj inner;
+			inner.add("text", "text");
+			o.add("inner", inner);
+
+			TEST_ASSERT(o.getContent("long") != NULL);
+			TEST_ASSERT(*(long*)*o.getContent("long") == 1L);
+
+			TEST_ASSERT(o.getContent("double") != NULL);
+			TEST_ASSERT(*(double*)*o.getContent("double") == 2.0);
+
+			TEST_ASSERT(o.getContent("int") != NULL);
+			TEST_ASSERT(*(int*)*o.getContent("int") == 1);
+
+			TEST_ASSERT(o.getContent("char*") != NULL);
+			TEST_ASSERT(strcmp((char*)*o.getContent("char*"), "Test") == 0);
+
+			TEST_ASSERT(o.getContent("string") != NULL);
+			TEST_ASSERT(((std::string*)*o.getContent("string"))->compare("String") == 0);
+
+			TEST_ASSERT(o.getContent("inner") != NULL);
+			BSONObj* obj = *o.getContent("inner");
+			TEST_ASSERT(obj != NULL);
+			TEST_ASSERT(obj->getString("text")->compare("text") == 0);
+		}
+
+		void testXPath() {
+			cout << "testXPath" << endl;
+
+			BSONObj* obj1 = BSONParser::parse("{ name: 'John', age: 35, one: { data: 1 }, children: [ { name: 'Joshua', age: 15}, { name: 'Mary', age: 30}] }");
+
+			int* age = obj1->getXpath("age");
+
+			TEST_ASSERT(*age == 35);
+
+			BSONArrayObj* children = obj1->getXpath("children");
+			TEST_ASSERT(children != NULL);
+			TEST_ASSERT(children->length() == 2);
+
+			int* data = obj1->getXpath("one.data");
+			TEST_ASSERT(data != NULL);
+			TEST_ASSERT(*data == 1);
+
+			delete obj1;
+		}
+
 };
 
 enum OutputType

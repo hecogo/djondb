@@ -115,9 +115,13 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 			}
 			continue;
 		}
+		if (c[x] == '[') {
+			value = parseArray(c, x);
+			type = BSONARRAY_TYPE;
+		}
 		if (c[x] == '}' || c[x] == ',') {
 			if (name != NULL) {
-				if (type != BSON_TYPE) {
+				if ((type != BSON_TYPE) && (type != BSONARRAY_TYPE)) {
 					value = (char*)malloc(len+1); 
 					memset(value, 0, len + 1);
 					strcpy((char*)value, buffer);
@@ -144,12 +148,19 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 											{
 												res->add(name, *((BSONObj*)value));
 												delete (BSONObj*)value;
+												break;
+											}
+					case BSONARRAY_TYPE:
+											{
+												res->add(name, *((BSONArrayObj*)value));
+												delete (BSONArrayObj*)value;
+												break;
 											}
 
 				}
 				free(name);
 				name = NULL;
-				if (type != BSON_TYPE) {
+				if ((type != BSON_TYPE) && (type != BSONARRAY_TYPE)) {
 					free(value);
 					value = NULL;
 				}
@@ -196,6 +207,7 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 					continue;
 				}
 			}
+
 			if (c[x] == ' ' && stringOpen == 0) {
 				continue;
 			}
@@ -215,9 +227,12 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 }
 
 BSONArrayObj* BSONParser::parseArray(const std::string& sbson) {
-	const char* chrs = sbson.c_str();
-	BSONArrayObj* result = NULL;
 	int pos = 0;
+	return parseArray(sbson.c_str(), pos);
+}
+
+BSONArrayObj* BSONParser::parseArray(const char* chrs, int& pos) {
+	BSONArrayObj* result = NULL;
 	while (chrs[pos] == ' ') {
 		pos++;
 	}
@@ -228,14 +243,13 @@ BSONArrayObj* BSONParser::parseArray(const std::string& sbson) {
 	}
 
 	while ((pos < strlen(chrs)) && (chrs[pos] != ']')) {
-		while ((pos < strlen(chrs)) && (chrs[pos] != '{'))
+		while ((pos < strlen(chrs)) && (chrs[pos] != ']') && (chrs[pos] != '{'))
 			pos++;
 		if (chrs[pos] == '{') {
 			BSONObj* bson = parseBSON(chrs, pos);
 			result->add(*bson);
 			delete bson;
 		}
-		pos++;
 	}	
 	return result;
 }

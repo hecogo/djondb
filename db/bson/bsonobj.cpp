@@ -137,8 +137,8 @@ char* BSONObj::toChar() const {
 }
 
 int* BSONObj::getInt(t_keytype key) const {
-	BSONContent* content = getContent(key, INT_TYPE);
-	if (content != NULL) {
+	BSONContent* content = getContent(key);
+	if ((content != NULL) && (content->type() == INT_TYPE)) {
 		int* res = (int*)content->_element;
 		return res;
 	} else {
@@ -147,8 +147,8 @@ int* BSONObj::getInt(t_keytype key) const {
 }
 
 double* BSONObj::getDouble(t_keytype key) const {
-	BSONContent* content = getContent(key, DOUBLE_TYPE);
-	if (content != NULL) {
+	BSONContent* content = getContent(key);
+	if ((content != NULL) && (content->type() == DOUBLE_TYPE)) {
 		double* res = (double*)content->_element;
 		return res;
 	} else {
@@ -157,8 +157,8 @@ double* BSONObj::getDouble(t_keytype key) const {
 }
 
 long* BSONObj::getLong(t_keytype key) const {
-	BSONContent* content = getContent(key, LONG_TYPE);
-	if (content != NULL) {
+	BSONContent* content = getContent(key);
+	if ((content != NULL) && (content->type() == LONG_TYPE)) {
 		long* res = (long*)content->_element;
 		return res;
 	} else {
@@ -167,40 +167,34 @@ long* BSONObj::getLong(t_keytype key) const {
 }
 
 char* BSONObj::getChars(t_keytype key) const {
-	BSONContent* content = getContent(key, PTRCHAR_TYPE);
+	BSONContent* content = getContent(key);
 	if (content != NULL) {
-		char* res = (char*)content->_element;
-		return res;
+		if (content->type() == PTRCHAR_TYPE) {
+			return (char*)content->_element;
+		} if (content->type() == STRING_TYPE) {
+			return const_cast<char*>(((std::string*)content->_element)->c_str());
+		} else {
+			return NULL;
+		}
 	} else {
 		return NULL;
 	}
 }
 
 std::string* BSONObj::getString(t_keytype key) const {
-	BSONContent* content = NULL;
+	BSONContent* content = getContent(key);
 	std::string* result = NULL;
-	for (std::map<t_keytype, BSONContent* >::const_iterator it = _elements.begin(); it != _elements.end(); it++) {
-		t_keytype itKey = it->first;
-		if (itKey.compare(key) == 0) {
-			content = it->second;
-			if (content->type() != STRING_TYPE) {
-				if (content->type() == PTRCHAR_TYPE) {
-					result = new std::string((char*)content->_element);
-				} else {
-					throw "The type does not match the requested STRING";
-				}
-			} else {
-				result = (std::string*)content->_element;
-			}
-			break;
-		}
+	if (content->type() == PTRCHAR_TYPE) {
+		result = new std::string((char*)content->_element);
+	} else if (content->type() == STRING_TYPE) {
+		result = (std::string*)content->_element;
 	}
 	return result;
 }
 
 BSONObj* BSONObj::getBSON(t_keytype key) const {
-	BSONContent* content = getContent(key, BSON_TYPE);
-	if (content != NULL) {
+	BSONContent* content = getContent(key);
+	if ((content != NULL) && (content->type() == BSON_TYPE)) {
 		BSONObj* res = (BSONObj*)content->_element;
 		return res;
 	} else {
@@ -209,8 +203,8 @@ BSONObj* BSONObj::getBSON(t_keytype key) const {
 }
 
 BSONArrayObj* BSONObj::getBSONArray(t_keytype key) const {
-	BSONContent* content = getContent(key, BSONARRAY_TYPE);
-	if (content != NULL) {
+	BSONContent* content = getContent(key);
+	if ((content != NULL) && (content->type() == BSONARRAY_TYPE)) {
 		BSONArrayObj* res = (BSONArrayObj*)content->_element;
 		return res;
 	} else {
@@ -234,8 +228,7 @@ BSONContent* BSONObj::getContent(t_keytype key, BSONTYPE ttype) const {
 	BSONContent* content = getContent(key);
 	if (content != NULL) {
 		if (content->type() != ttype) {
-			cout << "The type " << content->type() << " does not match the requested STRING for key2: " << key << endl; \
-				throw "type does not match";
+			throw "type does not match";
 		}
 	}
 	return content;
@@ -305,4 +298,26 @@ void* BSONObj::get(t_keytype key) const {
 	} else {
 		return NULL;
 	}
+}
+
+BSONContent BSONObj::getXpath(const std::string& xpath) const {
+	int posDot = xpath.find('.');
+	if (posDot == string::npos) {
+		BSONContent* result = getContent(xpath);
+		return *result;
+	} else {
+		std::string path = xpath.substr(0, posDot);
+		BSONContent* content = getContent(path);
+		if (content == NULL) {
+			return BSONContent();
+		}
+		if (content->type() == BSON_TYPE) {
+			BSONObj* inner = (BSONObj*)*content;
+			return inner->getXpath(xpath.substr(posDot + 1));
+		} else {
+			return BSONContent();
+		}
+	}
+
+	return BSONContent();
 }
