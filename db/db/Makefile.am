@@ -17,12 +17,22 @@ libdjon_db_la_SOURCES = bplusindex.cpp \
                                                  dbcontroller.cpp \
                                                  indexfactory.cpp \
                                                  indexmanager.cpp \
+																 filterparser.cpp \
+																 simpleexpression.cpp \
+																 constantexpression.cpp \
+																 unaryexpression.cpp \
+																 binaryexpression.cpp \
                                                  bplusindex.h \
                                                  dbcontroller.h \
                                                  db.h \
                                                  indexfactory.h \
                                                  index.h \
-                                                 indexmanager.h
+                                                 indexmanager.h \
+																 simpleexpression.h \
+																 constantexpression.h \
+																 unaryexpression.h \
+																 binaryexpression.h \
+																 filterparser.h
 
 library_includedir=$(includedir)/djon-db-1.0/djon-db
 #library_include_HEADERS = bson.h

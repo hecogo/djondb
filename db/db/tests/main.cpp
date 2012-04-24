@@ -33,7 +33,8 @@
 #include <math.h>
 #include "fileoutputstream.h"
 #include "fileinputstream.h"
-#include "bplusindex.cpp"
+#include "bplusindex.h"
+#include "filterparser.h"
 #include "indexfactory.h"
 #include "math.h"
 #include <cpptest.h>
@@ -73,6 +74,9 @@ public:
         fos.writeString(std::string("13"));
         fos.close();
 
+		  TEST_ADD(TestDBSuite::testExpressions);
+        TEST_ADD(TestDBSuite::testFilterExpressionParser);
+        TEST_ADD(TestDBSuite::testFilterExpressionParserEquals);
         TEST_ADD(TestDBSuite::testSimpleIndex);
         TEST_ADD(TestDBSuite::testComplexIndex);
         TEST_ADD(TestDBSuite::testIndexFactory);
@@ -97,53 +101,99 @@ private:
 
 private:
     void testInsert(BSONObj* o)
-    {
-        BSONObj* res = controller.insert("dbtest", "sp1.customer", o);
-        delete res;
-    }
+	 {
+		 BSONObj* res = controller.insert("dbtest", "sp1.customer", o);
+		 delete res;
+	 }
 
-    void testInsertWithStringId()
-    {
+	 void testExpressions() {
+		 cout << "testExpressions" << endl;
+		 BSONObj dummy;
+		 ConstantExpression exp("35");
+		 void* result = exp.eval(dummy);
+
+		 TEST_ASSERT(exp.constType() == CT_INT);
+		 int* i = (int*)result;
+		 TEST_ASSERT(*i == 35);
+	 }
+
+	 void testFilterExpressionParser() {
+		 cout << "testFilterExpressionParser" << endl;
+		 BSONObj obj;
+		 obj.add("age", 35);
+
+		 FilterParser* parser = FilterParser::parse("$'age'");
+		 BSONContent* content = (BSONContent*)parser->eval(obj);
+
+		 int* test = *content;
+
+		 TEST_ASSERT(test != NULL);
+		 TEST_ASSERT(*test == 35);
+
+		 delete parser;
+
+	 }
+
+	 void testFilterExpressionParserEquals() {
+		 cout << "testFilterExpressionParserEquals" << endl;
+		 BSONObj obj;
+		 obj.add("age", 35);
+
+		 FilterParser* parser = FilterParser::parse("$'age' == $'age'");
+		 /* 
+		 BSONContent* content = (BSONContent*)parser->eval(obj);
+
+		 int* test = *content;
+
+		 TEST_ASSERT(test != NULL);
+		 TEST_ASSERT(*test == 35);
+*/
+		 delete parser;
+
+	 }
+
+	 void testInsertWithStringId()
+	 {
 		 cout << "testInsertWithStringId" << endl;
-        BSONObj obj;
-        std::string* id = uuid();
-        obj.add("_id", *id);
-        obj.add("name", "cross");
-        delete id;
-        BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
-        if (res != NULL)
-        {
-            delete res;
-        }
-    }
+		 BSONObj obj;
+		 std::string* id = uuid();
+		 obj.add("_id", *id);
+		 obj.add("name", "cross");
+		 delete id;
+		 BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
+		 if (res != NULL)
+		 {
+			 delete res;
+		 }
+	 }
 
-    void testInsertWithCharId()
-    {
+	 void testInsertWithCharId()
+	 {
 		 cout << "testInsertWithCharId" << endl;
-        BSONObj obj;
-        std::string* id = uuid();
-        obj.add("_id", id->c_str());
-        obj.add("name", "cross");
-        delete id;
-        BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
-        if (res != NULL)
-        {
-            delete res;
-        }
-    }
+		 BSONObj obj;
+		 std::string* id = uuid();
+		 obj.add("_id", id->c_str());
+		 obj.add("name", "cross");
+		 delete id;
+		 BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
+		 if (res != NULL)
+		 {
+			 delete res;
+		 }
+	 }
 
-    void testInsertWithoutId()
-    {
+	 void testInsertWithoutId()
+	 {
 		 cout << "testInsertWithoutId" << endl;
-        BSONObj obj;
-        obj.add("name", "cross");
-        BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
-        TEST_ASSERT(res != NULL);
-        TEST_ASSERT(res->has("_id"));
-        delete res;
-    }
+		 BSONObj obj;
+		 obj.add("name", "cross");
+		 BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
+		 TEST_ASSERT(res != NULL);
+		 TEST_ASSERT(res->has("_id"));
+		 delete res;
+	 }
 
-    void testInsertComplexBSON() {
+	 void testInsertComplexBSON() {
 		 cout << "testInsertComplexBSON" << endl;
 		 BSONObj obj;
 		 obj.add("int", 1);
@@ -155,99 +205,99 @@ private:
 		 obj.add("inner", inner);
 
 		 BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
-       TEST_ASSERT(res != NULL);
-       TEST_ASSERT(res->has("_id"));
+		 TEST_ASSERT(res != NULL);
+		 TEST_ASSERT(res->has("_id"));
 		 delete res;
- 	 }
+	 }
 
 	 void testMassiveInsert()
-    {
+	 {
 		 cout << "testMassiveInsert" << endl;
-        int inserts = 1000;
-        std::auto_ptr<Logger> log(getLogger(NULL));
+		 int inserts = 1000;
+		 std::auto_ptr<Logger> log(getLogger(NULL));
 
-        log->startTimeRecord();
+		 log->startTimeRecord();
 
-        FileOutputStream fos("temp.txt", "wb+");
+		 FileOutputStream fos("temp.txt", "wb+");
 
-        for (int x = 0; x < inserts; x++)
-        {
-            BSONObj* obj = new BSONObj();
-            obj->add("name", "John");
-            char temp[700];
-            memset(temp, 0, 699);
-            memset(temp, 'a', 700);
-            obj->add("content", std::string(temp));
-            obj->add("last", std::string("Smith"));
-            testInsert(obj);
+		 for (int x = 0; x < inserts; x++)
+		 {
+			 BSONObj* obj = new BSONObj();
+			 obj->add("name", "John");
+			 char temp[700];
+			 memset(temp, 0, 699);
+			 memset(temp, 'a', 700);
+			 obj->add("content", std::string(temp));
+			 obj->add("last", std::string("Smith"));
+			 testInsert(obj);
 
-            int test = rand() % 10;
-            if (test > 0)
-            {
-                __ids.push_back(new std::string(((std::string*)obj->getString("_id"))->c_str()));
-                fos.writeString(*obj->getString("_id"));
-            }
-            if ((x % 1000000) == 0)
-            {
+			 int test = rand() % 10;
+			 if (test > 0)
+			 {
+				 __ids.push_back(new std::string(((std::string*)obj->getString("_id"))->c_str()));
+				 fos.writeString(*obj->getString("_id"));
+			 }
+			 if ((x % 1000000) == 0)
+			 {
 
-                cout<< "inserts " << x << endl;
-            }
-            delete obj;
-        }
-        fos.close();
+				 cout<< "inserts " << x << endl;
+			 }
+			 delete obj;
+		 }
+		 fos.close();
 
-        log->stopTimeRecord();
+		 log->stopTimeRecord();
 
-        int secs = log->recordedTime().totalSecs();
+		 int secs = log->recordedTime().totalSecs();
 
-        cout<< "inserts " << inserts << ", secs: " << secs << endl;
+		 cout<< "inserts " << inserts << ", secs: " << secs << endl;
 
-        if (secs > 0)
-        {
-            // If throughtput is too small fail
-            TEST_ASSERT((inserts / secs) > 10000);
-            cout << "Throughput: " << (inserts / secs) << " ops." << endl;
-            cout << "------------------------------------------------------------" << endl;
-        }
-    }
+		 if (secs > 0)
+		 {
+			 // If throughtput is too small fail
+			 TEST_ASSERT((inserts / secs) > 10000);
+			 cout << "Throughput: " << (inserts / secs) << " ops." << endl;
+			 cout << "------------------------------------------------------------" << endl;
+		 }
+	 }
 
-    void testFinds()
-    {
-        cout << "testFinds" << endl;
+	 void testFinds()
+	 {
+		 cout << "testFinds" << endl;
 
-        std::auto_ptr<Logger> log(getLogger(NULL));
+		 std::auto_ptr<Logger> log(getLogger(NULL));
 
-        log->startTimeRecord();
+		 log->startTimeRecord();
 
-        for (std::vector<string*>::iterator i = __ids.begin(); i != __ids.end(); i++)
-        {
-            string* id = *i;
+		 for (std::vector<string*>::iterator i = __ids.begin(); i != __ids.end(); i++)
+		 {
+			 string* id = *i;
 
-            BSONObj obj;
-            obj.add("_id", *id);
-            BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
-            std::string* id2 = res->getString("_id");
-            if ((id2 == NULL) || (id2->compare(*id) != 0))
-            {
-                TEST_FAIL("id not found");
-            }
-            delete res;
-        }
+			 BSONObj obj;
+			 obj.add("_id", *id);
+			 BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
+			 std::string* id2 = res->getString("_id");
+			 if ((id2 == NULL) || (id2->compare(*id) != 0))
+			 {
+				 TEST_FAIL("id not found");
+			 }
+			 delete res;
+		 }
 
-        log->stopTimeRecord();
+		 log->stopTimeRecord();
 
-        int secs = log->recordedTime().totalSecs();
+		 int secs = log->recordedTime().totalSecs();
 
-        if (secs > 0)
-        {
-            TEST_ASSERT((__ids.size() / secs) > 30);
-            cout << "Throughput: " << (__ids.size() / secs) << " ops." << endl;
-            cout << "------------------------------------------------------------" << endl;
-        }
-    }
+		 if (secs > 0)
+		 {
+			 TEST_ASSERT((__ids.size() / secs) > 30);
+			 cout << "Throughput: " << (__ids.size() / secs) << " ops." << endl;
+			 cout << "------------------------------------------------------------" << endl;
+		 }
+	 }
 
-    void testFindsByFilter()
-    {
+	 void testFindsByFilter()
+	 {
 		 cout << "testFindsByFilter" << endl;
 		 // Insert some data
 		 //
@@ -266,178 +316,178 @@ private:
 		 std::vector<BSONObj*> found = controller.find("dbtest", "find.filter",*filter);
 		 TEST_ASSERT(found.size() == 5); 
 		 delete filter;
-		 
+
 		 found = controller.find("dbtest", "find.filter", *BSONParser::parse("{}"));
 		 TEST_ASSERT(found.size() == 8); 
-		 
+
 		 found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan'}"));
 		 TEST_ASSERT(found.size() == 7); 
-		 
+
 		 found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Smith'}"));
 		 TEST_ASSERT(found.size() == 1); 
-		 
+
 		 found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Last'}"));
 		 TEST_ASSERT(found.size() == 1); 
-   }
+	 }
 
-    void testFindPrevious()
-    {
-        cout << "testFindPrevious" << endl;
-        std::auto_ptr<Logger> log(getLogger(NULL));
+	 void testFindPrevious()
+	 {
+		 cout << "testFindPrevious" << endl;
+		 std::auto_ptr<Logger> log(getLogger(NULL));
 
-        FileInputStream fis("temp.txt", "rb");
-        std::vector<std::string*> ids;
-        while (!fis.eof())
-        {
-            ids.push_back(fis.readString());
-        }
-        fis.close();
+		 FileInputStream fis("temp.txt", "rb");
+		 std::vector<std::string*> ids;
+		 while (!fis.eof())
+		 {
+			 ids.push_back(fis.readString());
+		 }
+		 fis.close();
 
-        log->startTimeRecord();
+		 log->startTimeRecord();
 
-        for (std::vector<string*>::iterator i = ids.begin(); i != ids.end(); i++)
-        {
-            string* id = *i;
+		 for (std::vector<string*>::iterator i = ids.begin(); i != ids.end(); i++)
+		 {
+			 string* id = *i;
 
-            BSONObj obj;
-            obj.add("_id", *id);
-            BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
-            if (res == NULL)
-            {
-                TEST_FAIL("Looking for a previous id does not returned any match");
-                break;
-            }
-            else
-            {
-                std::string* id2 = res->getString("_id");
-                //        cout << "Looking for: " << *id << endl;
-                //        cout << "Found        " << *id2 << endl;
-                if ((id2 == NULL) || (id2->compare(*id) != 0))
-                {
-                    TEST_FAIL("findFirst returned an incorrect result");
-                }
-                delete res;
-            }
-        }
+			 BSONObj obj;
+			 obj.add("_id", *id);
+			 BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
+			 if (res == NULL)
+			 {
+				 TEST_FAIL("Looking for a previous id does not returned any match");
+				 break;
+			 }
+			 else
+			 {
+				 std::string* id2 = res->getString("_id");
+				 //        cout << "Looking for: " << *id << endl;
+				 //        cout << "Found        " << *id2 << endl;
+				 if ((id2 == NULL) || (id2->compare(*id) != 0))
+				 {
+					 TEST_FAIL("findFirst returned an incorrect result");
+				 }
+				 delete res;
+			 }
+		 }
 
-        log->stopTimeRecord();
+		 log->stopTimeRecord();
 
-        int secs = log->recordedTime().totalSecs();
+		 int secs = log->recordedTime().totalSecs();
 
-        if (secs > 0)
-        {
-            TEST_ASSERT((ids.size() / secs) > 30);
-            cout << "Throughput: " << (ids.size() / secs) << " ops." << endl;
-            cout << "------------------------------------------------------------" << endl;
-        }
-    }
+		 if (secs > 0)
+		 {
+			 TEST_ASSERT((ids.size() / secs) > 30);
+			 cout << "Throughput: " << (ids.size() / secs) << " ops." << endl;
+			 cout << "------------------------------------------------------------" << endl;
+		 }
+	 }
 
-    void testIndex(std::vector<std::string> ids)
-    {
-        std::auto_ptr<BPlusIndex> tree(new BPlusIndex());
+	 void testIndex(std::vector<std::string> ids)
+	 {
+		 std::auto_ptr<BPlusIndex> tree(new BPlusIndex());
 
-        std::auto_ptr<Logger> log(getLogger(NULL));
+		 std::auto_ptr<Logger> log(getLogger(NULL));
 
-        log->startTimeRecord();
-        // Inserting
-        int x = 0;
-        for (std::vector<std::string>::iterator i = ids.begin(); i != ids.end(); i++)
-        {
-            BSONObj id;
-            id.add("_id", *i);
-            tree->add(id, 0);
-            x++;
-        }
-        log->stopTimeRecord();
-        DTime time = log->recordedTime();
+		 log->startTimeRecord();
+		 // Inserting
+		 int x = 0;
+		 for (std::vector<std::string>::iterator i = ids.begin(); i != ids.end(); i++)
+		 {
+			 BSONObj id;
+			 id.add("_id", *i);
+			 tree->add(id, 0, 0);
+			 x++;
+		 }
+		 log->stopTimeRecord();
+		 DTime time = log->recordedTime();
 
-        log->startTimeRecord();
-        while (ids.size() > 0)
-        {
-            int pos = rand() % ids.size();
-            while (pos > ids.size())
-            {
-                pos = rand() % ids.size();
-            }
-            std::vector<std::string>::iterator i = ids.begin() + pos;
-            std::string guid = *i;
+		 log->startTimeRecord();
+		 while (ids.size() > 0)
+		 {
+			 int pos = rand() % ids.size();
+			 while (pos > ids.size())
+			 {
+				 pos = rand() % ids.size();
+			 }
+			 std::vector<std::string>::iterator i = ids.begin() + pos;
+			 std::string guid = *i;
 
-            BSONObj id;
-            id.add("_id", guid);
-            Index* index = tree->find(id);
-            TEST_ASSERT(index != NULL);
-            BSONObj* key = index->key;
-            TEST_ASSERT(key != NULL);
-            TEST_ASSERT(key->getString("_id") != NULL);
-            TEST_ASSERT(key->getString("_id")->compare(guid) == 0);
+			 BSONObj id;
+			 id.add("_id", guid);
+			 Index* index = tree->find(id);
+			 TEST_ASSERT(index != NULL);
+			 BSONObj* key = index->key;
+			 TEST_ASSERT(key != NULL);
+			 TEST_ASSERT(key->getString("_id") != NULL);
+			 TEST_ASSERT(key->getString("_id")->compare(guid) == 0);
 
-            ids.erase(i);
-        }
-        log->stopTimeRecord();
-        time = log->recordedTime();
-    }
+			 ids.erase(i);
+		 }
+		 log->stopTimeRecord();
+		 time = log->recordedTime();
+	 }
 
-    void testSimpleIndex()
-    {
+	 void testSimpleIndex()
+	 {
 		 cout << "testSimpleIndex" << endl;
-        FileInputStream fis("simple.dat", "rb");
-        std::vector<std::string> ids;
-        while (!fis.eof())
-        {
-            std::string* s = fis.readString();
-            ids.push_back(*s);
-            delete s;
-        }
-        fis.close();
-        testIndex(ids);
-    }
+		 FileInputStream fis("simple.dat", "rb");
+		 std::vector<std::string> ids;
+		 while (!fis.eof())
+		 {
+			 std::string* s = fis.readString();
+			 ids.push_back(*s);
+			 delete s;
+		 }
+		 fis.close();
+		 testIndex(ids);
+	 }
 
-    void testComplexIndex()
-    {
+	 void testComplexIndex()
+	 {
 		 cout << "testComplexIndex" << endl;
-        FileInputStream fis("guids.txt", "rb");
-        std::vector<std::string> ids;
-        while (!fis.eof())
-        {
-            std::string* s= fis.readString();
-            ids.push_back(*s);
-            delete s;
-        }
-        fis.close();
-        testIndex(ids);
-    }
+		 FileInputStream fis("guids.txt", "rb");
+		 std::vector<std::string> ids;
+		 while (!fis.eof())
+		 {
+			 std::string* s= fis.readString();
+			 ids.push_back(*s);
+			 delete s;
+		 }
+		 fis.close();
+		 testIndex(ids);
+	 }
 
 	 void testIndexFactory() {
-		cout << "testIndexFactory" << endl;
-		BSONObj test;
-		test.add("_id", "1");
+		 cout << "testIndexFactory" << endl;
+		 BSONObj test;
+		 test.add("_id", "1");
 
-		IndexAlgorithm* index = IndexFactory::indexFactory.index("dbtest", "ns.a", test);
-		TEST_ASSERT(index != NULL);
+		 IndexAlgorithm* index = IndexFactory::indexFactory.index("dbtest", "ns.a", test);
+		 TEST_ASSERT(index != NULL);
 
-		// Let's check if the factory returns the same instance for the same key
-		IndexAlgorithm* indexCompare = IndexFactory::indexFactory.index("dbtest", "ns.a", test);
-		TEST_ASSERT(index == indexCompare);
+		 // Let's check if the factory returns the same instance for the same key
+		 IndexAlgorithm* indexCompare = IndexFactory::indexFactory.index("dbtest", "ns.a", test);
+		 TEST_ASSERT(index == indexCompare);
 
-		// Let's change the keys and test if a new IndexAlgorithm will be returned
-		BSONObj test2;
-		test2.add("key", "a");
-		IndexAlgorithm* indexCompare2 = IndexFactory::indexFactory.index("dbtest", "ns.a", test2);
-		TEST_ASSERT(index != indexCompare2);
+		 // Let's change the keys and test if a new IndexAlgorithm will be returned
+		 BSONObj test2;
+		 test2.add("key", "a");
+		 IndexAlgorithm* indexCompare2 = IndexFactory::indexFactory.index("dbtest", "ns.a", test2);
+		 TEST_ASSERT(index != indexCompare2);
 
-		// Checking the contains method
-      bool res = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", test);
-		TEST_ASSERT(res);
+		 // Checking the contains method
+		 bool res = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", test);
+		 TEST_ASSERT(res);
 
-		BSONObj test3;
-		test3.add("nkey", "b");
-      bool res2 = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", test3);
-		TEST_ASSERT(!res2);
+		 BSONObj test3;
+		 test3.add("nkey", "b");
+		 bool res2 = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", test3);
+		 TEST_ASSERT(!res2);
 	 }
-    
+
 	 void testDropnamespace()
-    {
-		cout << "testDropnamespace" << endl;
+	 {
+		 cout << "testDropnamespace" << endl;
 		 BSONObj obj;
 		 obj.add("name", "Test");
 
