@@ -40,8 +40,28 @@ SimpleExpression::SimpleExpression(const SimpleExpression& orig)
 }
 
 
-void* SimpleExpression::eval(const BSONObj& bson) {
-	return bson.getContent(_expression);
+ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
+	BSONContent content = bson.getXpath(_expression);
+
+	RESULT_TYPE type;
+	void* value = NULL;
+	switch (content.type()) {
+		case INT_TYPE:
+			type = RT_INT;
+			value = (int*)content;
+			break;
+		case DOUBLE_TYPE:
+			type = RT_DOUBLE;
+			value = (double*)content;
+			break;
+		case STRING_TYPE:
+		case PTRCHAR_TYPE:
+			type = RT_STRING;
+			value = (std::string*)content;
+			break;
+	}
+	ExpressionResult* result = new ExpressionResult(type, value);
+	return result;
 }
 
 BaseExpression* SimpleExpression::copyExpression() {

@@ -55,8 +55,8 @@ FilterParser::~FilterParser() {
 	delete _root;
 }
 
-void* FilterParser::eval(const BSONObj& bson) {
-	void* result = NULL;
+ExpressionResult* FilterParser::eval(const BSONObj& bson) {
+	ExpressionResult* result = NULL;
 	if (_root != NULL) {
 		result = _root->eval(bson);
 	}
@@ -184,6 +184,9 @@ BaseExpression* FilterParser::createTree(std::queue<BaseExpression*> expressions
 }
 
 BaseExpression* FilterParser::createExpression(TOKEN_TYPE token_type, const char* buffer) {
+	if (token_type == TT_NOTSELECTED) {
+		token_type = TT_CONSTANTEXPRESSION;
+	}
 	BaseExpression* result = NULL;
 	switch (token_type) {
 		case TT_NOTSELECTED:
@@ -193,6 +196,9 @@ BaseExpression* FilterParser::createExpression(TOKEN_TYPE token_type, const char
 			break;
 		case TT_SIMPLEEXPRESSION:
 			result = new SimpleExpression(std::string(buffer));
+			break;
+		case TT_CONSTANTEXPRESSION:
+			result = new ConstantExpression(std::string(buffer));
 			break;
 	}
 

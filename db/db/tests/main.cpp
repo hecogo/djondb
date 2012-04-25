@@ -110,11 +110,59 @@ private:
 		 cout << "testExpressions" << endl;
 		 BSONObj dummy;
 		 ConstantExpression exp("35");
-		 void* result = exp.eval(dummy);
+		 ExpressionResult* result = exp.eval(dummy);
 
-		 TEST_ASSERT(exp.constType() == CT_INT);
-		 int* i = (int*)result;
+		 TEST_ASSERT(result->type() == RT_INT);
+		 int* i = (int*)result->value();
 		 TEST_ASSERT(*i == 35);
+
+		 ConstantExpression exp2("3.324");
+		 ExpressionResult* result2 = exp2.eval(dummy);
+		 TEST_ASSERT(result2->type() == RT_DOUBLE);
+		 double* d = (double*)result2->value();
+		 TEST_ASSERT(*d == 3.324);
+
+		 ConstantExpression exp3("'Test'");
+		 ExpressionResult* result3 = exp3.eval(dummy);
+		 TEST_ASSERT(result3->type() == RT_STRING);
+		 std::string* s = (std::string*)result3->value();
+		 TEST_ASSERT(s != NULL);
+		 TEST_ASSERT(s->compare("Test") == 0);
+
+		 BSONObj obj;
+		 obj.add("age", 35);
+		 obj.add("name", "John");
+		 BSONObj inner;
+		 inner.add("i", 100);
+		 obj.add("child", inner);
+
+		 SimpleExpression exp4("age");
+		 ExpressionResult* result4 = exp4.eval(obj);
+		 TEST_ASSERT(result4->type() == RT_INT);
+		 int* i2 = (int*)result4->value();
+		 TEST_ASSERT(i2 != NULL);
+		 TEST_ASSERT(*i2 == 35);
+
+		 SimpleExpression exp5("name");
+		 ExpressionResult* result5 = exp5.eval(obj);
+		 std::string* s2 = (std::string*)result5->value();
+		 TEST_ASSERT(s2 != NULL);
+		 TEST_ASSERT(s2->compare("John") == 0);
+		 delete result5;
+		 
+		 SimpleExpression exp6("child.i");
+		 ExpressionResult* result6 = exp6.eval(obj);
+		 int* i3 = (int*)result6->value();
+		 TEST_ASSERT(i3 != NULL);
+		 TEST_ASSERT(*i3 == 100);
+
+		 BinaryExpression exp7(FO_EQUALS);
+		 exp7.push(new SimpleExpression("age"));
+		 exp7.push(new ConstantExpression("35"));
+		 ExpressionResult* result7 = exp7.eval(obj);
+		 TEST_ASSERT(result7->type() == RT_BOOLEAN);
+		 bool* bresult7 = (bool*)result7->value();
+		 TEST_ASSERT(*bresult7 == true);
 	 }
 
 	 void testFilterExpressionParser() {
@@ -123,14 +171,21 @@ private:
 		 obj.add("age", 35);
 
 		 FilterParser* parser = FilterParser::parse("$'age'");
-		 BSONContent* content = (BSONContent*)parser->eval(obj);
+		 ExpressionResult* result = parser->eval(obj);
 
-		 int* test = *content;
+		 TEST_ASSERT(result->type() == RT_INT);
+		 int* test = (int*)result->value();
 
 		 TEST_ASSERT(test != NULL);
 		 TEST_ASSERT(*test == 35);
 
 		 delete parser;
+
+		 parser = FilterParser::parse("$'age' == 35");
+		 result = parser->eval(obj);
+		 TEST_ASSERT(result->type() == RT_BOOLEAN);
+		 bool* bres = (bool*)result->value();
+		 TEST_ASSERT(*bres);
 
 	 }
 
@@ -141,13 +196,13 @@ private:
 
 		 FilterParser* parser = FilterParser::parse("$'age' == $'age'");
 		 /* 
-		 BSONContent* content = (BSONContent*)parser->eval(obj);
+			 BSONContent* content = (BSONContent*)parser->eval(obj);
 
-		 int* test = *content;
+			 int* test = *content;
 
-		 TEST_ASSERT(test != NULL);
-		 TEST_ASSERT(*test == 35);
-*/
+			 TEST_ASSERT(test != NULL);
+			 TEST_ASSERT(*test == 35);
+			 */
 		 delete parser;
 
 	 }

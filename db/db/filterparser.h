@@ -51,14 +51,31 @@ enum EXPRESSION_TYPE {
 
 enum TOKEN_TYPE {
 	TT_NOTSELECTED,
+	TT_CONSTANTEXPRESSION,
 	TT_SIMPLEEXPRESSION,
 	TT_EQUALS
 };
 
-enum CONST_TYPE {
-	CT_INT,
-	CT_DOUBLE,
-	CT_STRING
+enum RESULT_TYPE {
+	RT_INT,
+	RT_DOUBLE,
+	RT_BOOLEAN,
+	RT_STRING,
+	RT_BSON
+};
+
+class ExpressionResult {
+	public:
+		ExpressionResult(RESULT_TYPE type, void* value);
+		ExpressionResult(const ExpressionResult& orig);
+		~ExpressionResult();
+
+		RESULT_TYPE type();
+		void* value();
+
+	private:
+		void* _value;
+		RESULT_TYPE _type;
 };
 
 class BaseExpression {
@@ -71,7 +88,7 @@ class BaseExpression {
 			return _type;
 		}
 
-		virtual void* eval(const BSONObj& bson) = 0;
+		virtual ExpressionResult* eval(const BSONObj& bson) = 0;
 		virtual BaseExpression* copyExpression() = 0;
 	private:
 		EXPRESSION_TYPE _type;
@@ -83,13 +100,11 @@ class ConstantExpression: public BaseExpression {
 		ConstantExpression(const ConstantExpression& orig);
 		~ConstantExpression();
 
-		CONST_TYPE constType() const;
-		virtual void* eval(const BSONObj& bson);
+		virtual ExpressionResult* eval(const BSONObj& bson);
 		virtual BaseExpression* copyExpression();
 	private:
 		std::string _expression;
-		CONST_TYPE _constType;
-		void* _value;
+		ExpressionResult* _value;
 
 	private:
 		void parseConstantExpression();
@@ -100,7 +115,7 @@ class SimpleExpression: public BaseExpression {
 		SimpleExpression(const std::string& expression);
 		SimpleExpression(const SimpleExpression& orig);
 
-		virtual void* eval(const BSONObj& bson);
+		virtual ExpressionResult* eval(const BSONObj& bson);
 		virtual BaseExpression* copyExpression();
 	private:
 		std::string _expression;
@@ -113,7 +128,7 @@ class BinaryExpression: public BaseExpression {
 
 		void push(BaseExpression* expression);
 
-		virtual void* eval(const BSONObj& bson);
+		virtual ExpressionResult* eval(const BSONObj& bson);
 		virtual BaseExpression* copyExpression();
 
 		FILTER_OPERATORS oper() const;
@@ -128,7 +143,7 @@ class UnaryExpression: public BaseExpression {
 		UnaryExpression(FILTER_OPERATORS oper, BaseExpression* expression);
 		UnaryExpression(const UnaryExpression& orig);
 
-		virtual void* eval(const BSONObj& bson);
+		virtual ExpressionResult* eval(const BSONObj& bson);
 		virtual BaseExpression* copyExpression();
 		void push(BaseExpression* expression);
 
@@ -141,7 +156,7 @@ class FilterParser {
 	public:
 		FilterParser(const FilterParser& orig);
 		~FilterParser();
-		void* eval(const BSONObj& bson);
+		ExpressionResult* eval(const BSONObj& bson);
 		
 		static FilterParser* parse(const std::string& expression);
 

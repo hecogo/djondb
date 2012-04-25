@@ -36,7 +36,7 @@ UnaryExpression::UnaryExpression(const UnaryExpression& orig)
 }
 
 
-void* UnaryExpression::eval(const BSONObj& bson) {
+ExpressionResult* UnaryExpression::eval(const BSONObj& bson) {
 }
 
 BaseExpression* UnaryExpression::copyExpression() {

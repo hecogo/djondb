@@ -44,11 +44,11 @@ ConstantExpression::ConstantExpression(const ConstantExpression& orig)
 
 ConstantExpression::~ConstantExpression() {
 	if (_value != NULL) {
-		delete(_value);
+		delete _value;
 	}
 }
 
-void* ConstantExpression::eval(const BSONObj& bson) {
+ExpressionResult* ConstantExpression::eval(const BSONObj& bson) {
 	return _value; 
 }
 
@@ -58,14 +58,19 @@ BaseExpression* ConstantExpression::copyExpression() {
 }
 
 void ConstantExpression::parseConstantExpression() {
-	if (strchr("0123456789", _expression[0]) != NULL) {
-		_constType = CT_INT;
-		int* i = new int();
-	  	*i = atoi(_expression.c_str());
-		_value = i;
+	if (strchr("0123456789.", _expression[0]) != NULL) {
+		if (strchr(_expression.c_str(), '.') != NULL) {
+			double* d = new double();
+			*d = atof(_expression.c_str());
+			_value = new ExpressionResult(RT_DOUBLE, d);
+		} else {
+			int* i = new int();
+			*i = atoi(_expression.c_str());
+			_value = new ExpressionResult(RT_INT, i);
+		}
+	} else if ((_expression[0] == '\'') || (_expression[0] == '\"')) {
+		std::string* s = new std::string(_expression.substr(1, _expression.length() - 2));
+		_value = new ExpressionResult(RT_STRING, s);
 	}
 }
 
-CONST_TYPE ConstantExpression::constType() const {
-	return _constType;
-}

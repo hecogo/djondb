@@ -21,6 +21,7 @@ libdjon_db_la_SOURCES = bplusindex.cpp \
 																 simpleexpression.cpp \
 																 constantexpression.cpp \
 																 unaryexpression.cpp \
+																 expressionresult.cpp \
 																 binaryexpression.cpp \
                                                  bplusindex.h \
                                                  dbcontroller.h \
