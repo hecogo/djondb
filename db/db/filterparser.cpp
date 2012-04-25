@@ -168,6 +168,7 @@ BaseExpression* FilterParser::createTree(std::queue<BaseExpression*> expressions
 				binary = (BinaryExpression*)exp;
 				binary->push(current);
 				current = binary;
+				root = binary;
 				if (!expressions.empty()) {
 					BaseExpression* b1 = expressions.front();
 					expressions.pop();
@@ -184,21 +185,22 @@ BaseExpression* FilterParser::createTree(std::queue<BaseExpression*> expressions
 }
 
 BaseExpression* FilterParser::createExpression(TOKEN_TYPE token_type, const char* buffer) {
-	if (token_type == TT_NOTSELECTED) {
+/* 
+   if (token_type == TT_NOTSELECTED) {
 		token_type = TT_CONSTANTEXPRESSION;
 	}
+	*/
 	BaseExpression* result = NULL;
 	switch (token_type) {
 		case TT_NOTSELECTED:
 			if (strcmp(buffer, "==") == 0) {
 				result = new BinaryExpression(FO_EQUALS);
+			} else {
+				result = new ConstantExpression(std::string(buffer));
 			}
 			break;
 		case TT_SIMPLEEXPRESSION:
 			result = new SimpleExpression(std::string(buffer));
-			break;
-		case TT_CONSTANTEXPRESSION:
-			result = new ConstantExpression(std::string(buffer));
 			break;
 	}
 
