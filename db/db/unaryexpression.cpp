@@ -25,21 +25,29 @@
 
 #include "filterparser.h"
 
-UnaryExpression::UnaryExpression(FILTER_OPERATORS oper, BaseExpression* expression)
+UnaryExpression::UnaryExpression(FILTER_OPERATORS oper)
 	:BaseExpression(ET_SIMPLE)
 {
+	_expression = NULL;
 }
 
 UnaryExpression::UnaryExpression(const UnaryExpression& orig)
 	:BaseExpression(ET_SIMPLE)
 {
+	if (orig._expression != NULL) {
+		this->_expression = _expression->copyExpression();
+	}
 }
-
 
 ExpressionResult* UnaryExpression::eval(const BSONObj& bson) {
 }
 
 BaseExpression* UnaryExpression::copyExpression() {
+	UnaryExpression* result = new UnaryExpression(_oper);
+	if (_expression != NULL) {
+		result->push(_expression);
+	}
+	return result;
 }
 
 void UnaryExpression::push(BaseExpression* expression) {

@@ -29,11 +29,13 @@
 
 #include <string>
 #include <vector>
-#include <queue>
+#include <list>
 
 class BSONObj;
 
 enum FILTER_OPERATORS {
+	FO_NOTOPERATOR,
+	FO_TOKEN,
 	FO_AND,
 	FO_OR,
 	FO_EQUALS,
@@ -52,7 +54,9 @@ enum EXPRESSION_TYPE {
 enum TOKEN_TYPE {
 	TT_NOTSELECTED,
 //	TT_CONSTANTEXPRESSION,
+	TT_UNARYEXPRESSION,
 	TT_SIMPLEEXPRESSION,
+	TT_BINARYEXPRESSION,
 	TT_EQUALS
 };
 
@@ -140,7 +144,7 @@ class BinaryExpression: public BaseExpression {
 
 class UnaryExpression: public BaseExpression {
 	public:
-		UnaryExpression(FILTER_OPERATORS oper, BaseExpression* expression);
+		UnaryExpression(FILTER_OPERATORS oper);
 		UnaryExpression(const UnaryExpression& orig);
 
 		virtual ExpressionResult* eval(const BSONObj& bson);
@@ -163,8 +167,7 @@ class FilterParser {
 	private:
 		FilterParser(const std::string& expression, BaseExpression* root);
 		BinaryExpression* parseAND(char* chars, int index = 0, int len = 0);
-		static BaseExpression* createExpression(TOKEN_TYPE token_type, const char* expression);
-		static BaseExpression* createTree(std::queue<BaseExpression*> expressions);
+		static BaseExpression* createTree(std::list<BaseExpression*> expressions);
 
 	private:
 		std::string _expression;

@@ -169,6 +169,7 @@ private:
 		 cout << "testFilterExpressionParser" << endl;
 		 BSONObj obj;
 		 obj.add("age", 35);
+		 obj.add("state", 1);
 
 		 FilterParser* parser = FilterParser::parse("$'age'");
 		 ExpressionResult* result = parser->eval(obj);
@@ -185,6 +186,18 @@ private:
 		 result = parser->eval(obj);
 		 TEST_ASSERT(result->type() == RT_BOOLEAN);
 		 bool* bres = (bool*)result->value();
+		 TEST_ASSERT(*bres);
+
+		 parser = FilterParser::parse("($'age' == 35)");
+		 result = parser->eval(obj);
+		 TEST_ASSERT(result->type() == RT_BOOLEAN);
+		 bres = (bool*)result->value();
+		 TEST_ASSERT(*bres);
+
+		 parser = FilterParser::parse("(($'age' == 35) and ($'state' == 1))");
+		 result = parser->eval(obj);
+		 TEST_ASSERT(result->type() == RT_BOOLEAN);
+		 bres = (bool*)result->value();
 		 TEST_ASSERT(*bres);
 
 	 }

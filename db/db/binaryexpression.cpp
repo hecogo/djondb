@@ -41,51 +41,84 @@ BinaryExpression::BinaryExpression(const BinaryExpression& orig)
 	_right = orig._right;
 }
 
+ExpressionResult* evalEqual(const BSONObj& bson, BaseExpression* left, BaseExpression* right) {
+	ExpressionResult* valLeft = left->eval(bson);
+	ExpressionResult* valRight = right->eval(bson);
+	
+	bool result = false;
+	if (valLeft->type() != valRight->type()) {
+		result = false;
+	}
+
+	if (((valLeft->value() != NULL) && (valRight->value() == NULL)) ||
+			((valLeft->value() == NULL) && (valRight->value() != NULL))) {
+		result = false;
+	}
+
+	if (valLeft->value() == valRight->value()) {
+		result = true;
+	}
+
+	// the types are ensured to be equal
+	switch (valLeft->type()) {
+		case RT_INT:
+			result = (*(int*)valLeft->value() == *(int*)valRight->value());
+			break;
+		case RT_DOUBLE:
+			result = (*(double*)valLeft->value() == *(double*)valRight->value());
+			break;
+		case RT_BOOLEAN:
+			result = (*(bool*)valLeft->value() == *(bool*)valRight->value());
+			break;
+		case RT_STRING:
+			{
+				std::string* leftS = (std::string*)valLeft->value();
+				std::string* rightS = (std::string*)valRight->value();
+				result = (leftS->compare(*rightS) == 0);
+			}
+			break;
+		case RT_BSON:
+			result = false;
+			break;
+	}
+	bool* b = new bool();
+	*b = result;
+	return new ExpressionResult(RT_BOOLEAN, b);
+}
+
+ExpressionResult* evalAndOr(const BSONObj& bson, FILTER_OPERATORS oper, BaseExpression* left, BaseExpression* right) {
+	ExpressionResult* valLeft = left->eval(bson);
+	ExpressionResult* valRight = right->eval(bson);
+
+	if ((valLeft->type() != RT_BOOLEAN) || (valRight->type() != RT_BOOLEAN)) {
+		// ERROR
+		return NULL;
+	} else {
+		bool* bleft = (bool*)valLeft->value();
+		bool* bright = (bool*)valRight->value();
+
+		bool* bresult = new bool();
+		switch (oper) {
+			case FO_AND:
+				*bresult = (*bleft && *bright);
+				break;
+			case FO_OR:
+				*bresult = (*bleft ||  *bright);
+				break;
+		}
+		ExpressionResult* result = new ExpressionResult(RT_BOOLEAN, bresult);
+		return result;
+	}
+}
+
 ExpressionResult* BinaryExpression::eval(const BSONObj& bson) {
-	ExpressionResult* valLeft = _left->eval(bson);
-	ExpressionResult* valRight = _right->eval(bson);
 
-	if (_oper == FO_EQUALS) {
-		bool result = false;
-		if (valLeft->type() != valRight->type()) {
-			result = false;
-		}
-
-		if (((valLeft->value() != NULL) && (valRight->value() == NULL)) ||
-				((valLeft->value() == NULL) && (valRight->value() != NULL))) {
-			result = false;
-		}
-
-		if (valLeft->value() == valRight->value()) {
-			result = true;
-		}
-
-		// the types are ensured to be equal
-		switch (valLeft->type()) {
-			case RT_INT:
-				result = (*(int*)valLeft->value() == *(int*)valRight->value());
-				break;
-			case RT_DOUBLE:
-				result = (*(double*)valLeft->value() == *(double*)valRight->value());
-				break;
-			case RT_BOOLEAN:
-				result = (*(bool*)valLeft->value() == *(bool*)valRight->value());
-				break;
-			case RT_STRING:
-				{
-					std::string* leftS = (std::string*)valLeft->value();
-					std::string* rightS = (std::string*)valRight->value();
-					result = (leftS->compare(*rightS) == 0);
-				}
-				break;
-			case RT_BSON:
-				result = false;
-				break;
-		}
-		bool* b = new bool();
-		*b = result;
-		return new ExpressionResult(RT_BOOLEAN, b);
-	}	
+	switch (_oper) {
+		case FO_EQUALS:
+			return evalEqual(bson, _left, _right);
+		case FO_AND:
+			return evalAndOr(bson, _oper, _left, _right);
+	}
 }
 
 BaseExpression* BinaryExpression::copyExpression() {

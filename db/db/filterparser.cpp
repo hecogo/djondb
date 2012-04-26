@@ -26,6 +26,7 @@
 
 #include "filterparser.h"
 #include <string.h>
+#include <strings.h>
 
 FilterParser::FilterParser(const std::string& expression, BaseExpression* root):
 	_expression(expression)
@@ -64,6 +65,15 @@ ExpressionResult* FilterParser::eval(const BSONObj& bson) {
 	return result;
 }
 
+FILTER_OPERATORS checkOperator(char* buffer) {
+	FILTER_OPERATORS oper = FO_NOTOPERATOR;
+	if (strcmp(buffer, "==") == 0) {
+		oper = FO_EQUALS;
+	} else if (strcasecmp(buffer, "and") == 0) {
+		oper = FO_AND;
+	}
+	return oper;
+}
 
 // static
 FilterParser* FilterParser::parse(const std::string& expression) {
@@ -78,57 +88,79 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 
 	TOKEN_TYPE token_type = TT_NOTSELECTED;
 
-	std::queue<BaseExpression*> expressionsqueue;
+	std::list<BaseExpression*> expressions;
 	BaseExpression* rootExpression = NULL;
 	bool strOpen = false;
 	char startStringChar = '\'';
 	const char* SEPARATORS = " ";
+	int openParentesis = 0;
+	FILTER_OPERATORS lastOperator;
 
 	while (pos < len) {
 		bool charProcessed = false;
 		if ((chrs[pos] == '$') && (!strOpen)) {
 			token_type = TT_SIMPLEEXPRESSION;
 			charProcessed = true;
-		} else {
-			bool tokenFound = false;
-			if (!strOpen && ((chrs[pos] == '\'') || (chrs[pos] == '\"'))) {
-				startStringChar = chrs[pos];
-				strOpen = true;
-				charProcessed = true;
-			} else if (strOpen && (chrs[pos] == startStringChar)) {
-				strOpen = false;
-				tokenFound = true;
-				charProcessed = true;
+		} else if (!strOpen && ((chrs[pos] == '\'') || (chrs[pos] == '\"'))) {
+			startStringChar = chrs[pos];
+			strOpen = true;
+			charProcessed = true;
+		} else if (strOpen && (chrs[pos] == startStringChar)) {
+			strOpen = false;
+			charProcessed = true;
+			if (token_type == TT_SIMPLEEXPRESSION) {
+				expressions.push_back(new SimpleExpression(std::string(buffer)));
+				token_type = TT_NOTSELECTED;
+				memset(buffer, 0, BUFFER_SIZE);
+				posBuffer = 0;
 			}
-			if (!tokenFound && (strchr(SEPARATORS, chrs[pos]) != NULL)) {
-				tokenFound = true;
-				charProcessed = true;
+		} else if ((!strOpen) && (chrs[pos] == '(')) {
+			openParentesis++;
+			charProcessed = true;
+		} else if ((!strOpen) && (chrs[pos] == ')')) {
+			expressions.push_back(new UnaryExpression(FO_PARENTESIS));
+			charProcessed = true;
+			openParentesis--;
+			if (openParentesis < 0) {
+				// ERROR
 			}
-			// the Buffer contains a 'ready' token
-			if (tokenFound) {
-				if (strlen(buffer) > 0) {
-					BaseExpression* current = createExpression(token_type, buffer);
-					memset(buffer, 0, BUFFER_SIZE);
-					posBuffer = 0;
-					expressionsqueue.push(current);
-					token_type = TT_NOTSELECTED;
+		} else if (strchr(SEPARATORS, chrs[pos]) != NULL) {
+			charProcessed = true;
+			if (strlen(buffer) > 0) {
+				FILTER_OPERATORS oper = checkOperator(buffer);
+				BaseExpression* expr = NULL;
+				switch (oper) {
+					case FO_NOTOPERATOR:
+						expr = new ConstantExpression(buffer);
+						break;
+					case FO_EQUALS:
+					case FO_AND:
+						expr = new BinaryExpression(oper);
+						break;
+					default:
+						//ERROR
+						break;
 				}
-			} else {
-				if (!charProcessed) {
-					buffer[posBuffer] = chrs[pos];
-					posBuffer++;
-				}
+
+				expressions.push_back(expr);
+				memset(buffer, 0, BUFFER_SIZE);
+				posBuffer = 0;
 			}
+		} else if (!charProcessed) {
+			buffer[posBuffer] = chrs[pos];
+			posBuffer++;
 		}
 
 		pos++;
 	}
 
 	if (strlen(buffer) > 0) {
-		expressionsqueue.push(createExpression(token_type, buffer));
+		// all the other options has been processed, if the buffer contains something
+		// it should be a constant
+		expressions.push_back(new ConstantExpression(buffer));
 	}
 
-	rootExpression = createTree(expressionsqueue);
+	rootExpression = createTree(expressions);
 
 
 	FilterParser* parser = new FilterParser(expression, rootExpression);
@@ -136,79 +168,49 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 	return parser;
 }
 
-BaseExpression* FilterParser::createTree(std::queue<BaseExpression*> expressions) {
+BaseExpression* FilterParser::createTree(std::list<BaseExpression*> expressions) {
 	BaseExpression* root = NULL;
-	BaseExpression* current = NULL;
-	while (!expressions.empty()) {
+	BaseExpression* last = NULL;
+	while (expressions.size() > 1) {
 
 		BaseExpression* exp = expressions.front();
-		expressions.pop();
-		if (root == NULL) {
-			root = exp;
-			current = exp;
-		} else {
-			// ERROR!
-		}
+		expressions.pop_front();
 
-		UnaryExpression* unary;
-		BinaryExpression* binary;
 		switch (exp->type()) {
 			case ET_UNARY:
-				unary = (UnaryExpression*)exp;
 				if (!expressions.empty()) {
 					BaseExpression* b1 = expressions.front();
-					expressions.pop();
-					unary->push(b1);
-					current = unary;
+					expressions.pop_front();
+					((UnaryExpression*)exp)->push(b1);
 				} else {
 					// ERROR
 				}
+				expressions.push_front(exp);
+				last = NULL;
 				break;
 			case ET_BINARY:
-				binary = (BinaryExpression*)exp;
-				binary->push(current);
-				current = binary;
-				root = binary;
+				if (last == NULL) {
+					// ERROR
+				}
+				((BinaryExpression*)exp)->push(last);
 				if (!expressions.empty()) {
 					BaseExpression* b1 = expressions.front();
-					expressions.pop();
-					binary->push(b1);
+					expressions.pop_front();
+					((BinaryExpression*)exp)->push(b1);
 				} else {
 					// ERROR
 				}
+				expressions.push_front(exp);
 
 				break;
 		}
+		if (last != NULL) {
+			// ERROR an expression was not processed
+		}
+		last = exp;
 	}
 
-	return root;
+	return expressions.front();
 }
-
-BaseExpression* FilterParser::createExpression(TOKEN_TYPE token_type, const char* buffer) {
-/* 
-   if (token_type == TT_NOTSELECTED) {
-		token_type = TT_CONSTANTEXPRESSION;
-	}
-	*/
-	BaseExpression* result = NULL;
-	switch (token_type) {
-		case TT_NOTSELECTED:
-			if (strcmp(buffer, "==") == 0) {
-				result = new BinaryExpression(FO_EQUALS);
-			} else {
-				result = new ConstantExpression(std::string(buffer));
-			}
-			break;
-		case TT_SIMPLEEXPRESSION:
-			result = new SimpleExpression(std::string(buffer));
-			break;
-	}
-
-	return result;
-}
-
-BinaryExpression* FilterParser::parseAND(char* chars, int index, int len) {
-}
-
 
 
