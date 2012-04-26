@@ -188,13 +188,13 @@ private:
 		 bool* bres = (bool*)result->value();
 		 TEST_ASSERT(*bres);
 
-		 parser = FilterParser::parse("($'age' == 35)");
+		 parser = FilterParser::parse("($'age' == 35 )");
 		 result = parser->eval(obj);
 		 TEST_ASSERT(result->type() == RT_BOOLEAN);
 		 bres = (bool*)result->value();
 		 TEST_ASSERT(*bres);
 
-		 parser = FilterParser::parse("(($'age' == 35) and ($'state' == 1))");
+		 parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 1 l))");
 		 result = parser->eval(obj);
 		 TEST_ASSERT(result->type() == RT_BOOLEAN);
 		 bres = (bool*)result->value();

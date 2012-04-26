@@ -170,47 +170,51 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 
 BaseExpression* FilterParser::createTree(std::list<BaseExpression*> expressions) {
 	BaseExpression* root = NULL;
-	BaseExpression* last = NULL;
+	std::list<BaseExpression*> waitList;
 	while (expressions.size() > 1) {
+		while (expressions.size() > 0) {
 
-		BaseExpression* exp = expressions.front();
-		expressions.pop_front();
+			BaseExpression* exp = expressions.front();
+			expressions.pop_front();
 
-		switch (exp->type()) {
-			case ET_UNARY:
-				if (!expressions.empty()) {
-					BaseExpression* b1 = expressions.front();
-					expressions.pop_front();
-					((UnaryExpression*)exp)->push(b1);
-				} else {
-					// ERROR
-				}
-				expressions.push_front(exp);
-				last = NULL;
-				break;
-			case ET_BINARY:
-				if (last == NULL) {
-					// ERROR
-				}
-				((BinaryExpression*)exp)->push(last);
-				if (!expressions.empty()) {
-					BaseExpression* b1 = expressions.front();
-					expressions.pop_front();
-					((BinaryExpression*)exp)->push(b1);
-				} else {
-					// ERROR
-				}
-				expressions.push_front(exp);
+			switch (exp->type()) {
+				case ET_UNARY:
+					if (!waitList.empty()) {
+						BaseExpression* b1 = waitList.back();
+						waitList.pop_back();
+						((UnaryExpression*)exp)->push(b1);
+					} else {
+						// ERROR
+					}
+					waitList.push_front(exp);
+					break;
+				case ET_BINARY:
+					if (waitList.size() == 0) {
+						// ERROR
+					}
+					((BinaryExpression*)exp)->push(waitList.back());
+					waitList.pop_back();
+					if (!expressions.empty()) {
+						BaseExpression* b1 = expressions.front();
+						expressions.pop_front();
+						((BinaryExpression*)exp)->push(b1);
+					} else {
+						// ERROR
+					}
+					waitList.push_back(exp);
 
-				break;
+					break;
+				default:
+					waitList.push_back(exp);
+					break;
+			}
 		}
-		if (last != NULL) {
-			// ERROR an expression was not processed
+		for (std::list<BaseExpression*>::iterator i = waitList.begin(); i != waitList.end(); i++) {
+			expressions.push_back(*i);
 		}
-		last = exp;
+		waitList.clear();
 	}
 
 	return expressions.front();
 }
-
 
