@@ -26,13 +26,14 @@
 #include "filterparser.h"
 
 UnaryExpression::UnaryExpression(FILTER_OPERATORS oper)
-	:BaseExpression(ET_SIMPLE)
+	:BaseExpression(ET_UNARY)
 {
 	_expression = NULL;
+	_oper = oper;
 }
 
 UnaryExpression::UnaryExpression(const UnaryExpression& orig)
-	:BaseExpression(ET_SIMPLE)
+	:BaseExpression(ET_UNARY)
 {
 	if (orig._expression != NULL) {
 		this->_expression = _expression->copyExpression();
@@ -40,6 +41,11 @@ UnaryExpression::UnaryExpression(const UnaryExpression& orig)
 }
 
 ExpressionResult* UnaryExpression::eval(const BSONObj& bson) {
+	switch (_oper) {
+		case FO_PARENTESIS:
+			return _expression->eval(bson);
+	}
+	return NULL;
 }
 
 BaseExpression* UnaryExpression::copyExpression() {

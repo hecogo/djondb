@@ -194,7 +194,7 @@ private:
 		 bres = (bool*)result->value();
 		 TEST_ASSERT(*bres);
 
-		 parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 1 l))");
+		 parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 1 ))");
 		 result = parser->eval(obj);
 		 TEST_ASSERT(result->type() == RT_BOOLEAN);
 		 bres = (bool*)result->value();

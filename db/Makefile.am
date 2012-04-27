@@ -4,9 +4,11 @@ SUBDIRS = util bson cache filesystem db command network driverbase service daemo
 if DEBUG
    AM_CFLAGS = -g3 -O0
    AM_CPPFLAGS = -g3 -O0
+   AM_CXXFLAGS = -g3 -O0
 else
    AM_CFLAGS = -O2
    AM_CPPFLAGS = -O2
+   AM_CXXFLAGS = -O2
 endif
 
 #include aminclude.am

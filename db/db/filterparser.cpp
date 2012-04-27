@@ -115,10 +115,11 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 				posBuffer = 0;
 			}
 		} else if ((!strOpen) && (chrs[pos] == '(')) {
+			expressions.push_back(new UnaryExpression(FO_PARENTESIS_OPEN));
 			openParentesis++;
 			charProcessed = true;
 		} else if ((!strOpen) && (chrs[pos] == ')')) {
-			expressions.push_back(new UnaryExpression(FO_PARENTESIS));
+			expressions.push_back(new UnaryExpression(FO_PARENTESIS_CLOSE));
 			charProcessed = true;
 			openParentesis--;
 			if (openParentesis < 0) {
