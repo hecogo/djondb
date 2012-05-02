@@ -52,22 +52,52 @@ enum EXPRESSION_TYPE {
 	ET_UNARY
 };
 
-enum TOKEN_TYPE {
-	TT_NOTSELECTED,
-//	TT_CONSTANTEXPRESSION,
-	TT_UNARYEXPRESSION,
-	TT_PARENTESISEXPRESSION,
-	TT_SIMPLEEXPRESSION,
-	TT_BINARYEXPRESSION,
-	TT_EQUALS
-};
-
 enum RESULT_TYPE {
 	RT_INT,
 	RT_DOUBLE,
 	RT_BOOLEAN,
 	RT_STRING,
 	RT_BSON
+};
+
+enum TOKEN_TYPE {
+	TT_EXPRESION,
+	TT_OPENPARENTESIS,
+	TT_CLOSEPARENTESIS,
+	TT_CONSTANT,
+	TT_EQUALS,
+	TT_AND
+};
+
+class Token {
+	public:
+		Token(TOKEN_TYPE type, const std::string& content) {
+			_content = new std::string(content);
+			_type = type;
+		}
+
+		Token(TOKEN_TYPE type) {
+			_content = NULL;
+			_type = type;
+		}
+
+		Token(const Token& orig) {
+			if (orig._content != NULL) 
+				_content = new std::string(*orig._content);
+			else
+				_content = NULL;
+			_type = orig._type;
+		}
+
+		~Token() {
+			if (_content != NULL) delete _content;
+		}
+
+		TOKEN_TYPE type() { return _type; }
+
+	private:
+		std::string* _content;
+		TOKEN_TYPE _type;
 };
 
 class ExpressionResult {
@@ -168,8 +198,6 @@ class FilterParser {
 
 	private:
 		FilterParser(const std::string& expression, BaseExpression* root);
-		BinaryExpression* parseAND(char* chars, int index = 0, int len = 0);
-		static BaseExpression* createTree(std::list<BaseExpression*> expressions);
 
 	private:
 		std::string _expression;

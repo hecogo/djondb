@@ -65,118 +65,26 @@ ExpressionResult* FilterParser::eval(const BSONObj& bson) {
 	return result;
 }
 
-FILTER_OPERATORS checkOperator(char* buffer) {
-	FILTER_OPERATORS oper = FO_NOTOPERATOR;
+TOKEN_TYPE checkTokenType(char* buffer) {
+	TOKEN_TYPE type = TT_CONSTANT;
 	if (strcmp(buffer, "==") == 0) {
-		oper = FO_EQUALS;
+		type = TT_EQUALS;
 	} else if (strcasecmp(buffer, "and") == 0) {
-		oper = FO_AND;
+		type = TT_AND;
 	}
-	return oper;
+	return type;
 }
 
-// static
-FilterParser* FilterParser::parse(const std::string& expression) {
-	const char* chrs = expression.c_str();
-
-	const int BUFFER_SIZE = 1024;
-	char buffer[BUFFER_SIZE];
-	memset(buffer, 0, BUFFER_SIZE);
-	int pos = 0;
-	int posBuffer = 0;
-	int len = strlen(chrs);
-
-	TOKEN_TYPE token_type = TT_NOTSELECTED;
-
-	std::list<BaseExpression*> expressions;
-	BaseExpression* rootExpression = NULL;
-	bool strOpen = false;
-	char startStringChar = '\'';
-	const char* SEPARATORS = " ";
-	int openParentesis = 0;
-	FILTER_OPERATORS lastOperator;
-
-	while (pos < len) {
-		bool charProcessed = false;
-		if ((chrs[pos] == '$') && (!strOpen)) {
-			token_type = TT_SIMPLEEXPRESSION;
-			charProcessed = true;
-		} else if (!strOpen && ((chrs[pos] == '\'') || (chrs[pos] == '\"'))) {
-			startStringChar = chrs[pos];
-			strOpen = true;
-			charProcessed = true;
-		} else if (strOpen && (chrs[pos] == startStringChar)) {
-			strOpen = false;
-			charProcessed = true;
-			if (token_type == TT_SIMPLEEXPRESSION) {
-				expressions.push_back(new SimpleExpression(std::string(buffer)));
-				token_type = TT_NOTSELECTED;
-				memset(buffer, 0, BUFFER_SIZE);
-				posBuffer = 0;
-			}
-		} else if ((!strOpen) && (chrs[pos] == '(')) {
-			expressions.push_back(new UnaryExpression(FO_PARENTESIS_OPEN));
-			openParentesis++;
-			charProcessed = true;
-		} else if ((!strOpen) && (chrs[pos] == ')')) {
-			expressions.push_back(new UnaryExpression(FO_PARENTESIS_CLOSE));
-			charProcessed = true;
-			openParentesis--;
-			if (openParentesis < 0) {
-				// ERROR
-			}
-		} else if (strchr(SEPARATORS, chrs[pos]) != NULL) {
-			charProcessed = true;
-			if (strlen(buffer) > 0) {
-				FILTER_OPERATORS oper = checkOperator(buffer);
-				BaseExpression* expr = NULL;
-				switch (oper) {
-					case FO_NOTOPERATOR:
-						expr = new ConstantExpression(buffer);
-						break;
-					case FO_EQUALS:
-					case FO_AND:
-						expr = new BinaryExpression(oper);
-						break;
-					default:
-						//ERROR
-						break;
-				}
-
-				expressions.push_back(expr);
-				memset(buffer, 0, BUFFER_SIZE);
-				posBuffer = 0;
-			}
-		} else if (!charProcessed) {
-			buffer[posBuffer] = chrs[pos];
-			posBuffer++;
-		}
-
-		pos++;
-	}
-
-	if (strlen(buffer) > 0) {
-		// all the other options has been processed, if the buffer contains something
-		// it should be a constant
-		expressions.push_back(new ConstantExpression(buffer));
-	}
-
-	rootExpression = createTree(expressions);
-
-
-	FilterParser* parser = new FilterParser(expression, rootExpression);
-
-	return parser;
-}
-
-BaseExpression* FilterParser::createTree(std::list<BaseExpression*> expressions) {
+BaseExpression* createTree(std::list<Token*> tokens) {
+	// process binary operators
+	
 	BaseExpression* root = NULL;
-	std::list<BaseExpression*> waitList;
-	while (expressions.size() > 1) {
-		while (expressions.size() > 0) {
+	std::list<Token*> waitList;
+	while (tokens.size() > 1) {
+		while (tokens.size() > 0) {
 
-			BaseExpression* exp = expressions.front();
-			expressions.pop_front();
+			Token* token = tokens.front();
+			tokens.pop_front();
 
 			switch (exp->type()) {
 				case ET_UNARY:
@@ -195,9 +103,9 @@ BaseExpression* FilterParser::createTree(std::list<BaseExpression*> expressions)
 					}
 					((BinaryExpression*)exp)->push(waitList.back());
 					waitList.pop_back();
-					if (!expressions.empty()) {
-						BaseExpression* b1 = expressions.front();
-						expressions.pop_front();
+					if (!tokens.empty()) {
+						BaseExpression* b1 = tokens.front();
+						tokens.pop_front();
 						((BinaryExpression*)exp)->push(b1);
 					} else {
 						// ERROR
@@ -211,11 +119,90 @@ BaseExpression* FilterParser::createTree(std::list<BaseExpression*> expressions)
 			}
 		}
 		for (std::list<BaseExpression*>::iterator i = waitList.begin(); i != waitList.end(); i++) {
-			expressions.push_back(*i);
+			tokens.push_back(*i);
 		}
 		waitList.clear();
 	}
 
-	return expressions.front();
+	return NULL;// tokens.front();
 }
+// static
+FilterParser* FilterParser::parse(const std::string& expression) {
+	const char* chrs = expression.c_str();
+
+	const int BUFFER_SIZE = 1024;
+	char buffer[BUFFER_SIZE];
+	memset(buffer, 0, BUFFER_SIZE);
+	int pos = 0;
+	int posBuffer = 0;
+	int len = strlen(chrs);
+
+	TOKEN_TYPE token_type;//= TT_NOTSELECTED;
+
+	std::list<Token*> tokens;
+	BaseExpression* rootExpression = NULL;
+	bool strOpen = false;
+	char startStringChar = '\'';
+	const char* VALID_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+	const char* OPERATORS[] = { "==", "and", "<", "<=", ">", ">=", "!" };
+	int openParentesis = 0;
+	FILTER_OPERATORS lastOperator;
+
+	while (pos < len) {
+		bool charProcessed = false;
+		if ((chrs[pos] == '\'') || (chrs[pos] == '\"')) {
+			startStringChar = chrs[pos];
+			bool escaped = false;
+			do {
+				buffer[posBuffer] = chrs[pos];
+				posBuffer++;
+				pos++;
+			} while (chrs[pos] != startStringChar);
+			buffer[posBuffer] = chrs[pos];
+			posBuffer++;
+			pos++;
+			tokens.push_back(new Token(checkTokenType(buffer), std::string(buffer)));
+			memset(buffer, 0, BUFFER_SIZE);
+			posBuffer = 0;
+		} else if ((!strOpen) && (chrs[pos] == '(')) {
+			tokens.push_back(new Token(TT_OPENPARENTESIS));
+			openParentesis++;
+			charProcessed = true;
+		} else if ((!strOpen) && (chrs[pos] == ')')) {
+			tokens.push_back(new Token(TT_CLOSEPARENTESIS));
+			charProcessed = true;
+			openParentesis--;
+			if (openParentesis < 0) {
+				// ERROR
+			}
+		} else if (strchr(VALID_CHARS, chrs[pos]) == NULL) {
+			if (strlen(buffer) > 0) {
+				TOKEN_TYPE type = checkTokenType(buffer);
+				tokens.push_back(new Token(type, std::string(buffer)));
+
+				memset(buffer, 0, BUFFER_SIZE);
+				posBuffer = 0;
+			}
+		} else if (!charProcessed) {
+			buffer[posBuffer] = chrs[pos];
+			posBuffer++;
+		}
+
+		pos++;
+	}
+
+	if (strlen(buffer) > 0) {
+		// all the other options has been processed, if the buffer contains something
+		// it should be a constant
+		tokens.push_back(new Token(TT_CONSTANT, buffer));
+	}
+
+	rootExpression = createTree(tokens);
+
+
+	FilterParser* parser = new FilterParser(expression, rootExpression);
+
+	return parser;
+}
+
 
