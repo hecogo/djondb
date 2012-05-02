@@ -94,6 +94,9 @@ class Token {
 		}
 
 		TOKEN_TYPE type() { return _type; }
+		std::string* content() {
+			return _content;
+		}
 
 	private:
 		std::string* _content;

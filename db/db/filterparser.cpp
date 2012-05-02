@@ -75,54 +75,93 @@ TOKEN_TYPE checkTokenType(char* buffer) {
 	return type;
 }
 
+BaseExpression* solveToken(Token* token) {
+	BaseExpression* result = NULL;
+	EXPRESSION_TYPE extype;
+	FILTER_OPERATORS oper;
+	switch (token->type()) {
+		case TT_EQUALS:
+			extype = ET_BINARY;
+			oper = FO_EQUALS;
+			break;
+		case TT_AND:
+			extype = ET_BINARY;
+			oper = FO_AND;
+			break;
+		case TT_CONSTANT:
+			extype = ET_CONSTANT;
+			break;
+		case TT_EXPRESION:
+			extype = ET_SIMPLE;
+			break;
+	}
+	switch (extype) {
+		case ET_SIMPLE: 
+			result = new SimpleExpression(*token->content());
+			break;
+		case ET_BINARY:
+			result = new BinaryExpression(oper);
+
+			break;	
+	}
+	return result;	
+}
+
+BaseExpression* solveExpression(std::list<Token*> tokens, std::list<Token*>::iterator& i) {
+	Token* token = *i;
+	std::list<BaseExpression*> waitingList;
+	while ((token->type() != TT_CLOSEPARENTESIS) && (i != tokens.end())) {
+		BaseExpression* tempExpression = NULL;
+
+		BaseExpression* expression = solveToken(token);
+		switch(expression->type()) {
+			case ET_SIMPLE:
+				break;	  
+			case ET_BINARY:
+				((BinaryExpression*)expression)->push(waitingList.back());
+				waitingList.pop_back();
+				i++;
+				((BinaryExpression*)expression)->push(solveExpression(tokens, i));
+				break;
+		}
+		waitingList.push_back(expression);
+
+		i++;
+		token = *i;
+	}
+
+	if (waitingList.size() == 1) {
+		return waitingList.back();
+	} else {
+		// ERROR 
+		return NULL;
+	}
+}
+
+BaseExpression* solveParentesis(std::list<Token*> tokens, std::list<Token*>::iterator& i) {
+	Token* currentToken = *i;
+	if (currentToken->type() == TT_OPENPARENTESIS) {
+		i++;
+		solveParentesis(tokens, i);
+	}
+	BaseExpression* expression = solveExpression(tokens, i);
+	// Jumps the last parentesis
+	i++;
+	return expression;
+}
+
 BaseExpression* createTree(std::list<Token*> tokens) {
 	// process binary operators
-	
-	BaseExpression* root = NULL;
-	std::list<Token*> waitList;
-	while (tokens.size() > 1) {
-		while (tokens.size() > 0) {
 
-			Token* token = tokens.front();
-			tokens.pop_front();
-
-			switch (exp->type()) {
-				case ET_UNARY:
-					if (!waitList.empty()) {
-						BaseExpression* b1 = waitList.back();
-						waitList.pop_back();
-						((UnaryExpression*)exp)->push(b1);
-					} else {
-						// ERROR
-					}
-					waitList.push_front(exp);
-					break;
-				case ET_BINARY:
-					if (waitList.size() == 0) {
-						// ERROR
-					}
-					((BinaryExpression*)exp)->push(waitList.back());
-					waitList.pop_back();
-					if (!tokens.empty()) {
-						BaseExpression* b1 = tokens.front();
-						tokens.pop_front();
-						((BinaryExpression*)exp)->push(b1);
-					} else {
-						// ERROR
-					}
-					waitList.push_back(exp);
-
-					break;
-				default:
-					waitList.push_back(exp);
-					break;
-			}
+	// Reduce binaries
+	for (std::list<Token*>::iterator i = tokens.begin(); i != tokens.end(); i++) {
+		Token* token = *i;
+		if (token->type() == TT_OPENPARENTESIS) {
+			i++;
+			BaseExpression* express = solveParentesis(tokens, i);
 		}
-		for (std::list<BaseExpression*>::iterator i = waitList.begin(); i != waitList.end(); i++) {
-			tokens.push_back(*i);
-		}
-		waitList.clear();
 	}
+
 
 	return NULL;// tokens.front();
 }
