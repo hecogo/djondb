@@ -67,14 +67,50 @@ ExpressionResult* FilterParser::eval(const BSONObj& bson) {
 	return result;
 }
 
-TOKEN_TYPE checkTokenType(char* buffer) {
+TOKEN_TYPE checkTokenType(const char* chrs, int& pos) {
+	const int MAX_LENGTH = 3;
+	const char* OPERATORS[] = { "==", "and", "<", "<=", ">", ">=", "!" };
+
+	std::list<char*> matchOperators;
+	matchOperators.push_back("==");
+	matchOperators.push_back("and");
+	matchOperators.push_back("<");
+	matchOperators.push_back("<=");
+	matchOperators.push_back(">=");
+	matchOperators.push_back("!");
+
+	char buffer[1024];
+	memset(buffer, 0, 1024);
+	int posBuffer = 0;
+
 	TOKEN_TYPE type = TT_CONSTANT;
-	if (strcmp(buffer, "==") == 0) {
-		type = TT_EQUALS;
-	} else if (strcasecmp(buffer, "and") == 0) {
-		type = TT_AND;
-	} else if (buffer[0] == '$') {
-		type = TT_EXPRESION;
+
+	while (true) {
+		buffer[posBuffer] = chrs[pos];
+		posBuffer++;
+		pos++;
+		std::list<char*> newmatch;
+		for (std::list<char*>::iterator i = matchOperators.begin(); i != matchOperators.end(); i++) {
+			char* oper = *i;
+			if (strncmp(oper, buffer, posBuffer) == 0) {
+				newmatch.push_back(oper);
+			}
+			if (strcmp(oper, buffer) == 0) {
+				if (strcmp(buffer, "==") == 0) {
+					type = TT_EQUALS;
+				}
+				if (strcmp(buffer, "and") == 0) {
+					type = TT_AND;
+				}
+				return type;
+				// FOUND
+			}
+		}
+		matchOperators.clear();
+		matchOperators.insert(matchOperators.begin(), newmatch.begin(), newmatch.end());
+		if (matchOperators.size() == 0) {
+			break;
+		}
 	}
 	return type;
 }
@@ -100,6 +136,9 @@ BaseExpression* solveToken(Token* token) {
 			break;
 	}
 	switch (extype) {
+		case ET_CONSTANT:
+			result = new ConstantExpression(*token->content());
+			break;
 		case ET_SIMPLE: 
 			result = new SimpleExpression(*token->content());
 			break;
@@ -146,6 +185,7 @@ BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::it
 				case ET_BINARY:
 					((BinaryExpression*)expression)->push(waitingList.back());
 					waitingList.pop_back();
+					i++;
 					((BinaryExpression*)expression)->push(solveExpression(tokens, i));
 					break;
 			}
@@ -189,7 +229,6 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 	bool strOpen = false;
 	char startStringChar = '\'';
 	const char* VALID_CHARS = "$abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
-	const char* OPERATORS[] = { "==", "and", "<", "<=", ">", ">=", "!" };
 	int openParentesis = 0;
 	FILTER_OPERATORS lastOperator;
 
@@ -206,7 +245,13 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 			buffer[posBuffer] = chrs[pos];
 			posBuffer++;
 			pos++;
-			tokens.push_back(new Token(checkTokenType(buffer), std::string(buffer)));
+			TOKEN_TYPE type;
+			if (buffer[0] == '$') {
+				type = TT_EXPRESION;
+			} else {
+				type = TT_CONSTANT;
+			}
+			tokens.push_back(new Token(type, std::string(buffer)));
 			memset(buffer, 0, BUFFER_SIZE);
 			posBuffer = 0;
 		} else if ((!strOpen) && (chrs[pos] == '(')) {
@@ -224,16 +269,11 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 			buffer[posBuffer] = chrs[pos];
 			posBuffer++;
 		} else {
-			if (strlen(buffer) > 0) {
-				TOKEN_TYPE type = checkTokenType(buffer);
+				TOKEN_TYPE type = checkTokenType(chrs, pos);
 				tokens.push_back(new Token(type, std::string(buffer)));
 
 				memset(buffer, 0, BUFFER_SIZE);
 				posBuffer = 0;
-			} else {
-				buffer[posBuffer] = chrs[pos];
-				posBuffer++;
-			}
 		}
 
 		pos++;
