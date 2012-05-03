@@ -41,7 +41,8 @@ SimpleExpression::SimpleExpression(const SimpleExpression& orig)
 
 
 ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
-	BSONContent content = bson.getXpath(_expression);
+	std::string expression = _expression.substr(2, _expression.length() - 3);
+	BSONContent content = bson.getXpath(expression);
 
 	RESULT_TYPE type;
 	void* value = NULL;

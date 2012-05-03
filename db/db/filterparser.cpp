@@ -28,6 +28,8 @@
 #include <string.h>
 #include <strings.h>
 
+BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::iterator i);
+
 FilterParser::FilterParser(const std::string& expression, BaseExpression* root):
 	_expression(expression)
 {
@@ -71,6 +73,8 @@ TOKEN_TYPE checkTokenType(char* buffer) {
 		type = TT_EQUALS;
 	} else if (strcasecmp(buffer, "and") == 0) {
 		type = TT_AND;
+	} else if (buffer[0] == '$') {
+		type = TT_EXPRESION;
 	}
 	return type;
 }
@@ -107,27 +111,48 @@ BaseExpression* solveToken(Token* token) {
 	return result;	
 }
 
-BaseExpression* solveExpression(std::list<Token*> tokens, std::list<Token*>::iterator& i) {
-	Token* token = *i;
+BaseExpression* solveParentesis(std::list<Token*>& tokens, std::list<Token*>::iterator i) {
+	Token* currentToken = *i;
+	BaseExpression* expression;
+	if (currentToken->type() == TT_OPENPARENTESIS) {
+		i++;
+		expression = solveParentesis(tokens, i);
+	} else {
+		expression = solveExpression(tokens, i);
+	}
+	// Jumps the last parentesis
+	i++;
+	return expression;
+}
+
+BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::iterator i) {
 	std::list<BaseExpression*> waitingList;
-	while ((token->type() != TT_CLOSEPARENTESIS) && (i != tokens.end())) {
+	while (i != tokens.end()) {
+		Token* token = *i;
+		if (token->type() == TT_CLOSEPARENTESIS) {
+			break;
+		}
 		BaseExpression* tempExpression = NULL;
 
-		BaseExpression* expression = solveToken(token);
-		switch(expression->type()) {
-			case ET_SIMPLE:
-				break;	  
-			case ET_BINARY:
-				((BinaryExpression*)expression)->push(waitingList.back());
-				waitingList.pop_back();
-				i++;
-				((BinaryExpression*)expression)->push(solveExpression(tokens, i));
-				break;
+		BaseExpression* expression = NULL;
+		if (token->type() == TT_OPENPARENTESIS) {
+			i++;
+			expression = solveParentesis(tokens, i);
+		} else {
+			expression = solveToken(token);
+			switch(expression->type()) {
+				case ET_SIMPLE:
+					break;	  
+				case ET_BINARY:
+					((BinaryExpression*)expression)->push(waitingList.back());
+					waitingList.pop_back();
+					((BinaryExpression*)expression)->push(solveExpression(tokens, i));
+					break;
+			}
 		}
 		waitingList.push_back(expression);
 
 		i++;
-		token = *i;
 	}
 
 	if (waitingList.size() == 1) {
@@ -138,33 +163,14 @@ BaseExpression* solveExpression(std::list<Token*> tokens, std::list<Token*>::ite
 	}
 }
 
-BaseExpression* solveParentesis(std::list<Token*> tokens, std::list<Token*>::iterator& i) {
-	Token* currentToken = *i;
-	if (currentToken->type() == TT_OPENPARENTESIS) {
-		i++;
-		solveParentesis(tokens, i);
-	}
-	BaseExpression* expression = solveExpression(tokens, i);
-	// Jumps the last parentesis
-	i++;
-	return expression;
-}
-
 BaseExpression* createTree(std::list<Token*> tokens) {
 	// process binary operators
+	std::list<Token*>::iterator i = tokens.begin();
+	BaseExpression* expression = solveExpression(tokens, i);
 
-	// Reduce binaries
-	for (std::list<Token*>::iterator i = tokens.begin(); i != tokens.end(); i++) {
-		Token* token = *i;
-		if (token->type() == TT_OPENPARENTESIS) {
-			i++;
-			BaseExpression* express = solveParentesis(tokens, i);
-		}
-	}
-
-
-	return NULL;// tokens.front();
+	return expression;// tokens.front();
 }
+
 // static
 FilterParser* FilterParser::parse(const std::string& expression) {
 	const char* chrs = expression.c_str();
@@ -182,7 +188,7 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 	BaseExpression* rootExpression = NULL;
 	bool strOpen = false;
 	char startStringChar = '\'';
-	const char* VALID_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+	const char* VALID_CHARS = "$abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
 	const char* OPERATORS[] = { "==", "and", "<", "<=", ">", ">=", "!" };
 	int openParentesis = 0;
 	FILTER_OPERATORS lastOperator;
@@ -214,17 +220,20 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 			if (openParentesis < 0) {
 				// ERROR
 			}
-		} else if (strchr(VALID_CHARS, chrs[pos]) == NULL) {
+		} else if (strchr(VALID_CHARS, chrs[pos]) != NULL) {
+			buffer[posBuffer] = chrs[pos];
+			posBuffer++;
+		} else {
 			if (strlen(buffer) > 0) {
 				TOKEN_TYPE type = checkTokenType(buffer);
 				tokens.push_back(new Token(type, std::string(buffer)));
 
 				memset(buffer, 0, BUFFER_SIZE);
 				posBuffer = 0;
+			} else {
+				buffer[posBuffer] = chrs[pos];
+				posBuffer++;
 			}
-		} else if (!charProcessed) {
-			buffer[posBuffer] = chrs[pos];
-			posBuffer++;
 		}
 
 		pos++;

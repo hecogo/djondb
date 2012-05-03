@@ -41,10 +41,12 @@ UnaryExpression::UnaryExpression(const UnaryExpression& orig)
 }
 
 ExpressionResult* UnaryExpression::eval(const BSONObj& bson) {
+/* /
 	switch (_oper) {
 		case FO_PARENTESIS:
 			return _expression->eval(bson);
 	}
+*/
 	return NULL;
 }
 

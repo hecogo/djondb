@@ -136,28 +136,28 @@ private:
 		 inner.add("i", 100);
 		 obj.add("child", inner);
 
-		 SimpleExpression exp4("age");
+		 SimpleExpression exp4("$'age'");
 		 ExpressionResult* result4 = exp4.eval(obj);
 		 TEST_ASSERT(result4->type() == RT_INT);
 		 int* i2 = (int*)result4->value();
 		 TEST_ASSERT(i2 != NULL);
 		 TEST_ASSERT(*i2 == 35);
 
-		 SimpleExpression exp5("name");
+		 SimpleExpression exp5("$'name'");
 		 ExpressionResult* result5 = exp5.eval(obj);
 		 std::string* s2 = (std::string*)result5->value();
 		 TEST_ASSERT(s2 != NULL);
 		 TEST_ASSERT(s2->compare("John") == 0);
 		 delete result5;
 		 
-		 SimpleExpression exp6("child.i");
+		 SimpleExpression exp6("$'child.i'");
 		 ExpressionResult* result6 = exp6.eval(obj);
 		 int* i3 = (int*)result6->value();
 		 TEST_ASSERT(i3 != NULL);
 		 TEST_ASSERT(*i3 == 100);
 
 		 BinaryExpression exp7(FO_EQUALS);
-		 exp7.push(new SimpleExpression("age"));
+		 exp7.push(new SimpleExpression("$'age'"));
 		 exp7.push(new ConstantExpression("35"));
 		 ExpressionResult* result7 = exp7.eval(obj);
 		 TEST_ASSERT(result7->type() == RT_BOOLEAN);
