@@ -67,7 +67,8 @@ enum TOKEN_TYPE {
 	TT_CLOSEPARENTESIS,
 	TT_CONSTANT,
 	TT_EQUALS,
-	TT_AND
+	TT_AND,
+	TT_OR
 };
 
 class Token {

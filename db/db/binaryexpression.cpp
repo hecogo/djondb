@@ -117,6 +117,7 @@ ExpressionResult* BinaryExpression::eval(const BSONObj& bson) {
 		case FO_EQUALS:
 			return evalEqual(bson, _left, _right);
 		case FO_AND:
+		case FO_OR:
 			return evalAndOr(bson, _oper, _left, _right);
 	}
 }

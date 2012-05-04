@@ -170,6 +170,7 @@ private:
 		 BSONObj obj;
 		 obj.add("age", 35);
 		 obj.add("state", 1);
+		 obj.add("name", "John");
 
 		 FilterParser* parser = FilterParser::parse("$'age'");
 		 ExpressionResult* result = parser->eval(obj);
@@ -195,6 +196,42 @@ private:
 		 TEST_ASSERT(*bres);
 
 		 parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 1 ))");
+		 result = parser->eval(obj);
+		 TEST_ASSERT(result->type() == RT_BOOLEAN);
+		 bres = (bool*)result->value();
+		 TEST_ASSERT(*bres);
+
+		 parser = FilterParser::parse("(($'age' == 36 ) and ($'state' == 1 ))");
+		 result = parser->eval(obj);
+		 TEST_ASSERT(result->type() == RT_BOOLEAN);
+		 bres = (bool*)result->value();
+		 TEST_ASSERT(!*bres);
+
+		 parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 2 ))");
+		 result = parser->eval(obj);
+		 TEST_ASSERT(result->type() == RT_BOOLEAN);
+		 bres = (bool*)result->value();
+		 TEST_ASSERT(!*bres);
+
+		 parser = FilterParser::parse("(($'age'==35) and ($'state'==1))");
+		 result = parser->eval(obj);
+		 TEST_ASSERT(result->type() == RT_BOOLEAN);
+		 bres = (bool*)result->value();
+		 TEST_ASSERT(*bres);
+
+		 parser = FilterParser::parse("(('John' == $'name') and ($'age'==35))");
+		 result = parser->eval(obj);
+		 TEST_ASSERT(result->type() == RT_BOOLEAN);
+		 bres = (bool*)result->value();
+		 TEST_ASSERT(*bres);
+
+		 parser = FilterParser::parse("(('John' == $'name') or ($'age'==36))");
+		 result = parser->eval(obj);
+		 TEST_ASSERT(result->type() == RT_BOOLEAN);
+		 bres = (bool*)result->value();
+		 TEST_ASSERT(*bres);
+
+		 parser = FilterParser::parse("(('Johnny' == $'name') or ($'age'==35))");
 		 result = parser->eval(obj);
 		 TEST_ASSERT(result->type() == RT_BOOLEAN);
 		 bres = (bool*)result->value();

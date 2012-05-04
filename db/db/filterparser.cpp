@@ -74,6 +74,7 @@ TOKEN_TYPE checkTokenType(const char* chrs, int& pos) {
 	matchOperators.push_back(")");
 	matchOperators.push_back("==");
 	matchOperators.push_back("and");
+	matchOperators.push_back("or");
 	matchOperators.push_back("<");
 	matchOperators.push_back("<=");
 	matchOperators.push_back(">=");
@@ -99,6 +100,8 @@ TOKEN_TYPE checkTokenType(const char* chrs, int& pos) {
 					type = TT_EQUALS;
 				} else if (strcmp(buffer, "and") == 0) {
 					type = TT_AND;
+				} else if (strcmp(buffer, "or") == 0) {
+					type = TT_OR;
 				} else if (strcmp(buffer, "(") == 0) {
 					type = TT_OPENPARENTESIS;
 				} else if (strcmp(buffer, ")") == 0) {
@@ -131,6 +134,10 @@ BaseExpression* solveToken(Token* token) {
 			extype = ET_BINARY;
 			oper = FO_AND;
 			break;
+		case TT_OR:
+			extype = ET_BINARY;
+			oper = FO_OR;
+			break;
 		case TT_CONSTANT:
 			extype = ET_CONSTANT;
 			break;
@@ -157,14 +164,13 @@ BaseExpression* solveParentesis(std::list<Token*>& tokens, std::list<Token*>::it
 	BaseExpression* expression;
 	// Jumps the starting parentesis
 	i++;
-	Token* currentToken = *i;
-	if (currentToken->type() == TT_OPENPARENTESIS) {
-		expression = solveParentesis(tokens, i);
-	} else {
+	//Token* currentToken = *i;
+//	if (currentToken->type() == TT_OPENPARENTESIS) {
+//		expression = solveParentesis(tokens, i);
+//	} else {
 		expression = solveExpression(tokens, i);
-	}
-	// Jumps the last parentesis
-	i++;
+		i++;
+//	}
 	return expression;
 }
 
@@ -183,7 +189,9 @@ BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::it
 		} else {
 			expression = solveToken(token);
 			switch(expression->type()) {
+				case ET_CONSTANT:
 				case ET_SIMPLE:
+					i++;
 					break;	  
 				case ET_BINARY:
 					((BinaryExpression*)expression)->push(waitingList.back());
@@ -195,12 +203,11 @@ BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::it
 		}
 		waitingList.push_back(expression);
 
-		i++;
 	}
 
 	// the last token will not be processed, this could be the last parentesis
 	// or the end token, it will be processed by the caller
-	i--;
+	//	i--;
 	if (waitingList.size() == 1) {
 		return waitingList.back();
 	} else {
@@ -266,7 +273,6 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 			} while (chrs[pos] != startStringChar);
 			buffer[posBuffer] = chrs[pos];
 			posBuffer++;
-			pos++;
 			TOKEN_TYPE type;
 			if (buffer[0] == '$') {
 				type = TT_EXPRESION;
