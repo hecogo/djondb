@@ -25,6 +25,7 @@
 
 #include "bsonoutputstream.h"
 #include "bsoninputstream.h"
+#include "filterparser.h"
 
 #include "cachemanager.h"
 #include "indexfactory.h"
@@ -437,6 +438,94 @@ BSONObj* DBController::findFirst(char* db, char* ns, BSONObj* filter) {
 	} else {
 		return NULL;
 	}
+}
+
+std::vector<BSONObj*> DBController::find(char* db, char* ns, const char* filter) {
+	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, filter: %s", db, ns, filter);
+
+	std::vector<BSONObj*> result;
+	
+	result = findFullScan(db, ns, filter);
+	
+	return result;
+}
+
+BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
+	if (_logger->isDebug()) _logger->debug(2, "DBController::findFirst db: %s, ns: %s, filter: %s", db, ns, filter);
+	std::string filedir = _dataDir + "/" + db;
+	filedir = filedir + "/";
+
+	std::stringstream ss;
+	ss << filedir << ns << ".dat";
+
+	std::string filename = ss.str();
+
+	FileInputStream* fis = new FileInputStream(filename.c_str(), "rb");
+	std::vector<BSONObj*> result;
+
+	BSONInputStream* bis = new BSONInputStream(fis);
+
+	FilterParser* parser = FilterParser::parse(std::string(filter));
+
+	BSONObj* bsonResult = NULL;
+	while (!fis->eof()) {
+		BSONObj* obj = bis->readBSON();
+
+		ExpressionResult* result = parser->eval(*obj);
+		if (result->type() == RT_BOOLEAN) {
+			bool* bres = (bool*)result->value();
+			if (*bres) {
+				bsonResult = obj;
+				break;
+			}
+		}
+		delete result;
+		delete obj;
+		if (bsonResult) {
+			break;
+		}
+	}
+
+	delete parser;
+	return bsonResult;
+}
+
+std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const char* filter) {
+	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, filter: %s", db, ns, filter);
+	std::string filedir = _dataDir + "/" + db;
+	filedir = filedir + "/";
+
+	std::stringstream ss;
+	ss << filedir << ns << ".dat";
+
+	std::string filename = ss.str();
+
+	FileInputStream* fis = new FileInputStream(filename.c_str(), "rb");
+	std::vector<BSONObj*> result;
+
+	BSONInputStream* bis = new BSONInputStream(fis);
+
+	FilterParser* parser = FilterParser::parse(std::string(filter));
+
+	while (!fis->eof()) {
+		BSONObj* obj = bis->readBSON();
+
+		ExpressionResult* expresult = parser->eval(*obj);
+		if (expresult->type() == RT_BOOLEAN) {
+			bool* bres = (bool*)expresult->value();
+			if (*bres) {
+				result.push_back(obj);
+			} else {
+				delete obj;
+			}
+		} else {
+			delete obj;
+		}
+		delete expresult;
+	}
+
+	delete parser;
+	return result;
 }
 
 bool DBController::dropNamespace(char* db, char* ns) {

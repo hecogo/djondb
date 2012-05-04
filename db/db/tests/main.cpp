@@ -90,6 +90,7 @@ public:
         TEST_ADD(TestDBSuite::testFinds);
 		  TEST_ADD(TestDBSuite::testInsertComplexBSON);
 		  TEST_ADD(TestDBSuite::testFindsByFilter);
+		  TEST_ADD(TestDBSuite::testFindsByTextFilter);
 		  TEST_ADD(TestDBSuite::testDropnamespace);
 
         controller.shutdown();
@@ -406,6 +407,7 @@ private:
 		 cout << "testFindsByFilter" << endl;
 		 // Insert some data
 		 //
+		 controller.dropNamespace("dbtest", "find.filter");
 		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
 		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Pepe', lastName:'Crossley'}"));
 		 controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Smith'}"));
@@ -433,6 +435,35 @@ private:
 
 		 found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Last'}"));
 		 TEST_ASSERT(found.size() == 1); 
+	 }
+
+	 void testFindsByTextFilter()
+	 {
+		 cout << "testFindsByTextFilter" << endl;
+		 // Insert some data
+		 //
+		 controller.dropNamespace("dbtest", "find.filter2");
+		 controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Crossley', age: 38}"));
+		 controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Pepe', lastName:'Crossley', age: 15}"));
+		 controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Smith', age: 45}"));
+		 controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Clark', age: 38}"));
+
+		 std::string filter = "$'age' == 45";
+		 std::vector<BSONObj*> found = controller.find("dbtest", "find.filter2",filter.c_str());
+		 TEST_ASSERT(found.size() == 1); 
+		 std::string* name = found.at(0)->getString("lastName");
+		 TEST_ASSERT(name != NULL);
+		 TEST_ASSERT(name->compare("Smith") == 0);
+
+		 filter = "$'age' == 38";
+		 found = controller.find("dbtest", "find.filter2",filter.c_str());
+		 TEST_ASSERT(found.size() == 2); 
+		 name = found.at(0)->getString("lastName");
+		 TEST_ASSERT(name != NULL);
+		 TEST_ASSERT(name->compare("Crossley") == 0);
+		 name = found.at(1)->getString("lastName");
+		 TEST_ASSERT(name != NULL);
+		 TEST_ASSERT(name->compare("Clark") == 0);
 	 }
 
 	 void testFindPrevious()

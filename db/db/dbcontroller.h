@@ -42,13 +42,16 @@ class DBController
 		  bool dropNamespace(char* db, char* ns);
         void update(char* db, char* ns, BSONObj* bson);
         std::vector<BSONObj*> find(char* db, char* ns, const BSONObj& filter);
+        std::vector<BSONObj*> find(char* db, char* ns, const char* filter);
         BSONObj* findFirst(char* db, char* ns, BSONObj* filter);
+        BSONObj* findFirst(char* db, char* ns, const char* filter);
         BSONObj* readBSON(StreamType* stream);
     protected:
     private:
 		  std::map<std::string, std::map<std::string, SpacesType>* > _spaces;
         StreamType* open(std::string db, std::string ns, FILE_TYPE type);
 		  std::vector<BSONObj*> findFullScan(char* db, char* ns, const BSONObj& filter);
+		  std::vector<BSONObj*> findFullScan(char* db, char* ns, const char* filter);
 		  Logger* _logger;
 
 		  std::string _dataDir;
