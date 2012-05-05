@@ -168,18 +168,18 @@ PHP_METHOD(Connection, djon_find)
 	int db_len;
 	char* ns;
 	int ns_len;
-	char* json;
-	int json_len;
+	char* filter;
+	int filter_len;
 
 	zval *object = getThis();
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &db, &db_len, &ns, &ns_len, &json, &json_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &db, &db_len, &ns, &ns_len, &filter, &filter_len) == FAILURE) {
 		RETURN_NULL();
 	}
 
 	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
 	Connection* conn = __conn;//obj->conn;
-	conn->findByKey(db, ns, json);
+	conn->findByKey(db, ns, filter);
 }
 
 PHP_METHOD(Connection, djon_dropNamespace)
@@ -211,18 +211,18 @@ PHP_METHOD(Connection, djon_findByFilter)
 	int db_len;
 	char* ns;
 	int ns_len;
-	char* json;
-	int json_len;
+	char* filter;
+	int filter_len;
 
 	zval *object = getThis();
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &db, &db_len, &ns, &ns_len, &json, &json_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &db, &db_len, &ns, &ns_len, &filter, &filter_len) == FAILURE) {
 		RETURN_NULL();
 	}
 
 	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
 	Connection* conn = __conn;//obj->conn;
-	std::vector<BSONObj*> result = conn->find(db, ns, json);
+	std::vector<BSONObj*> result = conn->find(db, ns, filter);
 
 	std::stringstream ss;
 	ss << "[";

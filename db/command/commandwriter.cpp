@@ -76,9 +76,7 @@ int CommandWriter::writeFind(FindCommand* cmd, OutputStream* out)  {
     out->writeString(*cmd->DB());
     std::string* ns = cmd->nameSpace();
     out->writeString(*ns);
-
-    std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
-    bsonout->writeBSON(*cmd->bson());
+    out->writeString(*cmd->filter());
 
     return 0;
 }

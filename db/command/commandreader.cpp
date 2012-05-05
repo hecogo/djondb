@@ -87,13 +87,12 @@ FindCommand* parseFind(InputStream* is)  {
     command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
-    std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
-    BSONObj* obj = bsonis->readBSON();
-    command->setBSON(*obj);
+    std::string* filter = is->readString();
+    command->setFilter(*filter);
 
-    delete obj;
     delete db;
     delete ns;
+    delete filter;
     return command;
 }
 

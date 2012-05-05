@@ -112,10 +112,7 @@ class TestCommandSuite: public Test::Suite {
 			FindCommand cmd;
 			cmd.setDB("testdb");
 			cmd.setNameSpace("test.namespace.db");
-			BSONObj obj;
-			std::string* uid = uuid();
-			obj.add("_id", *uid);
-			cmd.setBSON(obj);
+			cmd.setFilter("$'a.b.c' == 1");
 
 			commandWriter->writeCommand(&cmd);
 
@@ -129,11 +126,7 @@ class TestCommandSuite: public Test::Suite {
 			TEST_ASSERT(rdCmd != NULL);
 			TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
 			TEST_ASSERT(rdCmd->DB()->compare("testdb") == 0);
-			BSONObj* objResult = rdCmd->bson();
-			TEST_ASSERT(objResult  != NULL);
-			TEST_ASSERT(objResult->has("_id"));	
-			TEST_ASSERT(objResult->getString("_id")->compare(*uid) == 0);
-			delete uid;
+			TEST_ASSERT(rdCmd->filter()->compare("$'a.b.c' == 1") == 0);
 		}
 		
 		void testDropnamespaceCommand() {

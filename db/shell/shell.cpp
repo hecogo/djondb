@@ -240,26 +240,33 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 }
 
 v8::Handle<v8::Value> find(const v8::Arguments& args) {
-	if (args.Length() < 3) {
-		v8::ThrowException(v8::String::New("usage: db.find(db, namespace, json)"));
+	if (args.Length() < 2) {
+		v8::ThrowException(v8::String::New("usage: db.find(db, namespace, filter)\ndb.find(db, namespace)"));
 	}
 
 	if (__djonConnection == NULL) {
-		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+		v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
 	}
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value strDB(args[0]);
 	std::string db = ToCString(strDB);
 	v8::String::Utf8Value str(args[1]);
 	std::string ns = ToCString(str);
-	std::string json;
-	if (args[2]->IsObject()) {
-		json = toJson(args[2]->ToObject());
-	} else {
-		json = ToCString(v8::String::Utf8Value(args[2]));
+	std::string filter = "";
+	if (args.Length() == 3) {
+		v8::String::Utf8Value strFilter(args[2]);
+		filter = ToCString(strFilter);
 	}
+	/* 
+		std::string json;
+		if (args[2]->IsObject()) {
+		json = toJson(args[2]->ToObject());
+		} else {
+		json = ToCString(v8::String::Utf8Value(args[2]));
+		}
+		*/
 
-	std::vector<BSONObj*> result = __djonConnection->find(db, ns, json);
+	std::vector<BSONObj*> result = __djonConnection->find(db, ns, filter);
 
 	std::stringstream ss;
 	ss << "[";

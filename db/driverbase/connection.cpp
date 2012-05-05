@@ -156,8 +156,7 @@ bool Connection::update(const std::string& db, const std::string& ns, const BSON
 BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& id) {
 	if (_logger->isDebug()) _logger->debug("executing findByKey db: %s, ns: %s id: %s", db.c_str(), ns.c_str(), id.c_str());
 
-	BSONObj filter;
-	filter.add("_id", id);
+	std::string filter = "$'_id' == '" + id + "'";
 
 	std::vector<BSONObj*> result = find(db, ns, filter);
 
@@ -176,17 +175,8 @@ BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, con
 std::vector<BSONObj*> Connection::find(const std::string& db, const std::string& ns, const std::string& filter) {
 	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, filter: %s", db.c_str(), ns.c_str(), filter.c_str());
 
-	BSONObj* bsonFilter = BSONParser::parse(filter);
-
-	std::vector<BSONObj*> result = find(db, ns, *bsonFilter);
-	delete bsonFilter;
-	return result;
-}
-
-std::vector<BSONObj*> Connection::find(const std::string& db, const std::string& ns, const BSONObj& bsonFilter) {
-	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, bsonFilter: %s", db.c_str(), ns.c_str(), bsonFilter.toChar());
 	FindCommand cmd;
-	cmd.setBSON(bsonFilter);
+	cmd.setFilter(filter);
 	cmd.setDB(db);
 	cmd.setNameSpace(ns);
 	_commandWriter->writeCommand(&cmd);
@@ -197,7 +187,6 @@ std::vector<BSONObj*> Connection::find(const std::string& db, const std::string&
 
 	return result;
 }
-
 
 bool Connection::isOpen() const {
 	return _open;

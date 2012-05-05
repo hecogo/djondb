@@ -114,23 +114,25 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
 
 	if (_logger->isDebug()) _logger->debug(3, "NetworkOutputStream::writeChars, chars: %s, len: %d", text, len);
 	writeLong(len);
-	char buffer[1024];
-	int pos = 0;
-	while (pos < len) {
-		memset(buffer, 0, 1024);
-		int size;
-		if ((len-pos) > 1024) {
-			size = 1024;
-			memcpy(buffer, &(text[pos]), size);
-		} else {
-			size = len-pos;
-			memcpy(buffer, &(text[pos]), size);
-		}
-		pos += size;
-		int sent = 0;
-		while (sent < size) {
-			sent += send(_socket, &buffer[sent], size - sent, __sendFlags_networkoutput);
-			//            sent += write(_socket, &buffer[sent], size - sent);
+	if (len > 0) {
+		char buffer[1024];
+		int pos = 0;
+		while (pos < len) {
+			memset(buffer, 0, 1024);
+			int size;
+			if ((len-pos) > 1024) {
+				size = 1024;
+				memcpy(buffer, &(text[pos]), size);
+			} else {
+				size = len-pos;
+				memcpy(buffer, &(text[pos]), size);
+			}
+			pos += size;
+			int sent = 0;
+			while (sent < size) {
+				sent += send(_socket, &buffer[sent], size - sent, __sendFlags_networkoutput);
+				//            sent += write(_socket, &buffer[sent], size - sent);
+			}
 		}
 	}
 	if (_logger->isDebug()) _logger->debug(3, "~NetworkOutputStream::writeChars");
@@ -167,7 +169,7 @@ int NetworkOutputStream::open(const char* hostname, int port)
 #ifdef WINDOWS
 	serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
 #else
-  	memcpy((char *) & serv_addr.sin_addr.s_addr,
+	memcpy((char *) & serv_addr.sin_addr.s_addr,
 			(char *) server->h_addr,
 			server->h_length);
 #endif

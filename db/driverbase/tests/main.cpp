@@ -78,8 +78,7 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			TEST_ASSERT(result);
 
-			BSONObj filter;
-			std::vector<BSONObj*> testresult = conn->find("db", "testdrop.namespace", filter);
+			std::vector<BSONObj*> testresult = conn->find("db", "testdrop.namespace", std::string(""));
 
 			TEST_ASSERT(testresult.size() == 0);
 		}
@@ -215,9 +214,11 @@ class TestDriverBaseSuite: public Test::Suite {
 			//
 
 			cout << "Testbyfilter" << endl;
-			BSONObj objfilter;
-			objfilter.add("name", "Test");
-			std::vector<BSONObj*> result = conn->find("db", "test.filter2", objfilter);			
+			std::string filter = "";
+			std::vector<BSONObj*> result = conn->find("db", "test.filter2", filter);			
+			TEST_ASSERT(result.size() > 0);
+			filter = "$'name' == 'Test'";
+			result = conn->find("db", "test.filter2", filter);			
 			TEST_ASSERT(result.size() > 0);
 
 			BSONObj* objR = *result.begin();

@@ -63,6 +63,10 @@ ExpressionResult* FilterParser::eval(const BSONObj& bson) {
 	ExpressionResult* result = NULL;
 	if (_root != NULL) {
 		result = _root->eval(bson);
+	} else {
+		bool* bres = new bool();
+		*bres = true;
+		result = new ExpressionResult(RT_BOOLEAN, bres);
 	}
 
 	return result;

@@ -29,7 +29,10 @@ if (!extension_loaded('djonPhpExt')) {
 	$json = "{ _id: '$guid', name: 'Juan', lastName: 'Cross'}";
 
 	$c->djon_insert('phpdb', 'a', $json);
-
 	echo '<p>Inserted</p>';
+	
+	echo '<p>Finding</p>';
+	$c->djon_findByFilter('phpdb', 'a', '$\'name\' == \'Juan\'');
+
 }
 ?>

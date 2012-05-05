@@ -118,8 +118,14 @@ double NetworkInputStream::readDoubleIEEE () {
 char* NetworkInputStream::readChars() {
 	if (_logger->isDebug()) _logger->debug(3, "NetworkInputStream::readChars");
 	int len = readLong();
-	char* res = readChars(len);
-	if (_logger->isDebug()) _logger->debug(3, "chars: ", res);
+	char* res;
+	if (len > 0) {
+		res = readChars(len);
+		if (_logger->isDebug()) _logger->debug(3, "chars: ", res);
+	} else {
+		res = (char*)malloc(1);
+		memset(res, 0, 1);
+	}
 	if (_logger->isDebug()) _logger->debug(3, "~NetworkInputStream::readChars");
 	return res;
 }
@@ -148,7 +154,7 @@ bool NetworkInputStream::eof() {
 
 void NetworkInputStream::closeStream() {
 #ifdef _WIN32
-    ::closesocket(_socket);
+	::closesocket(_socket);
 #else
 	close(_socket);
 #endif
