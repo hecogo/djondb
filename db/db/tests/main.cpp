@@ -162,6 +162,14 @@ class TestDBSuite: public Test::Suite
 			TEST_ASSERT(result7->type() == RT_BOOLEAN);
 			bool* bresult7 = (bool*)result7->value();
 			TEST_ASSERT(*bresult7 == true);
+
+			BinaryExpression exp8(FO_GREATERTHAN);
+			exp8.push(new SimpleExpression("$'age'"));
+			exp8.push(new ConstantExpression("30"));
+			ExpressionResult* result8 = exp8.eval(obj);
+			TEST_ASSERT(result8->type() == RT_BOOLEAN);
+			bool* bresult8 = (bool*)result8->value();
+			TEST_ASSERT(*bresult8 == true);
 		}
 
 		void testFilterExpressionParser() {

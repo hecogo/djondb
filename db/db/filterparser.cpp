@@ -80,8 +80,7 @@ TOKEN_TYPE checkTokenType(const char* chrs, int& pos) {
 	matchOperators.push_back("and");
 	matchOperators.push_back("or");
 	matchOperators.push_back("<");
-	matchOperators.push_back("<=");
-	matchOperators.push_back(">=");
+	matchOperators.push_back(">");
 	matchOperators.push_back("!");
 
 	char buffer[1024];
@@ -110,6 +109,18 @@ TOKEN_TYPE checkTokenType(const char* chrs, int& pos) {
 					type = TT_OPENPARENTESIS;
 				} else if (strcmp(buffer, ")") == 0) {
 					type = TT_CLOSEPARENTESIS;
+				} else if (strcmp(buffer, "<") == 0) {
+					if (chrs[pos] == '=') {
+						type = TT_LESSEQUALTHAN;
+					} else {
+						type = TT_LESSTHAN;
+					}
+				} else if (strcmp(buffer, ">") == 0) {
+					if (chrs[pos] == '=') {
+						type = TT_GREATEREQUALTHAN;
+					} else {
+						type = TT_GREATERTHAN;
+					}
 				}
 				return type;
 				// FOUND

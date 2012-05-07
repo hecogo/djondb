@@ -24,6 +24,7 @@
 // =====================================================================================
 
 #include "filterparser.h"
+#include <string.h>
 
 BinaryExpression::BinaryExpression(FILTER_OPERATORS oper)
    :BaseExpression(ET_BINARY)
@@ -86,6 +87,48 @@ ExpressionResult* evalEqual(const BSONObj& bson, BaseExpression* left, BaseExpre
 	return new ExpressionResult(RT_BOOLEAN, b);
 }
 
+ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& oper, BaseExpression* left, BaseExpression* right) {
+	ExpressionResult* valLeft = left->eval(bson);
+	ExpressionResult* valRight = right->eval(bson);
+	
+	bool result = false;
+	if (valLeft->type() != valRight->type()) {
+		// ERROR types does not match
+		return NULL;
+	}
+
+	bool resultGreather = false; // this will compare only greather than, and at the end will invert
+	                             // based on the sign
+	if ((valLeft->value() != NULL) && (valRight->value() == NULL)) {
+		resultGreather = true;
+	} else if (((valLeft->value() == NULL) && (valRight->value() != NULL))) {
+		resultGreather = false;
+	} else {
+		switch (valLeft->type()) {
+			case RT_INT:
+				resultGreather = (*(int*)valLeft->value() > *(int*)valRight->value());
+				break;
+			case RT_DOUBLE:
+				resultGreather = (*(double*)valLeft->value() > *(double*)valRight->value());
+				break;
+		}
+	}
+
+	if (!resultGreather && ((oper == FO_LESSEQUALTHAN) || (oper == FO_GREATEREQUALTHAN))) {
+		return evalEqual(bson, left, right);
+	} else {
+		ExpressionResult* result;
+		bool* bres = new bool();
+		if ((oper == FO_LESSTHAN) || (oper == FO_LESSEQUALTHAN)) {
+				*bres = !resultGreather;
+		}else {
+			*bres = resultGreather;
+		}
+		result = new ExpressionResult(RT_BOOLEAN, bres);
+		return result;
+	}
+}
+
 ExpressionResult* evalAndOr(const BSONObj& bson, FILTER_OPERATORS oper, BaseExpression* left, BaseExpression* right) {
 	ExpressionResult* valLeft = left->eval(bson);
 	ExpressionResult* valRight = right->eval(bson);
@@ -119,6 +162,11 @@ ExpressionResult* BinaryExpression::eval(const BSONObj& bson) {
 		case FO_AND:
 		case FO_OR:
 			return evalAndOr(bson, _oper, _left, _right);
+		case FO_LESSTHAN:
+		case FO_LESSEQUALTHAN:
+		case FO_GREATERTHAN:
+		case FO_GREATEREQUALTHAN:
+			return evalComparison(bson, _oper, _left, _right);
 	}
 }
 
