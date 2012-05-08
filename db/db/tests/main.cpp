@@ -250,6 +250,41 @@ class TestDBSuite: public Test::Suite
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
+			parser = FilterParser::parse("($'age' > 15)");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(*bres);
+
+			parser = FilterParser::parse("($'age' < 45)");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(*bres);
+			
+			parser = FilterParser::parse("($'age' >= 15)");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(*bres);
+
+			parser = FilterParser::parse("($'age' >= 35)");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(*bres);
+
+			parser = FilterParser::parse("($'age' <= 45)");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(*bres);
+			
+			parser = FilterParser::parse("($'age' <= 35)");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(*bres);
 		}
 
 		void testFilterExpressionParserEquals() {

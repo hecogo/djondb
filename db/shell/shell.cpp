@@ -149,6 +149,7 @@ v8::Persistent<v8::Context> CreateShellContext() {
 	return v8::Context::New(NULL, global);
 }
 
+/* 
 std::string toJson(const v8::Local<v8::Object>& obj) {
 	std::stringstream ss;
 	ss << "{";
@@ -174,6 +175,21 @@ std::string toJson(const v8::Local<v8::Object>& obj) {
 	return sresult;
 }
 
+*/
+
+v8::Handle<v8::Value> toJson(v8::Handle<v8::Value> object)
+{
+	v8::HandleScope scope;
+
+	v8::Handle<v8::Context> context = v8::Context::GetCurrent();
+	v8::Handle<v8::Object> global = context->Global();
+
+	v8::Handle<v8::Object> JSON = global->Get(v8::String::New("JSON"))->ToObject();
+	v8::Handle<v8::Function> JSON_stringify = v8::Handle<v8::Function>::Cast(JSON->Get(v8::String::New("stringify")));
+
+	return scope.Close(JSON_stringify->Call(JSON, 1, &object));
+}
+
 v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 	if (args.Length() < 3) {
 		v8::ThrowException(v8::String::New("usage: db.insert(db, namespace, json)"));
@@ -186,7 +202,8 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 	std::string ns = ToCString(str2);
 	std::string json;
 	if (args[2]->IsObject()) {
-		json = toJson(args[2]->ToObject());
+		v8::String::Utf8Value strValue(toJson(args[2]));
+		json = ToCString(strValue);
 	} else {
 		v8::String::Utf8Value sjson(args[2]);
 		json = ToCString(sjson);

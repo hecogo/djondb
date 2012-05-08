@@ -110,14 +110,16 @@ TOKEN_TYPE checkTokenType(const char* chrs, int& pos) {
 				} else if (strcmp(buffer, ")") == 0) {
 					type = TT_CLOSEPARENTESIS;
 				} else if (strcmp(buffer, "<") == 0) {
-					if (chrs[pos] == '=') {
+					if (chrs[pos+1] == '=') {
 						type = TT_LESSEQUALTHAN;
+						pos++;
 					} else {
 						type = TT_LESSTHAN;
 					}
 				} else if (strcmp(buffer, ">") == 0) {
-					if (chrs[pos] == '=') {
+					if (chrs[pos+1] == '=') {
 						type = TT_GREATEREQUALTHAN;
+						pos++;
 					} else {
 						type = TT_GREATERTHAN;
 					}
@@ -148,6 +150,22 @@ BaseExpression* solveToken(Token* token) {
 		case TT_AND:
 			extype = ET_BINARY;
 			oper = FO_AND;
+			break;
+		case TT_LESSEQUALTHAN:
+			extype = ET_BINARY;
+			oper = FO_LESSEQUALTHAN;
+			break;
+		case TT_LESSTHAN:
+			extype = ET_BINARY;
+			oper = FO_LESSTHAN;
+			break;
+		case TT_GREATEREQUALTHAN:
+			extype = ET_BINARY;
+			oper = FO_GREATEREQUALTHAN;
+			break;
+		case TT_GREATERTHAN:
+			extype = ET_BINARY;
+			oper = FO_GREATERTHAN;
 			break;
 		case TT_OR:
 			extype = ET_BINARY;

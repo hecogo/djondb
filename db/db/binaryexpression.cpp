@@ -114,7 +114,8 @@ ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& op
 		}
 	}
 
-	if (!resultGreather && ((oper == FO_LESSEQUALTHAN) || (oper == FO_GREATEREQUALTHAN))) {
+	if ((!resultGreather  && (oper == FO_GREATEREQUALTHAN)) || 
+			(resultGreather && (oper == FO_LESSEQUALTHAN))) {
 		return evalEqual(bson, left, right);
 	} else {
 		ExpressionResult* result;
