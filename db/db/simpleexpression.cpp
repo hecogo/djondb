@@ -49,16 +49,16 @@ ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
 	switch (content.type()) {
 		case INT_TYPE:
 			type = RT_INT;
-			value = (int*)content;
+			value = new int((int)content);
 			break;
 		case DOUBLE_TYPE:
 			type = RT_DOUBLE;
-			value = (double*)content;
+			value = new double((double)content);
 			break;
 		case STRING_TYPE:
 		case PTRCHAR_TYPE:
 			type = RT_STRING;
-			value = (std::string*)content;
+			value = new std::string((std::string)content);
 			break;
 	}
 	ExpressionResult* result = new ExpressionResult(type, value);

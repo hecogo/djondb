@@ -40,7 +40,7 @@ class BSONObj
         double* getDouble(t_keytype) const;
         long* getLong(t_keytype) const;
         char* getChars(t_keytype) const;
-        std::string* getString(t_keytype) const;
+        std::string getString(t_keytype) const;
         BSONObj* getBSON(t_keytype) const;
         BSONArrayObj* getBSONArray(t_keytype) const;
         void* get(t_keytype) const;

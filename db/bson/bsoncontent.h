@@ -24,13 +24,12 @@ class BSONContent {
 		  }
 
 		  bool operator ==(const BSONContent& content);
-		  operator int*();
-		  operator long*();
-		  operator double*();
-		  operator char*();
-		  operator std::string*();
-		  operator BSONObj*();
-		  operator BSONArrayObj*();
+		  operator int();
+		  operator long();
+		  operator double();
+		  operator std::string();
+		  operator BSONObj();
+		  operator BSONArrayObj();
 	protected:
         BSONTYPE _type;
 };

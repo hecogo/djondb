@@ -181,13 +181,15 @@ char* BSONObj::getChars(t_keytype key) const {
 	}
 }
 
-std::string* BSONObj::getString(t_keytype key) const {
+std::string BSONObj::getString(t_keytype key) const {
 	BSONContent* content = getContent(key);
-	std::string* result = NULL;
+	std::string result;
 	if (content->type() == PTRCHAR_TYPE) {
-		result = new std::string((char*)content->_element);
+		result = std::string((char*)content->_element);
 	} else if (content->type() == STRING_TYPE) {
-		result = (std::string*)content->_element;
+		result = *(std::string*)content->_element;
+	} else {
+		assert(false);
 	}
 	return result;
 }
@@ -312,8 +314,8 @@ BSONContent BSONObj::getXpath(const std::string& xpath) const {
 			return BSONContent();
 		}
 		if (content->type() == BSON_TYPE) {
-			BSONObj* inner = (BSONObj*)*content;
-			return inner->getXpath(xpath.substr(posDot + 1));
+			BSONObj inner = (BSONObj)*content;
+			return inner.getXpath(xpath.substr(posDot + 1));
 		} else {
 			return BSONContent();
 		}

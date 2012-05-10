@@ -175,11 +175,11 @@ BSONObj* DBController::insert(char* db, char* ns, BSONObj* obj) {
 		delete tid;
 	}
 
-	std::string* id = NULL;
+	std::string id = NULL;
 	if (obj->type("_id") == STRING_TYPE) {
 		id = obj->getString("_id");
 	} else if (obj->type("_id") == PTRCHAR_TYPE) {
-		id = new std::string(obj->getChars("_id"));
+		id = std::string(obj->getChars("_id"));
 	}
 	//    long crcStructure = checkStructure(obj);
 
@@ -191,9 +191,7 @@ BSONObj* DBController::insert(char* db, char* ns, BSONObj* obj) {
 
 	writeBSON(streamData, obj);
 
-	if (id != NULL) {
-		CacheManager::objectCache()->add(*id, new BSONObj(*obj));
-	}
+	CacheManager::objectCache()->add(id, new BSONObj(*obj));
 
 	return result;
 }
@@ -212,9 +210,9 @@ void DBController::update(char* db, char* ns, BSONObj* obj) {
 
 	writeBSON(streamData, obj);
 
-	std::string* id = obj->getString("_id");
+	std::string id = obj->getString("_id");
 
-	CacheManager::objectCache()->add(*id, new BSONObj(*obj));
+	CacheManager::objectCache()->add(id, new BSONObj(*obj));
 }
 
 StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
@@ -292,7 +290,7 @@ bool DBController::close(char* db, char* ns) {
 
 void DBController::updateIndex(char* db, char* ns, BSONObj* bson, long filePos) {
 	BSONObj indexBSON;
-	indexBSON.add("_id", *bson->getString("_id"));
+	indexBSON.add("_id", bson->getString("_id"));
 	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, indexBSON);
 	Index* index = impl->find(indexBSON);
 
@@ -310,12 +308,12 @@ void DBController::updateIndex(char* db, char* ns, BSONObj* bson, long filePos) 
 
 void DBController::insertIndex(char* db, char* ns, BSONObj* bson, long filePos) {
 	BSONObj indexBSON;
-	std::string* id = bson->getString("_id");
-	indexBSON.add("_id", *id);
+	std::string id = bson->getString("_id");
+	indexBSON.add("_id", id);
 	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, indexBSON);
-	
+
 	StreamType* out = open(std::string(db), std::string(ns), INDEX_FTYPE);
-	
+
 	impl->add(indexBSON, filePos, out->currentPos());
 
 	writeBSON(out, &indexBSON);
@@ -389,10 +387,10 @@ std::vector<BSONObj*> DBController::find(char* db, char* ns, const BSONObj& filt
 
 	std::vector<BSONObj*> result;
 	if (filter.has("_id")) {
-		std::string* id = filter.getString("_id");
+		std::string id = filter.getString("_id");
 
 		BSONObj indexBSON;
-		indexBSON.add("_id", *id);
+		indexBSON.add("_id", id);
 		IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, indexBSON);
 		Index* index = impl->find(indexBSON);
 
@@ -426,14 +424,14 @@ std::vector<BSONObj*> DBController::find(char* db, char* ns, const BSONObj& filt
 
 BSONObj* DBController::findFirst(char* db, char* ns, BSONObj* filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFirst db: %s, ns: %s, bsonFilter: %s", db, ns, filter->toChar());
-	std::string* id = filter->getString("_id");
-	if (CacheManager::objectCache()->containsKey(*id)) {
-		return (*CacheManager::objectCache())[*id];
+	std::string id = filter->getString("_id");
+	if (CacheManager::objectCache()->containsKey(id)) {
+		return (*CacheManager::objectCache())[id];
 	}
 	std::vector<BSONObj*> temp = find(db, ns, *filter);
 	if (temp.size() == 1) {
 		BSONObj* element = *temp.begin();
-		CacheManager::objectCache()->add(*id, new BSONObj(*element));
+		CacheManager::objectCache()->add(id, new BSONObj(*element));
 		return element;
 	} else {
 		return NULL;
@@ -444,9 +442,9 @@ std::vector<BSONObj*> DBController::find(char* db, char* ns, const char* filter)
 	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, filter: %s", db, ns, filter);
 
 	std::vector<BSONObj*> result;
-	
+
 	result = findFullScan(db, ns, filter);
-	
+
 	return result;
 }
 

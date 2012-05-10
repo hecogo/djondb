@@ -112,7 +112,7 @@ const std::string FileInputOutputStream::fileName() const {
 }
 
 unsigned char FileInputOutputStream::readChar() {
-    unsigned char v;
+    unsigned char v = 0;
     fread(&v, 1, 1, _pFile);
     return v;
 }
