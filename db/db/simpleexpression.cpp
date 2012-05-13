@@ -39,29 +39,39 @@ SimpleExpression::SimpleExpression(const SimpleExpression& orig)
 	_expression = orig._expression;
 }
 
+SimpleExpression::~SimpleExpression() {
+}
 
 ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
 	std::string expression = _expression.substr(2, _expression.length() - 3);
 	BSONContent content = bson.getXpath(expression);
 
 	RESULT_TYPE type;
-	void* value = NULL;
+	ExpressionResult* result;
 	switch (content.type()) {
 		case INT_TYPE:
-			type = RT_INT;
-			value = new int((int)content);
-			break;
+			{
+				type = RT_INT;
+				int i = (int)content;
+				result = new ExpressionResult(type, &i);
+				break;
+			}
 		case DOUBLE_TYPE:
-			type = RT_DOUBLE;
-			value = new double((double)content);
-			break;
+			{
+				type = RT_DOUBLE;
+				double d = (double)content;
+				result = new ExpressionResult(type, &d);
+				break;
+			}
 		case STRING_TYPE:
 		case PTRCHAR_TYPE:
-			type = RT_STRING;
-			value = new std::string((std::string)content);
-			break;
+			{
+				type = RT_STRING;
+				std::string s = (std::string)content;
+				result = new ExpressionResult(type, &s);
+				break;
+			}
 	}
-	ExpressionResult* result = new ExpressionResult(type, value);
 	return result;
 }
 

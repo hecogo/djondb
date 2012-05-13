@@ -26,9 +26,10 @@
 
 #include "filterparser.h"
 #include "bson.h"
+#include <assert.h>
 
 ConstantExpression::ConstantExpression(const std::string& expression)
-	:BaseExpression(ET_SIMPLE)
+	:BaseExpression(ET_CONSTANT)
 {
 	_expression = expression;
 	_value = NULL;
@@ -36,20 +37,26 @@ ConstantExpression::ConstantExpression(const std::string& expression)
 }
 
 ConstantExpression::ConstantExpression(const ConstantExpression& orig)
-	:BaseExpression(ET_SIMPLE)
+	:BaseExpression(ET_CONSTANT)
 {
 	_expression = orig._expression;
-	_value = orig._value;
-}
-
-ConstantExpression::~ConstantExpression() {
-	if (_value != NULL) {
-		delete _value;
+	if (orig._value) {
+		_value = new ExpressionResult(*orig._value);
+	} else {
+		_value = NULL;
 	}
 }
 
+ConstantExpression::~ConstantExpression() {
+	if (_value) {
+		delete _value;
+	}
+	_value = NULL;
+}
+
 ExpressionResult* ConstantExpression::eval(const BSONObj& bson) {
-	return _value; 
+	ExpressionResult* result = new ExpressionResult(*_value);
+	return result; 
 }
 
 BaseExpression* ConstantExpression::copyExpression() {
@@ -60,17 +67,17 @@ BaseExpression* ConstantExpression::copyExpression() {
 void ConstantExpression::parseConstantExpression() {
 	if (strchr("0123456789.", _expression[0]) != NULL) {
 		if (strchr(_expression.c_str(), '.') != NULL) {
-			double* d = new double();
-			*d = atof(_expression.c_str());
-			_value = new ExpressionResult(RT_DOUBLE, d);
+			double d = atof(_expression.c_str());
+			_value = new ExpressionResult(RT_DOUBLE, &d);
 		} else {
-			int* i = new int();
-			*i = atoi(_expression.c_str());
-			_value = new ExpressionResult(RT_INT, i);
+			int i = atoi(_expression.c_str());
+			_value = new ExpressionResult(RT_INT, &i);
 		}
 	} else if ((_expression[0] == '\'') || (_expression[0] == '\"')) {
-		std::string* s = new std::string(_expression.substr(1, _expression.length() - 2));
-		_value = new ExpressionResult(RT_STRING, s);
+		std::string s(_expression.substr(1, _expression.length() - 2));
+		_value = new ExpressionResult(RT_STRING, &s);
+	} else {
+		assert(false);
 	}
 }
 

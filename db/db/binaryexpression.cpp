@@ -25,6 +25,7 @@
 
 #include "filterparser.h"
 #include <string.h>
+#include <memory>
 
 BinaryExpression::BinaryExpression(FILTER_OPERATORS oper)
    :BaseExpression(ET_BINARY)
@@ -42,63 +43,65 @@ BinaryExpression::BinaryExpression(const BinaryExpression& orig)
 	_right = orig._right;
 }
 
+BinaryExpression::~BinaryExpression() {
+	if (_left) delete _left;
+	if (_right) delete _right;
+}
+
 ExpressionResult* evalEqual(const BSONObj& bson, BaseExpression* left, BaseExpression* right) {
 	ExpressionResult* valLeft = left->eval(bson);
-	ExpressionResult* valRight = right->eval(bson);
+	ExpressionResult* valRight= right->eval(bson);
 	
 	bool result = false;
 	if (valLeft->type() != valRight->type()) {
 		result = false;
-	}
-
-	if (((valLeft->value() != NULL) && (valRight->value() == NULL)) ||
+	} else if (((valLeft->value() != NULL) && (valRight->value() == NULL)) ||
 			((valLeft->value() == NULL) && (valRight->value() != NULL))) {
 		result = false;
-	}
-
-	if (valLeft->value() == valRight->value()) {
+	} else if (valLeft->value() == valRight->value()) {
 		result = true;
+	} else {
+
+		// the types are ensured to be equal
+		switch (valLeft->type()) {
+			case RT_INT:
+				result = (*(int*)valLeft->value() == *(int*)valRight->value());
+				break;
+			case RT_DOUBLE:
+				result = (*(double*)valLeft->value() == *(double*)valRight->value());
+				break;
+			case RT_BOOLEAN:
+				result = (*(bool*)valLeft->value() == *(bool*)valRight->value());
+				break;
+			case RT_STRING:
+				{
+					std::string* leftS = (std::string*)valLeft->value();
+					std::string* rightS = (std::string*)valRight->value();
+					result = (leftS->compare(*rightS) == 0);
+				}
+				break;
+			case RT_BSON:
+				result = false;
+				break;
+		}
 	}
 
-	// the types are ensured to be equal
-	switch (valLeft->type()) {
-		case RT_INT:
-			result = (*(int*)valLeft->value() == *(int*)valRight->value());
-			break;
-		case RT_DOUBLE:
-			result = (*(double*)valLeft->value() == *(double*)valRight->value());
-			break;
-		case RT_BOOLEAN:
-			result = (*(bool*)valLeft->value() == *(bool*)valRight->value());
-			break;
-		case RT_STRING:
-			{
-				std::string* leftS = (std::string*)valLeft->value();
-				std::string* rightS = (std::string*)valRight->value();
-				result = (leftS->compare(*rightS) == 0);
-			}
-			break;
-		case RT_BSON:
-			result = false;
-			break;
-	}
-	bool* b = new bool();
-	*b = result;
-	return new ExpressionResult(RT_BOOLEAN, b);
+	delete valLeft;
+	delete valRight;
+	return new ExpressionResult(RT_BOOLEAN, &result);
 }
 
 ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& oper, BaseExpression* left, BaseExpression* right) {
 	ExpressionResult* valLeft = left->eval(bson);
-	ExpressionResult* valRight = right->eval(bson);
-	
-	bool result = false;
+	ExpressionResult* valRight= right->eval(bson);
+
 	if (valLeft->type() != valRight->type()) {
 		// ERROR types does not match
 		return NULL;
 	}
 
 	bool resultGreather = false; // this will compare only greather than, and at the end will invert
-	                             // based on the sign
+	// based on the sign
 	if ((valLeft->value() != NULL) && (valRight->value() == NULL)) {
 		resultGreather = true;
 	} else if (((valLeft->value() == NULL) && (valRight->value() != NULL))) {
@@ -114,25 +117,28 @@ ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& op
 		}
 	}
 
+	ExpressionResult* result = NULL;
 	if ((!resultGreather  && (oper == FO_GREATEREQUALTHAN)) || 
 			(resultGreather && (oper == FO_LESSEQUALTHAN))) {
-		return evalEqual(bson, left, right);
+		result = evalEqual(bson, left, right);
 	} else {
-		ExpressionResult* result;
-		bool* bres = new bool();
+		bool bres;
 		if ((oper == FO_LESSTHAN) || (oper == FO_LESSEQUALTHAN)) {
-				*bres = !resultGreather;
+			bres = !resultGreather;
 		}else {
-			*bres = resultGreather;
+			bres = resultGreather;
 		}
-		result = new ExpressionResult(RT_BOOLEAN, bres);
-		return result;
+		result = new ExpressionResult(RT_BOOLEAN, &bres);
 	}
+
+	delete valLeft;
+	delete valRight;
+	return result;
 }
 
 ExpressionResult* evalAndOr(const BSONObj& bson, FILTER_OPERATORS oper, BaseExpression* left, BaseExpression* right) {
-	ExpressionResult* valLeft = left->eval(bson);
-	ExpressionResult* valRight = right->eval(bson);
+	std::auto_ptr<ExpressionResult> valLeft(left->eval(bson));
+	std::auto_ptr<ExpressionResult> valRight(right->eval(bson));
 
 	if ((valLeft->type() != RT_BOOLEAN) || (valRight->type() != RT_BOOLEAN)) {
 		// ERROR

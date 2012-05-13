@@ -31,10 +31,11 @@
 BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::iterator& i);
 const int BUFFER_SIZE = 1024;
 
-FilterParser::FilterParser(const std::string& expression, BaseExpression* root):
+FilterParser::FilterParser(const std::string& expression, BaseExpression* root, std::list<Token*> tokens):
 	_expression(expression)
 {
 	_root = root;
+	_tokens = tokens;
 }
 
 FilterParser::FilterParser(const FilterParser& orig) {
@@ -57,6 +58,11 @@ FilterParser::FilterParser(const FilterParser& orig) {
 
 FilterParser::~FilterParser() {
 	delete _root;
+	for (std::list<Token*>::iterator i = _tokens.begin(); i != _tokens.end(); i++) {
+		Token* token = *i;
+		delete token;
+	}
+	_tokens.clear();
 }
 
 ExpressionResult* FilterParser::eval(const BSONObj& bson) {
@@ -64,9 +70,8 @@ ExpressionResult* FilterParser::eval(const BSONObj& bson) {
 	if (_root != NULL) {
 		result = _root->eval(bson);
 	} else {
-		bool* bres = new bool();
-		*bres = true;
-		result = new ExpressionResult(RT_BOOLEAN, bres);
+		bool bres = true;
+		result = new ExpressionResult(RT_BOOLEAN, &bres);
 	}
 
 	return result;
@@ -283,8 +288,8 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 
 	TOKEN_TYPE token_type = TT_NOTTOKEN;
 
-	std::list<Token*> tokens;
 	BaseExpression* rootExpression = NULL;
+	std::list<Token*> tokens;
 	bool strOpen = false;
 	char startStringChar = '\'';
 	const char* VALID_CHARS = "$abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
@@ -361,8 +366,7 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 
 	rootExpression = createTree(tokens);
 
-
-	FilterParser* parser = new FilterParser(expression, rootExpression);
+	FilterParser* parser = new FilterParser(expression, rootExpression, tokens);
 
 	return parser;
 }

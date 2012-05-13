@@ -40,6 +40,10 @@ UnaryExpression::UnaryExpression(const UnaryExpression& orig)
 	}
 }
 
+UnaryExpression::~UnaryExpression() {
+	if (_expression) delete _expression;
+}
+
 ExpressionResult* UnaryExpression::eval(const BSONObj& bson) {
 /* /
 	switch (_oper) {

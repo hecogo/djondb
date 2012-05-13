@@ -175,7 +175,7 @@ BSONObj* DBController::insert(char* db, char* ns, BSONObj* obj) {
 		delete tid;
 	}
 
-	std::string id = NULL;
+	std::string id;
 	if (obj->type("_id") == STRING_TYPE) {
 		id = obj->getString("_id");
 	} else if (obj->type("_id") == PTRCHAR_TYPE) {
@@ -507,15 +507,15 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const char*
 
 	while (!fis->eof()) {
 		BSONObj* obj = bis->readBSON();
-
+		
+		bool match = false;
 		ExpressionResult* expresult = parser->eval(*obj);
 		if (expresult->type() == RT_BOOLEAN) {
 			bool* bres = (bool*)expresult->value();
-			if (*bres) {
-				result.push_back(obj);
-			} else {
-				delete obj;
-			}
+			match = *bres;
+		}
+		if (match) {
+			result.push_back(obj);
 		} else {
 			delete obj;
 		}
@@ -523,6 +523,9 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const char*
 	}
 
 	delete parser;
+	delete bis;
+	delete fis;
+
 	return result;
 }
 

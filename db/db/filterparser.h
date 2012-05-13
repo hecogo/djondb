@@ -133,6 +133,8 @@ class BaseExpression {
 			_type = type;
 		}
 
+		virtual ~BaseExpression() {}
+
 		EXPRESSION_TYPE type() {
 			return _type;
 		}
@@ -147,7 +149,7 @@ class ConstantExpression: public BaseExpression {
 	public:
 		ConstantExpression(const std::string& expression);
 		ConstantExpression(const ConstantExpression& orig);
-		~ConstantExpression();
+		virtual ~ConstantExpression();
 
 		virtual ExpressionResult* eval(const BSONObj& bson);
 		virtual BaseExpression* copyExpression();
@@ -163,6 +165,7 @@ class SimpleExpression: public BaseExpression {
 	public:
 		SimpleExpression(const std::string& expression);
 		SimpleExpression(const SimpleExpression& orig);
+		virtual ~SimpleExpression();
 
 		virtual ExpressionResult* eval(const BSONObj& bson);
 		virtual BaseExpression* copyExpression();
@@ -174,6 +177,7 @@ class BinaryExpression: public BaseExpression {
 	public:
 		BinaryExpression(FILTER_OPERATORS oper);
 		BinaryExpression(const BinaryExpression& orig);
+		virtual ~BinaryExpression();
 
 		void push(BaseExpression* expression);
 
@@ -191,6 +195,7 @@ class UnaryExpression: public BaseExpression {
 	public:
 		UnaryExpression(FILTER_OPERATORS oper);
 		UnaryExpression(const UnaryExpression& orig);
+		~UnaryExpression();
 
 		virtual ExpressionResult* eval(const BSONObj& bson);
 		virtual BaseExpression* copyExpression();
@@ -210,11 +215,12 @@ class FilterParser {
 		static FilterParser* parse(const std::string& expression);
 
 	private:
-		FilterParser(const std::string& expression, BaseExpression* root);
+		FilterParser(const std::string& expression, BaseExpression* root, std::list<Token*> tokens);
 
 	private:
 		std::string _expression;
 	   BaseExpression* _root;
+		std::list<Token*> _tokens;
 
 };
 #endif // INCLUDE_FILTERPARSER_H
