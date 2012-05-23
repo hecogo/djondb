@@ -3,13 +3,10 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 all_includes = -I$(srcdir)/../service
 
-if DEBUG
-   AM_CFLAGS = -g3 -O0 $(all_includes)
-   AM_CPPFLAGS = -g3 -O0 $(all_includes)
-else
-   AM_CFLAGS = -O2 $(all_includes)
-   AM_CPPFLAGS = -O2 $(all_includes)
-endif
+include $(top_srcdir)/common.mk
+
+AM_CFLAGS += $(all_includes)
+AM_CPPFLAGS += $(all_includes)
 
 bin_PROGRAMS = djondbd
 djondbd_SOURCES = main.cpp

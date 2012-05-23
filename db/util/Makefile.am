@@ -1,19 +1,7 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-if DEBUG
-   AM_CFLAGS = -g3 -O0
-   DB_XXFLAGS = -g3 -O0
-else
-   AM_CFLAGS = -O2
-   DB_XXFLAGS = -O2
-endif
-
-if PROFILE
-	PF_XXFLAGS = -pg   
-endif
-
-AM_CXXFLAGS = ${PF_XXFLAGS} ${DB_XXFLAGS} 
+include $(top_srcdir)/common.mk
 
 lib_LTLIBRARIES = libdjon-util.la
 
