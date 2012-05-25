@@ -27,7 +27,9 @@ libdjon_command_la_SOURCES = command.cpp \
                                                    commandwriter.h \
                                                    findcommand.h \
                                                    insertcommand.h \
-                                                   updatecommand.h
+                                                   updatecommand.h \
+																	dropnamespacecommand.h \
+																	dropnamespacecommand.cpp
 
 TESTS = test-command
 check_PROGRAMS = test-command

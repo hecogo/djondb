@@ -27,6 +27,7 @@
 #include "insertcommand.h"
 #include "updatecommand.h"
 #include "findcommand.h"
+#include "dropnamespacecommand.h"
 #include "util.h"
 #include <cpptest.h>
 
@@ -38,6 +39,7 @@ class TestCommandSuite: public Test::Suite {
 			TEST_ADD(TestCommandSuite::testInsertCommand);	
 			TEST_ADD(TestCommandSuite::testUpdateCommand);	
 			TEST_ADD(TestCommandSuite::testFindCommand);	
+			TEST_ADD(TestCommandSuite::testDropnamespaceCommand);	
 		}
 
 		void testInsertCommand() {
@@ -126,6 +128,26 @@ class TestCommandSuite: public Test::Suite {
 			TEST_ASSERT(objResult->has("_id"));	
 			TEST_ASSERT(objResult->getString("_id")->compare(*uid) == 0);
 			delete uid;
+		}
+		
+		void testDropnamespaceCommand() {
+			FileOutputStream* fos = new FileOutputStream("test.dat", "wb");
+
+			CommandWriter* commandWriter = new CommandWriter(fos);
+			DropnamespaceCommand cmd;
+			cmd.setNameSpace("test.namespace.db");
+
+			commandWriter->writeCommand(&cmd);
+
+			fos->close();
+			delete fos;
+			delete commandWriter;
+
+			FileInputStream* fis = new FileInputStream("test.dat", "rb");
+			CommandReader* reader = new CommandReader(fis);
+			DropnamespaceCommand* rdCmd = (DropnamespaceCommand*) reader->readCommand();
+			TEST_ASSERT(rdCmd != NULL);
+			TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
 		}
 };
 

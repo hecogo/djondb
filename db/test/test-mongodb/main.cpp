@@ -47,7 +47,7 @@ char* testInsert(char* host, int inserts) {
     fosIds->writeInt(ids.size());
     for (std::vector<std::string>::iterator i2 = ids.begin(); i2!= ids.end(); i2++) {
         std::string s = *i2;
-        fosIds->writeString(&s);
+        fosIds->writeString(s);
     }
     fosIds->close();
 

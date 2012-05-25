@@ -13,7 +13,8 @@ enum COMMANDTYPE {
     INSERT,
     UPDATE,
     FIND,
-    CLOSECONNECTION
+    CLOSECONNECTION,
+	 DROPNAMESPACE
 };
 
 class Command {

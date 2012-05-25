@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="db"
 	ProjectGUID="{ACF2227F-242F-4FB7-B433-58CED3D02A8F}"
 	Keyword="Win32Proj"
@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost_1_48_0\;..\windows\includes"
+				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost_1_49_0\;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

@@ -46,7 +46,7 @@
 //#include "dbjaguar.h"
 
 // Windows does not have this definition
-#ifndef socklen_t
+#ifdef WINDOWS
 	#define socklen_t int
 #endif
 
@@ -122,7 +122,25 @@ void NetworkService::stop() { //throw (NetworkException*) {
 }
 
 void *startSocketListener(void* arg) {
-    sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+#ifdef WINDOWS
+    WORD wVersionRequested;
+    WSADATA wsaData;
+    int err;
+
+/* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
+    wVersionRequested = MAKEWORD(2, 2);
+
+    err = WSAStartup(wVersionRequested, &wsaData);
+    if (err != 0) {
+        /* Tell the user that we could not find a usable */
+        /* Winsock DLL.                                  */
+        printf("WSAStartup failed with error: %d\n", err);
+        return NULL;
+    }
+#endif
+
+	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     if (sock < 0) {
 		log->error(std::string("Error creating the socked"));
@@ -156,7 +174,7 @@ void *startSocketListener(void* arg) {
 	/* If they have O_NONBLOCK, use the Posix way to do it */
 #if defined(O_NONBLOCK)
 	/* Fixme: O_NONBLOCK is defined but broken on SunOS 4.1.x and AIX 3.2.5. */
-	if (-1 == (flags = fcntl(_socket, F_GETFL, 0)))
+	if (-1 == (flags = fcntl(sock, F_GETFL, 0)))
 		flags = 0;
 	fcntl(sock, F_SETFL, flags | O_NONBLOCK);
 #else
@@ -239,6 +257,10 @@ void *startSocketListener(void* arg) {
     }
 
     log->info("Thread stopped");
+
+#ifdef WINDOWS
+	WSACleanup();
+#endif
 //    pthread_exit(arg);
     return NULL;
 }
@@ -259,6 +281,8 @@ int processRequest(void *arg) {
         nis->setNonblocking();
         __mapInput.insert(pair<int, NetworkInputStream*>(sock, nis));
         __mapOutput.insert(pair<int, NetworkOutputStream*>(sock, nos));
+    	  itNis = __mapInput.find(sock);
+        itNos = __mapOutput.find(sock);
     } else {
         nis = itNis->second;
         nos = itNos->second;

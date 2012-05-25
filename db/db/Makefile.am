@@ -19,6 +19,7 @@ libdjon_db_la_SOURCES = bplusindex.cpp \
                                                  indexmanager.cpp \
                                                  bplusindex.h \
                                                  dbcontroller.h \
+                                                 db.h \
                                                  indexfactory.h \
                                                  index.h \
                                                  indexmanager.h

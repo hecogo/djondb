@@ -33,11 +33,13 @@ class DBController
         virtual ~DBController();
 
         void initialize();
+        void initialize(std::string dataDir);
         void shutdown();
 
         bool close(char* ns);
 
         BSONObj* insert(char* ns, BSONObj* bson);
+		  bool dropNamespace(char* ns);
         void update(char* ns, BSONObj* bson);
         std::vector<BSONObj*> find(char* ns, const BSONObj& filter);
         BSONObj* findFirst(char* ns, BSONObj* filter);
@@ -48,6 +50,8 @@ class DBController
         StreamType* open(std::string ns, FILE_TYPE type);
 		  std::vector<BSONObj*> findFullScan(char* ns, const BSONObj& filter);
 		  Logger* _logger;
+
+		  std::string _dataDir;
 
     private:
         long checkStructure(BSONObj* bson);

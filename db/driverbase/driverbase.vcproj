@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="driverbase"
 	ProjectGUID="{8D4F581B-05E3-41D3-8EF3-DF77FE97E40B}"
 	Keyword="Win32Proj"
@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../network;../command;../db;../filesystem;../cache;../bson;../util;C:\development\boost_1_48_0\;..\windows\includes"
+				AdditionalIncludeDirectories="../network;../command;../db;../filesystem;../cache;../bson;../util;C:\development\boost_1_49_0\;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Rpcrt4.lib Ws2_32.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib"
-				AdditionalLibraryDirectories="..\network\Debug;..\command\Debug;..\db\Debug;..\filesystem\Debug;..\cache\Debug;..\bson\Debug;..\util\Debug"
+				AdditionalLibraryDirectories="..\network\Debug;..\windows\Debug;..\command\Debug;..\db\Debug;..\filesystem\Debug;..\cache\Debug;..\bson\Debug;..\util\Debug;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib"
+				GenerateDebugInformation="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -145,6 +146,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{926BE9D3-3A05-40AB-83EA-40F4D940F23C}"
+			RelativePathToProject="..\filesystem\filesystem.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter

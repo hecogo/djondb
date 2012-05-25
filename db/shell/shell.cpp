@@ -78,6 +78,7 @@ bool ExecuteString(v8::Handle<v8::String> source,
 		bool report_exceptions);
 v8::Handle<v8::Value> Print(const v8::Arguments& args);
 v8::Handle<v8::Value> find(const v8::Arguments& args);
+v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args);
 v8::Handle<v8::Value> Read(const v8::Arguments& args);
 v8::Handle<v8::Value> Load(const v8::Arguments& args);
 v8::Handle<v8::Value> Quit(const v8::Arguments& args);
@@ -112,8 +113,8 @@ int main(int argc, char* argv[]) {
 
 
 // Extracts a C string from a V8 Utf8Value.
-const char* ToCString(const v8::String::Utf8Value& value) {
-	return *value ? *value : "<string conversion failed>";
+std::string ToCString(const v8::String::Utf8Value& value) {
+	return *value ? std::string(*value) : "<string conversion failed>";
 }
 
 
@@ -126,6 +127,8 @@ v8::Persistent<v8::Context> CreateShellContext() {
 	global->Set(v8::String::New("print"), v8::FunctionTemplate::New(Print));
 	// Bind the gloabl 'find' function to the C++ Find callback.
 	global->Set(v8::String::New("find"), v8::FunctionTemplate::New(find));
+	// Bind the gloabl 'dropNamespace' function to the C++ Find callback.
+	global->Set(v8::String::New("dropNamespace"), v8::FunctionTemplate::New(dropNamespace));
 	// Bind the global 'read' function to the C++ Read callback.
 	global->Set(v8::String::New("read"), v8::FunctionTemplate::New(Read));
 	// Bind the global 'load' function to the C++ Load callback.
@@ -146,7 +149,7 @@ v8::Persistent<v8::Context> CreateShellContext() {
 	return v8::Context::New(NULL, global);
 }
 
-const char* toJson(const v8::Local<v8::Object>& obj) {
+std::string toJson(const v8::Local<v8::Object>& obj) {
 	std::stringstream ss;
 	ss << "{";
 	v8::Local<v8::Array> propertyNames = obj->GetPropertyNames();
@@ -167,8 +170,8 @@ const char* toJson(const v8::Local<v8::Object>& obj) {
 
 	ss << "}";
 
-	const char* result = ss.str().c_str();
-	return result;
+	std::string sresult = ss.str();
+	return sresult;
 }
 
 v8::Handle<v8::Value> insert(const v8::Arguments& args) {
@@ -178,32 +181,58 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value str(args[0]);
-	const char* ns = ToCString(str);
-	const char* json;
+	;
+	std::string ns = ToCString(str);
+	std::string json;
 	if (args[1]->IsObject()) {
 		json = toJson(args[1]->ToObject());
 	} else {
-		json = ToCString(v8::String::Utf8Value(args[1]));
+		v8::String::Utf8Value sjson(args[1]);
+		json = ToCString(sjson);
 	}
 
 	if (__djonConnection == NULL) {
 		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
 	}
-	__djonConnection->insert(std::string(ns), std::string(json));
+	__djonConnection->insert(ns, json);
 
+	return v8::String::New("");
+}
+
+v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
+	if (args.Length() < 1) {
+		v8::ThrowException(v8::String::New("usage: db.dropNamespace(namespace)"));
+	}
+
+	v8::HandleScope handle_scope;
+	v8::String::Utf8Value str(args[0]);
+	;
+	std::string ns = ToCString(str);
+
+	if (__djonConnection == NULL) {
+		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+	}
+	bool result = __djonConnection->dropNamespace(ns);
+
+	if (result) {
+		printf("ns dropped: %s", ns.c_str());
+	} else {
+		printf("ns cannot be dropped: %s", ns.c_str());
+	}
 	return v8::String::New("");
 }
 
 v8::Handle<v8::Value> help(const v8::Arguments& args) {
 	if (args.Length() > 0) {
 		v8::String::Utf8Value str(args[0]);
-		const char* cmd = ToCString(str);
+		std::string cmd = ToCString(str);
 	} else {
 		printf("connect(host)\n");
 		printf("insert(namespace, json)\n");
 		printf("find(namespace, filter)\n");
 		printf("load(file)\n");
 		printf("print(text)\n");
+		printf("dropNamespace(namespace)\n");
 	}
 	return v8::Undefined();
 }
@@ -218,15 +247,15 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	}
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value str(args[0]);
-	const char* ns = ToCString(str);
-	const char* json;
+	std::string ns = ToCString(str);
+	std::string json;
 	if (args[1]->IsObject()) {
 		json = toJson(args[1]->ToObject());
 	} else {
 		json = ToCString(v8::String::Utf8Value(args[1]));
 	}
 
-	std::vector<BSONObj*> result = __djonConnection->find(std::string(ns), std::string(json));
+	std::vector<BSONObj*> result = __djonConnection->find(ns, json);
 
 	std::stringstream ss;
 	ss << "[";
@@ -265,15 +294,15 @@ v8::Handle<v8::Value> connect(const v8::Arguments& args) {
 
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value str(args[0]);
-	const char* server = ToCString(str);
+	std::string server = ToCString(str);
 	if (__djonConnection != NULL) {
 		__djonConnection->close();
 	}
-	__djonConnection = ConnectionManager::getConnection(std::string(server));
+	__djonConnection = ConnectionManager::getConnection(server);
 	if (__djonConnection->open()) {
-		printf("Connected to %s\n", server);
+		printf("Connected to %s\n", server.c_str());
 	} else {
-		printf("Could not connect to: %s\n", server);
+		printf("Could not connect to: %s\n", server.c_str());
 		__djonConnection->close();
 		__djonConnection = NULL;
 	}
@@ -293,8 +322,8 @@ v8::Handle<v8::Value> Print(const v8::Arguments& args) {
 			printf(" ");
 		}
 		v8::String::Utf8Value str(args[i]);
-		const char* cstr = ToCString(str);
-		printf("%s", cstr);
+		std::string cstr = ToCString(str);
+		printf("%s", cstr.c_str());
 	}
 	printf("\n");
 	fflush(stdout);
@@ -512,8 +541,8 @@ bool ExecuteString(v8::Handle<v8::String> source,
 				// If all went well and the result wasn't undefined then print
 				// the returned value.
 				v8::String::Utf8Value str(result);
-				const char* cstr = ToCString(str);
-				printf("%s\n", cstr);
+				std::string cstr = ToCString(str);
+				printf("%s\n", cstr.c_str());
 			}
 			return true;
 		}
@@ -524,22 +553,22 @@ bool ExecuteString(v8::Handle<v8::String> source,
 void ReportException(v8::TryCatch* try_catch) {
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value exception(try_catch->Exception());
-	const char* exception_string = ToCString(exception);
+	std::string exception_string = ToCString(exception);
 	v8::Handle<v8::Message> message = try_catch->Message();
 	if (message.IsEmpty()) {
 		// V8 didn't provide any extra information about this error; just
 		// print the exception.
-		printf("%s\n", exception_string);
+		printf("%s\n", exception_string.c_str());
 	} else {
 		// Print (filename):(line number): (message).
 		v8::String::Utf8Value filename(message->GetScriptResourceName());
-		const char* filename_string = ToCString(filename);
+		std::string filename_string = ToCString(filename);
 		int linenum = message->GetLineNumber();
-		printf("%s:%i: %s\n", filename_string, linenum, exception_string);
+		printf("%s:%i: %s\n", filename_string.c_str(), linenum, exception_string.c_str());
 		// Print line of source code.
 		v8::String::Utf8Value sourceline(message->GetSourceLine());
-		const char* sourceline_string = ToCString(sourceline);
-		printf("%s\n", sourceline_string);
+		std::string sourceline_string = ToCString(sourceline);
+		printf("%s\n", sourceline_string.c_str());
 		// Print wavy underline (GetUnderline is deprecated).
 		int start = message->GetStartColumn();
 		for (int i = 0; i < start; i++) {
@@ -552,8 +581,8 @@ void ReportException(v8::TryCatch* try_catch) {
 		printf("\n");
 		v8::String::Utf8Value stack_trace(try_catch->StackTrace());
 		if (stack_trace.length() > 0) {
-			const char* stack_trace_string = ToCString(stack_trace);
-			printf("%s\n", stack_trace_string);
+			std::string stack_trace_string = ToCString(stack_trace);
+			printf("%s\n", stack_trace_string.c_str());
 		}
 	}
 }

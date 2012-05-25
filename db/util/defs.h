@@ -9,7 +9,7 @@
 #endif
 
 #ifndef _WIN32
-#include "config.h"
+#include "../config.h"
 #else
 #define PACKAGE_VERSION "0.1"
 #endif

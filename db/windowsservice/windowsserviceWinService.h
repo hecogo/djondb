@@ -44,13 +44,13 @@ namespace windowsservice {
 		virtual void OnStart(array<System::String^>^ args) override
 		{
 			__stopRunning = false;
-			service_startup();
+			//service_startup();
 
 			while(true) {
 				if (__stopRunning) {
 					break;
 				}
-				Thread::sleep(30000);
+				//sleep(30000);
 			}
 		}
 

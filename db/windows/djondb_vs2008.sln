@@ -19,9 +19,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "driverbase", "..\driverbase
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "service", "..\service\service.vcproj", "{565D9B86-9829-4BC3-9D9B-7ADE6A9D2968}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "daemon", "..\daemon\daemon.vcproj", "{A2A68A87-2B76-4945-9F6A-8A7C48562BE6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "djondb_win", "..\djondb_win\djondb_win.vcproj", "{6CE5F68C-E601-4021-9E44-5A0575BC87D2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "windowsservice", "..\windowsservice\windowsservice.vcproj", "{B56B5055-FA68-4771-9782-EE6C732ACC9A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "shell", "..\shell\shell.vcproj", "{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,14 +65,14 @@ Global
 		{565D9B86-9829-4BC3-9D9B-7ADE6A9D2968}.Debug|Win32.Build.0 = Debug|Win32
 		{565D9B86-9829-4BC3-9D9B-7ADE6A9D2968}.Release|Win32.ActiveCfg = Release|Win32
 		{565D9B86-9829-4BC3-9D9B-7ADE6A9D2968}.Release|Win32.Build.0 = Release|Win32
-		{A2A68A87-2B76-4945-9F6A-8A7C48562BE6}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A2A68A87-2B76-4945-9F6A-8A7C48562BE6}.Debug|Win32.Build.0 = Debug|Win32
-		{A2A68A87-2B76-4945-9F6A-8A7C48562BE6}.Release|Win32.ActiveCfg = Release|Win32
-		{A2A68A87-2B76-4945-9F6A-8A7C48562BE6}.Release|Win32.Build.0 = Release|Win32
-		{B56B5055-FA68-4771-9782-EE6C732ACC9A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B56B5055-FA68-4771-9782-EE6C732ACC9A}.Debug|Win32.Build.0 = Debug|Win32
-		{B56B5055-FA68-4771-9782-EE6C732ACC9A}.Release|Win32.ActiveCfg = Release|Win32
-		{B56B5055-FA68-4771-9782-EE6C732ACC9A}.Release|Win32.Build.0 = Release|Win32
+		{6CE5F68C-E601-4021-9E44-5A0575BC87D2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6CE5F68C-E601-4021-9E44-5A0575BC87D2}.Debug|Win32.Build.0 = Debug|Win32
+		{6CE5F68C-E601-4021-9E44-5A0575BC87D2}.Release|Win32.ActiveCfg = Release|Win32
+		{6CE5F68C-E601-4021-9E44-5A0575BC87D2}.Release|Win32.Build.0 = Release|Win32
+		{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}.Debug|Win32.Build.0 = Debug|Win32
+		{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}.Release|Win32.ActiveCfg = Release|Win32
+		{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

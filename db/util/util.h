@@ -16,6 +16,7 @@
 #include "util/version.h"
 #include "util/logger.h"
 #include "util/threads.h"
+#include "util/settings.h"
 
 #include <string>
 #include <vector>

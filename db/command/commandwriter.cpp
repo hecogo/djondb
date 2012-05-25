@@ -18,6 +18,7 @@
 
 #include "commandwriter.h"
 #include "insertcommand.h"
+#include "dropnamespacecommand.h"
 #include "updatecommand.h"
 #include "findcommand.h"
 #include "bsonoutputstream.h"
@@ -47,6 +48,13 @@ int CommandWriter::writeInsert(InsertCommand* cmd, OutputStream* out)  {
 
     std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
     bsonout->writeBSON(*cmd->bson());
+
+    return 0;
+}
+
+int CommandWriter::writeDropnamespace(DropnamespaceCommand* cmd, OutputStream* out)  {
+    const std::string* ns = cmd->nameSpace();
+    out->writeString(*ns);
 
     return 0;
 }
@@ -87,6 +95,9 @@ int CommandWriter::writeCommand(Command* cmd) {
             break;
         case FIND:
             ret = writeFind((FindCommand*)cmd, _stream);
+            break;
+        case DROPNAMESPACE:
+            ret = writeDropnamespace((DropnamespaceCommand*)cmd, _stream);
             break;
         case CLOSECONNECTION: // Nothing to be done
             break;

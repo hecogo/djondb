@@ -21,10 +21,14 @@
 #include "../defs.h"
 #ifdef WINDOWS
 	#include <Windows.h>
-	#include <time.h>
+#else
+   #include <sys/time.h>
 #endif
+#include <time.h>
 
 int m_numtreads;
+bool Thread::m_mutexInitalized;
+pthread_mutex_t Thread::m_mutex_t;
 
 Thread::Thread(void *(*run)(void* arg)) {
     runFunction = run;
@@ -48,35 +52,32 @@ Thread::~Thread() {
 }
 
 
-void Thread::sleep(int mili) {
+void Thread::sleep(int milisecs) {
+#ifndef WINDOWS
 	struct timespec timeToWait;
 	struct timeval now;
 	int rt;
 
 	int currentsecs;
 	int currentusecs;
-#ifndef WINDOWS
-	gettimeofday(&now,NULL);
-	currentsecs = now.tv_sec;
-	currentusecs = now.tv_usec;
-#else
-	SYSTEMTIME st;
-	GetSystemTime(&st);
-	currentsecs = st.wSecond;
-	currentusecs = st.wMilliseconds / 1000; // 10^(-9)
-#endif
-	timeToWait.tv_sec = currentsecs;
-	timeToWait.tv_nsec = (currentusecs*1000) + mili;
+
+	gettimeofday(&now, NULL);
+
+	timeToWait.tv_sec = now.tv_sec + (milisecs / 1000);
+	timeToWait.tv_nsec = (now.tv_usec *1000);
 
 	pthread_mutex_t fakeMutex = PTHREAD_MUTEX_INITIALIZER;
 	pthread_cond_t fakeCond = PTHREAD_COND_INITIALIZER;	pthread_mutex_lock(&fakeMutex);
 
 	rt = pthread_cond_timedwait(&fakeCond, &fakeMutex, &timeToWait);
 	pthread_mutex_unlock(&fakeMutex);
+#else
+	System::Threading::Thread::CurrentThread->Sleep(milisecs);
+#endif
 }
 
-/*
-static void Thread::mutex_lock() {
+
+void Thread::mutex_lock() {
     if (!m_mutexInitalized) {
         pthread_mutex_init(&m_mutex_t, NULL);
         m_mutexInitalized = true;
@@ -84,8 +85,7 @@ static void Thread::mutex_lock() {
     pthread_mutex_lock(&m_mutex_t);
 }
 
-static void Thread::mutex_unlock() {
+void Thread::mutex_unlock() {
     pthread_mutex_unlock(&m_mutex_t);
 }
-*/
 
