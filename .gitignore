@@ -12,7 +12,6 @@ bin
 obj
 # make files
 Makefile.in
-Makefile.am
 *.swp
 *.*~
 autom4te.cache
