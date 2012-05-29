@@ -95,7 +95,8 @@ JNIEXPORT jboolean JNICALL Java_ConnectionWrapper_insert__JLjava_lang_String_2Lj
  * Signature: (JLjava/lang/String;Ljava/lang/String;LBSONObjWrapper;)Z
  */
 JNIEXPORT jboolean JNICALL Java_ConnectionWrapper_insert__JLjava_lang_String_2Ljava_lang_String_2LBSONObjWrapper_2
-(JNIEnv *, jobject, jlong, jstring, jstring, jobject) {
+(JNIEnv *env, jobject obj, jlong jconnection, jstring jdb, jstring jns, jobject jbson) {
+
 }
 
 /*
