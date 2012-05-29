@@ -38,4 +38,10 @@ JNIEXPORT jobject JNICALL Java_ConnectionManagerWrapper_getConnection
 JNIEXPORT void JNICALL Java_ConnectionManagerWrapper_releaseConnection
   (JNIEnv *env, jclass cl, jobject connection) {
 
+	  jclass clazzConnectionWrapper = env->FindClass("ConnectionWrapper");
+	  jmethodID id = env->GetMethodID(clazzConnectionWrapper, "connection", "()J");
+	  long lcon = env->CallLongMethod(connection, id);
+
+	  Connection* conn = (Connection*)lcon;
+	  ConnectionManager::releaseConnection(conn);
   }

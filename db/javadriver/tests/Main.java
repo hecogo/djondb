@@ -10,7 +10,15 @@ class Main {
 	
 	public static void main(String[] args) {
 		try {
-		ConnectionManagerWrapper.getConnection("localhost");
+			ConnectionWrapper con = ConnectionManagerWrapper.getConnection("localhost");
+
+			if (!con.open()) {
+				System.out.println("Not connected");
+			}
+
+			con.insert("dbjava", "nsjava", "{ 'name': 'Juan' }");
+
+			ConnectionManagerWrapper.releaseConnection(con);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
