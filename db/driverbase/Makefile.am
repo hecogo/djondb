@@ -16,7 +16,7 @@ libdjon_client_la_SOURCES= connection.cpp \
                                                      djondb_client.h
 TESTS = test-driverbase
 check_PROGRAMS = test-driverbase
-test_driverbase_CPPFLAGS = -I$(srcdir)../driverbase
+test_driverbase_CPPFLAGS = $(all_includes)
 test_driverbase_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest
 test_driverbase_SOURCES = tests/main.cpp
 

@@ -216,12 +216,6 @@ void DBController::update(char* db, char* ns, BSONObj* obj) {
 }
 
 StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
-	std::string filedir = concatStrings(_dataDir, db);
-	if (!existDir(filedir.c_str())) {
-		makeDir(filedir.c_str());
-	}
-	filedir = concatStrings(filedir, "/");
-
 	std::stringstream ss;
 	ss << ns << ".";
 	switch (type) {
@@ -248,17 +242,17 @@ StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 		spaces = itDB->second;
 	}
 
-	for (map<std::string, SpacesType>::iterator it = spaces->begin(); it != spaces->end(); it++) {
-		std::string key = it->first;
-		if (key.compare(fileName) == 0) {
-			SpacesType space = it->second;
-			stream = space.stream;
-			break;
-		}
+	map<std::string, SpacesType>::iterator it = spaces->find(fileName);
+
+	if (it != spaces->end()) {
+		stream = (it->second).stream;
 	}
+	
 	if (stream != NULL) {
 		return stream;
 	}
+	
+	std::string filedir = concatStrings(_dataDir, db);
 	std::string streamfile = concatStrings(filedir, fileName);
 	StreamType* output = new StreamType(streamfile, "ab+");
 	SpacesType space;
