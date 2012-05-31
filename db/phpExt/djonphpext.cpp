@@ -37,47 +37,46 @@ struct connection_object {
 
 void connection_free_storage(void *object TSRMLS_DC)
 {
-    syslog(LOG_INFO, "free storage");
-//    connection_object *obj = (connection_object *)object;
-//    obj->conn->close();
-//    delete obj->conn;
+    syslog(LOG_INFO, "connection_free_storage");
+    connection_object *obj = (connection_object *)object;
+    obj->conn->close();
+    delete obj->conn;
 
-//    zend_hash_destroy(obj->std.properties);
-//    FREE_HASHTABLE(obj->std.properties);
+    zend_hash_destroy(obj->std.properties);
+    FREE_HASHTABLE(obj->std.properties);
 
-//    efree(obj);
-//    test
+    efree(obj);
 }
 
 zend_object_value connection_create_handler(zend_class_entry *type TSRMLS_DC)
 {
-    syslog(LOG_INFO, "connection_create_handler" ); zval *tmp;
-    zend_object_value retval;
+	syslog(LOG_INFO, "connection_create_handler" ); zval *tmp;
+	zend_object_value retval;
 
-    connection_object *obj = (connection_object *)emalloc(sizeof(connection_object));
-    memset(obj, 0, sizeof(connection_object));
-    obj->std.ce = type;
+	connection_object *obj = (connection_object *)emalloc(sizeof(connection_object));
+	memset(obj, 0, sizeof(connection_object));
+	obj->std.ce = type;
 
-    ALLOC_HASHTABLE(obj->std.properties);
-    zend_hash_init(obj->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
-    zend_hash_copy(obj->std.properties, &type->default_properties,
-        (copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(zval *));
+	ALLOC_HASHTABLE(obj->std.properties);
+	zend_hash_init(obj->std.properties, 0, NULL, ZVAL_PTR_DTOR, 0);
+	zend_hash_copy(obj->std.properties, &type->default_properties,
+			(copy_ctor_func_t)zval_add_ref, (void *)&tmp, sizeof(zval *));
 
-    retval.handle = zend_objects_store_put(obj, NULL,
-        connection_free_storage, NULL TSRMLS_CC);
-    retval.handlers = &connection_object_handlers;
+	retval.handle = zend_objects_store_put(obj, NULL,
+			connection_free_storage, NULL TSRMLS_CC);
+	retval.handlers = &connection_object_handlers;
 
-    return retval;
+	return retval;
 }
 
 PHP_METHOD(Connection, __construct)
 {
-    syslog(LOG_INFO, "__construct" );
+	syslog(LOG_INFO, "__construct" );
 }
 
-PHP_METHOD(Connection, djon_insert)
+PHP_METHOD(Connection, insert)
 {
-    syslog(LOG_INFO, "djon_insert" );
+	syslog(LOG_INFO, "insert" );
 	char* db;
 	int db_len;
 	char* ns;
@@ -105,7 +104,7 @@ PHP_METHOD(Connection, djon_insert)
 	conn->insert(db, ns, json);
 }
 
-PHP_METHOD(Connection, djon_isconnected)
+PHP_METHOD(Connection, isconnected)
 {
 	char* ns;
 	int ns_len;
@@ -131,38 +130,38 @@ PHP_METHOD(Connection, djon_isconnected)
 	}
 }
 
-PHP_METHOD(Connection, djon_connect)
+PHP_METHOD(Connection, connect)
 {
-		syslog(LOG_INFO, "djon_connect" );
+	syslog(LOG_INFO, "connect" );
 	char* host;
-    int host_len;
-    Connection *conn = NULL;
-    zval *object = getThis();
+	int host_len;
+	Connection *conn = NULL;
+	zval *object = getThis();
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &host, &host_len) == FAILURE) {
-        RETURN_NULL();
-    }
-	 connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &host, &host_len) == FAILURE) {
+		RETURN_NULL();
+	}
+	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
 
-//	 if (obj->conn != NULL) {
-//		 obj->conn->close();
-//		 delete obj->conn;
-//		 obj->conn = NULL;
-//	 }
+	//	 if (obj->conn != NULL) {
+	//		 obj->conn->close();
+	//		 delete obj->conn;
+	//		 obj->conn = NULL;
+	//	 }
 
-	 if (__conn == NULL) {
-		 __conn		= ConnectionManager::getConnection(host);
-	 }
-	 Connection* con = __conn;
-	 if (con->isOpen() || con->open()) {
-		 syslog(LOG_INFO, "Connection open. host:" );
-		 obj->conn = con;
-	 } else {
-		 syslog(LOG_INFO, "Cannot connection to the selected host" );
-	 }
+	if (__conn == NULL) {
+		__conn		= ConnectionManager::getConnection(host);
+	}
+	Connection* con = __conn;
+	if (con->isOpen() || con->open()) {
+		syslog(LOG_INFO, "Connection open. host:" );
+		obj->conn = con;
+	} else {
+		syslog(LOG_INFO, "Cannot connection to the selected host" );
+	}
 }
 
-PHP_METHOD(Connection, djon_find)
+PHP_METHOD(Connection, find)
 {
 	char* db;
 	int db_len;
@@ -182,7 +181,7 @@ PHP_METHOD(Connection, djon_find)
 	conn->findByKey(db, ns, filter);
 }
 
-PHP_METHOD(Connection, djon_dropNamespace)
+PHP_METHOD(Connection, dropNamespace)
 {
 	char* db;
 	int db_len;
@@ -205,7 +204,7 @@ PHP_METHOD(Connection, djon_dropNamespace)
 	}
 }
 
-PHP_METHOD(Connection, djon_findByFilter)
+PHP_METHOD(Connection, findByFilter)
 {
 	char* db;
 	int db_len;
@@ -241,16 +240,16 @@ PHP_METHOD(Connection, djon_findByFilter)
 }
 
 
-	function_entry connection_methods[] = {
-		PHP_ME(Connection,  __construct,     NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
-			PHP_ME(Connection,  djon_insert,           NULL, ZEND_ACC_PUBLIC)
-			PHP_ME(Connection,  djon_connect,           NULL, ZEND_ACC_PUBLIC)
-			PHP_ME(Connection,  djon_isconnected,           NULL, ZEND_ACC_PUBLIC)
-			PHP_ME(Connection,  djon_find,      NULL, ZEND_ACC_PUBLIC)
-			PHP_ME(Connection,  djon_findByFilter,      NULL, ZEND_ACC_PUBLIC)
-			PHP_ME(Connection,  djon_dropNamespace,      NULL, ZEND_ACC_PUBLIC)
-			{NULL, NULL, NULL}
-	};
+function_entry connection_methods[] = {
+	PHP_ME(Connection,  __construct,     NULL, ZEND_ACC_PUBLIC | ZEND_ACC_CTOR)
+		PHP_ME(Connection,  insert,           NULL, ZEND_ACC_PUBLIC)
+		PHP_ME(Connection,  connect,           NULL, ZEND_ACC_PUBLIC)
+		PHP_ME(Connection,  isconnected,           NULL, ZEND_ACC_PUBLIC)
+		PHP_ME(Connection,  find,      NULL, ZEND_ACC_PUBLIC)
+		PHP_ME(Connection,  findByFilter,      NULL, ZEND_ACC_PUBLIC)
+		PHP_ME(Connection,  dropNamespace,      NULL, ZEND_ACC_PUBLIC)
+		{NULL, NULL, NULL}
+};
 
 PHP_MINIT_FUNCTION(djonPhpExt)
 {
@@ -283,7 +282,7 @@ zend_module_entry djonPhpExt_module_entry = {
 };
 
 #ifdef COMPILE_DL_DJONPHPEXT
-	extern "C" {
-		ZEND_GET_MODULE(djonPhpExt)
-	}
+extern "C" {
+	ZEND_GET_MODULE(djonPhpExt)
+}
 #endif
