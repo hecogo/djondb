@@ -1,60 +1,109 @@
-class BSONObjWrapper {
-	public native void add(long bson,String key, int i);
-	public native void add(long bson,String key, double d);
-	public native void add(long bson,String key, long l);
-	public native void add(long bson,String key, String val);
-	public native void add(long bson,String key, BSONObjWrapper bson);
-	//public native void add(long bson,String key, BSONArrayObj);
+import java.util.Iterator;
 
-	public native bool has(long bson,String key) ;
+public class BSONObjWrapper {
+	public native void add(long instance,String key, int i);
+	public native void add(long instance,String key, double d);
+	public native void add(long instance,String key, long l);
+	public native void add(long instance,String key, String val);
+	public native void add(long instance,String key, BSONObjWrapper bson);
+	//public native void add(long instance,String key, BSONArrayObj);
 
-	public native int* getInt(long bson,String key) ;
-	public native double* getDouble(long bson,String key) ;
-	public native long* getLong(long bson,String key) ;
-	public native String* getStrings(long bson,String key) ;
-	public native String getString(long bson,String key) ;
-	public native BSONObj* getBSON(long bson,String key) ;
-	//public native BSONArrayObj* getBSONArray(long bson,String key) ;
+	public native boolean has(long instance,String key) ;
 
-	public native Object getXpath(long bson,String xpath) ;
+	public native int getInt(long instance,String key) ;
+	public native double getDouble(long instance,String key) ;
+	public native long getLong(long instance,String key) ;
+	public native String getStrings(long instance,String key) ;
+	public native String getString(long instance,String key) ;
+	public native Object get(long instance,String key) ;
+	public native BSONObjWrapper getBSON(long instance,String key) ;
+	//public native BSONArrayObj* getBSONArray(long instance,String key) ;
 
-	//public native BSONTYPE type(long bson,String key) ;
+	public native Object getXpath(long instance,String xpath) ;
 
-	public native String* toString(long bson,) ;
+	//public native BSONTYPE type(long instance,String key) ;
 
-	public native std::map<String key, BSONContent* >::_iterator begin(long bson,) ;
-	public native std::map<String key, BSONContent* >::_iterator end(long bson,) ;
-	public native int length(long bson,) ;
+	public native String toString(long instance) ;
 
-	public void add(String key, int);
-	public void add(String key, double);
-	public void add(String key, long);
-	public void add(String key, String*);
-	public void add(String key, String);
-	public void add(String key, BSONObj);
-	public void add(String key, BSONArrayObj);
+	public native Iterator iterator(long instance);
+	public native int length(long instance) ;
 
-	public bool has(String key) ;
+	private long _instance;
 
-	public int* getInt(String key) ;
-	public double* getDouble(String key) ;
-	public long* getLong(String key) ;
-	public String* getStrings(String key) ;
-	public String getString(String key) ;
-	public BSONObj* getBSON(String key) ;
-	public BSONArrayObj* getBSONArray(String key) ;
-	public void* get(String key) ;
-	public BSONContent* getContent(String key) ;
-	public BSONContent* getContent(String key, BSONTYPE) ;
+	public BSONObjWrapper(long instance) {
+		_instance = instance;
+	}
 
-	public BSONContent getXpath(String xpath) ;
+	public long instance() {
+		return _instance;
+	}
 
-	public BSONTYPE type(String key) ;
+	public void add(String key, int i) {
+		add(_instance, key, i);
+	}
 
-	public String* toString() ;
+	public void add(String key, double d) {
+		add(_instance, key, d);
+	}
 
-	public std::map<String key, BSONContent* >::_iterator begin() ;
-	public std::map<String key, BSONContent* >::_iterator end() ;
-	public int length() ;
+	public void add(String key, long l) {
+		add(_instance, key, l);
+	}
+
+	public void add(String key, String str) {
+		add(_instance, key, str);
+	}
+
+	public void add(String key, BSONObjWrapper bson) {
+		add(_instance, key, bson);
+	}
+
+//	public void add(String key, BSONArrayObj);
+
+	public boolean has(String key) {
+		return has(_instance, key);
+	}	
+
+	public int getInt(String key)  {
+		return getInt(_instance, key);
+	}
+
+	public double getDouble(String key) {
+		return getDouble(_instance, key);
+	}
+
+	public long getLong(String key) {
+		return getLong(_instance, key);
+	}
+
+	public String getString(String key) {
+		return getString(_instance, key);
+	}
+
+	public BSONObjWrapper getBSON(String key) {
+		return getBSON(_instance, key);
+	}
+
+//	public BSONArrayObj* getBSONArray(String key) ;
+//
+	public Object get(String key) {
+		return get(_instance, key);
+	}
+
+	public Object getXpath(String xpath) {
+		return getXpath(_instance, xpath);
+	}
+
+	public String toString() {
+		return toString(_instance);
+	}
+
+	public Iterator iterator() {
+		return iterator(_instance);
+	}
+	
+	public int length() {
+		return length(_instance);
+	}
 
 }
