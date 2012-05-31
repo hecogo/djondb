@@ -22,14 +22,14 @@ if (!extension_loaded('djonPhpExt')) {
 
 	}
 
-		$c->djon_connect("localhost");
+		$c->connect("localhost");
 //	$guid = uniqid();
 
 	$data = $_POST['data'];
 
 	$text = json_encode($data);
 
-	$c->djon_insert('djonlistdb', 'test.demo', $text);
+	$c->insert('djonlistdb', 'test.demo', $text);
 }
 print 'done';
 ?>

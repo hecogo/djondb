@@ -21,6 +21,7 @@
 #include "dropnamespacecommand.h"
 #include "updatecommand.h"
 #include "findcommand.h"
+#include "shutdowncommand.h"
 #include "bsoninputstream.h"
 #include "util.h"
 
@@ -62,6 +63,12 @@ DropnamespaceCommand* parseDropnamespace(InputStream* is)  {
 
     delete db;
     delete ns;
+    return command;
+}
+
+ShutdownCommand* parseShutdown(InputStream* is)  {
+    ShutdownCommand* command = new ShutdownCommand();
+
     return command;
 }
 
@@ -124,6 +131,9 @@ Command* CommandReader::readCommand() {
             break;
         case DROPNAMESPACE:
             cmd = parseDropnamespace(_stream);
+            break;
+        case SHUTDOWN:
+            cmd = parseShutdown(_stream);
             break;
         case CLOSECONNECTION: // Insert
             cmd = new CloseCommand();

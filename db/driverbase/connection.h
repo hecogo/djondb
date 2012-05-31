@@ -34,6 +34,8 @@ namespace djondb {
             void internalClose();
             bool isOpen() const;
 
+				bool shutdown() const;
+
 				bool insert(const std::string& db, const std::string& ns, const std::string& json);
             bool insert(const std::string& db, const std::string& ns, const BSONObj& obj);
             BSONObj* findByKey(const std::string& db, const std::string& ns, const std::string& id);

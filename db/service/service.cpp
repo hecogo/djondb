@@ -40,6 +40,6 @@ int service_shutdown() {
 	return 0;
 }
 
-int service_status() {
-	return 0;
+bool service_running() {
+	return __service->running();
 }

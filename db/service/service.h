@@ -7,6 +7,6 @@ int service_startup();
 int service_shutdown();
 int service_restart();
 
-int service_status();
+bool service_running();
 
 #endif // SERVICE_H_INCLUDED

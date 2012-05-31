@@ -46,6 +46,7 @@ class DBController
         BSONObj* findFirst(char* db, char* ns, BSONObj* filter);
         BSONObj* findFirst(char* db, char* ns, const char* filter);
         BSONObj* readBSON(StreamType* stream);
+
     protected:
     private:
 		  std::map<std::string, std::map<std::string, SpacesType>* > _spaces;

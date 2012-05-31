@@ -25,6 +25,7 @@
 #include "dropnamespacecommand.h"
 #include "findcommand.h"
 #include "updatecommand.h"
+#include "shutdowncommand.h"
 #include "bsoninputstream.h"
 #include "connectionmanager.h"
 #include "util.h"
@@ -104,6 +105,14 @@ bool Connection::insert(const std::string& db, const std::string& ns, const std:
 	bool result = insert(db, ns, *obj);
 	delete obj;
 	return result;
+}
+
+bool Connection::shutdown() const {
+	if (_logger->isDebug()) _logger->debug(2, "Shutdown command");
+	ShutdownCommand cmd;
+
+	_commandWriter->writeCommand(&cmd);
+	return true;
 }
 
 bool Connection::insert(const std::string& db, const std::string& ns, const BSONObj& bson) {

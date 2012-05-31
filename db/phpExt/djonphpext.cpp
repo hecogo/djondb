@@ -181,6 +181,15 @@ PHP_METHOD(Connection, find)
 	conn->findByKey(db, ns, filter);
 }
 
+PHP_METHOD(Connection, shutdown)
+{
+	zval *object = getThis();
+
+	connection_object *obj = (connection_object *)zend_object_store_get_object(object TSRMLS_CC);
+	Connection* conn = __conn;//obj->conn;
+	conn->shutdown();
+}
+
 PHP_METHOD(Connection, dropNamespace)
 {
 	char* db;
@@ -248,6 +257,7 @@ function_entry connection_methods[] = {
 		PHP_ME(Connection,  find,      NULL, ZEND_ACC_PUBLIC)
 		PHP_ME(Connection,  findByFilter,      NULL, ZEND_ACC_PUBLIC)
 		PHP_ME(Connection,  dropNamespace,      NULL, ZEND_ACC_PUBLIC)
+		PHP_ME(Connection,  shutdown,      NULL, ZEND_ACC_PUBLIC)
 		{NULL, NULL, NULL}
 };
 

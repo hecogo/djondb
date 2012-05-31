@@ -21,6 +21,7 @@
 #include "dropnamespacecommand.h"
 #include "updatecommand.h"
 #include "findcommand.h"
+#include "shutdowncommand.h"
 #include "bsonoutputstream.h"
 #include <memory>
 #include <iostream>
@@ -49,6 +50,11 @@ int CommandWriter::writeInsert(InsertCommand* cmd, OutputStream* out)  {
 
     std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
     bsonout->writeBSON(*cmd->bson());
+
+    return 0;
+}
+
+int CommandWriter::writeShutdown(ShutdownCommand* cmd, OutputStream* out)  {
 
     return 0;
 }
@@ -100,6 +106,9 @@ int CommandWriter::writeCommand(Command* cmd) {
             break;
         case DROPNAMESPACE:
             ret = writeDropnamespace((DropnamespaceCommand*)cmd, _stream);
+            break;
+        case SHUTDOWN:
+            ret = writeShutdown((ShutdownCommand*)cmd, _stream);
             break;
         case CLOSECONNECTION: // Nothing to be done
             break;

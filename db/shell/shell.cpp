@@ -84,6 +84,7 @@ v8::Handle<v8::Value> Load(const v8::Arguments& args);
 v8::Handle<v8::Value> Quit(const v8::Arguments& args);
 v8::Handle<v8::Value> Version(const v8::Arguments& args);
 v8::Handle<v8::Value> insert(const v8::Arguments& args);
+v8::Handle<v8::Value> shutdown(const v8::Arguments& args);
 v8::Handle<v8::Value> fuuid(const v8::Arguments& args);
 v8::Handle<v8::Value> connect(const v8::Arguments& args);
 v8::Handle<v8::Value> help(const v8::Arguments& args);
@@ -145,6 +146,8 @@ v8::Persistent<v8::Context> CreateShellContext() {
 	global->Set(v8::String::New("connect"), v8::FunctionTemplate::New(connect));
 	// Bind the 'db.help' function
 	global->Set(v8::String::New("help"), v8::FunctionTemplate::New(help));
+	// Bind the global 'shutdown' function to the C++ Load callback.
+	global->Set(v8::String::New("shutdown"), v8::FunctionTemplate::New(shutdown));
 
 	return v8::Context::New(NULL, global);
 }
@@ -217,6 +220,21 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 	return v8::String::New("");
 }
 
+v8::Handle<v8::Value> shutdown(const v8::Arguments& args) {
+	if (args.Length() != 0) {
+		v8::ThrowException(v8::String::New("usage: db.shutdown()"));
+	}
+
+	v8::HandleScope handle_scope;
+
+	if (__djonConnection == NULL) {
+		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+	}
+	__djonConnection->shutdown();
+
+	return v8::String::New("");
+}
+
 v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
 	if (args.Length() < 2) {
 		v8::ThrowException(v8::String::New("usage: db.dropNamespace(db, namespace)"));
@@ -252,6 +270,7 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 		printf("load(file)\n");
 		printf("print(text)\n");
 		printf("dropNamespace(db, namespace)\n");
+		printf("shutdown()\n");
 	}
 	return v8::Undefined();
 }
