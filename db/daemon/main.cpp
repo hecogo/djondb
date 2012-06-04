@@ -229,6 +229,7 @@ int main(int argc, char *argv[]) {
 		
 		if (!service_running()) {
 			syslog(LOG_INFO, "service down");
+			exit(0);
 			break;
 		}
 	}

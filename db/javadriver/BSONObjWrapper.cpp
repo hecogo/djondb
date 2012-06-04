@@ -117,11 +117,11 @@ JNIEXPORT jint JNICALL Java_BSONObjWrapper_getInt
 	  jboolean iscopy;
 	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
 
-	  int i = (int)obj->getInt(key);
+	  int* i = (int*)obj->getInt(key);
 
 	  env->ReleaseStringUTFChars(jkey, key);
 
-	  return i;
+	  return *i;
 }
 
 /*

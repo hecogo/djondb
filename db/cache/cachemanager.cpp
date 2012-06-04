@@ -37,3 +37,4 @@ StructureCache* CacheManager::structuresCache() {
 ObjectCache* CacheManager::objectCache() {
     return objects;
 }
+

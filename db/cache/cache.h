@@ -17,6 +17,17 @@ class Cache
         void remove(const K& key);
         bool containsKey(const K& key) const;
 
+		  typedef typename map<K, V>::iterator iterator;
+
+		  iterator begin();
+		  iterator end();
+		  void erase(iterator position);
+		  void clear();
+
+		  typedef typename map<K,V>::size_type size_type;
+
+		  size_type size() const;
+
         V& operator[](const K& key);
 
     protected:
@@ -39,6 +50,31 @@ template <class K, class V>
 Cache<K, V>::Cache(const Cache& other)
 {
     this->_elements = other._elements;
+}
+
+template <class K, class V>
+typename Cache<K, V>::iterator Cache<K,V>::begin() {
+	return _elements.begin();
+}
+
+template <class K, class V>
+typename Cache<K, V>::iterator Cache<K,V>::end() {
+	return _elements.end();
+}
+
+template <class K, class V>
+void Cache<K,V>::erase(iterator position) {
+	return _elements.erase(position);
+}
+
+template <class K, class V>
+void Cache<K,V>::clear() {
+	return _elements.clear();
+}
+
+template <class K, class V>
+typename Cache<K, V>::size_type Cache<K, V>::size() const {
+	return _elements.size();
 }
 
 template <class K, class V>

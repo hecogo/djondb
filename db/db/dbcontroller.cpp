@@ -50,6 +50,23 @@ DBController::~DBController()
 void DBController::shutdown() {
 	if (_logger->isInfo()) _logger->info("DBController shutting down");
 	saveDatabases();
+	clearCache();
+}
+
+void DBController::clearCache() {
+	if (_logger->isInfo()) _logger->info("DBController::clearCache");
+	for (ObjectCache::iterator i = CacheManager::objectCache()->begin(); i != CacheManager::objectCache()->end(); i++) {
+		BSONObj* item = i->second;
+		delete item;
+	}
+	CacheManager::objectCache()->clear();
+
+	for (StructureCache::iterator i = CacheManager::structuresCache()->begin(); i != CacheManager::structuresCache()->end(); i++) {
+		Structure* item = i->second;
+		delete item;
+	}
+	CacheManager::structuresCache()->clear();
+
 }
 
 void DBController::saveDatabases() {
@@ -181,6 +198,7 @@ BSONObj* DBController::insert(char* db, char* ns, BSONObj* obj) {
 	} else if (obj->type("_id") == PTRCHAR_TYPE) {
 		id = std::string(obj->getChars("_id"));
 	}
+	assert(id.length() > 0);
 	//    long crcStructure = checkStructure(obj);
 
 	//    char* text = obj->toChar();
@@ -247,12 +265,14 @@ StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 	if (it != spaces->end()) {
 		stream = (it->second).stream;
 	}
-	
+
 	if (stream != NULL) {
 		return stream;
 	}
-	
+
 	std::string filedir = concatStrings(_dataDir, db);
+	filedir += "/";
+	assert(makeDir(filedir.c_str()));
 	std::string streamfile = concatStrings(filedir, fileName);
 	StreamType* output = new StreamType(streamfile, "ab+");
 	SpacesType space;
@@ -317,7 +337,7 @@ void DBController::insertIndex(char* db, char* ns, BSONObj* bson, long filePos) 
 
 std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const BSONObj& filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, bsonFilter: %s", db, ns, filter.toChar());
-	std::string filedir = _dataDir + "/" + db;
+	std::string filedir = _dataDir + db;
 	filedir = filedir + "/";
 
 	std::stringstream ss;
@@ -393,7 +413,7 @@ std::vector<BSONObj*> DBController::find(char* db, char* ns, const BSONObj& filt
 			out->flush();
 			//    out->close();
 
-			std::string filedir = _dataDir + "/" + db;
+			std::string filedir = _dataDir + db;
 			filedir = filedir + "/";
 
 			std::stringstream ss;
@@ -444,7 +464,7 @@ std::vector<BSONObj*> DBController::find(char* db, char* ns, const char* filter)
 
 BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFirst db: %s, ns: %s, filter: %s", db, ns, filter);
-	std::string filedir = _dataDir + "/" + db;
+	std::string filedir = _dataDir + db;
 	filedir = filedir + "/";
 
 	std::stringstream ss;
@@ -484,7 +504,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
 
 std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const char* filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, filter: %s", db, ns, filter);
-	std::string filedir = _dataDir + "/" + db;
+	std::string filedir = _dataDir + db;
 	filedir = filedir + "/";
 
 	std::stringstream ss;
@@ -501,7 +521,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const char*
 
 	while (!fis->eof()) {
 		BSONObj* obj = bis->readBSON();
-		
+
 		bool match = false;
 		ExpressionResult* expresult = parser->eval(*obj);
 		if (expresult->type() == RT_BOOLEAN) {

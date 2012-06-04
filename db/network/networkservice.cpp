@@ -266,6 +266,13 @@ void *startSocketListener(void* arg) {
 					if (sock == fdmax) {
 						fdmax--;
 					}
+					std::map<int, NetworkOutputStream*>::iterator itNos = __mapOutput.find(sock);
+					std::map<int, NetworkInputStream*>::iterator itNis = __mapInput.find(sock);
+					NetworkOutputStream* nos = itNos->second;
+					delete nos;
+					delete nis;
+					__mapInput.erase(itNis);
+					__mapOutput.erase(itNos);
 				}
 			}
 		}
@@ -277,6 +284,18 @@ void *startSocketListener(void* arg) {
 	WSACleanup();
 #endif
 	//    pthread_exit(arg);
+	for (std::map<int, NetworkInputStream*>::iterator i = __mapInput.begin(); i != __mapInput.end(); i++) {
+		NetworkInputStream* nis = i->second;
+		delete nis;
+	}
+	__mapInput.clear();
+	for (std::map<int, NetworkOutputStream*>::iterator i = __mapOutput.begin(); i != __mapOutput.end(); i++) {
+		NetworkOutputStream* nos = i->second;
+		delete nos;
+	}
+	__mapOutput.clear();
+
+
 	return NULL;
 }
 int __status;
@@ -317,6 +336,8 @@ int processRequest(NetworkService* service, void *arg) {
 	int commands = 0;
 	if (nis->isClosed()) {
 		if (log->isDebug()) log->debug("The connection was closed and nothing is available to be processed");
+		delete nis;
+		delete nos;
 		__mapInput.erase(itNis);
 		__mapOutput.erase(itNos);
 		return -1;

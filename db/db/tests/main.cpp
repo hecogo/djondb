@@ -285,6 +285,12 @@ class TestDBSuite: public Test::Suite
 			TEST_ASSERT(result->type() == RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
+
+			parser = FilterParser::parse("($'name' == \"John\")");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(*bres);
 		}
 
 		void testFilterExpressionParserEquals() {
@@ -387,8 +393,8 @@ class TestDBSuite: public Test::Suite
 				int test = rand() % 10;
 				if (test > 0)
 				{
-					__ids.push_back(new std::string(((std::string*)obj->getString("_id"))->c_str()));
-					fos.writeString(*obj->getString("_id"));
+					__ids.push_back(new std::string(obj->getString("_id").c_str()));
+					fos.writeString(obj->getString("_id"));
 				}
 				if ((x % 1000000) == 0)
 				{
@@ -429,8 +435,8 @@ class TestDBSuite: public Test::Suite
 				BSONObj obj;
 				obj.add("_id", *id);
 				BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
-				std::string* id2 = res->getString("_id");
-				if ((id2 == NULL) || (id2->compare(*id) != 0))
+				std::string id2 = res->getString("_id");
+				if (id2.compare(*id) != 0)
 				{
 					TEST_FAIL("id not found");
 				}
@@ -498,9 +504,8 @@ class TestDBSuite: public Test::Suite
 			std::string filter = "$'age' == 45";
 			std::vector<BSONObj*> found = controller.find("dbtest", "find.filter2",filter.c_str());
 			TEST_ASSERT(found.size() == 1); 
-			std::string* name = found.at(0)->getString("lastName");
-			TEST_ASSERT(name != NULL);
-			TEST_ASSERT(name->compare("Smith") == 0);
+			std::string name = found.at(0)->getString("lastName");
+			TEST_ASSERT(name.compare("Smith") == 0);
 
 			filter = "";
 			found = controller.find("dbtest", "find.filter2",filter.c_str());
@@ -510,11 +515,9 @@ class TestDBSuite: public Test::Suite
 			found = controller.find("dbtest", "find.filter2",filter.c_str());
 			TEST_ASSERT(found.size() == 2); 
 			name = found.at(0)->getString("lastName");
-			TEST_ASSERT(name != NULL);
-			TEST_ASSERT(name->compare("Crossley") == 0);
+			TEST_ASSERT(name.compare("Crossley") == 0);
 			name = found.at(1)->getString("lastName");
-			TEST_ASSERT(name != NULL);
-			TEST_ASSERT(name->compare("Clark") == 0);
+			TEST_ASSERT(name.compare("Clark") == 0);
 		}
 
 		void testFindPrevious()
@@ -546,10 +549,10 @@ class TestDBSuite: public Test::Suite
 				}
 				else
 				{
-					std::string* id2 = res->getString("_id");
+					std::string id2 = res->getString("_id");
 					//        cout << "Looking for: " << *id << endl;
 					//        cout << "Found        " << *id2 << endl;
-					if ((id2 == NULL) || (id2->compare(*id) != 0))
+					if (id2.compare(*id) != 0)
 					{
 						TEST_FAIL("findFirst returned an incorrect result");
 					}
@@ -605,8 +608,7 @@ class TestDBSuite: public Test::Suite
 				TEST_ASSERT(index != NULL);
 				BSONObj* key = index->key;
 				TEST_ASSERT(key != NULL);
-				TEST_ASSERT(key->getString("_id") != NULL);
-				TEST_ASSERT(key->getString("_id")->compare(guid) == 0);
+				TEST_ASSERT(key->getString("_id").compare(guid) == 0);
 
 				ids.erase(i);
 			}

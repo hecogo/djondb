@@ -48,6 +48,9 @@ InsertCommand* parseInsert(InputStream* is)  {
     BSONObj* obj = bsonis->readBSON();
     command->setBSON(*obj);
 
+	 Logger* log = getLogger(NULL);
+	 delete log;
+
     delete ns;
     delete db;
     delete obj;
@@ -114,6 +117,7 @@ Command* CommandReader::readCommand() {
 	if (log->isDebug()) log->debug("readCommand: reading version");
 	std::string* version = _stream->readString();
 	if (log->isDebug()) log->debug("readCommand: version %s", version->c_str());
+	delete version;
 
     COMMANDTYPE type = static_cast<COMMANDTYPE>(_stream->readInt());
 
