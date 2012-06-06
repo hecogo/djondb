@@ -31,8 +31,7 @@ class Logger {
         #ifdef LINUX
         timespec _ts1;
         timespec _ts2;
-        #endif
-        #ifdef WINDOWS
+	#else
         struct timeval _ts1;
         struct timeval _ts2;
         #endif

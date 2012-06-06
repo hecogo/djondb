@@ -14,17 +14,9 @@
 #define PACKAGE_VERSION "0.1"
 #endif
 
-/*
-#if defined Q_WS_MAC
+#ifdef __MACH__ || __APPLE__ || TARGET_OS_MAC
 #define MAC
 #endif
-#if defined Q_WS_WIN
-#define WINDOWS
-#endif
-#if defined Q_WS_X11
-#define LINUX
-#endif
-*/
 
 //#define VERSION "1.2.20110726"
 

@@ -32,7 +32,7 @@
 #include <netinet/tcp.h>
 #endif
 
-#ifndef WINDOWS
+#ifdef LINUX 
 	int __sendFlags_networkoutput = MSG_NOSIGNAL;
 #else
 	int __sendFlags_networkoutput = MSG_DONTROUTE;

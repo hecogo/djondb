@@ -29,6 +29,11 @@
 #ifndef WINDOWS
 #include <syslog.h>
 #endif
+#ifdef MAC
+#include <mach/clock.h>
+#include <mach/mach.h>
+#endif
+
 
 #ifndef WINDOWS
 #define WRITE(TYPE, TEXT) \
@@ -74,7 +79,7 @@ timespec diff(timespec start, timespec end)
 }
 #endif
 
-#ifdef WINDOWS
+#ifndef WINDOWS // This works in mac and linux
 timeval diff(timeval start, timeval end)
 {
 	timeval temp;
@@ -86,6 +91,23 @@ timeval diff(timeval start, timeval end)
 		temp.tv_usec = end.tv_usec-start.tv_usec;
 	}
 	return temp;
+}
+#endif
+
+
+
+
+#ifdef MAC // OS X does not have clock_gettime, use clock_get_time
+int clock_gettime(int X, struct timeval *tv) 
+{
+	clock_serv_t cclock;
+	mach_timespec_t mts;
+	host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+	clock_get_time(cclock, &mts);
+	mach_port_deallocate(mach_task_self(), cclock);
+	tv->tv_sec = mts.tv_sec;
+	tv->tv_usec = mts.tv_nsec * 0.000001; 
+
 }
 #endif
 
@@ -170,19 +192,19 @@ Logger::Logger(void* clazz) {
 }
 
 /*
-	std::string format(const char * message, ...) {
-	char* buffer = (char*)malloc(1000);
-	memset(buffer, 0, 1000);
-	va_list args;
-	va_start (args, message);
-	vsprintf (buffer,message, args);
-	va_end(args);
-	std::string result;
-	std::stringstream ss;
-	ss << buffer;
-	free(buffer);
-	}
-	*/
+   std::string format(const char * message, ...) {
+   char* buffer = (char*)malloc(1000);
+   memset(buffer, 0, 1000);
+   va_list args;
+   va_start (args, message);
+   vsprintf (buffer,message, args);
+   va_end(args);
+   std::string result;
+   std::stringstream ss;
+   ss << buffer;
+   free(buffer);
+   }
+ */
 
 void Logger::debug(string message, ...) {
 	// default debug behaviour is maximum detail
@@ -228,17 +250,16 @@ bool Logger::isWarn() {
 }
 
 void Logger::startTimeRecord() {
-#ifndef _WIN32
-	int interval = CLOCK_REALTIME;// CLOCK_PROCESS_CPUTIME_ID;
-#else
-	int interval = 0;// CLOCK_PROCESS_CPUTIME_ID;
+int interval = 0;
+#ifdef LINUX
+	interval = CLOCK_REALTIME;// CLOCK_PROCESS_CPUTIME_ID;
 #endif
 
 	clock_gettime(interval, &_ts1);
 }
 
 void Logger::stopTimeRecord() {
-#ifndef _WIN32
+#ifdef LINUX
 	int interval = CLOCK_REALTIME;// CLOCK_PROCESS_CPUTIME_ID;
 #else
 	int interval = 0;// CLOCK_PROCESS_CPUTIME_ID;
