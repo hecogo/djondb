@@ -56,6 +56,8 @@ void* copyValue(RESULT_TYPE type, void* value) {
 				result = s;
 				break;
 			}
+		case RT_NULL:
+			break;
 		default:
 			assert(false);
 			break;

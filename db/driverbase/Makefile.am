@@ -19,9 +19,15 @@ check_PROGRAMS = test-driverbase
 test_driverbase_CPPFLAGS = $(all_includes)
 test_driverbase_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lcpptest
 test_driverbase_SOURCES = tests/main.cpp
+if !MAC
+test_driverbase_LDADD += -lrt -lpthread -luuid
+endif
 
 bin_PROGRAMS = test-performance
 test_performance_SOURCES = tests/testperformance.cpp
 test_performance_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lcpptest
 
+if !MAC
+test_performance_LDADD += -lrt -lpthread -luuid
+endif
 djon_client_libincludedir = $(libdir)/djon-client-1.0/include

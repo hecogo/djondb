@@ -291,6 +291,13 @@ class TestDBSuite: public Test::Suite
 			TEST_ASSERT(result->type() == RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
+
+			// Eval an attribute that does not exist
+			parser = FilterParser::parse("($'nn' == \"John\")");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(!*bres);
 		}
 
 		void testFilterExpressionParserEquals() {
