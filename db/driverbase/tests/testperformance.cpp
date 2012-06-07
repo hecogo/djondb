@@ -31,14 +31,17 @@ class TestPerfomance {
 		void testPerfomance() {
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
-			conn->open();
+			if (!conn->open()) {
+				cout << "Not connected" << endl;
+				exit(0);
+			}
 
 			// 1k inserts
 			//
 			Logger* log = getLogger(NULL);
 			log->startTimeRecord();
 			int tests[] = { 10, 100, 1000, 10000, 1000000, 10000000};
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 4; i++) {
 				cout << "Testing performance over: " << tests[i] << " inserts" << endl;
 				for (int x = 0; x < tests[i]; x++) {
 					std::string* uid = uuid();
@@ -66,7 +69,6 @@ class TestPerfomance {
 				}
 				if ((time.totalSecs() > 0) && ((tests[i] / time.totalSecs()) < 16000))  {
 					cout << "Performance is not good enough" << endl;
-					break;
 				}
 			}
 
