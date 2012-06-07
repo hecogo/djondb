@@ -63,7 +63,6 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ADD(TestDriverBaseSuite::testInsert);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
-			TEST_ADD(TestDriverBaseSuite::testPerformance);
 
 			TEST_ADD(TestDriverBaseSuite::testDropNamespace);
 			//TEST_ADD(TestDriverBaseSuite::testTransactions);
@@ -88,7 +87,7 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			Logger* log = getLogger(NULL);
 
-			cout << "Starting " << endl;
+			cout << "\nStarting " << endl;
 
 			log->startTimeRecord();
 			__running = true;
@@ -96,7 +95,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			Connection* conn = ConnectionManager::getConnection(std::string(_host));
 
 			if (!conn->open()) {
-				cout << "Could not connect to " << _host << endl;
+				cout << "\nCould not connect to " << _host << endl;
 				exit(0);
 			}
 			std::vector<std::string> ids;
@@ -120,7 +119,7 @@ class TestDriverBaseSuite: public Test::Suite {
 				conn->insert("db", "driverbase.test", obj);
 
 				if ((inserts > 9) && (x % (inserts / 10)) == 0) {
-					cout << x << " Records sent" << endl;
+					cout << "\n" << x << " Records sent" << endl;
 				}
 			}
 			FileOutputStream* fosIds = new FileOutputStream("results.txt", "wb");
@@ -130,20 +129,20 @@ class TestDriverBaseSuite: public Test::Suite {
 				fosIds->writeString(s);
 			}
 			fosIds->close();
-			cout << "all sent" << endl;
+			cout << "\nall sent" << endl;
 
 			log->stopTimeRecord();
 
 			DTime rec = log->recordedTime();
 
 			int secs = rec.totalSecs();
-			cout<< "inserts " << inserts << ", time: " << rec.toChar() << endl;
+			cout << "\ninserts " << inserts << ", time: " << rec.toChar() << endl;
 
 			if (secs > 0) {
-				cout << "Throughput: " << (inserts / secs) << " ops." << endl;
+				cout << "\nThroughput: " << (inserts / secs) << " ops." << endl;
 			}
-			cout << "------------------------------------------------------------" << endl;
-			cout << "Ready to close the connection" << endl;
+			cout << "\n------------------------------------------------------------" << endl;
+			cout << "\nReady to close the connection" << endl;
 			//getchar();
 			__running = false;
 
@@ -158,13 +157,13 @@ class TestDriverBaseSuite: public Test::Suite {
 			int maxfinds = 1;
 			Logger* log = getLogger(NULL);
 
-			cout << "Starting testFinds" << endl;
+			cout << "\nStarting testFinds" << endl;
 
 			__running = true;
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
-				cout << "Cannot connect to localhost" << endl;
+				cout << "\nCannot connect to localhost" << endl;
 				exit(0);
 			}
 
@@ -197,23 +196,27 @@ class TestDriverBaseSuite: public Test::Suite {
 		void testFindByFilter() {
 			// Insert record to search for
 
-			BSONObj* obj = BSONParser::parse("{name: 'Test'}");
+			BSONObj* obj = BSONParser::parse("{'name': 'Test', 'inner': { 'x': 1 }}");
 
 			//delete id;
 
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
-				cout << "Cannot connect to localhost" << endl;
+				cout << "\nCannot connect to localhost" << endl;
 				exit(0);
 			}
+
+
+			// Drops the current namespace to start from scratch
+			conn->dropNamespace("db", "test.filter2");
 
 			conn->insert("db", "test.filter2", *obj);
 
 			// doing search
 			//
 
-			cout << "Testbyfilter" << endl;
+			cout << "\nTestbyfilter" << endl;
 			std::string filter = "";
 			std::vector<BSONObj*> result = conn->find("db", "test.filter2", filter);			
 			TEST_ASSERT(result.size() > 0);
@@ -227,61 +230,29 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ASSERT(strcmp(objR->getChars("name"), "Test") == 0);
 
 			char* temp = objR->toChar();
-			cout << "obj: " << temp << endl;
+			cout << "\nobj: " << temp << endl;
+
+			result = conn->find("db", "test.filter2", "$'name' == 'Test'");
+			TEST_ASSERT(result.size() == 1);
+
+			result = conn->find("db", "test.filter2", "$'inner.x' == 1");
+			TEST_ASSERT(result.size() == 1);
+
+			result = conn->find("db", "test.filter2", "$'inner.x' > 0");
+			TEST_ASSERT(result.size() == 1);
+
+			result = conn->find("db", "test.filter2", "$'inner.x' > 1");
+			TEST_ASSERT(result.size() == 0);
+
 			delete objR;
 
-		}
-
-		void testPerformance() {
-			Connection* conn = ConnectionManager::getConnection("localhost");
-
-			// 1k inserts
-			//
-			Logger* log = getLogger(NULL);
-			log->startTimeRecord();
-			BSONObj obj;
-			char* text = (char*)malloc(1001);
-			memset(text, 0, 1001);
-			memset(text, 'a', 1000);
-
-			obj.add("text", text);
-
-			int tests[] = { 10, 100, 1000, 10000, 1000000, 10000000};
-			for (int i = 0; i < 6; i++) {
-				cout << "Testing performance over: " << tests[i] << " inserts" << endl;
-				for (int x = 0; x < tests[i]; x++) {
-					std::string* uid = uuid();
-					obj.add("_id", *uid);
-					delete uid;
-					conn->insert("db", "test.performance", obj);
-				}
-
-				log->stopTimeRecord();
-
-				DTime time = log->recordedTime();
-
-				if (time.totalSecs() > 0) {
-					cout << "Performance over: " << tests[i] << " inserts:" << (tests[i] / time.totalSecs()) << endl;
-				} else {
-					cout << "Total time is not enough to do some calculations" << endl;
-				}
-				if ((time.totalSecs() > 0) && ((tests[i] / time.totalSecs()) < 16000))  {
-					TEST_FAIL("Performance is not good enough");
-					break;
-				}
-			}
-
-			conn->close();
-
-			free(text);
-			delete log;
 		}
 
 		void testUpdate() {
 			int maxupdates = 1;
 			Logger* log = getLogger(NULL);
 
-			cout << "Starting " << endl;
+			cout << "\nStarting " << endl;
 
 			log->startTimeRecord();
 			__running = true;
@@ -289,7 +260,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
-				cout << "Cannot connect to localhost" << endl;
+				cout << "\nCannot connect to localhost" << endl;
 				exit(0);
 			}
 			FileInputStream* fisIds = new FileInputStream("results.txt", "rb");
@@ -298,7 +269,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			if ((maxupdates > -1) && (count > maxupdates)) {
 				count = maxupdates;
 			}
-			cout << "Records to update: " << count << endl;
+			cout << "\nRecords to update: " << count << endl;
 
 			std::vector<std::string> idsUpdated;
 			for (x =0; x < count; x++) {
@@ -318,13 +289,13 @@ class TestDriverBaseSuite: public Test::Suite {
 				conn->update("db", "driverbase.test", obj);
 
 				if ((count > 9) && (x % (count / 10)) == 0) {
-					cout << x << " Records received" << endl;
+					cout << "\n" << x << " Records received" << endl;
 				}
 			}
 
 			log->stopTimeRecord();
 
-			cout << "Executing a verification" << endl;
+			cout << "\nExecuting a verification" << endl;
 
 			for (std::vector<std::string>::iterator i = idsUpdated.begin(); i != idsUpdated.end(); i++) {
 				std::string guid = *i;
@@ -347,10 +318,10 @@ class TestDriverBaseSuite: public Test::Suite {
 			cout<< "finds " << count << ", time: " << rec.toChar() << endl;
 
 			if (secs > 0) {
-				cout << "Throughput: " << (count / secs) << " ops." << endl;
+				cout << "\nThroughput: " << (count / secs) << " ops." << endl;
 			}
-			cout << "------------------------------------------------------------" << endl;
-			cout << "Ready to close the connection" << endl;
+			cout << "\n------------------------------------------------------------" << endl;
+			cout << "\nReady to close the connection" << endl;
 			//getchar();
 			__running = false;
 
