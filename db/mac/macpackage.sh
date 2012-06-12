@@ -102,7 +102,7 @@
 	install_name_tool -change /usr/lib/libdjon-service.0.dylib @executable_path/libdjon-service.0.dylib djondb.app/djon-shell
 	install_name_tool -change /usr/lib/libdjon-network.0.dylib @executable_path/libdjon-network.0.dylib djondb.app/djon-shell
 	install_name_tool -change /usr/lib/libdjon-client.0.dylib @executable_path/libdjon-client.0.dylib djondb.app/djon-shell
-	install_name_tool -change /usr/lib/libv8.dylib @executable_path/libv8.dylib djondb.app/djon-shell
+	install_name_tool -change /Users/User/development/v8/out/x64.release/libv8.dylib @executable_path/libv8.dylib djondb.app/djon-shell
 
 	# macdeployqt djondb.app -dmg
         # check paths with otool -L
