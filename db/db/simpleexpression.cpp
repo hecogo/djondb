@@ -47,7 +47,7 @@ ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
 	BSONContent content = bson.getXpath(expression);
 
 	RESULT_TYPE type;
-	ExpressionResult* result;
+	ExpressionResult* result = NULL;
 	switch (content.type()) {
 		case INT_TYPE:
 			{
@@ -69,6 +69,12 @@ ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
 				type = RT_STRING;
 				std::string s = (std::string)content;
 				result = new ExpressionResult(type, &s);
+				break;
+			}
+		case NULL_TYPE:
+			{
+				type = RT_NULL;
+				result = new ExpressionResult(type, NULL);
 				break;
 			}
 	}

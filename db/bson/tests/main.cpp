@@ -95,6 +95,13 @@ class TestBSONSuite : public Test::Suite
 			
 			BSONObj* el2 = arrayR->get(1);
 			TEST_ASSERT(el2 != NULL);
+
+			// test a non existant attribute
+			long* l = obj->getLong("xx");
+			TEST_ASSERT(l == NULL);
+
+			std::string s = obj->getString("xxx");
+			TEST_ASSERT(s.length() == 0);
 			delete obj;
 		}
 

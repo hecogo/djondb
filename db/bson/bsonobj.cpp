@@ -183,6 +183,9 @@ char* BSONObj::getChars(t_keytype key) const {
 
 std::string BSONObj::getString(t_keytype key) const {
 	BSONContent* content = getContent(key);
+	if (!content) {
+		return std::string();
+	}
 	std::string result;
 	if (content->type() == PTRCHAR_TYPE) {
 		result = std::string((char*)content->_element);
@@ -306,7 +309,11 @@ BSONContent BSONObj::getXpath(const std::string& xpath) const {
 	int posDot = xpath.find('.');
 	if (posDot == string::npos) {
 		BSONContent* result = getContent(xpath);
-		return *result;
+		if (result != NULL) {
+			return *result;
+		} else {
+			return BSONContent(); // this will return a NULL_TYPE
+		}
 	} else {
 		std::string path = xpath.substr(0, posDot);
 		BSONContent* content = getContent(path);
