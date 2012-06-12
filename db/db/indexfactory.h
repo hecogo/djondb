@@ -16,15 +16,15 @@ class IndexFactory
         virtual ~IndexFactory();
 
         static IndexFactory indexFactory;
-        IndexAlgorithm* index(const char* ns, BSONObj key);
-		  bool containsIndex(const char* ns, BSONObj key);
+        IndexAlgorithm* index(const char* db, const char* ns, BSONObj key);
+		  bool containsIndex(const char* db, const char* ns, BSONObj key);
     protected:
     private:
         IndexFactory();
 
     private:
 
-        map<std::string, IndexAlgorithm*> _indexes;
+        map<std::string, map<std::string, IndexAlgorithm*>* > _indexes;
 };
 
 #endif // INDEXFACTORY_H

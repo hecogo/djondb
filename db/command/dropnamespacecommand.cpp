@@ -32,11 +32,12 @@ DropnamespaceCommand::DropnamespaceCommand(const DropnamespaceCommand& orig)
 
 DropnamespaceCommand::~DropnamespaceCommand() {
     delete(_namespace);
+    delete(_db);
 }
 
 void DropnamespaceCommand::execute() {
     const char* ns = _namespace->c_str();
-    dbController()->dropNamespace(const_cast<char*>(ns));
+    dbController()->dropNamespace(const_cast<char*>(_db->c_str()), const_cast<char*>(ns));
 }
 
 void* DropnamespaceCommand::result() {
@@ -46,11 +47,19 @@ void* DropnamespaceCommand::result() {
 void DropnamespaceCommand::writeResult(OutputStream* out) const {
 }
 
-void DropnamespaceCommand::setNameSpace(const std::string ns) {
+void DropnamespaceCommand::setNameSpace(const std::string& ns) {
     _namespace = new std::string(ns);
 }
 
 const std::string* DropnamespaceCommand::nameSpace() const {
     return _namespace;
+}
+
+void DropnamespaceCommand::setDB(const std::string& db) {
+    _db = new std::string(db);
+}
+
+const std::string* DropnamespaceCommand::DB() const {
+    return _db;
 }
 

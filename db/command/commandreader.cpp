@@ -21,6 +21,7 @@
 #include "dropnamespacecommand.h"
 #include "updatecommand.h"
 #include "findcommand.h"
+#include "shutdowncommand.h"
 #include "bsoninputstream.h"
 #include "util.h"
 
@@ -39,28 +40,45 @@ CommandReader::~CommandReader()
 
 InsertCommand* parseInsert(InputStream* is)  {
     InsertCommand* command = new InsertCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
     BSONObj* obj = bsonis->readBSON();
     command->setBSON(*obj);
 
+	 Logger* log = getLogger(NULL);
+	 delete log;
+
     delete ns;
+    delete db;
     delete obj;
     return command;
 }
 
 DropnamespaceCommand* parseDropnamespace(InputStream* is)  {
     DropnamespaceCommand* command = new DropnamespaceCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
 
+    delete db;
     delete ns;
+    return command;
+}
+
+ShutdownCommand* parseShutdown(InputStream* is)  {
+    ShutdownCommand* command = new ShutdownCommand();
+
     return command;
 }
 
 UpdateCommand* parseUpdate(InputStream* is)  {
     UpdateCommand* command = new UpdateCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
@@ -68,20 +86,23 @@ UpdateCommand* parseUpdate(InputStream* is)  {
     command->setBSON(*obj);
 
     delete ns;
+    delete db;
     delete obj;
     return command;
 }
 
 FindCommand* parseFind(InputStream* is)  {
     FindCommand* command = new FindCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
-    std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
-    BSONObj* obj = bsonis->readBSON();
-    command->setBSON(*obj);
+    std::string* filter = is->readString();
+    command->setFilter(*filter);
 
-    delete obj;
+    delete db;
     delete ns;
+    delete filter;
     return command;
 }
 
@@ -96,6 +117,7 @@ Command* CommandReader::readCommand() {
 	if (log->isDebug()) log->debug("readCommand: reading version");
 	std::string* version = _stream->readString();
 	if (log->isDebug()) log->debug("readCommand: version %s", version->c_str());
+	delete version;
 
     COMMANDTYPE type = static_cast<COMMANDTYPE>(_stream->readInt());
 
@@ -113,6 +135,9 @@ Command* CommandReader::readCommand() {
             break;
         case DROPNAMESPACE:
             cmd = parseDropnamespace(_stream);
+            break;
+        case SHUTDOWN:
+            cmd = parseShutdown(_stream);
             break;
         case CLOSECONNECTION: // Insert
             cmd = new CloseCommand();

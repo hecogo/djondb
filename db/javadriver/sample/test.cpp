@@ -1,14 +1,14 @@
 // =====================================================================================
-//  Filename:  tx.h
+//  Filename:  test.cpp
 // 
-//  Description:  Main include file, which will be used as central include file
+//  Description:  
 // 
 //  Version:  1.0
-//  Created:  03/17/2012 05:55:37 PM
+//  Created:  05/28/2012 08:06:08 AM
 //  Revision:  none
 //  Compiler:  gcc
 // 
-//  Author:  Juan Pablo Crossley (crossleyjuan@gmail.com), 
+//  Author:  YOUR NAME (), 
 // 
 // License:
 // 
@@ -23,10 +23,16 @@
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
 
-#ifndef TX_H_INCLUDED
-#define TX_H_INCLUDED
+#include "test.h"
 
-#include "transactionmanager.h"
-#include "transaction.h"
+#include <iostream>
 
-#endif // TX_H_INCLUDED
+using namespace std;
+
+void test1() {
+	cout << "Hello world" << endl;
+}
+
+void test2(const char* name) {
+	cout << "Hello " << name << endl;
+}

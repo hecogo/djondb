@@ -1,12 +1,8 @@
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
-SUBDIRS = util bson cache filesystem db command network tx driverbase service daemon shell
-
-if DEBUG
-   AM_CFLAGS = -g3 -O0
-   AM_CPPFLAGS = -g3 -O0
+if MAC
+SUBDIRS = util bson cache filesystem db command network driverbase service daemon shell
 else
-   AM_CFLAGS = -O2
-   AM_CPPFLAGS = -O2
+SUBDIRS = util bson cache filesystem db command network driverbase service daemon shell javadriver
 endif
 
 #include aminclude.am

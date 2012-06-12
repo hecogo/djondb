@@ -13,13 +13,13 @@ if (!extension_loaded('djonPhpExt')) {
 } else {
 	$c = new Connection();
 
-	$c->djon_connect("localhost");
+	$c->connect("localhost");
 
 	$type = $_GET['type'];
 
 	$filter = '{ type: "'.$type.'"}';
 
-	$jsonResult = $c->djon_findByFilter('test.demo', $filter);
+	$jsonResult = $c->findByFilter('djonlistdb', 'test.demo', $filter);
 
 	print $jsonResult;
 }

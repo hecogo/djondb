@@ -3,14 +3,10 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 all_includes = -I$(srcdir)/../util -I$(srcdir)/../bson -I$(srcdir)/../filesystem -I$(srcdir)/../db  
 
-if DEBUG
-   AM_CFLAGS = -g3 -O0 $(all_includes)
-   AM_CPPFLAGS = -g3 -O0 $(all_includes)
-else
-   AM_CFLAGS = -O2 $(all_includes)
-   AM_CPPFLAGS = -O2 $(all_includes)
-endif
+include $(top_srcdir)/common.mk
 
+AM_CFLAGS += $(all_includes)
+AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-command.la
 
@@ -29,7 +25,8 @@ libdjon_command_la_SOURCES = command.cpp \
                                                    insertcommand.h \
                                                    updatecommand.h \
 																	dropnamespacecommand.h \
-																	dropnamespacecommand.cpp
+																	dropnamespacecommand.cpp \
+																	shutdowncommand.cpp
 
 TESTS = test-command
 check_PROGRAMS = test-command

@@ -176,3 +176,13 @@ std::vector<std::string> splitLines(std::string str) {
 
 	return lines;
 }
+
+
+std::string concatStrings(const std::string& a, const std::string& b) {
+	std::stringstream ss;
+	ss << a << b;
+
+	std::string result = ss.str();
+
+	return result;
+}

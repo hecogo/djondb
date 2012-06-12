@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 NetworkService* __service;
+bool __service_running;
 
 int service_restart() {
 	return 0;
@@ -32,14 +33,22 @@ int service_startup() {
     }
     __service = new NetworkService();
     __service->start();
+	 __service_running = true;
 	return 0;
 }
 
 int service_shutdown() {
     __service->stop();
+	 __service_running = false;
+	 delete __service;
+	 __service = NULL;
 	return 0;
 }
 
-int service_status() {
-	return 0;
+bool service_running() {
+	if (__service) {
+		return __service->running();
+	} else {
+		return false;
+	}
 }

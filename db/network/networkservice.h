@@ -18,6 +18,11 @@ public:
     void start();// throw (NetworkException*);
 
     void stop();// throw (NetworkException*);
+
+	 bool running() const;
+	 void setRunning(bool);
+private:
+	 bool _running;
 };
 
 

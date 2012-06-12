@@ -1,14 +1,14 @@
 // =====================================================================================
-//  Filename:  transaction.h
+//  Filename:  test.h
 // 
-//  Description:  Contains the definition of the transaction class
+//  Description:  
 // 
 //  Version:  1.0
-//  Created:  03/12/2012 08:49:22 PM
+//  Created:  05/28/2012 08:06:08 AM
 //  Revision:  none
 //  Compiler:  gcc
 // 
-//  Author:  Juan Pablo Crossley (crossleyjuan@gmail.com), 
+//  Author:  YOUR NAME (), 
 // 
 // License:
 // 
@@ -23,44 +23,7 @@
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
 
-#ifndef TRANSACTION_INCLUDED_H
-#define TRANSACTION_INCLUDED_H
 
-class Command;
-class InsertCommand;
-class FindCommand;
-class UpdateCommand;
-class DBController;
-class BSONObj;
+void test1();
 
-class FileOutputStream;
-#include <map>
-#include <vector>
-#include <string>
-
-class Transaction {
-	public:
-		Transaction(bool longterm);
-		Transaction(const Transaction& orig);
-		virtual ~Transaction();
-
-		virtual void insert(InsertCommand* cmd) = 0;
-		virtual bool update(UpdateCommand* cmd) = 0;
-		virtual std::vector<BSONObj*> find(FindCommand* cmd) = 0;
-
-		virtual std::map<std::string, Command*> commit() = 0;
-
-	protected:
-		std::map<std::string, Command*> commands() const;
-
-	private:
-		Command* copyCommand(Command* cmd);
-		void insertCommand(std::string ns, Command* cmd);
-
-	private:
-		std::map<std::string, Command*> _commands;
-		bool _longterm;
-};
-
-#endif // TRANSACTION_INCLUDED_H
-
+void test2(const char* name);

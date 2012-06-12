@@ -1,14 +1,14 @@
 // =====================================================================================
-//  Filename:  transactionmanager.h
+//  Filename:  Test.cpp
 // 
-//  Description: This file defines the class TransactionManager which will control the transactions of djondb  
+//  Description: 
 // 
 //  Version:  1.0
-//  Created:  03/12/2012 08:28:14 PM
+//  Created:  05/28/2012 08:17:35 AM
 //  Revision:  none
 //  Compiler:  gcc
 // 
-//  Author:  Juan Pablo Crossley (crossleyjuan@gmail.com), 
+//  Author:  YOUR NAME (), 
 // 
 // License:
 // 
@@ -23,34 +23,21 @@
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
 
-#ifndef TRANSACTIONMANAGER_INCLUDED_H
-#define TRANSACTIONMANAGER_INCLUDED_H
+#include "Test.h"
+#include "test.h"
 
-#include <map>
-#include <string>
+JNIEXPORT void JNICALL Java_Test_test1
+  (JNIEnv *, jobject) {
+	  test1();
+  }
 
-class Transaction;
+JNIEXPORT void JNICALL Java_Test_test2
+  (JNIEnv *env, jobject jo, jstring strname) {
+	  jboolean iscopy = false;
+	  const char* name = env->GetStringUTFChars(strname, &iscopy);
 
-class TransactionManager {
+	  test2(name);
 
-	public:
-		static TransactionManager* transactionManager();
+	  env->ReleaseStringUTFChars(strname, name);
+  }
 
-		Transaction* beginTransaction(bool longterm);
-
-		Transaction* beginTransaction() {
-			return beginTransaction(false);
-		}
-
-		Transaction* loadTransaction(std::string id);
-
-	private:
-		TransactionManager();
-		virtual ~TransactionManager();
-		TransactionManager(const TransactionManager& orig);
-		static TransactionManager* _manager;
-
-	private:
-		static std::map<std::string, Transaction*> _transactions;
-};
-#endif // TRANSACTIONMANAGER_INCLUDED_H

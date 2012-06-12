@@ -22,6 +22,7 @@ std::string toString(double a, int fixedPrecision);
 std::string toString(int a);
 std::vector<std::string> split(std::string str, std::string token);
 long countChar(const char* s, const char c);
+std::string concatStrings(const std::string& a, const std::string& b);
 
 std::vector<std::string> splitLines(std::string);
 

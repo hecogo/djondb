@@ -4,9 +4,12 @@
 #include "defs.h"
 #include <string>
 
+class BSONArrayObj;
+class BSONObj;
+
 class BSONContent {
     public:
-        BSONContent() {}
+        BSONContent();
         virtual ~BSONContent();
 
         BSONContent(const BSONContent& orig);
@@ -21,6 +24,12 @@ class BSONContent {
 		  }
 
 		  bool operator ==(const BSONContent& content);
+		  operator int();
+		  operator long();
+		  operator double();
+		  operator std::string();
+		  operator BSONObj();
+		  operator BSONArrayObj();
 	protected:
         BSONTYPE _type;
 };

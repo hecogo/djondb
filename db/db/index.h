@@ -12,7 +12,7 @@ struct Index {
 class IndexAlgorithm {
     public:
     virtual ~IndexAlgorithm() {};
-    virtual Index* add(const BSONObj& elem, long filePos) = 0;
+    virtual void add(const BSONObj& elem, long filePos, long indexPos) = 0;
     virtual Index* find(const BSONObj& elem) = 0;
     virtual void remove(const BSONObj& elem) = 0;
 };

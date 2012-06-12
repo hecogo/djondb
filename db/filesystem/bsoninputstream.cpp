@@ -74,6 +74,7 @@ BSONObj* BSONInputStream::readBSON() const {
                 break;
         }
     }
+	 delete log;
     return obj;
 }
 

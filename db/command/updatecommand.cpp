@@ -31,13 +31,14 @@ UpdateCommand::UpdateCommand(const UpdateCommand& orig)
 }
 
 UpdateCommand::~UpdateCommand() {
+    delete(_db);
     delete(_namespace);
     delete(_bson);
 }
 
 void UpdateCommand::execute() {
     const char* ns = _namespace->c_str();
-    dbController()->update(const_cast<char*>(ns), _bson);
+    dbController()->update(const_cast<char*>(_db->c_str()), const_cast<char*>(ns), _bson);
 }
 
 void* UpdateCommand::result() {
@@ -47,7 +48,7 @@ void* UpdateCommand::result() {
 void UpdateCommand::writeResult(OutputStream* out) const {
 }
 
-void UpdateCommand::setNameSpace(const std::string ns) {
+void UpdateCommand::setNameSpace(const std::string& ns) {
     _namespace = new std::string(ns);
 }
 
@@ -62,3 +63,12 @@ void UpdateCommand::setBSON(const BSONObj bson) {
 BSONObj* UpdateCommand::bson() const {
     return _bson;
 }
+
+void UpdateCommand::setDB(const std::string& db) {
+    _db = new std::string(db);
+}
+
+const std::string* UpdateCommand::DB() const {
+    return _db;
+}
+

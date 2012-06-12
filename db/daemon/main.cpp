@@ -225,6 +225,12 @@ int main(int argc, char *argv[]) {
 		if (__stopRunning) {
 			break;
 		}
-		sleep(30);
+		sleep(1);
+		
+		if (!service_running()) {
+			syslog(LOG_INFO, "service down");
+			exit(0);
+			break;
+		}
 	}
 }

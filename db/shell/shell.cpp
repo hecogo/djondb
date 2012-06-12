@@ -84,6 +84,7 @@ v8::Handle<v8::Value> Load(const v8::Arguments& args);
 v8::Handle<v8::Value> Quit(const v8::Arguments& args);
 v8::Handle<v8::Value> Version(const v8::Arguments& args);
 v8::Handle<v8::Value> insert(const v8::Arguments& args);
+v8::Handle<v8::Value> shutdown(const v8::Arguments& args);
 v8::Handle<v8::Value> fuuid(const v8::Arguments& args);
 v8::Handle<v8::Value> connect(const v8::Arguments& args);
 v8::Handle<v8::Value> help(const v8::Arguments& args);
@@ -145,10 +146,13 @@ v8::Persistent<v8::Context> CreateShellContext() {
 	global->Set(v8::String::New("connect"), v8::FunctionTemplate::New(connect));
 	// Bind the 'db.help' function
 	global->Set(v8::String::New("help"), v8::FunctionTemplate::New(help));
+	// Bind the global 'shutdown' function to the C++ Load callback.
+	global->Set(v8::String::New("shutdown"), v8::FunctionTemplate::New(shutdown));
 
 	return v8::Context::New(NULL, global);
 }
 
+/* 
 std::string toJson(const v8::Local<v8::Object>& obj) {
 	std::stringstream ss;
 	ss << "{";
@@ -174,45 +178,78 @@ std::string toJson(const v8::Local<v8::Object>& obj) {
 	return sresult;
 }
 
+*/
+
+v8::Handle<v8::Value> toJson(v8::Handle<v8::Value> object)
+{
+	v8::HandleScope scope;
+
+	v8::Handle<v8::Context> context = v8::Context::GetCurrent();
+	v8::Handle<v8::Object> global = context->Global();
+
+	v8::Handle<v8::Object> JSON = global->Get(v8::String::New("JSON"))->ToObject();
+	v8::Handle<v8::Function> JSON_stringify = v8::Handle<v8::Function>::Cast(JSON->Get(v8::String::New("stringify")));
+
+	return scope.Close(JSON_stringify->Call(JSON, 1, &object));
+}
+
 v8::Handle<v8::Value> insert(const v8::Arguments& args) {
-	if (args.Length() < 2) {
-		v8::ThrowException(v8::String::New("usage: db.insert(namespace, json)"));
+	if (args.Length() < 3) {
+		v8::ThrowException(v8::String::New("usage: db.insert(db, namespace, json)"));
 	}
 
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value str(args[0]);
-	;
-	std::string ns = ToCString(str);
+	std::string db = ToCString(str);
+	v8::String::Utf8Value str2(args[1]);
+	std::string ns = ToCString(str2);
 	std::string json;
-	if (args[1]->IsObject()) {
-		json = toJson(args[1]->ToObject());
+	if (args[2]->IsObject()) {
+		v8::String::Utf8Value strValue(toJson(args[2]));
+		json = ToCString(strValue);
 	} else {
-		v8::String::Utf8Value sjson(args[1]);
+		v8::String::Utf8Value sjson(args[2]);
 		json = ToCString(sjson);
 	}
 
 	if (__djonConnection == NULL) {
 		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
 	}
-	__djonConnection->insert(ns, json);
+	__djonConnection->insert(db, ns, json);
+
+	return v8::String::New("");
+}
+
+v8::Handle<v8::Value> shutdown(const v8::Arguments& args) {
+	if (args.Length() != 0) {
+		v8::ThrowException(v8::String::New("usage: db.shutdown()"));
+	}
+
+	v8::HandleScope handle_scope;
+
+	if (__djonConnection == NULL) {
+		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+	}
+	__djonConnection->shutdown();
 
 	return v8::String::New("");
 }
 
 v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
-	if (args.Length() < 1) {
-		v8::ThrowException(v8::String::New("usage: db.dropNamespace(namespace)"));
+	if (args.Length() < 2) {
+		v8::ThrowException(v8::String::New("usage: db.dropNamespace(db, namespace)"));
 	}
 
 	v8::HandleScope handle_scope;
-	v8::String::Utf8Value str(args[0]);
-	;
+	v8::String::Utf8Value strDB(args[0]);
+	std::string db = ToCString(strDB);
+	v8::String::Utf8Value str(args[1]);
 	std::string ns = ToCString(str);
 
 	if (__djonConnection == NULL) {
 		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
 	}
-	bool result = __djonConnection->dropNamespace(ns);
+	bool result = __djonConnection->dropNamespace(db, ns);
 
 	if (result) {
 		printf("ns dropped: %s", ns.c_str());
@@ -228,34 +265,44 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 		std::string cmd = ToCString(str);
 	} else {
 		printf("connect(host)\n");
-		printf("insert(namespace, json)\n");
-		printf("find(namespace, filter)\n");
+		printf("insert(db, namespace, json)\n");
+		printf("find(db, namespace, filter)\n");
 		printf("load(file)\n");
 		printf("print(text)\n");
-		printf("dropNamespace(namespace)\n");
+		printf("dropNamespace(db, namespace)\n");
+		printf("shutdown()\n");
 	}
 	return v8::Undefined();
 }
 
 v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	if (args.Length() < 2) {
-		v8::ThrowException(v8::String::New("usage: db.find(namespace, json)"));
+		v8::ThrowException(v8::String::New("usage: db.find(db, namespace, filter)\ndb.find(db, namespace)"));
 	}
 
 	if (__djonConnection == NULL) {
-		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+		v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
 	}
 	v8::HandleScope handle_scope;
-	v8::String::Utf8Value str(args[0]);
+	v8::String::Utf8Value strDB(args[0]);
+	std::string db = ToCString(strDB);
+	v8::String::Utf8Value str(args[1]);
 	std::string ns = ToCString(str);
-	std::string json;
-	if (args[1]->IsObject()) {
-		json = toJson(args[1]->ToObject());
-	} else {
-		json = ToCString(v8::String::Utf8Value(args[1]));
+	std::string filter = "";
+	if (args.Length() == 3) {
+		v8::String::Utf8Value strFilter(args[2]);
+		filter = ToCString(strFilter);
 	}
+	/* 
+		std::string json;
+		if (args[2]->IsObject()) {
+		json = toJson(args[2]->ToObject());
+		} else {
+		json = ToCString(v8::String::Utf8Value(args[2]));
+		}
+		*/
 
-	std::vector<BSONObj*> result = __djonConnection->find(ns, json);
+	std::vector<BSONObj*> result = __djonConnection->find(db, ns, filter);
 
 	std::stringstream ss;
 	ss << "[";
@@ -465,7 +512,7 @@ int RunMain(int argc, char* argv[]) {
 
 // The read-eval-execute loop of the shell.
 void RunShell(v8::Handle<v8::Context> context) {
-	printf("V8 version %s [sample shell]\n", v8::V8::GetVersion());
+	printf("djondb shell version 0.120120618\n", v8::V8::GetVersion());
 	static const int kBufferSize = 256;
 	// Enter the execution environment before evaluating any code.
 	v8::Context::Scope context_scope(context);

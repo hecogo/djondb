@@ -24,6 +24,11 @@
 
 using namespace std;
 
+BSONContent::BSONContent() {
+	this->_element = NULL;
+	this->_type = NULL_TYPE;
+}
+
 BSONContent::~BSONContent() {
 	if (!_element) {
 		return;
@@ -114,10 +119,6 @@ BSONContent::BSONContent(const BSONContent& orig) {
 
 
 bool BSONContent::operator ==(const BSONContent& content) {
-	Logger* log = getLogger(NULL);
-
-	if (log->isDebug()) log->debug("operator == ");
-
 	if (this->_type != content._type) {
 		return false;
 	} else {
@@ -170,4 +171,58 @@ bool BSONContent::operator ==(const BSONContent& content) {
 			return result;
 		}	
 	}
+}
+
+BSONContent::operator int() {
+	assert(_type == INT_TYPE);
+	int* content = (int*)_element;
+	return *content; 
+}
+
+BSONContent::operator long() {
+	assert(_type == LONG_TYPE);
+	long* content = (long*)_element;
+	return *content; 
+
+}
+
+BSONContent::operator double() {
+	assert(_type == DOUBLE_TYPE);
+	double* content = (double*)_element;
+	return *content; 
+}
+/*
+ * To make the user of this library easier the char* will not be implemented, use std::string instead
+ * otherwise the user should handle the free of the char*
+BSONContent::operator char*() {
+	assert(_type == PTRCHAR_TYPE);
+	char* content = (char*)_element;
+	char* result = (char*)malloc(strlen(content + 1));
+	memset(result, 0, strlen(content + 1));
+	memcpy(result, content, strlen(content));
+	return result; 
+}
+*/
+
+BSONContent::operator std::string() {
+	assert((_type == STRING_TYPE) || (_type == PTRCHAR_TYPE));
+	if (_type == STRING_TYPE) {
+		std::string* content = (std::string*)_element;
+		return *content; 
+	} else if (_type == PTRCHAR_TYPE) {
+		std::string result((char*)_element);
+		return result;
+	}
+}
+
+BSONContent::operator BSONObj() {
+	assert(_type == BSON_TYPE);
+	BSONObj* content = (BSONObj*)_element;
+	return *content; 
+}
+
+BSONContent::operator BSONArrayObj() {
+	assert(_type == BSONARRAY_TYPE);
+	BSONArrayObj* content = (BSONArrayObj*)_element;
+	return *content; 
 }

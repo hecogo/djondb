@@ -30,6 +30,10 @@ esac],
 
 AM_CONDITIONAL(DETAIL, test x"$log" != x"false")
 
+UNAME=$(uname -s)
+
+AM_CONDITIONAL(MAC, test x"$UNAME" == x"Darwin")
+
 AC_ARG_ENABLE(profile,
 AS_HELP_STRING([profile],
                [enable profiling, default: no]),
@@ -49,8 +53,11 @@ AM_COND_IF([DETAIL], AC_DEFINE_UNQUOTED([DETAIL], $log, [Define log detail 3 - M
 AM_COND_IF([PROFILE], AC_DEFINE([PROFILE], [1], [Define Profile variable]))
 
 
+# if text -z $CXXFLAGS; then
+#	CXXFLAGS='-g -O0'
+#fi
 AC_PROG_CXX
-    AC_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 
-    AC_OUTPUT(Makefile util/Makefile bson/Makefile cache/Makefile filesystem/Makefile db/Makefile command/Makefile network/Makefile tx/Makefile driverbase/Makefile service/Makefile daemon/Makefile shell/Makefile)
+AC_OUTPUT(Makefile util/Makefile bson/Makefile cache/Makefile filesystem/Makefile db/Makefile command/Makefile network/Makefile driverbase/Makefile service/Makefile daemon/Makefile shell/Makefile javadriver/Makefile)
 

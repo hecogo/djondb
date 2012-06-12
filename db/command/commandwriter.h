@@ -8,6 +8,7 @@ class UpdateCommand;
 class InsertCommand;
 class FindCommand;
 class DropnamespaceCommand;
+class ShutdownCommand;
 
 class CommandWriter
 {
@@ -25,6 +26,7 @@ class CommandWriter
 		int writeFind(FindCommand* cmd, OutputStream* out);
 		int writeInsert(InsertCommand* cmd, OutputStream* out);
 		int writeDropnamespace(DropnamespaceCommand* cmd, OutputStream* out);
+		int writeShutdown(ShutdownCommand* cmd, OutputStream* out);
 
 	private:
 		OutputStream* _stream;

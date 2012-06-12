@@ -47,6 +47,7 @@ class TestCommandSuite: public Test::Suite {
 
 			CommandWriter* commandWriter = new CommandWriter(fos);
 			InsertCommand cmd;
+			cmd.setDB("testdb");
 			cmd.setNameSpace("test.namespace.db");
 			BSONObj obj;
 			obj.add("name", std::string("Cross"));
@@ -64,6 +65,7 @@ class TestCommandSuite: public Test::Suite {
 			InsertCommand* rdCmd = (InsertCommand*) reader->readCommand();
 			TEST_ASSERT(rdCmd != NULL);
 			TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
+			TEST_ASSERT(rdCmd->DB()->compare("testdb") == 0);
 			BSONObj* objResult = rdCmd->bson();
 			TEST_ASSERT(objResult != NULL);
 			TEST_ASSERT(objResult->has("name"));	
@@ -75,6 +77,7 @@ class TestCommandSuite: public Test::Suite {
 
 			CommandWriter* commandWriter = new CommandWriter(fos);
 			UpdateCommand cmd;
+			cmd.setDB("testdb");
 			cmd.setNameSpace("test.namespace.db");
 			BSONObj obj;
 			std::string* uid = uuid();
@@ -95,6 +98,7 @@ class TestCommandSuite: public Test::Suite {
 			UpdateCommand* rdCmd = (UpdateCommand*) reader->readCommand();
 			TEST_ASSERT(rdCmd != NULL);
 			TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
+			TEST_ASSERT(rdCmd->DB()->compare("testdb") == 0);
 			BSONObj* objResult = rdCmd->bson();
 			TEST_ASSERT(objResult  != NULL);
 			TEST_ASSERT(objResult->has("name"));	
@@ -106,11 +110,9 @@ class TestCommandSuite: public Test::Suite {
 
 			CommandWriter* commandWriter = new CommandWriter(fos);
 			FindCommand cmd;
+			cmd.setDB("testdb");
 			cmd.setNameSpace("test.namespace.db");
-			BSONObj obj;
-			std::string* uid = uuid();
-			obj.add("_id", *uid);
-			cmd.setBSON(obj);
+			cmd.setFilter("$'a.b.c' == 1");
 
 			commandWriter->writeCommand(&cmd);
 
@@ -123,11 +125,8 @@ class TestCommandSuite: public Test::Suite {
 			FindCommand* rdCmd = (FindCommand*) reader->readCommand();
 			TEST_ASSERT(rdCmd != NULL);
 			TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
-			BSONObj* objResult = rdCmd->bson();
-			TEST_ASSERT(objResult  != NULL);
-			TEST_ASSERT(objResult->has("_id"));	
-			TEST_ASSERT(objResult->getString("_id")->compare(*uid) == 0);
-			delete uid;
+			TEST_ASSERT(rdCmd->DB()->compare("testdb") == 0);
+			TEST_ASSERT(rdCmd->filter()->compare("$'a.b.c' == 1") == 0);
 		}
 		
 		void testDropnamespaceCommand() {
@@ -135,6 +134,7 @@ class TestCommandSuite: public Test::Suite {
 
 			CommandWriter* commandWriter = new CommandWriter(fos);
 			DropnamespaceCommand cmd;
+			cmd.setDB("testdb");
 			cmd.setNameSpace("test.namespace.db");
 
 			commandWriter->writeCommand(&cmd);
@@ -148,6 +148,7 @@ class TestCommandSuite: public Test::Suite {
 			DropnamespaceCommand* rdCmd = (DropnamespaceCommand*) reader->readCommand();
 			TEST_ASSERT(rdCmd != NULL);
 			TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
+			TEST_ASSERT(rdCmd->DB()->compare("testdb") == 0);
 		}
 };
 

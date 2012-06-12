@@ -136,6 +136,13 @@ private:
 		  std::string t1 = spl[1];
 		  TEST_ASSERT(spl[0].compare("test1") == 0);
 		  TEST_ASSERT(spl[1].compare("test2") == 0);
+
+
+		  // Test concat
+			std::string sc1 = "Hello ";
+			std::string sc2 = "World!";
+			std::string resultconcat = concatStrings(sc1, sc2);
+			TEST_ASSERT(resultconcat.compare("Hello World!") == 0);
     }
 
     void testUUID()

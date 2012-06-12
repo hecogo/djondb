@@ -14,7 +14,8 @@ enum COMMANDTYPE {
     UPDATE,
     FIND,
     CLOSECONNECTION,
-	 DROPNAMESPACE
+	 DROPNAMESPACE,
+    SHUTDOWN
 };
 
 class Command {

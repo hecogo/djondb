@@ -3,13 +3,10 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 all_includes = -I$(srcdir)/../bson -I$(srcdir)/../util -I$(srcdir)/../filesystem -I$(srcdir)/../command -I$(srcdir)/../tx
 
-if DEBUG
-   AM_CFLAGS = -g3 -O0 $(all_includes)
-   AM_CPPFLAGS = -g3 -O0 $(all_includes)
-else
-   AM_CFLAGS = -O2 $(all_includes)
-   AM_CPPFLAGS = -O2 $(all_includes)
-endif
+include $(top_srcdir)/common.mk
+
+AM_CFLAGS += $(all_includes)
+AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-client.la
 libdjon_client_la_SOURCES= connection.cpp \
@@ -19,7 +16,18 @@ libdjon_client_la_SOURCES= connection.cpp \
                                                      djondb_client.h
 TESTS = test-driverbase
 check_PROGRAMS = test-driverbase
-test_driverbase_LDADD = libdjon-client.la -ldjon-tx -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest
+test_driverbase_CPPFLAGS = $(all_includes)
+test_driverbase_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lcpptest
 test_driverbase_SOURCES = tests/main.cpp
+if !MAC
+test_driverbase_LDADD += -lrt -lpthread -luuid
+endif
 
+bin_PROGRAMS = test-performance
+test_performance_SOURCES = tests/testperformance.cpp
+test_performance_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lcpptest
+
+if !MAC
+test_performance_LDADD += -lrt -lpthread -luuid
+endif
 djon_client_libincludedir = $(libdir)/djon-client-1.0/include

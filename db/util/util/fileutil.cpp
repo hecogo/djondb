@@ -137,6 +137,9 @@ bool existDir(const char* dir) {
     if((dp  = opendir(dir)) == NULL) {
         exists = false;
     }
+	 if (dp != NULL) {
+	 	closedir(dp);
+	 }
 #else 
 	String^ folder = Marshal::PtrToStringAnsi((IntPtr) (char *) dir);;
 	exists = Directory::Exists(folder);

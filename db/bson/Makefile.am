@@ -3,13 +3,10 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 all_includes = -I$(srcdir)/../util
 
-if DEBUG
-   AM_CFLAGS = -g3 -O0 $(all_includes)
-   AM_CPPFLAGS = -g3 -O0 $(all_includes)
-else
-   AM_CFLAGS = -O2 $(all_includes)
-   AM_CPPFLAGS = -O2 $(all_includes)
-endif
+include $(top_srcdir)/common.mk
+
+AM_CFLAGS += $(all_includes)
+AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-bson.la
 
@@ -30,7 +27,11 @@ library_include_HEADERS = bson.h
 TESTS = test-bson
 bin_PROGRAMS = test-bson
 check_PROGRAMS = test-bson
+if !MAC
 test_bson_LDADD = libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lXss -lrt -luuid   -lcpptest
+else
+test_bson_LDADD = libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lXss -lcpptest
+endif
 test_bson_SOURCES = tests/main.cpp
 
 djon_bson_libincludedir = $(libdir)/djon-bson-1.0/include

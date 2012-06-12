@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  transactionlong.cpp
+ *       Filename:  main.cpp
  *
- *    Description:  
+ *    Description:  :x
  *
  *        Version:  1.0
- *        Created:  04/11/2012 09:21:09 PM
+ *        Created:  05/27/2012 12:03:29 PM
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -17,3 +17,5 @@
  */
 #include <stdlib.h>
 
+int main(int arc, char** argc) {
+}

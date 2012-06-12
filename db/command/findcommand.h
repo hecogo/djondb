@@ -22,15 +22,18 @@ class FindCommand : public Command
 
         virtual void writeResult(OutputStream* out) const;
 
+        void setDB(const std::string& db);
+        const std::string* DB() const;
         void setNameSpace(const std::string& ns);
         std::string* nameSpace() const;
-        void setBSON(BSONObj bson);
-        BSONObj* bson() const;
+        void setFilter(const std::string& filter);
+		  std::string* filter() const;
     protected:
     private:
     private:
         std::string* _namespace;
-        BSONObj* _bson;
+        std::string* _db;
+		  std::string* _filter;
 
 		  std::vector<BSONObj*> _result;
 };
