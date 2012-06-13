@@ -41,6 +41,7 @@
 #include <errno.h>
 #include <string.h>
 #include <signal.h>
+#include "util.h"
 #ifdef _WIN32
 	#define WINDOWS
 #else
@@ -117,7 +118,7 @@ void signal_handler(int sig) {
 			break;
 
 		default:
-			syslog(LOG_WARNING, "Unhandled signal (%d) %s", strsignal(sig));
+			syslog(LOG_WARNING, "Unhandled signal %s", strsignal(sig));
 			break;
 	}
 }
@@ -136,6 +137,8 @@ Returns:
 returns integer which is passed back to the parent process
  **************************************************************************/
 int main(int argc, char *argv[]) {
+
+	Logger* log = getLogger(NULL);
 
 	__stopRunning = false;
 #if defined(DEBUG)
@@ -169,7 +172,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
-	syslog(LOG_INFO, "%s daemon starting up", DAEMON_NAME);
+	log->info("djondbd version %s is starting up.", VERSION);
 
 	// Setup syslog logging - see SETLOGMASK(3)
 #if defined(DEBUG)
@@ -184,6 +187,7 @@ int main(int argc, char *argv[]) {
 	pid_t pid, sid;
 
 	if (daemonize) {
+		setDaemon(true);
 		syslog(LOG_INFO, "starting the daemonizing process");
 
 		/* Fork off the parent process */
@@ -218,6 +222,7 @@ int main(int argc, char *argv[]) {
 		close(STDOUT_FILENO);
 		close(STDERR_FILENO);
 	}
+	setDaemon(false);
 
 	service_startup();
 
@@ -233,4 +238,6 @@ int main(int argc, char *argv[]) {
 			break;
 		}
 	}
+
+	delete log;
 }

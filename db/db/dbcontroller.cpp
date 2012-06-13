@@ -105,7 +105,6 @@ void DBController::initialize() {
 	_initialized = true;
 }
 
-
 void DBController::initialize(std::string dataDir) {
 	if (_logger->isInfo()) _logger->info("DBController initializing");
 
@@ -116,6 +115,12 @@ void DBController::initialize(std::string dataDir) {
 	if (!existDir(_dataDir.c_str())) {
 		makeDir(_dataDir.c_str());
 	}
+
+	if (!checkFileCreation(_dataDir.c_str())) {
+		_logger->error("An error ocurred using the data folder: %s. Please check that the user has permissions for writing over that directory. Error: %s", _dataDir.c_str(), lastErrorDescription()); 
+		exit(1);
+	}
+
 	std::auto_ptr<FileInputStream> fis(new FileInputStream((_dataDir + "djondb.dat").c_str(), "rb"));
 	while (!fis->eof()) {
 		std::auto_ptr<std::string> db(fis->readString());

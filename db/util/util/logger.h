@@ -3,6 +3,7 @@
 
 #include <string>
 #include "../defs.h"
+#include "../util.h"
 #include "dtime.h"
 #include <ctime>
 #ifndef WINDOWS
@@ -36,6 +37,9 @@ class Logger {
         struct timeval _ts2;
         #endif
 
+
+	 private:
+		  void print(std::string type, std::string message);
 
     public:
         Logger(void* clazz);

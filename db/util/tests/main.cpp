@@ -164,6 +164,11 @@ private:
 		 makeDir("/tmp/test/test2");
 
 		 TEST_ASSERT(existDir("/tmp/test/test2"));
+
+		 char* home = getenv("HOME");
+		 TEST_ASSERT(checkFileCreation(home));
+		 // test directory fail
+		 TEST_ASSERT(!checkFileCreation("/"));
 	 }
 };
 //// Tests unconditional fail TEST_ASSERTs

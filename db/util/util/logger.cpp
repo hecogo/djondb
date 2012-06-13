@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sstream>
+#include "settings.h"
 #include "../defs.h"
 #ifndef WINDOWS
 #include <syslog.h>
@@ -34,35 +35,21 @@
 #include <mach/mach.h>
 #endif
 
+#include <boost/algorithm/string.hpp>
 
-#ifndef WINDOWS
-#define WRITE(TYPE, TEXT) \
-	syslog(LOG_DEBUG, result.c_str());
-#else
-#define WRITE(TYPE, TEXT) \
-	cout << TYPE << ": " << CLAZZ << ": " << result << endl;
-#endif
-#ifdef DEBUG
-	#define PRINT(TYPE, CLAZZ) \
-		char* buffer = (char*)malloc(1000); \
-		memset(buffer, 0, 1000); \
-		va_list args; \
-		va_start (args, message); \
-		vsprintf (buffer, message.c_str(), args); \
-		va_end(args); \
-		std::string result; \
-		std::stringstream ss; \
-		ss << buffer; \
-		result = ss.str(); \
-		free(buffer); \
-		WRITE(TYPE, result);
-#endif
-
-#ifndef DEBUG
-#define PRINT(TYPE, CLAZZ) 
-#endif
-
-
+#define PRINT(TYPE, CLAZZ) \
+	char* buffer = (char*)malloc(1000); \
+memset(buffer, 0, 1000); \
+va_list args; \
+va_start (args, message); \
+vsprintf (buffer, message.c_str(), args); \
+va_end(args); \
+std::string result; \
+std::stringstream ss; \
+ss << buffer; \
+result = ss.str(); \
+free(buffer); \
+print(TYPE, result);
 
 #ifdef LINUX
 timespec diff(timespec start, timespec end)
@@ -182,29 +169,52 @@ Logger::Logger(void* clazz) {
 	m_warn = true;
 	// this will be readed from a configuration file
 	// but right now it'll be hardcoded by config.h
-#ifdef DETAIL
-	_detail = DETAIL;
-	m_debug = true;
-#else
+	std::string debug_conf = getSetting("debug");
+	if (boost::iequals(debug_conf, std::string("true"))) {
+		m_debug = true;
+	} else {
+		m_debug = false;
+	}
+
+	std::string logLevel = getSetting("loglevel");
 	_detail = 0;
-	m_debug = false;
+	if (m_debug && (logLevel.length() > 0)) {
+		_detail = atoi(logLevel.c_str());
+		if (_detail > 3) {
+			warn("loglevel is greater than 3, adjusted to be equals to 3");
+			_detail = 3;
+		}
+		if (_detail < 0) {
+			warn("loglevel is less than 0, adjusted to be equals to 0");
+			_detail = 0;
+		}
+	}
+}
+
+void Logger::print(std::string type, std::string text) {
+#ifndef WINDOWS
+	if (isDaemon()) {
+		syslog(LOG_DEBUG, text.c_str());
+	} else {
+		cout << type << ": " << text << endl;
+	}
 #endif
 }
 
 /*
-   std::string format(const char * message, ...) {
-   char* buffer = (char*)malloc(1000);
-   memset(buffer, 0, 1000);
-   va_list args;
-   va_start (args, message);
-   vsprintf (buffer,message, args);
-   va_end(args);
-   std::string result;
-   std::stringstream ss;
-   ss << buffer;
-   free(buffer);
-   }
- */
+	std::string format(const char * message, ...) {
+	char* buffer = (char*)malloc(1000);
+	memset(buffer, 0, 1000);
+	va_list args;
+	va_start (args, message);
+	vsprintf (buffer,message, args);
+	va_end(args);
+	std::string result;
+	std::stringstream ss;
+	ss << buffer;
+	free(buffer);
+	}
+	*/
 
 void Logger::debug(string message, ...) {
 	// default debug behaviour is maximum detail
@@ -250,7 +260,7 @@ bool Logger::isWarn() {
 }
 
 void Logger::startTimeRecord() {
-int interval = 0;
+	int interval = 0;
 #ifdef LINUX
 	interval = CLOCK_REALTIME;// CLOCK_PROCESS_CPUTIME_ID;
 #endif

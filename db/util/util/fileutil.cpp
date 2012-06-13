@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 #ifndef WINDOWS
 #include <dirent.h>
 #include <errno.h>
@@ -147,6 +148,41 @@ bool existDir(const char* dir) {
     return exists;
 }
 
+bool checkFileCreation(const char* dir) {
+	char* file = (char*)malloc(strlen(dir) + 10);
+	memset(file, 0, strlen(dir) + 10);
+	strcat(file, dir);
+	if (!endsWith(dir, "/")) {
+		strcat(file, "/file.chk");
+	} else {
+		strcat(file, "file.chk");
+	}
+
+	FILE* f = fopen(file, "w");
+	bool result = true;
+	if (f == NULL) {
+		char* error = strerror(errno);
+		setLastError(errno, error);
+		
+		result = false;
+	}
+	if (f != NULL) {
+		fclose(f);
+	}
+
+	removeFile(file);
+	return result;
+}
+
+bool removeFile(const char* file) {
+	if (remove(file) != 0) {
+		setLastError(errno, strerror(errno));
+		return false;
+	} else {
+		return true;
+	}
+}
+
 bool makeDir(const char* dir) {
 
 	std::vector<std::string> dirs = split(dir, "/");
@@ -160,7 +196,14 @@ bool makeDir(const char* dir) {
 		std::string currentdir = ss.str();
 
 		if (!existDir(currentdir.c_str())) {
-			mkdir(currentdir.c_str(), 0777);
+			int res = mkdir(currentdir.c_str(), 0777);
+			if (res < 0) {
+				Logger* logger = getLogger(NULL);
+				char* error = strerror(errno);
+				logger->error("An error ocurred creating the directory %s. Error: %s", dir, error);
+				delete logger;
+				exit(1);
+			}
 		}
 	}
 	return true;

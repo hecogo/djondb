@@ -26,6 +26,9 @@
   Type Definitions and macros
 */
 
+bool isDaemon();
+void setDaemon(bool daemon);
+
 void logInfo(char* text);
 
 long idleTime();

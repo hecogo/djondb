@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-all_includes = -I$(srcdir)/../service
+all_includes = -I$(srcdir)/../service -I$(srcdir)/../util
 
 include $(top_srcdir)/common.mk
 

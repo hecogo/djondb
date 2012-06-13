@@ -32,6 +32,10 @@ FileOutputStream::~FileOutputStream() {
     free(_pFile);
 }
 
+bool FileOutputStream::isOpen() const {
+	return (_pFile != NULL);
+}
+
 /* Write 1 byte in the output */
 void FileOutputStream::writeChar (unsigned char v)
 {

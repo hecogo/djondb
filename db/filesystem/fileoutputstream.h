@@ -37,6 +37,8 @@ class FileOutputStream: public OutputStream
         virtual void flush();
         virtual const char* fileName() const;
 
+		  bool isOpen() const;
+
     private:
         char* _fileName;
         FILE* _pFile;
