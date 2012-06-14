@@ -28,3 +28,6 @@ if !MAC
 djon_shell_LDADD += -lrt -luuid
 endif
 
+if MAC
+djon_shell_LDFLAGS = -framework CoreFoundation -framework IOKit
+endif

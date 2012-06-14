@@ -512,7 +512,7 @@ int RunMain(int argc, char* argv[]) {
 
 // The read-eval-execute loop of the shell.
 void RunShell(v8::Handle<v8::Context> context) {
-	printf("djondb shell version 0.120120618\n", v8::V8::GetVersion());
+	printf("djondb shell version %s\n", VERSION);
 	static const int kBufferSize = 256;
 	// Enter the execution environment before evaluating any code.
 	v8::Context::Scope context_scope(context);

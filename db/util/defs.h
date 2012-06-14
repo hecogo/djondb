@@ -11,6 +11,7 @@
 #ifndef _WIN32
 #include "../config.h"
 #else
+#define VERSION "0.120120612"
 #define PACKAGE_VERSION "0.1"
 #endif
 
@@ -18,7 +19,6 @@
 #define MAC
 #endif
 
-//#define VERSION "1.2.20110726"
 
 // #define TESTING
 

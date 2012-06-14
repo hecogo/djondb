@@ -47,6 +47,8 @@
 #include <direct.h>
 #endif
 
+bool _daemon;
+
 void logInfo(char* text) {
     cout << text << endl;
 }
@@ -83,6 +85,14 @@ std::string* uuid() {
 #endif
 }
 
+
+bool isDaemon() {
+	return _daemon;
+}
+
+void setDaemon(bool daemon) {
+	_daemon = daemon;
+}
 bool makedir(const char* path) {
 #ifndef WINDOWS
     int status = mkdir(path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);

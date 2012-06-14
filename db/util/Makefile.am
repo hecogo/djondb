@@ -28,8 +28,8 @@ libdjon_util_la_SOURCES = util.cpp \
                                                    util/settings.cpp \
                                                    defs.h
 
-library_includedir=$(includedir)/djon-util-1.0/djon-util
-library_include_HEADERS = util.h
+library_includedir=$(includedir)/djon-util-1.0/util
+library_include_HEADERS = util.h defs.h util/DateTime.h util/errorHandle.h util/dtime.h util/fileutil.h
 
 
 TESTS = test-util
