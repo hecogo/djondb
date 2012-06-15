@@ -56,38 +56,30 @@ enum EXPRESSION_TYPE {
 	ET_UNARY
 };
 
-enum RESULT_TYPE {
-	RT_INT,
-	RT_DOUBLE,
-	RT_BOOLEAN,
-	RT_STRING,
-	RT_BSON,
-	RT_NULL
-};
-
-enum TOKEN_TYPE {
-	TT_NOTTOKEN,
-	TT_EXPRESION,
-	TT_OPENPARENTESIS,
-	TT_CLOSEPARENTESIS,
-	TT_CONSTANT,
-	TT_EQUALS,
-	TT_AND,
-	TT_OR,
-	TT_LESSTHAN,
-	TT_LESSEQUALTHAN,
-	TT_GREATERTHAN,
-	TT_GREATEREQUALTHAN
-};
-
 class Token {
 	public:
-		Token(TOKEN_TYPE type, const std::string& content) {
+		enum TOKEN_TYPE {
+			TT_NOTTOKEN,
+			TT_EXPRESION,
+			TT_OPENPARENTESIS,
+			TT_CLOSEPARENTESIS,
+			TT_CONSTANT,
+			TT_EQUALS,
+			TT_AND,
+			TT_OR,
+			TT_LESSTHAN,
+			TT_LESSEQUALTHAN,
+			TT_GREATERTHAN,
+			TT_GREATEREQUALTHAN
+		};
+
+	public:
+		Token(Token::TOKEN_TYPE type, const std::string& content) {
 			_content = new std::string(content);
 			_type = type;
 		}
 
-		Token(TOKEN_TYPE type) {
+		Token(Token::TOKEN_TYPE type) {
 			_content = NULL;
 			_type = type;
 		}
@@ -104,17 +96,26 @@ class Token {
 			if (_content != NULL) delete _content;
 		}
 
-		TOKEN_TYPE type() { return _type; }
+		Token::TOKEN_TYPE type() { return _type; }
 		std::string* content() {
 			return _content;
 		}
 
 	private:
 		std::string* _content;
-		TOKEN_TYPE _type;
+		Token::TOKEN_TYPE _type;
 };
 
 class ExpressionResult {
+	public: 
+		enum RESULT_TYPE {
+			RT_INT,
+			RT_DOUBLE,
+			RT_BOOLEAN,
+			RT_STRINGDB,
+			RT_BSON,
+			RT_NULL
+		};
 	public:
 		ExpressionResult(RESULT_TYPE type, void* value);
 		ExpressionResult(const ExpressionResult& orig);

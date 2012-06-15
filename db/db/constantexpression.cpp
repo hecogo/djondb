@@ -68,14 +68,14 @@ void ConstantExpression::parseConstantExpression() {
 	if (strchr("0123456789.", _expression[0]) != NULL) {
 		if (strchr(_expression.c_str(), '.') != NULL) {
 			double d = atof(_expression.c_str());
-			_value = new ExpressionResult(RT_DOUBLE, &d);
+			_value = new ExpressionResult(ExpressionResult::RT_DOUBLE, &d);
 		} else {
 			int i = atoi(_expression.c_str());
-			_value = new ExpressionResult(RT_INT, &i);
+			_value = new ExpressionResult(ExpressionResult::RT_INT, &i);
 		}
 	} else if ((_expression[0] == '\'') || (_expression[0] == '\"')) {
 		std::string s(_expression.substr(1, _expression.length() - 2));
-		_value = new ExpressionResult(RT_STRING, &s);
+		_value = new ExpressionResult(ExpressionResult::RT_STRINGDB, &s);
 	} else {
 		assert(false);
 	}

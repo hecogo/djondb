@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="cache"
 	ProjectGUID="{62FF06CD-7090-4A69-9CAE-21470F09B447}"
+	RootNamespace="cache"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -39,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\bson;..\util;C:\development\boost_1_49_0\;"
+				AdditionalIncludeDirectories="..\bson;..\util;C:\development\boost_1_48_0\;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

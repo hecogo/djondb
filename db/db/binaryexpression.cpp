@@ -64,23 +64,23 @@ ExpressionResult* evalEqual(const BSONObj& bson, BaseExpression* left, BaseExpre
 
 		// the types are ensured to be equal
 		switch (valLeft->type()) {
-			case RT_INT:
+			case ExpressionResult::RT_INT:
 				result = (*(int*)valLeft->value() == *(int*)valRight->value());
 				break;
-			case RT_DOUBLE:
+			case ExpressionResult::RT_DOUBLE:
 				result = (*(double*)valLeft->value() == *(double*)valRight->value());
 				break;
-			case RT_BOOLEAN:
+			case ExpressionResult::RT_BOOLEAN:
 				result = (*(bool*)valLeft->value() == *(bool*)valRight->value());
 				break;
-			case RT_STRING:
+			case ExpressionResult::RT_STRINGDB:
 				{
 					std::string* leftS = (std::string*)valLeft->value();
 					std::string* rightS = (std::string*)valRight->value();
 					result = (leftS->compare(*rightS) == 0);
 				}
 				break;
-			case RT_BSON:
+			case ExpressionResult::RT_BSON:
 				result = false;
 				break;
 		}
@@ -88,7 +88,7 @@ ExpressionResult* evalEqual(const BSONObj& bson, BaseExpression* left, BaseExpre
 
 	delete valLeft;
 	delete valRight;
-	return new ExpressionResult(RT_BOOLEAN, &result);
+	return new ExpressionResult(ExpressionResult::RT_BOOLEAN, &result);
 }
 
 ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& oper, BaseExpression* left, BaseExpression* right) {
@@ -108,10 +108,10 @@ ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& op
 		resultGreather = false;
 	} else {
 		switch (valLeft->type()) {
-			case RT_INT:
+			case ExpressionResult::RT_INT:
 				resultGreather = (*(int*)valLeft->value() > *(int*)valRight->value());
 				break;
-			case RT_DOUBLE:
+			case ExpressionResult::RT_DOUBLE:
 				resultGreather = (*(double*)valLeft->value() > *(double*)valRight->value());
 				break;
 		}
@@ -128,7 +128,7 @@ ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& op
 		}else {
 			bres = resultGreather;
 		}
-		result = new ExpressionResult(RT_BOOLEAN, &bres);
+		result = new ExpressionResult(ExpressionResult::RT_BOOLEAN, &bres);
 	}
 
 	delete valLeft;
@@ -140,7 +140,7 @@ ExpressionResult* evalAndOr(const BSONObj& bson, FILTER_OPERATORS oper, BaseExpr
 	std::auto_ptr<ExpressionResult> valLeft(left->eval(bson));
 	std::auto_ptr<ExpressionResult> valRight(right->eval(bson));
 
-	if ((valLeft->type() != RT_BOOLEAN) || (valRight->type() != RT_BOOLEAN)) {
+	if ((valLeft->type() != ExpressionResult::RT_BOOLEAN) || (valRight->type() != ExpressionResult::RT_BOOLEAN)) {
 		// ERROR
 		return NULL;
 	} else {
@@ -156,7 +156,7 @@ ExpressionResult* evalAndOr(const BSONObj& bson, FILTER_OPERATORS oper, BaseExpr
 				*bresult = (*bleft ||  *bright);
 				break;
 		}
-		ExpressionResult* result = new ExpressionResult(RT_BOOLEAN, bresult);
+		ExpressionResult* result = new ExpressionResult(ExpressionResult::RT_BOOLEAN, bresult);
 		return result;
 	}
 }

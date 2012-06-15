@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="network"
 	ProjectGUID="{B80016DF-3BFD-4756-B2C8-7D827DE39A84}"
+	RootNamespace="network"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -39,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../command;../db;../filesystem;../cache;../bson;../util;C:\development\boost_1_49_0\;..\windows\includes"
+				AdditionalIncludeDirectories="../command;../db;../filesystem;../cache;../bson;../util;C:\development\boost_1_48_0\;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

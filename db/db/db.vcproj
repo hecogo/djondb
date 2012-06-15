@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="db"
 	ProjectGUID="{ACF2227F-242F-4FB7-B433-58CED3D02A8F}"
+	RootNamespace="db"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -39,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost_1_49_0\;..\windows\includes"
+				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost_1_48_0\;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -153,6 +154,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\filterparser.h"
+				>
+			</File>
+			<File
 				RelativePath=".\index.h"
 				>
 			</File>
@@ -177,11 +182,27 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\binaryexpression.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\bplusindex.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\constantexpression.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\dbcontroller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\expressionresult.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\filterparser.cpp"
 				>
 			</File>
 			<File
@@ -190,6 +211,14 @@
 			</File>
 			<File
 				RelativePath=".\indexmanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\simpleexpression.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\unaryexpression.cpp"
 				>
 			</File>
 		</Filter>

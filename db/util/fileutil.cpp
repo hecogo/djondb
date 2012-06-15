@@ -34,6 +34,7 @@
 using namespace System;
 using namespace System::IO;
 using namespace System::Runtime::InteropServices;
+#include <direct.h>
 #endif
 #include <string.h>
 #include <stdlib.h>
@@ -185,18 +186,22 @@ bool removeFile(const char* file) {
 
 bool makeDir(const char* dir) {
 
-	std::vector<std::string> dirs = split(dir, "/");
+	std::vector<std::string> dirs = split(dir, FILESEPARATOR);
 	std::stringstream ss;
 
-	ss << "/";
+//	ss << FILESEPARATOR;
 	for (std::vector<std::string>::const_iterator it = dirs.begin(); it != dirs.end(); it++) {
 		std::string cdir = *it;
-		ss << cdir << "/";
+		ss << cdir << FILESEPARATOR;
 
 		std::string currentdir = ss.str();
 
 		if (!existDir(currentdir.c_str())) {
+#ifndef WINDOWS
 			int res = mkdir(currentdir.c_str(), 0777);
+#else
+			int res = _mkdir(currentdir.c_str());
+#endif
 			if (res < 0) {
 				Logger* logger = getLogger(NULL);
 				char* error = strerror(errno);

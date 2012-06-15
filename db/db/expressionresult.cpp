@@ -19,44 +19,44 @@
 #include "bson.h"
 #include <assert.h>
 
-void* copyValue(RESULT_TYPE type, void* value) {
+void* copyValue(ExpressionResult::RESULT_TYPE type, void* value) {
 	void* result = NULL;
 	switch (type) {
-		case RT_INT:
+		case ExpressionResult::RT_INT:
 			{
 				int* i = new int();
 				*i = *(int*)value;
 				result = i;
 				break;
 			}
-		case RT_DOUBLE:
+		case ExpressionResult::RT_DOUBLE:
 			{
 				double* d = new double();
 				*d = *(double*)value;
 				result = d;
 				break;
 			}
-		case RT_BOOLEAN:
+		case ExpressionResult::RT_BOOLEAN:
 			{
 				bool* b = new bool();
 				*b = *(bool*)value;
 				result = b;
 				break;
 			}
-		case RT_BSON:
+		case ExpressionResult::RT_BSON:
 			{
 				BSONObj* o = new BSONObj(*(BSONObj*)value);
 				result = o;
 				break;
 			}
 
-		case RT_STRING:
+		case ExpressionResult::RT_STRINGDB:
 			{
 				std::string* s = new std::string(*(std::string*)value);
 				result = s;
 				break;
 			}
-		case RT_NULL:
+		case ExpressionResult::RT_NULL:
 			break;
 		default:
 			assert(false);
@@ -79,16 +79,16 @@ ExpressionResult::ExpressionResult(const ExpressionResult& orig) {
 ExpressionResult::~ExpressionResult() {
 	if (_value) {
 		switch (_type) {
-			case RT_INT:
+			case ExpressionResult::RT_INT:
 				delete ((int*)_value);
 				break;
-			case RT_DOUBLE:
+			case ExpressionResult::RT_DOUBLE:
 				delete ((double*)_value);
 				break;
-			case RT_BOOLEAN:
+			case ExpressionResult::RT_BOOLEAN:
 				delete ((bool*)_value);
 				break;
-			case RT_BSON:
+			case ExpressionResult::RT_BSON:
 				delete ((BSONObj*)_value);
 				break;
 		}
@@ -97,7 +97,7 @@ ExpressionResult::~ExpressionResult() {
 }
 
 
-RESULT_TYPE ExpressionResult::type() {
+ExpressionResult::RESULT_TYPE ExpressionResult::type() {
 	return _type;
 }
 

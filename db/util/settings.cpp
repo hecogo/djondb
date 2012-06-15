@@ -34,7 +34,11 @@ std::map<std::string, std::string> __settingsValues;
 bool __settingsLoaded;
 
 void readSettings() {
+#ifndef WINDOWS
 	char* ccont = readFile("/etc/djondb.conf");
+#else
+	char* ccont = readFile("C:\\workspace\\personal\\djondb\\db\\windows\\djondb.conf");
+#endif
    std::string content = std::string(ccont);
 
 	std::vector<std::string> lines = splitLines(content);

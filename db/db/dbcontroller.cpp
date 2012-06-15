@@ -489,7 +489,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
 		BSONObj* obj = bis->readBSON();
 
 		ExpressionResult* result = parser->eval(*obj);
-		if (result->type() == RT_BOOLEAN) {
+		if (result->type() == ExpressionResult::RT_BOOLEAN) {
 			bool* bres = (bool*)result->value();
 			if (*bres) {
 				bsonResult = obj;
@@ -529,7 +529,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const char*
 
 		bool match = false;
 		ExpressionResult* expresult = parser->eval(*obj);
-		if (expresult->type() == RT_BOOLEAN) {
+		if (expresult->type() == ExpressionResult::RT_BOOLEAN) {
 			bool* bres = (bool*)expresult->value();
 			match = *bres;
 		}

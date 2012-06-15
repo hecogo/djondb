@@ -66,7 +66,7 @@ timespec diff(timespec start, timespec end)
 }
 #endif
 
-#ifndef WINDOWS // This works in mac and linux
+#ifndef LINUX // This works in mac and linux
 timeval diff(timeval start, timeval end)
 {
 	timeval temp;
