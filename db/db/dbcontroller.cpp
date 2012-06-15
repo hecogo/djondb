@@ -214,7 +214,7 @@ BSONObj* DBController::insert(char* db, char* ns, BSONObj* obj) {
 
 	writeBSON(streamData, obj);
 
-	CacheManager::objectCache()->add(id, new BSONObj(*obj));
+	//CacheManager::objectCache()->add(id, new BSONObj(*obj));
 
 	return result;
 }

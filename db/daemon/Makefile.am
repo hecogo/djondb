@@ -14,4 +14,7 @@ djondbd_LDADD = $(top_builddir)/service/libdjon-service.la $(top_builddir)/netwo
 if !MAC
 djondbd_LDADD += -lrt -luuid
 endif
+if MAC
+djondbd_LDFLAGS = -framework CoreFoundation -framework IOKit
+endif
 
