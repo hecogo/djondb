@@ -25,7 +25,7 @@
 #ifndef SETTINGS_H_INCLUDED
 #define SETTINGS_H_INCLUDED
 
-#include "../defs.h"
+#include "defs.h"
 #include <string>
 
 std::string getSetting(std::string);

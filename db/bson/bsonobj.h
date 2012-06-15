@@ -2,7 +2,7 @@
 #define BSONOBJ_H
 
 #include "bsoncontent.h"
-#include "defs.h"
+#include "bsondefs.h"
 #include <map>
 #include <string>
 #include <boost/shared_ptr.hpp>

@@ -16,8 +16,8 @@
 // this program will be open sourced and all its derivated work will be too.
 // *********************************************************************************************************************
 
-#include "errorHandle.h"
-#include "../util.h"
+#include "errorhandle.h"
+#include "util.h"
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
