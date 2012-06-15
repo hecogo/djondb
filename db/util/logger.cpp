@@ -26,7 +26,7 @@
 #include <string.h>
 #include <sstream>
 #include "settings.h"
-#include "../defs.h"
+#include "defs.h"
 #ifndef WINDOWS
 #include <syslog.h>
 #endif

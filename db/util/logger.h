@@ -2,8 +2,8 @@
 #define LOGGER_H_INCLUDED
 
 #include <string>
-#include "../defs.h"
-#include "../util.h"
+#include "defs.h"
+#include "util.h"
 #include "dtime.h"
 #include <ctime>
 #ifndef WINDOWS

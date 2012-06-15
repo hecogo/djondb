@@ -18,7 +18,7 @@
 
 #include "threads.h"
 #include <iostream>
-#include "../defs.h"
+#include "defs.h"
 #ifdef WINDOWS
 	#include <Windows.h>
 #else

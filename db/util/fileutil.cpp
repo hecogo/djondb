@@ -18,8 +18,8 @@
 
 #include "fileutil.h"
 #include "stringfunctions.h"
-#include "errorHandle.h"
-#include "../util.h"
+#include "errorhandle.h"
+#include "util.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>

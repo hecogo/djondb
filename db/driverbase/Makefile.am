@@ -30,4 +30,5 @@ test_performance_LDADD = libdjon-client.la -ldjon-command -ldjon-db -ldjon-files
 if !MAC
 test_performance_LDADD += -lrt -lpthread -luuid
 endif
-djon_client_libincludedir = $(libdir)/djon-client-1.0/include
+library_includedir=$(includedir)/djondb_0.1
+library_include_HEADERS = djondb_client.h connectionmanager.h connection.h

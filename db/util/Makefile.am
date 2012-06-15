@@ -6,30 +6,30 @@ include $(top_srcdir)/common.mk
 lib_LTLIBRARIES = libdjon-util.la
 
 libdjon_util_la_SOURCES = util.cpp \
-                                                   util/fileutil.cpp \
-                                                   util/version.cpp \
-                                                   util/threads.cpp \
-                                                   util/dtime.cpp \
-                                                   util/stringfunctions.cpp \
-                                                   util/errorHandle.cpp \
-                                                   util/logger.cpp \
-                                                   util/DateTime.cpp \
+                                                   fileutil.cpp \
+                                                   version.cpp \
+                                                   threads.cpp \
+                                                   dtime.cpp \
+                                                   stringfunctions.cpp \
+                                                   errorhandle.cpp \
+                                                   logger.cpp \
+                                                   datetime.cpp \
                                                    util.h \
                                                    config.h \
-                                                   util/DateTime.h \
-                                                   util/errorHandle.h \
-                                                   util/dtime.h \
-                                                   util/fileutil.h \
-                                                   util/logger.h \
-                                                   util/version.h \
-                                                   util/stringfunctions.h \
-                                                   util/threads.h \
-                                                   util/settings.h \
-                                                   util/settings.cpp \
+                                                   datetime.h \
+                                                   errorhandle.h \
+                                                   dtime.h \
+                                                   fileutil.h \
+                                                   logger.h \
+                                                   version.h \
+                                                   stringfunctions.h \
+                                                   threads.h \
+                                                   settings.h \
+                                                   settings.cpp \
                                                    defs.h
 
-library_includedir=$(includedir)/djon-util-1.0/util
-library_include_HEADERS = util.h defs.h util/DateTime.h util/errorHandle.h util/dtime.h util/fileutil.h
+library_includedir=$(includedir)/djondb_0.1
+library_include_HEADERS = util.h datetime.h errorhandle.h dtime.h fileutil.h logger.h version.h stringfunctions.h threads.h settings.h defs.h
 
 
 TESTS = test-util

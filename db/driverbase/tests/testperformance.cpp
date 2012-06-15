@@ -41,7 +41,7 @@ class TestPerfomance {
 			Logger* log = getLogger(NULL);
 			log->startTimeRecord();
 			int tests[] = { 10, 100, 1000, 10000, 1000000, 10000000};
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 5; i++) {
 				cout << "Testing performance over: " << tests[i] << " inserts" << endl;
 				for (int x = 0; x < tests[i]; x++) {
 					std::string* uid = uuid();

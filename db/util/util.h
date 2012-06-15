@@ -8,15 +8,15 @@
 #ifndef _UTIL_H
 #define	_UTIL_H
 
-#include "util/DateTime.h"
-#include "util/dtime.h"
-#include "util/fileutil.h"
-#include "util/stringfunctions.h"
-#include "util/errorHandle.h"
-#include "util/version.h"
-#include "util/logger.h"
-#include "util/threads.h"
-#include "util/settings.h"
+#include "datetime.h"
+#include "dtime.h"
+#include "fileutil.h"
+#include "stringfunctions.h"
+#include "errorhandle.h"
+#include "version.h"
+#include "logger.h"
+#include "threads.h"
+#include "settings.h"
 
 #include <string>
 #include <vector>
