@@ -213,4 +213,6 @@ bool Connection::dropNamespace(const std::string& db, const std::string& ns) {
 	cmd.setNameSpace(ns);
 
 	_commandWriter->writeCommand(&cmd);
+
+	return true;
 }
