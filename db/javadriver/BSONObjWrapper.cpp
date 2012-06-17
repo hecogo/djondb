@@ -3,20 +3,32 @@
 
 /*
  * Class:     BSONObjWrapper
+ * Method:    create
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_BSONObjWrapper_create
+(JNIEnv *env, jobject jobj) {
+
+	BSONObj* obj = new BSONObj();
+	return (long)obj;
+}
+
+/*
+ * Class:     BSONObjWrapper
  * Method:    add
  * Signature: (JLjava/lang/String;I)V
  */
 JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2I
-  (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jint ji){
-	  BSONObj* obj = (BSONObj*)jinstance;
-	  
-	  jboolean iscopy;
-	  int i = (int)ji;
-	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
+(JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jint ji){
+	BSONObj* obj = (BSONObj*)jinstance;
 
-	  obj->add(key, i);
+	jboolean iscopy;
+	int i = (int)ji;
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
 
-	  env->ReleaseStringUTFChars(jkey, key);
+	obj->add(key, i);
+
+	env->ReleaseStringUTFChars(jkey, key);
 }
 
 /*
@@ -25,14 +37,14 @@ JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2I
  * Signature: (JLjava/lang/String;D)V
  */
 JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2D
-  (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jdouble jd){
-	  BSONObj* obj = (BSONObj*)jinstance;
-	  jboolean iscopy;
-	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
-	  double d = (double)jd;
-	  obj->add(key, d);
+(JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jdouble jd){
+	BSONObj* obj = (BSONObj*)jinstance;
+	jboolean iscopy;
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
+	double d = (double)jd;
+	obj->add(key, d);
 
-	  env->ReleaseStringUTFChars(jkey, key);
+	env->ReleaseStringUTFChars(jkey, key);
 }
 
 /*
@@ -41,14 +53,35 @@ JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2D
  * Signature: (JLjava/lang/String;J)V
  */
 JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2J
-  (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jlong jl){
-	  BSONObj* obj = (BSONObj*)jinstance;
-	  jboolean iscopy;
-	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
-	  long l = (long)l;
-	  obj->add(key, l);
+(JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jlong jl){
+	BSONObj* obj = (BSONObj*)jinstance;
+	jboolean iscopy;
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
+	long l = (long)l;
+	obj->add(key, l);
 
-	  env->ReleaseStringUTFChars(jkey, key);
+	env->ReleaseStringUTFChars(jkey, key);
+}
+
+/*
+ * Class:     BSONObjWrapper
+ * Method:    add
+ * Signature: (JLjava/lang/String;LBSONArrayObjWrapper;)V
+ */
+JNIEXPORT void JNICALL Java_BSONObjWrapper_add_1array
+(JNIEnv *env, jobject jobj, jlong jinstance, jstring jkey, jobject jarray) {
+	jboolean iscopy;
+
+	BSONObj* obj = (BSONObj*)jinstance;
+
+	jclass clazzBSONObjWrapper = env->FindClass("BSONArrayObjWrapper");
+	jmethodID id = env->GetMethodID(clazzBSONObjWrapper, "instance", "()J");
+	BSONArrayObj* ref = (BSONArrayObj*) env->CallLongMethod(jarray, id);
+
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
+	obj->add(key, *ref);
+
+	env->ReleaseStringUTFChars(jkey, key);
 }
 
 /*
@@ -57,15 +90,15 @@ JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2J
  * Signature: (JLjava/lang/String;Ljava/lang/String;)V
  */
 JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2Ljava_lang_String_2
-  (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jstring jstr){
-	  BSONObj* obj = (BSONObj*)jinstance;
-	  jboolean iscopy;
-	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
-	  const char* str = env->GetStringUTFChars(jstr, &iscopy);
-	  obj->add(key, str);
+(JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jstring jstr){
+	BSONObj* obj = (BSONObj*)jinstance;
+	jboolean iscopy;
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
+	const char* str = env->GetStringUTFChars(jstr, &iscopy);
+	obj->add(key, str);
 
-	  env->ReleaseStringUTFChars(jkey, key);
-	  env->ReleaseStringUTFChars(jstr, str);
+	env->ReleaseStringUTFChars(jkey, key);
+	env->ReleaseStringUTFChars(jstr, str);
 }
 
 /*
@@ -74,18 +107,18 @@ JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2Ljava_lang_S
  * Signature: (JLjava/lang/String;LBSONObjWrapper;)V
  */
 JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2LBSONObjWrapper_2
-  (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jobject jbson){
-	  BSONObj* obj = (BSONObj*)jinstance;
-	  jboolean iscopy;
-	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
+(JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey, jobject jbson){
+	BSONObj* obj = (BSONObj*)jinstance;
+	jboolean iscopy;
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
 
-	  jclass clazzBSONObjWrapper = env->FindClass("BSONObjWrapper");
-	  jmethodID id = env->GetMethodID(clazzBSONObjWrapper, "instance", "()J");
-	  BSONObj* ref = (BSONObj*) env->CallLongMethod(jbson, id);
+	jclass clazzBSONObjWrapper = env->FindClass("BSONObjWrapper");
+	jmethodID id = env->GetMethodID(clazzBSONObjWrapper, "instance", "()J");
+	BSONObj* ref = (BSONObj*) env->CallLongMethod(jbson, id);
 
-	  obj->add(key, *ref);
+	obj->add(key, *ref);
 
-	  env->ReleaseStringUTFChars(jkey, key);
+	env->ReleaseStringUTFChars(jkey, key);
 }
 
 /*
@@ -94,16 +127,16 @@ JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2LBSONObjWrap
  * Signature: (JLjava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_BSONObjWrapper_has
-  (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey){
-	  BSONObj* obj = (BSONObj*)jinstance;
+(JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey){
+	BSONObj* obj = (BSONObj*)jinstance;
 
-	  jboolean iscopy;
-	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
+	jboolean iscopy;
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
 
-	  jboolean res = (jboolean)obj->has(key);
+	jboolean res = (jboolean)obj->has(key);
 
-	  env->ReleaseStringUTFChars(jkey, key);
-	  return res;
+	env->ReleaseStringUTFChars(jkey, key);
+	return res;
 }
 
 /*
@@ -112,16 +145,16 @@ JNIEXPORT jboolean JNICALL Java_BSONObjWrapper_has
  * Signature: (JLjava/lang/String;)I
  */
 JNIEXPORT jint JNICALL Java_BSONObjWrapper_getInt
-  (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey){
-	  BSONObj* obj = (BSONObj*)jinstance;
-	  jboolean iscopy;
-	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
+(JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey){
+	BSONObj* obj = (BSONObj*)jinstance;
+	jboolean iscopy;
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
 
-	  int* i = (int*)obj->getInt(key);
+	int* i = (int*)obj->getInt(key);
 
-	  env->ReleaseStringUTFChars(jkey, key);
+	env->ReleaseStringUTFChars(jkey, key);
 
-	  return *i;
+	return *i;
 }
 
 /*
@@ -130,16 +163,16 @@ JNIEXPORT jint JNICALL Java_BSONObjWrapper_getInt
  * Signature: (JLjava/lang/String;)D
  */
 JNIEXPORT jdouble JNICALL Java_BSONObjWrapper_getDouble
-  (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey){
-	  BSONObj* obj = (BSONObj*)jinstance;
-	  jboolean iscopy;
-	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
+(JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey){
+	BSONObj* obj = (BSONObj*)jinstance;
+	jboolean iscopy;
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
 
-	  double* d = (double*)obj->getDouble(key);
+	double* d = (double*)obj->getDouble(key);
 
-	  env->ReleaseStringUTFChars(jkey, key);
+	env->ReleaseStringUTFChars(jkey, key);
 
-	  return *d;
+	return *d;
 }
 
 /*
@@ -148,23 +181,23 @@ JNIEXPORT jdouble JNICALL Java_BSONObjWrapper_getDouble
  * Signature: (JLjava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL Java_BSONObjWrapper_getLong
-  (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey){
-	  BSONObj* obj = (BSONObj*)jinstance;
-	  jboolean iscopy;
-	  const char* key = env->GetStringUTFChars(jkey, &iscopy);
+(JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey){
+	BSONObj* obj = (BSONObj*)jinstance;
+	jboolean iscopy;
+	const char* key = env->GetStringUTFChars(jkey, &iscopy);
 
-	  long l = (long)obj->getLong(key);
+	long l = (long)obj->getLong(key);
 
-	  env->ReleaseStringUTFChars(jkey, key);
+	env->ReleaseStringUTFChars(jkey, key);
 
-	  return l;
+	return l;
 }
 
 /*
  * Class:     BSONObjWrapper
  * Method:    getString
  * Signature: (JLjava/lang/String;)Ljava/lang/String{
-}
+ }
  */
 JNIEXPORT jstring JNICALL Java_BSONObjWrapper_getString
 (JNIEnv *env, jobject jobj, jlong jinstance,jstring jkey) {

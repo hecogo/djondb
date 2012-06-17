@@ -1,12 +1,14 @@
 import java.util.Iterator;
 
 public class BSONObjWrapper {
+	public native long create();
+
 	public native void add(long instance,String key, int i);
 	public native void add(long instance,String key, double d);
 	public native void add(long instance,String key, long l);
 	public native void add(long instance,String key, String val);
 	public native void add(long instance,String key, BSONObjWrapper bson);
-	//public native void add(long instance,String key, BSONArrayObj);
+	public native void add_array(long instance,String key, BSONArrayObjWrapper array);
 
 	public native boolean has(long instance,String key) ;
 
@@ -17,7 +19,7 @@ public class BSONObjWrapper {
 	public native String getString(long instance,String key) ;
 	public native Object get(long instance,String key) ;
 	public native BSONObjWrapper getBSON(long instance,String key) ;
-	//public native BSONArrayObj* getBSONArray(long instance,String key) ;
+	public native BSONArrayObjWrapper getBSONArray(long instance,String key);
 
 	public native Object getXpath(long instance,String xpath) ;
 
@@ -29,6 +31,11 @@ public class BSONObjWrapper {
 	public native int length(long instance) ;
 
 	private long _instance;
+
+	public BSONObjWrapper() {
+		_instance = create();
+		System.out.println("BSONObj: " + _instance);
+	}
 
 	public BSONObjWrapper(long instance) {
 		_instance = instance;
@@ -58,7 +65,10 @@ public class BSONObjWrapper {
 		add(_instance, key, bson);
 	}
 
-//	public void add(String key, BSONArrayObj);
+	public void add(String key, BSONArrayObjWrapper array) {
+		System.out.println("Calling array");
+		add_array(_instance, key, array);
+	}
 
 	public boolean has(String key) {
 		return has(_instance, key);
@@ -84,8 +94,10 @@ public class BSONObjWrapper {
 		return getBSON(_instance, key);
 	}
 
-//	public BSONArrayObj* getBSONArray(String key) ;
-//
+	public BSONArrayObjWrapper getBSONArray(String key) {
+		return getBSONArray(_instance, key);
+	}
+
 	public Object get(String key) {
 		return get(_instance, key);
 	}

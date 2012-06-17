@@ -133,7 +133,37 @@ JNIEXPORT jobject JNICALL Java_ConnectionWrapper_findByKey
  * Signature: (JLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/util/ArrayList;
  */
 JNIEXPORT jobject JNICALL Java_ConnectionWrapper_find
-(JNIEnv *, jobject, jlong, jstring, jstring, jstring) {
+(JNIEnv *env, jobject obj, jlong jconnection, jstring jdb, jstring jns, jstring jfilter) {
+	Connection* con = (Connection*)jconnection;
+
+	jboolean iscopy;
+	const char* db = env->GetStringUTFChars(jdb, &iscopy);
+	const char* ns = env->GetStringUTFChars(jns, &iscopy);
+	const char* filter = env->GetStringUTFChars(jfilter, &iscopy);
+	
+	std::vector<BSONObj*> array = con->find(db, ns, filter);
+
+	env->ReleaseStringUTFChars(jdb, db);
+	env->ReleaseStringUTFChars(jns, ns);
+	env->ReleaseStringUTFChars(jfilter, filter);
+
+	// Create the Java Wrapper for connection
+	jclass clazzArrayList = env->FindClass("java/util/ArrayList");
+	jclass clazzBSONObjWrapper = env->FindClass("BSONObjWrapper");
+	jmethodID minitArray = env->GetMethodID(clazzArrayList, "<init>", "()V");
+	jmethodID minitBSON = env->GetMethodID(clazzBSONObjWrapper, "<init>", "(J)V");
+	jobject jarraylist = env->NewObject(clazzArrayList, minitArray);
+	
+	jmethodID madd = env->GetMethodID(clazzArrayList, "add", "(Ljava/lang/Object;)Z");
+
+	for (std::vector<BSONObj*>::iterator i = array.begin(); i != array.end(); i++) {
+		BSONObj* element = *i;
+
+		jobject bsonwrapper = env->NewObject(clazzBSONObjWrapper, minitBSON, (long)element);
+		env->CallVoidMethod(jarraylist, madd, bsonwrapper);
+	}
+
+	return jarraylist;
 }
 
 /*

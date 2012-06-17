@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     BSONObjWrapper
+ * Method:    create
+ * Signature: ()J
+ */
+JNIEXPORT jlong JNICALL Java_BSONObjWrapper_create
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     BSONObjWrapper
  * Method:    add
  * Signature: (JLjava/lang/String;I)V
  */
@@ -45,6 +53,14 @@ JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2Ljava_lang_S
  * Signature: (JLjava/lang/String;LBSONObjWrapper;)V
  */
 JNIEXPORT void JNICALL Java_BSONObjWrapper_add__JLjava_lang_String_2LBSONObjWrapper_2
+  (JNIEnv *, jobject, jlong, jstring, jobject);
+
+/*
+ * Class:     BSONObjWrapper
+ * Method:    add_array
+ * Signature: (JLjava/lang/String;LBSONArrayObjWrapper;)V
+ */
+JNIEXPORT void JNICALL Java_BSONObjWrapper_add_1array
   (JNIEnv *, jobject, jlong, jstring, jobject);
 
 /*
@@ -109,6 +125,14 @@ JNIEXPORT jobject JNICALL Java_BSONObjWrapper_get
  * Signature: (JLjava/lang/String;)LBSONObjWrapper;
  */
 JNIEXPORT jobject JNICALL Java_BSONObjWrapper_getBSON
+  (JNIEnv *, jobject, jlong, jstring);
+
+/*
+ * Class:     BSONObjWrapper
+ * Method:    getBSONArray
+ * Signature: (JLjava/lang/String;)LBSONArrayObjWrapper;
+ */
+JNIEXPORT jobject JNICALL Java_BSONObjWrapper_getBSONArray
   (JNIEnv *, jobject, jlong, jstring);
 
 /*

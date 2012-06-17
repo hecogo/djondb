@@ -1,3 +1,5 @@
+import java.util.*;
+
 class Main {
 	static {
 		try {
@@ -8,11 +10,47 @@ class Main {
 	}
 
 	public static void testBSON() {
-		BSONObjWrapper wrapper = new BSONObjWrapper(1);
-		wrapper.add("test", 1);
+		System.out.println("testing testBSON");
+		BSONObjWrapper wrapper = new BSONObjWrapper();
+		wrapper.add("i", 1);
+		wrapper.add("d", 100120d);
+		wrapper.add("l", 12l);
+		wrapper.add("s", "Test");
+		BSONObjWrapper inner = new BSONObjWrapper();
+		inner.add("s", "s");
+		wrapper.add("inner", inner);
+		assert(5 == wrapper.length());
+		assert(wrapper.has("i"));
+		assert(wrapper.has("d"));
+		assert(wrapper.has("l"));
+		assert(wrapper.has("s"));
+		assert(1 == wrapper.getInt("i"));
+		assert(100120d == wrapper.getDouble("d"));
+		assert(12l == wrapper.getLong("l"));
+		assert("Test".equals(wrapper.getString("s")));
+		BSONObjWrapper innerres = wrapper.getBSON("inner");
+		assert(innerres != null);
+		assert("Test".equals(innerres.getString("s")));
+
+		// test arrays
+		BSONArrayObjWrapper array = new BSONArrayObjWrapper();
+		System.out.println("Array");
+		BSONObjWrapper obj = new BSONObjWrapper();
+		obj.add("i", 1);
+		System.out.println("adding to Array");
+		array.add(obj);
+		wrapper.add("array", array);
+		assert(wrapper.getBSONArray("array") != null);
+		assert(wrapper.getBSONArray("array").length() == 1);
+		//	public BSONArrayObj* getBSONArray(String key) ;
+		//
+		assert(wrapper.get("s") != null);
+		//wrapper.getXpath(String xpath);
+		//wrapper.toString();
+		//wrapper.iterator();
 	}
 
-	public static void main(String[] args) {
+	public void testConnection() {
 		try {
 			ConnectionWrapper con = ConnectionManagerWrapper.getConnection("localhost");
 
@@ -21,14 +59,24 @@ class Main {
 			}
 
 			con.insert("dbjava", "nsjava", "{ 'name': 'Juan' }");
-			BSONObjWrapper wrapper = con.findByKey("dbjava", "nsjava", "56681d39-e6ae-46cf-8c5e-85e517f7a969");
+			ArrayList<BSONObjWrapper> wrapper = con.find("dbjava", "nsjava", "$'name' == 'Juan'");
 
-			System.out.println("has: " + wrapper.has("name"));
-			System.out.println("name: " + wrapper.getString("name"));
+			System.out.println("Size: " + wrapper.size());
+
+			for (int x = 0; x < wrapper.size(); x++) {
+				BSONObjWrapper bson = wrapper.get(x);
+				System.out.println(bson.toString());
+			}
 
 			ConnectionManagerWrapper.releaseConnection(con);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void main(String[] args) {
+		Main m = new Main();
+		m.testBSON();
+		m.testConnection();
 	}
 }
