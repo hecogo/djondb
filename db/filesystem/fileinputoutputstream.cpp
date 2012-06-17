@@ -18,22 +18,26 @@
 
 #include "fileinputoutputstream.h"
 
+#include "util.h"
 #include <string.h>
 #include <boost/crc.hpp>
 #include <stdlib.h>
+#include <errno.h>
 #include <sstream>
 
 FileInputOutputStream::FileInputOutputStream(const std::string& fileName, const char* flags) {
+	Logger* log = getLogger(NULL);
     _pFile = fopen(fileName.c_str(), flags);
 
     // Position the cursor at the end of the file
 	 if (_pFile == NULL) {
-		 perror("Error");
-		 cout << "here we go" << endl;
+		 log->error("Error opening the file: %s. Error: %s", fileName.c_str(), strerror(errno));
+		 exit(1);
 	 }
     fseek(_pFile, 0, SEEK_END);
     _fileName = fileName;
     _open = true;
+	 delete log;
 }
 
 FileInputOutputStream::~FileInputOutputStream() {
