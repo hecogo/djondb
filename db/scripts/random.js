@@ -5,6 +5,7 @@ var jsontemplate = {
 };
 
 function init() {
+    load("logger.js");
 	if (typeof String.prototype.startsWith != 'function') {
   		String.prototype.startsWith = function (str){
 	 		return this.indexOf(str) == 0;
@@ -56,10 +57,13 @@ function generate(count) {
 }
 
 function insertInDb(r) {
+   startTimer("insert");
    for (var x = 0; x < r.length; x++) {
       var e = r[x];
       insert('db', 'test', e);
    }
+   var t = stopTimer("insert");
+   print("Time: " + t);
 }
 
 init();
