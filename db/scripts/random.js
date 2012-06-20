@@ -63,7 +63,8 @@ function insertInDb(r) {
       insert('db', 'test', e);
    }
    var t = stopTimer("insert");
-   print("Time: " + t);
+   var ops = r.length / t;
+   print("Time: " + t + ", op x millisec: " + ops * 1000);
 }
 
 init();
