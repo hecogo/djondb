@@ -72,10 +72,33 @@ BSONObj* BSONInputStream::readBSON() const {
                 obj->add(*key.get(), *(std::string*)data);
                 delete (std::string*)data;
                 break;
-        }
-    }
+				case BSONARRAY_TYPE:
+					 {
+						 BSONArrayObj* array = readBSONInnerArray();
+						 obj->add(*key.get(), *array);
+						 delete array;
+						 break;
+					 }
+		  }
+	 }
 	 delete log;
-    return obj;
+	 return obj;
+}
+
+BSONArrayObj* BSONInputStream::readBSONInnerArray() const {
+	if (_log->isDebug()) _log->debug(3, "BSONInputStream::readBSONInnerArray");
+	int elements = _inputStream->readLong();
+	if (_log->isDebug()) _log->debug(3, "elements read: %d", elements);
+	BSONArrayObj* result = new BSONArrayObj();
+
+	for (int x= 0; x < elements; x++) {
+		BSONObj* obj = readBSON();
+		if (_log->isDebug()) _log->debug(3, "obj: %s", obj->toChar());
+		result->add(*obj);
+		delete obj;
+	}
+
+	return result;
 }
 
 std::vector<BSONObj*> BSONInputStream::readBSONArray() const {

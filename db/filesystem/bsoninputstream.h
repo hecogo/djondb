@@ -4,6 +4,7 @@
 #include <vector>
 
 class BSONObj;
+class BSONArrayObj;
 class InputStream;
 class Logger;
 
@@ -17,6 +18,7 @@ class BSONInputStream
 
         BSONObj* readBSON() const;
 		  std::vector<BSONObj*> readBSONArray() const;
+		  BSONArrayObj* readBSONInnerArray() const;
 
     protected:
     private:

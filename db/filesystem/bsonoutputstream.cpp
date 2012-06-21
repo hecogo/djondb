@@ -65,13 +65,33 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
                 text = (char*)cont->_element;
                 _outputStream->writeChars(text, strlen(text));
                 break;
-            case STRING_TYPE:
-                string* str = (string*)cont->_element;
-                _outputStream->writeString(*str);
-                break;
-        }
-    }
+				case STRING_TYPE:
+					 {
+						 string* str = (string*)cont->_element;
+						 _outputStream->writeString(*str);
+						 break;
+					 }
+				case BSONARRAY_TYPE: 
+					 {
+						 BSONArrayObj* array = (BSONArrayObj*)cont->_element;
+						 writeBSONArray(array);
+						 break;
+					 }
+		  }
+	 }
 	 delete log;
+}
+
+void BSONOutputStream::writeBSONArray(const BSONArrayObj* array) {
+	Logger* log = getLogger(NULL);
+	if (log->isDebug()) log->debug("BSONOutputStream::writeBSONArray elements: %d", array->length());
+	int length = array->length();
+	_outputStream->writeLong(length);
+	for (int x = 0; x < length; x++) {
+		BSONObj* obj = array->get(x);
+		writeBSON(*obj);
+	}
+	delete log;
 }
 
 void BSONOutputStream::writeBSONArray(const std::vector<BSONObj*>& array) {

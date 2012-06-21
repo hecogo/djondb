@@ -84,12 +84,15 @@ class TestDriverBaseSuite: public Test::Suite {
 		}
 
 		void testInsertComplex() {
+			cout << "\nTesting complex" << endl;
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
 				cout << "\nCould not connect to " << _host << endl;
 				exit(0);
 			}
+
+			conn->dropNamespace("test", "ns");
 
 			BSONObj obj;
 			std::string* id = uuid();
@@ -109,6 +112,18 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ASSERT(innerres != NULL);
 			TEST_ASSERT(innerres->has("innername"));
 			TEST_ASSERT(((std::string)"Test").compare(innerres->getString("innername")) == 0);
+
+			// testing arrays
+			cout << "testInsertComplex: Testing arrays" << endl;
+			std::string* id2 = uuid();
+			conn->insert("test", "ns", "{ '_id': '" + *id2 + "', 'array': [ { 'x': 'test', 'y': 3},  { 'x': 'test2', 'y': 4}]  }");
+
+			std::vector<BSONObj*> res2 = conn->find("test", "ns", "$'_id' == '" + *id2 + "'");
+			TEST_ASSERT(res2.size() == 1);
+			BSONObj* o2 = res2[0];
+			TEST_ASSERT(o2 != NULL);
+
+			TEST_ASSERT(o2->has("array"));
 
 		}
 
