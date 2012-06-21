@@ -111,19 +111,19 @@ class TestDBSuite: public Test::Suite
 			ConstantExpression exp("35");
 			ExpressionResult* result = exp.eval(dummy);
 
-			TEST_ASSERT(result->type() == RT_INT);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_INT);
 			int* i = (int*)result->value();
 			TEST_ASSERT(*i == 35);
 
 			ConstantExpression exp2("3.324");
 			ExpressionResult* result2 = exp2.eval(dummy);
-			TEST_ASSERT(result2->type() == RT_DOUBLE);
+			TEST_ASSERT(result2->type() == ExpressionResult::RT_DOUBLE);
 			double* d = (double*)result2->value();
 			TEST_ASSERT(*d == 3.324);
 
 			ConstantExpression exp3("'Test'");
 			ExpressionResult* result3 = exp3.eval(dummy);
-			TEST_ASSERT(result3->type() == RT_STRING);
+			TEST_ASSERT(result3->type() == ExpressionResult::RT_STRINGDB);
 			std::string* s = (std::string*)result3->value();
 			TEST_ASSERT(s != NULL);
 			TEST_ASSERT(s->compare("Test") == 0);
@@ -137,7 +137,7 @@ class TestDBSuite: public Test::Suite
 
 			SimpleExpression exp4("$'age'");
 			ExpressionResult* result4 = exp4.eval(obj);
-			TEST_ASSERT(result4->type() == RT_INT);
+			TEST_ASSERT(result4->type() == ExpressionResult::RT_INT);
 			int* i2 = (int*)result4->value();
 			TEST_ASSERT(i2 != NULL);
 			TEST_ASSERT(*i2 == 35);
@@ -159,7 +159,7 @@ class TestDBSuite: public Test::Suite
 			exp7.push(new SimpleExpression("$'age'"));
 			exp7.push(new ConstantExpression("35"));
 			ExpressionResult* result7 = exp7.eval(obj);
-			TEST_ASSERT(result7->type() == RT_BOOLEAN);
+			TEST_ASSERT(result7->type() == ExpressionResult::RT_BOOLEAN);
 			bool* bresult7 = (bool*)result7->value();
 			TEST_ASSERT(*bresult7 == true);
 
@@ -167,7 +167,7 @@ class TestDBSuite: public Test::Suite
 			exp8.push(new SimpleExpression("$'age'"));
 			exp8.push(new ConstantExpression("30"));
 			ExpressionResult* result8 = exp8.eval(obj);
-			TEST_ASSERT(result8->type() == RT_BOOLEAN);
+			TEST_ASSERT(result8->type() == ExpressionResult::RT_BOOLEAN);
 			bool* bresult8 = (bool*)result8->value();
 			TEST_ASSERT(*bresult8 == true);
 		}
@@ -182,7 +182,7 @@ class TestDBSuite: public Test::Suite
 			FilterParser* parser = FilterParser::parse("$'age'");
 			ExpressionResult* result = parser->eval(obj);
 
-			TEST_ASSERT(result->type() == RT_INT);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_INT);
 			int* test = (int*)result->value();
 
 			TEST_ASSERT(test != NULL);
@@ -192,110 +192,110 @@ class TestDBSuite: public Test::Suite
 
 			parser = FilterParser::parse("");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bool* bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("$'age' == 35");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' == 35 )");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 1 ))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(($'age' == 36 ) and ($'state' == 1 ))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(!*bres);
 
 			parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 2 ))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(!*bres);
 
 			parser = FilterParser::parse("(($'age'==35) and ($'state'==1))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(('John' == $'name') and ($'age'==35))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(('John' == $'name') or ($'age'==36))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(('Johnny' == $'name') or ($'age'==35))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' > 15)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' < 45)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 			
 			parser = FilterParser::parse("($'age' >= 15)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' >= 35)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' <= 45)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 			
 			parser = FilterParser::parse("($'age' <= 35)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'name' == \"John\")");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			// Eval an attribute that does not exist
 			parser = FilterParser::parse("($'nn' == \"John\")");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(!*bres);
 		}
@@ -361,6 +361,8 @@ class TestDBSuite: public Test::Suite
 
 		void testInsertComplexBSON() {
 			cout << "testInsertComplexBSON" << endl;
+
+			controller.dropNamespace("dbtest", "sp1.customercomplex");
 			BSONObj obj;
 			obj.add("int", 1);
 			obj.add("char", "test");
@@ -370,9 +372,18 @@ class TestDBSuite: public Test::Suite
 			inner.add("char", "testInner");
 			obj.add("inner", inner);
 
-			BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
+			controller.insert("dbtest", "sp1.customercomplex", &obj);
+
+			std::vector<BSONObj*> array = controller.find("dbtest", "sp1.customercomplex", "$'int' == 1");
+			TEST_ASSERT(array.size() == 1);
+			BSONObj* res = array[0];
 			TEST_ASSERT(res != NULL);
 			TEST_ASSERT(res->has("_id"));
+			TEST_ASSERT(res->getBSON("inner") != NULL);
+			BSONObj* innerRes = res->getBSON("inner");
+			TEST_ASSERT(innerRes != NULL);
+			TEST_ASSERT(innerRes->has("int"));
+			TEST_ASSERT(*innerRes->getInt("int") == 2);
 			delete res;
 		}
 

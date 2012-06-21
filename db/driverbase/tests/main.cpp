@@ -61,6 +61,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			_port = 1243;
 			TEST_ADD(TestDriverBaseSuite::testFinds);
 			TEST_ADD(TestDriverBaseSuite::testInsert);
+			TEST_ADD(TestDriverBaseSuite::testInsertComplex);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
 
@@ -80,6 +81,35 @@ class TestDriverBaseSuite: public Test::Suite {
 			std::vector<BSONObj*> testresult = conn->find("db", "testdrop.namespace", std::string(""));
 
 			TEST_ASSERT(testresult.size() == 0);
+		}
+
+		void testInsertComplex() {
+			Connection* conn = ConnectionManager::getConnection("localhost");
+
+			if (!conn->open()) {
+				cout << "\nCould not connect to " << _host << endl;
+				exit(0);
+			}
+
+			BSONObj obj;
+			std::string* id = uuid();
+			obj.add("_id", *id);
+			obj.add("name", "John");
+			BSONObj inner;
+			inner.add("innername", "Test");
+			obj.add("inner", inner);
+
+			conn->insert("test", "ns", obj);
+
+			std::vector<BSONObj*> res = conn->find("test", "ns", "$'_id' == '" + *id + "'");
+			TEST_ASSERT(res.size() == 1);
+			BSONObj* bres = res[0];
+			TEST_ASSERT(bres->has("inner"));
+			BSONObj* innerres = bres->getBSON("inner");
+			TEST_ASSERT(innerres != NULL);
+			TEST_ASSERT(innerres->has("innername"));
+			TEST_ASSERT(((std::string)"Test").compare(innerres->getString("innername")) == 0);
+
 		}
 
 		void testInsert() {

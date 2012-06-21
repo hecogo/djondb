@@ -17,7 +17,7 @@ libdjon_client_la_SOURCES= connection.cpp \
 TESTS = test-driverbase
 check_PROGRAMS = test-driverbase
 test_driverbase_CPPFLAGS = $(all_includes)
-test_driverbase_LDADD = libdjon-client.la $(top_builddir)/command/libdjon-command.la $(top_builddir)/db/libdjon-db.la $(top_builddir)/filesystem/libdjon-filesystem.la $(top_builddir)/cache/libdjon-cache.la $(top_builddir)/bson/libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lXss
+test_driverbase_LDADD = libdjon-client.la $(top_builddir)/command/libdjon-command.la $(top_builddir)/db/libdjon-db.la $(top_builddir)/filesystem/libdjon-filesystem.la $(top_builddir)/cache/libdjon-cache.la $(top_builddir)/bson/libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lXss -lcpptest
 test_driverbase_SOURCES = tests/main.cpp
 if !MAC
 test_driverbase_LDADD += -lrt -lpthread -luuid
