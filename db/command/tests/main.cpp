@@ -69,7 +69,7 @@ class TestCommandSuite: public Test::Suite {
 			BSONObj* objResult = rdCmd->bson();
 			TEST_ASSERT(objResult != NULL);
 			TEST_ASSERT(objResult->has("name"));	
-			TEST_ASSERT(objResult->getString("name")->compare("Cross") == 0);
+			TEST_ASSERT(objResult->getString("name").compare("Cross") == 0);
 		}
 
 		void testUpdateCommand() {
@@ -102,7 +102,7 @@ class TestCommandSuite: public Test::Suite {
 			BSONObj* objResult = rdCmd->bson();
 			TEST_ASSERT(objResult  != NULL);
 			TEST_ASSERT(objResult->has("name"));	
-			TEST_ASSERT(objResult->getString("name")->compare("Cross") == 0);
+			TEST_ASSERT(objResult->getString("name").compare("Cross") == 0);
 		}
 
 		void testFindCommand() {

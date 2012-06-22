@@ -9,11 +9,12 @@ AM_CFLAGS += $(all_includes)
 AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-client.la
+#libdjon_client_la_LDFLAGS = -static
 libdjon_client_la_SOURCES= connection.cpp \
-                                                     connection.h \
-                                                     connectionmanager.cpp \
-                                                     connectionmanager.h \
-                                                     djondb_client.h
+									connection.h \
+									connectionmanager.cpp \
+									connectionmanager.h \
+									djondb_client.h
 TESTS = test-driverbase
 check_PROGRAMS = test-driverbase
 test_driverbase_CPPFLAGS = $(all_includes)
