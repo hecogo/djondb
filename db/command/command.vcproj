@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="command"
 	ProjectGUID="{E42648EC-412D-49B3-BE88-A2E54909C8CD}"
 	RootNamespace="command"
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../db;../filesystem;../cache;../bson;../util;C:\development\boost_1_48_0\;..\windows\includes"
+				AdditionalIncludeDirectories="../db;../filesystem;../cache;../bson;../util;C:\development\boost;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

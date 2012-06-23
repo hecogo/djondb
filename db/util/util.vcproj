@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="util"
 	ProjectGUID="{C5EB45F0-68D0-426D-A04A-47439917D92F}"
 	RootNamespace="util"
@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\development\boost_1_48_0;..\windows\includes"
+				AdditionalIncludeDirectories="C:\development\boost;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
