@@ -557,6 +557,8 @@ bool DBController::dropNamespace(char* db, char* ns) {
 	}
 	map<std::string, SpacesType>* spaces = itspaces->second;
 
+	vector<std::string> keysToRemove;
+
 	for (map<std::string, SpacesType>::iterator it = spaces->begin(); it != spaces->end(); it++) {
 		std::string key = it->first;
 		std::string filename = key.substr(0, key.find_last_of("."));
@@ -571,9 +573,13 @@ bool DBController::dropNamespace(char* db, char* ns) {
 				result = false;
 				break;
 			}
-			spaces->erase(it);
+			keysToRemove.push_back(key);
 			result = true;
 		}
 	}
+        // remove the elementsss
+        for (std::vector<std::string>::iterator it = keysToRemove.begin(); it != keysToRemove.end(); it++) {
+		spaces->erase(*it);
+        } 
 	return result;
 }
