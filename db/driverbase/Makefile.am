@@ -23,6 +23,9 @@ test_driverbase_SOURCES = tests/main.cpp
 if !MAC
 test_driverbase_LDADD += -lrt -lpthread -luuid
 endif
+if MAC
+test_driverbase_LDFLAGS = -framework CoreFoundation -framework IOKit
+endif
 
 bin_PROGRAMS = test-performance
 test_performance_SOURCES = tests/testperformance.cpp
@@ -30,6 +33,9 @@ test_performance_LDADD = libdjon-client.la $(top_builddir)/command/libdjon-comma
 
 if !MAC
 test_performance_LDADD += -lrt -lpthread -luuid
+endif
+if MAC
+test_performance_LDFLAGS = -framework CoreFoundation -framework IOKit
 endif
 library_includedir=$(includedir)/djondb_0.1
 library_include_HEADERS = djondb_client.h connectionmanager.h connection.h
