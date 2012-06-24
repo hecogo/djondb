@@ -28,148 +28,191 @@ using namespace std;
 
 class TestUtilSuite : public Test::Suite
 {
-public:
-    TestUtilSuite() {
-        TEST_ADD(TestUtilSuite::testDates)
-        TEST_ADD(TestUtilSuite::testTimes)
-        TEST_ADD(TestUtilSuite::testStrings)
-        TEST_ADD(TestUtilSuite::testUUID);
-        TEST_ADD(TestUtilSuite::testSettings);
-        TEST_ADD(TestUtilSuite::testFileUtils);
-    }
+	public:
+		TestUtilSuite() {
+			TEST_ADD(TestUtilSuite::testDates)
+				TEST_ADD(TestUtilSuite::testTimes)
+				TEST_ADD(TestUtilSuite::testStrings)
+				TEST_ADD(TestUtilSuite::testUUID);
+			TEST_ADD(TestUtilSuite::testSettings);
+			TEST_ADD(TestUtilSuite::testFileUtils);
+			TEST_ADD(TestUtilSuite::testCircularQueue);
+		}
 
-private:
-    void testDates()
-    {
-        DateTime dt = DateTime::today(true);
+	private:
+		void testDates()
+		{
+			DateTime dt = DateTime::today(true);
 
-        DateTime dt2 = dt.addDays(1);
+			DateTime dt2 = dt.addDays(1);
 
-        TEST_ASSERT((dt.getDay() + 1) == dt2.getDay());
+			TEST_ASSERT((dt.getDay() + 1) == dt2.getDay());
 
-        // testing day of the week
-        dt = DateTime(2011, 9, 12);
-        TEST_ASSERT(dt.dayOfTheWeek() == 1);
+			// testing day of the week
+			dt = DateTime(2011, 9, 12);
+			TEST_ASSERT(dt.dayOfTheWeek() == 1);
 
-        // testing day of the week "complex", 29 of febr
-        dt = DateTime(2008, 2, 29);
-        TEST_ASSERT(dt.dayOfTheWeek() == 5);
+			// testing day of the week "complex", 29 of febr
+			dt = DateTime(2008, 2, 29);
+			TEST_ASSERT(dt.dayOfTheWeek() == 5);
 
-        // diff
-        dt = DateTime(2011, 2, 10);
-        dt2 = DateTime(2011, 3, 1);
-        int diff = dt2.daysTo(dt);
-        TEST_ASSERT(diff == 19);
-    }
+			// diff
+			dt = DateTime(2011, 2, 10);
+			dt2 = DateTime(2011, 3, 1);
+			int diff = dt2.daysTo(dt);
+			TEST_ASSERT(diff == 19);
+		}
 
-    void testTimes()
-    {
-        // Testing diff
-        DTime t(15, 40, 0);
-        DTime t2(16, 20, 0);
-        DTime res = t2 - t;
+		void testCircularQueue() {
+			CircularQueue<int> c(3);
+			c.push_back(1);
 
-        TEST_ASSERT((res.hour() == 0) && (res.minutes() == 40) && (res.seconds() == 0));
+			for (int x = 0; x < 3; x++) {
+				TEST_ASSERT(c.next() == 1);
+			}
 
-        res = t2 - 200;
-        TEST_ASSERT((res.hour() == 16) && (res.minutes() == 16) && (res.seconds() == 40));
-        // teting add
-    }
+			for (int x= 0; x < 3; x++) {
+				TEST_ASSERT(c.previous() == 1);
+			}
 
-    void testStrings()
-    {
-        // Copy chars
-        char* test = "Hello world!";
-        char* res = strcpy(test, strlen(test));
+			c.push_back(2);
 
-        TEST_ASSERT(strcmp(test, res) == 0);
-        TEST_ASSERT(test != res);
-        free(res);
+			TEST_ASSERT(c.current() == 2);
+			TEST_ASSERT(c.next() == 1);
+			TEST_ASSERT(c.next() == 2);
 
-        //copy string
-        std::string s = "Hello world!";
-        res = strcpy(s);
-        TEST_ASSERT(s.compare(res) == 0);
+			c.push_back(3);
+			TEST_ASSERT(c.current() == 3);
+			TEST_ASSERT(c.previous() == 2);
+			TEST_ASSERT(c.previous() == 1);
+			TEST_ASSERT(c.previous() == 3);
+			TEST_ASSERT(c.previous() == 2);
+			
+			c.push_back(4);
+			TEST_ASSERT(c.current() == 4);
+			TEST_ASSERT(c.previous() == 3);
+			TEST_ASSERT(c.previous() == 2);
+			TEST_ASSERT(c.previous() == 4);
 
-        // ends with
-        bool com = endsWith("test.tex", ".tex");
-        TEST_ASSERT(com);
-        com = endsWith("test.ss", "test");
-        TEST_ASSERT(!com);
-		  TEST_ASSERT(endsWith("test/", "/"));
-		 
-        // tokenizer
-        std::vector<std::string*>* token = tokenizer("test,other,and 1 more", ",");
-        TEST_ASSERT(token->size() == 3);
-        TEST_ASSERT(token->at(0)->compare("test") == 0);
-        TEST_ASSERT(token->at(1)->compare("other") == 0);
-        TEST_ASSERT(token->at(2)->compare("and 1 more") == 0);
-        delete(token);
+			c.push_front(1);
+			TEST_ASSERT(c.current() == 3);
+			TEST_ASSERT(c.previous() == 2);
+			TEST_ASSERT(c.previous() == 1);
+			TEST_ASSERT(c.previous() == 3);
 
-        // format
-        std::string sformat = format("test %d %s %5.4f", 10, "Hello World!", 3.14159);
-        TEST_ASSERT(sformat.compare("test 10 Hello World! 3.1416") == 0);
+			TEST_ASSERT(c.pop_back() == 3);
+			TEST_ASSERT(c.pop_front() == 1);
+			TEST_ASSERT(c.current() == 2);
+		}
 
-        // toString
-        std::string s2 = toString(10.1);
-        TEST_ASSERT(s2.compare("10.1")== 0);
+		void testTimes()
+		{
+			// Testing diff
+			DTime t(15, 40, 0);
+			DTime t2(16, 20, 0);
+			DTime res = t2 - t;
 
-        std::string s3 = toString(3.14159, 2);
-        TEST_ASSERT(s3.compare("3.14")== 0);
+			TEST_ASSERT((res.hour() == 0) && (res.minutes() == 40) && (res.seconds() == 0));
 
-        std::string s4 = toString(3);
-        TEST_ASSERT(s4.compare("3")== 0);
+			res = t2 - 200;
+			TEST_ASSERT((res.hour() == 16) && (res.minutes() == 16) && (res.seconds() == 40));
+			// teting add
+		}
 
-        // split
-        std::vector<std::string> sp = split("test,other,and 1 more", ",");
-        TEST_ASSERT(sp.size() == 3);
-        TEST_ASSERT(sp.at(0).compare("test") == 0);
-        TEST_ASSERT(sp.at(1).compare("other") == 0);
-        TEST_ASSERT(sp.at(2).compare("and 1 more") == 0);
+		void testStrings()
+		{
+			// Copy chars
+			char* test = "Hello world!";
+			char* res = strcpy(test, strlen(test));
 
-        //Count char
-        long c = countChar("testing.this.component.!", '.');
-        TEST_ASSERT(c == 3);
+			TEST_ASSERT(strcmp(test, res) == 0);
+			TEST_ASSERT(test != res);
+			free(res);
 
-		  std::vector<std::string> spl = splitLines("test1\r\ntest2");
-		  TEST_ASSERT(spl.size() == 2);
-		  std::string t1 = spl[1];
-		  TEST_ASSERT(spl[0].compare("test1") == 0);
-		  TEST_ASSERT(spl[1].compare("test2") == 0);
+			//copy string
+			std::string s = "Hello world!";
+			res = strcpy(s);
+			TEST_ASSERT(s.compare(res) == 0);
+
+			// ends with
+			bool com = endsWith("test.tex", ".tex");
+			TEST_ASSERT(com);
+			com = endsWith("test.ss", "test");
+			TEST_ASSERT(!com);
+			TEST_ASSERT(endsWith("test/", "/"));
+
+			// tokenizer
+			std::vector<std::string*>* token = tokenizer("test,other,and 1 more", ",");
+			TEST_ASSERT(token->size() == 3);
+			TEST_ASSERT(token->at(0)->compare("test") == 0);
+			TEST_ASSERT(token->at(1)->compare("other") == 0);
+			TEST_ASSERT(token->at(2)->compare("and 1 more") == 0);
+			delete(token);
+
+			// format
+			std::string sformat = format("test %d %s %5.4f", 10, "Hello World!", 3.14159);
+			TEST_ASSERT(sformat.compare("test 10 Hello World! 3.1416") == 0);
+
+			// toString
+			std::string s2 = toString(10.1);
+			TEST_ASSERT(s2.compare("10.1")== 0);
+
+			std::string s3 = toString(3.14159, 2);
+			TEST_ASSERT(s3.compare("3.14")== 0);
+
+			std::string s4 = toString(3);
+			TEST_ASSERT(s4.compare("3")== 0);
+
+			// split
+			std::vector<std::string> sp = split("test,other,and 1 more", ",");
+			TEST_ASSERT(sp.size() == 3);
+			TEST_ASSERT(sp.at(0).compare("test") == 0);
+			TEST_ASSERT(sp.at(1).compare("other") == 0);
+			TEST_ASSERT(sp.at(2).compare("and 1 more") == 0);
+
+			//Count char
+			long c = countChar("testing.this.component.!", '.');
+			TEST_ASSERT(c == 3);
+
+			std::vector<std::string> spl = splitLines("test1\r\ntest2");
+			TEST_ASSERT(spl.size() == 2);
+			std::string t1 = spl[1];
+			TEST_ASSERT(spl[0].compare("test1") == 0);
+			TEST_ASSERT(spl[1].compare("test2") == 0);
 
 
-		  // Test concat
+			// Test concat
 			std::string sc1 = "Hello ";
 			std::string sc2 = "World!";
 			std::string resultconcat = concatStrings(sc1, sc2);
 			TEST_ASSERT(resultconcat.compare("Hello World!") == 0);
-    }
+		}
 
-    void testUUID()
-    {
-        std::string* u = uuid();
-        TEST_ASSERT(u != NULL);
-        delete u;
-    }
+		void testUUID()
+		{
+			std::string* u = uuid();
+			TEST_ASSERT(u != NULL);
+			delete u;
+		}
 
-	 void testSettings() {
-		 std::string folder = getSetting("DATA_DIR");
+		void testSettings() {
+			std::string folder = getSetting("DATA_DIR");
 
-		 TEST_ASSERT(folder.compare("/var/djondb") == 0);
-	 }
+			TEST_ASSERT(folder.compare("/var/djondb") == 0);
+		}
 
-	 void testFileUtils() {
-		 //test mkdir
+		void testFileUtils() {
+			//test mkdir
 
-		 makeDir("/tmp/test/test2");
+			makeDir("/tmp/test/test2");
 
-		 TEST_ASSERT(existDir("/tmp/test/test2"));
+			TEST_ASSERT(existDir("/tmp/test/test2"));
 
-		 char* home = getenv("HOME");
-		 TEST_ASSERT(checkFileCreation(home));
-		 // test directory fail
-		 TEST_ASSERT(!checkFileCreation("/"));
-	 }
+			char* home = getenv("HOME");
+			TEST_ASSERT(checkFileCreation(home));
+			// test directory fail
+			TEST_ASSERT(!checkFileCreation("/"));
+		}
 };
 //// Tests unconditional fail TEST_ASSERTs
 ////
@@ -281,81 +324,81 @@ private:
 
 enum OutputType
 {
-    Compiler,
-    Html,
-    TextTerse,
-    TextVerbose
+	Compiler,
+	Html,
+	TextTerse,
+	TextVerbose
 };
 
-static void
+	static void
 usage()
 {
-    cout << "usage: mytest [MODE]\n"
-         << "where MODE may be one of:\n"
-         << "  --compiler\n"
-         << "  --html\n"
-         << "  --text-terse (default)\n"
-         << "  --text-verbose\n";
-    exit(0);
+	cout << "usage: mytest [MODE]\n"
+		<< "where MODE may be one of:\n"
+		<< "  --compiler\n"
+		<< "  --html\n"
+		<< "  --text-terse (default)\n"
+		<< "  --text-verbose\n";
+	exit(0);
 }
 
-static auto_ptr<Test::Output>
+	static auto_ptr<Test::Output>
 cmdline(int argc, char* argv[])
 {
-    if (argc > 2)
-        usage(); // will not return
+	if (argc > 2)
+		usage(); // will not return
 
-    Test::Output* output = 0;
+	Test::Output* output = 0;
 
-    if (argc == 1)
-        output = new Test::TextOutput(Test::TextOutput::Verbose);
-    else
-    {
-        const char* arg = argv[1];
-        if (strcmp(arg, "--compiler") == 0)
-            output = new Test::CompilerOutput;
-        else if (strcmp(arg, "--html") == 0)
-            output =  new Test::HtmlOutput;
-        else if (strcmp(arg, "--text-terse") == 0)
-            output = new Test::TextOutput(Test::TextOutput::Terse);
-        else if (strcmp(arg, "--text-verbose") == 0)
-            output = new Test::TextOutput(Test::TextOutput::Verbose);
-        else
-        {
-            cout << "invalid commandline argument: " << arg << endl;
-            usage(); // will not return
-        }
-    }
+	if (argc == 1)
+		output = new Test::TextOutput(Test::TextOutput::Verbose);
+	else
+	{
+		const char* arg = argv[1];
+		if (strcmp(arg, "--compiler") == 0)
+			output = new Test::CompilerOutput;
+		else if (strcmp(arg, "--html") == 0)
+			output =  new Test::HtmlOutput;
+		else if (strcmp(arg, "--text-terse") == 0)
+			output = new Test::TextOutput(Test::TextOutput::Terse);
+		else if (strcmp(arg, "--text-verbose") == 0)
+			output = new Test::TextOutput(Test::TextOutput::Verbose);
+		else
+		{
+			cout << "invalid commandline argument: " << arg << endl;
+			usage(); // will not return
+		}
+	}
 
-    return auto_ptr<Test::Output>(output);
+	return auto_ptr<Test::Output>(output);
 }
 
 // Main test program
 //
 int main(int argc, char* argv[])
 {
-    try
-    {
-        // Demonstrates the ability to use multiple test suites
-        //
-        Test::Suite ts;
-        ts.add(auto_ptr<Test::Suite>(new TestUtilSuite));
-//        ts.add(auto_ptr<Test::Suite>(new CompareTestSuite));
-//        ts.add(auto_ptr<Test::Suite>(new ThrowTestSuite));
+	try
+	{
+		// Demonstrates the ability to use multiple test suites
+		//
+		Test::Suite ts;
+		ts.add(auto_ptr<Test::Suite>(new TestUtilSuite));
+		//        ts.add(auto_ptr<Test::Suite>(new CompareTestSuite));
+		//        ts.add(auto_ptr<Test::Suite>(new ThrowTestSuite));
 
-        // Run the tests
-        //
-        auto_ptr<Test::Output> output(cmdline(argc, argv));
-        ts.run(*output, true);
+		// Run the tests
+		//
+		auto_ptr<Test::Output> output(cmdline(argc, argv));
+		ts.run(*output, true);
 
-        Test::HtmlOutput* const html = dynamic_cast<Test::HtmlOutput*>(output.get());
-        if (html)
-            html->generate(cout, true, "MyTest");
-    }
-    catch (...)
-    {
-        cout << "unexpected exception encountered\n";
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
+		Test::HtmlOutput* const html = dynamic_cast<Test::HtmlOutput*>(output.get());
+		if (html)
+			html->generate(cout, true, "MyTest");
+	}
+	catch (...)
+	{
+		cout << "unexpected exception encountered\n";
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
 }

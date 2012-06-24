@@ -26,10 +26,11 @@ libdjon_util_la_SOURCES = util.cpp \
                                                    threads.h \
                                                    settings.h \
                                                    settings.cpp \
-                                                   defs.h
+                                                   defs.h \
+																	circular_queue.h
 
 library_includedir=$(includedir)/djondb_0.1
-library_include_HEADERS = util.h datetime.h errorhandle.h dtime.h fileutil.h logger.h version.h stringfunctions.h threads.h settings.h defs.h
+library_include_HEADERS = util.h datetime.h errorhandle.h dtime.h fileutil.h logger.h version.h stringfunctions.h threads.h settings.h defs.h circular_queue.h
 
 
 TESTS = test-util
