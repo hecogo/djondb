@@ -37,6 +37,7 @@ class TestUtilSuite : public Test::Suite
 			TEST_ADD(TestUtilSuite::testSettings);
 			TEST_ADD(TestUtilSuite::testFileUtils);
 			TEST_ADD(TestUtilSuite::testCircularQueue);
+			linenoise((const char*)"<>");
 		}
 
 	private:

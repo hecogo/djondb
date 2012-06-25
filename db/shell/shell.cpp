@@ -51,9 +51,6 @@
 #include <vector>
 #include <sstream>
 
-//#include <conio.h>  /*  for kbhit */
-//#include <dos.h>
-
 #ifdef COMPRESS_STARTUP_DATA_BZ2
 #error Using compressed startup data is not supported for this sample
 #endif
@@ -156,30 +153,30 @@ v8::Persistent<v8::Context> CreateShellContext() {
 }
 
 /* 
-std::string toJson(const v8::Local<v8::Object>& obj) {
+	std::string toJson(const v8::Local<v8::Object>& obj) {
 	std::stringstream ss;
 	ss << "{";
 	v8::Local<v8::Array> propertyNames = obj->GetPropertyNames();
 
 	for (int x = 0; x < propertyNames->Length(); x++) {
-		if (x != 0) {
-			ss << ", ";
-		}
-		v8::String::Utf8Value name(propertyNames->Get(x));
-		ss << "\"" << ToCString(name) << "\":";
-		v8::Local<v8::Value> val = obj->GetInternalField(x);
-		if (val->IsObject()) {
-			ss << toJson(val->ToObject());
-		} else {
-			ss << "\"" << ToCString(v8::String::Utf8Value(val)) << "\"";
-		}
+	if (x != 0) {
+	ss << ", ";
+	}
+	v8::String::Utf8Value name(propertyNames->Get(x));
+	ss << "\"" << ToCString(name) << "\":";
+	v8::Local<v8::Value> val = obj->GetInternalField(x);
+	if (val->IsObject()) {
+	ss << toJson(val->ToObject());
+	} else {
+	ss << "\"" << ToCString(v8::String::Utf8Value(val)) << "\"";
+	}
 	}
 
 	ss << "}";
 
 	std::string sresult = ss.str();
 	return sresult;
-}
+	}
 
 */
 
@@ -511,39 +508,49 @@ int RunMain(int argc, char* argv[]) {
 	__djonConnection = NULL;
 	return 0;
 }
-
-int getkey(void) 
-{               
+/*
+	int getkey(void) 
+	{               
 	union REGS in, out;
 	in.h.ah = 0x08; 
 	int86(0x21, &in, &out);
 	if (out.h.al == 0)  
 	{
-		return(getkey()+0x100);
+	return(getkey()+0x100);
 	}
 	else         
 	{      
-		return(out.h.al);  
+	return(out.h.al);  
 	}              
-}                                         
+	} 
+	*/
 
 std::string readLine() {
+	
+   std::string s(linenoise(" >"));
+	return s;
+	/* 
 	char* buffer = (char*)malloc(5000);
 	memset(buffer, 0, 5000);
 	int pos = 0;
 	int c = 0;
 	while (true) {
-		c = getkey();
+		c = readKey();
 		buffer[pos] = c;
 		if (c == '\n') {
 			break;
+		} else {
+			printf("%c", (char)c);
 		}
+		pos++;
 	}
 
 	std::string res(buffer);
 	free(buffer);
+	printf("command: %s\n", res.c_str());
 
 	return res;
+	*/
 }
 
 // The read-eval-execute loop of the shell.
