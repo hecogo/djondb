@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="shell"
 	ProjectGUID="{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}"
 	Keyword="Win32Proj"
@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="D:\workspace\v8\include;C:\development\pthreads.2;..\util;C:\development\boost_1_48_0;..\bson;..\driverbase"
+				AdditionalIncludeDirectories="C:\workspace\v8_readonly\include;C:\development\pthreads.2;..\util;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -60,9 +60,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="v8.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib"
+				AdditionalDependencies="v8.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\bson\Debug;D:\workspace\v8\build\Debug\lib;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug"
+				AdditionalLibraryDirectories="..\bson\Debug;C:\workspace\djondb\db\libs;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
