@@ -32,9 +32,7 @@
 //       from this software without specific prior written permission.
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
 // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -53,6 +51,9 @@
 #include <vector>
 #include <sstream>
 
+//#include <conio.h>  /*  for kbhit */
+//#include <dos.h>
+
 #ifdef COMPRESS_STARTUP_DATA_BZ2
 #error Using compressed startup data is not supported for this sample
 #endif
@@ -68,6 +69,8 @@
 using namespace djondb;
 
 Connection* __djonConnection;
+
+CircularQueue<std::string> _commands(10);
 
 v8::Persistent<v8::Context> CreateShellContext();
 void RunShell(v8::Handle<v8::Context> context);
@@ -509,6 +512,39 @@ int RunMain(int argc, char* argv[]) {
 	return 0;
 }
 
+int getkey(void) 
+{               
+	union REGS in, out;
+	in.h.ah = 0x08; 
+	int86(0x21, &in, &out);
+	if (out.h.al == 0)  
+	{
+		return(getkey()+0x100);
+	}
+	else         
+	{      
+		return(out.h.al);  
+	}              
+}                                         
+
+std::string readLine() {
+	char* buffer = (char*)malloc(5000);
+	memset(buffer, 0, 5000);
+	int pos = 0;
+	int c = 0;
+	while (true) {
+		c = getkey();
+		buffer[pos] = c;
+		if (c == '\n') {
+			break;
+		}
+	}
+
+	std::string res(buffer);
+	free(buffer);
+
+	return res;
+}
 
 // The read-eval-execute loop of the shell.
 void RunShell(v8::Handle<v8::Context> context) {
@@ -529,8 +565,8 @@ void RunShell(v8::Handle<v8::Context> context) {
 			printf("  ");
 		}
 		line = false;
-		char* str = fgets(buffer, kBufferSize, stdin);
-		if (str == NULL) break;
+		std::string str = readLine();
+		//char* str = fgets(buffer, kBufferSize, stdin);
 		if (str[0] == '~') {
 			system("vi .tmp.js");
 			lastCmd = getFile(".tmp.js");
@@ -543,8 +579,8 @@ void RunShell(v8::Handle<v8::Context> context) {
 			}
 			str = const_cast<char*>(lastCmd);
 		} else 
-			if (str[strlen(str) - 2] == '\\') {
-				str[strlen(str) - 2] = ' '; 
+			if (str[str.length() - 2] == '\\') {
+				str[str.length() - 2] = ' '; 
 				line = true;
 			}
 		ss << str;
@@ -554,6 +590,7 @@ void RunShell(v8::Handle<v8::Context> context) {
 			const char* cmd = sCmd.c_str();
 			ss.str("");
 			lastCmd = cmd;
+			_commands.push_back(std::string(cmd));
 			ExecuteString(v8::String::New(cmd), name, true, true);
 		}
 	}
