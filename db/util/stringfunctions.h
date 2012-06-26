@@ -14,6 +14,7 @@
 char* strcpy(char* str, int len);
 char* strcpy(std::string str);
 bool endsWith(char* source, char* check);
+bool startsWith(char* source, char* check);
 std::vector<std::string*>* tokenizer(const std::string source, const char* tokens);
 std::string format(const char * fmt, ...);
 

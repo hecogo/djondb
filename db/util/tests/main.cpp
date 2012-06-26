@@ -37,7 +37,6 @@ class TestUtilSuite : public Test::Suite
 			TEST_ADD(TestUtilSuite::testSettings);
 			TEST_ADD(TestUtilSuite::testFileUtils);
 			TEST_ADD(TestUtilSuite::testCircularQueue);
-			linenoise((const char*)"<>");
 		}
 
 	private:
@@ -141,6 +140,13 @@ class TestUtilSuite : public Test::Suite
 			com = endsWith("test.ss", "test");
 			TEST_ASSERT(!com);
 			TEST_ASSERT(endsWith("test/", "/"));
+
+			bool start = startsWith("testing the starts with", "testing");
+			TEST_ASSERT(start);
+			start = startsWith("testing", "testing this");
+			TEST_ASSERT(!start);
+			start = startsWith("testing", "testing");
+			TEST_ASSERT(start);
 
 			// tokenizer
 			std::vector<std::string*>* token = tokenizer("test,other,and 1 more", ",");
