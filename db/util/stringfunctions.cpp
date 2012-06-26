@@ -47,7 +47,7 @@ bool endsWith(char* source, char* check) {
     }
 }
 
-bool startsWith(char* source, char* check) {
+bool startsWith(const char* source, const char* check) {
 	if (strlen(source) < strlen(check)) {
 		return false;
 	}

@@ -51,6 +51,7 @@
 #include <vector>
 #include <sstream>
 #include "linenoise.h"
+#include "util.h"
 
 #ifdef COMPRESS_STARTUP_DATA_BZ2
 #error Using compressed startup data is not supported for this sample
@@ -94,6 +95,21 @@ void ReportException(v8::TryCatch* handler);
 
 static bool run_shell;
 
+char* commands[] = {
+	"print",
+	"find",
+	"dropnamespace",
+	"Read",
+	"Load",
+	"quit",
+	"version",
+	"insert",
+	"shutdown",
+	"fuuid",
+	"connect",
+	"help",
+	"readfile"
+};
 
 int main(int argc, char* argv[]) {
 	v8::V8::SetFlagsFromCommandLine(&argc, argv, true);
@@ -113,6 +129,14 @@ int main(int argc, char* argv[]) {
 	return result;
 }
 
+
+void completion(const char *buf, linenoiseCompletions *lc) {
+	for (int x = 0; x < 13; x++) {
+		if (startsWith(commands[x], buf)) {
+			linenoiseAddCompletion(lc, commands[x]);
+		}
+	}
+}
 
 // Extracts a C string from a V8 Utf8Value.
 std::string ToCString(const v8::String::Utf8Value& value) {
@@ -544,6 +568,7 @@ void RunShell(v8::Handle<v8::Context> context) {
 	v8::Local<v8::String> name(v8::String::New("(shell)"));
 
 	linenoiseHistoryLoad(".djonshell_history");
+	linenoiseSetCompletionCallback(completion);
 	std::stringstream ss;
 	bool line = false;
 	const char* lastCmd = "";
