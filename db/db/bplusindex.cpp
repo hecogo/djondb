@@ -130,7 +130,7 @@ void BPlusIndex::initializeBucket(Bucket* const bucket)
 
 void BPlusIndex::checkBucket(Bucket* const bucket)
 {
-	if (bucket->size == BUCKET_MAX_ELEMENTS) {
+	while (bucket->size > BUCKET_MAX_ELEMENTS) {
 		std::auto_ptr<Logger> log(getLogger(NULL));
 		// The bucked will be split
 		Bucket* leftBucket = new Bucket();
@@ -221,6 +221,8 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 				}
 				else
 				{
+					element->next = currentElement;
+					element->previous = currentElement->previous;
 					currentElement->previous->next = element;
 					currentElement->previous = element;
 				}
