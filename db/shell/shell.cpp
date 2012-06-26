@@ -50,6 +50,7 @@
 #include "djondb_client.h"
 #include <vector>
 #include <sstream>
+#include "linenoise.h"
 
 #ifdef COMPRESS_STARTUP_DATA_BZ2
 #error Using compressed startup data is not supported for this sample
@@ -427,6 +428,8 @@ v8::Handle<v8::Value> Quit(const v8::Arguments& args) {
 	int exit_code = args[0]->Int32Value();
 	fflush(stdout);
 	fflush(stderr);
+
+	linenoiseHistorySave(".djonshell_history");
 	exit(exit_code);
 	return v8::Undefined();
 }
@@ -525,32 +528,11 @@ int RunMain(int argc, char* argv[]) {
 	} 
 	*/
 
-std::string readLine() {
+std::string readLine(char* prompt) {
 	
-   std::string s(linenoise(" >"));
-	return s;
-	/* 
-	char* buffer = (char*)malloc(5000);
-	memset(buffer, 0, 5000);
-	int pos = 0;
-	int c = 0;
-	while (true) {
-		c = readKey();
-		buffer[pos] = c;
-		if (c == '\n') {
-			break;
-		} else {
-			printf("%c", (char)c);
-		}
-		pos++;
-	}
-
-	std::string res(buffer);
-	free(buffer);
-	printf("command: %s\n", res.c_str());
-
-	return res;
-	*/
+   char* line = linenoise(prompt);
+	linenoiseHistoryAdd(line);
+	return std::string(line);
 }
 
 // The read-eval-execute loop of the shell.
@@ -561,18 +543,20 @@ void RunShell(v8::Handle<v8::Context> context) {
 	v8::Context::Scope context_scope(context);
 	v8::Local<v8::String> name(v8::String::New("(shell)"));
 
+	linenoiseHistoryLoad(".djonshell_history");
 	std::stringstream ss;
 	bool line = false;
 	const char* lastCmd = "";
 	while (true) {
 		char buffer[kBufferSize];
+		char* prompt;
 		if (!line) {
-			printf("> ");
+			prompt = "> ";
 		} else {
-			printf("  ");
+			prompt = ". ";
 		}
 		line = false;
-		std::string str = readLine();
+		std::string str = readLine(prompt);
 		//char* str = fgets(buffer, kBufferSize, stdin);
 		if (str[0] == '~') {
 			system("vi .tmp.js");

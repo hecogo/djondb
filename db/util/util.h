@@ -18,7 +18,6 @@
 #include "threads.h"
 #include "settings.h"
 #include "circular_queue.h"
-#include "linenoise.h"
 
 #include <string>
 #include <vector>

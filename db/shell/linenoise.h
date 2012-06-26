@@ -37,9 +37,13 @@
 #ifndef __LINENOISE_H
 #define __LINENOISE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct linenoiseCompletions {
-  size_t len;
-  char **cvec;
+	size_t len;
+	char **cvec;
 } linenoiseCompletions;
 
 typedef void(linenoiseCompletionCallback)(const char *, linenoiseCompletions *);
@@ -52,5 +56,9 @@ int linenoiseHistorySetMaxLen(int len);
 int linenoiseHistorySave(char *filename);
 int linenoiseHistoryLoad(char *filename);
 void linenoiseClearScreen(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __LINENOISE_H */
