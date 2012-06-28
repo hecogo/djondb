@@ -261,7 +261,7 @@ class TestDBSuite: public Test::Suite
 			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
-			
+
 			parser = FilterParser::parse("($'age' >= 15)");
 			result = parser->eval(obj);
 			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
@@ -279,7 +279,7 @@ class TestDBSuite: public Test::Suite
 			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
-			
+
 			parser = FilterParser::parse("($'age' <= 35)");
 			result = parser->eval(obj);
 			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
@@ -294,6 +294,12 @@ class TestDBSuite: public Test::Suite
 
 			// Eval an attribute that does not exist
 			parser = FilterParser::parse("($'nn' == \"John\")");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(!*bres);
+
+			parser = FilterParser::parse("$'name' == \"John\" and $'age' > 25");
 			result = parser->eval(obj);
 			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
@@ -453,10 +459,16 @@ class TestDBSuite: public Test::Suite
 				BSONObj obj;
 				obj.add("_id", *id);
 				BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
+				TEST_ASSERT(res != NULL);
+				if (res == NULL) {
+					TEST_FAIL("res is null");
+					return;
+				}
 				std::string id2 = res->getString("_id");
 				if (id2.compare(*id) != 0)
 				{
 					TEST_FAIL("id not found");
+					return;
 				}
 				delete res;
 			}
@@ -528,7 +540,7 @@ class TestDBSuite: public Test::Suite
 			filter = "";
 			found = controller.find("dbtest", "find.filter2",filter.c_str());
 			TEST_ASSERT(found.size() == 4); 
-			
+
 			filter = "$'age' == 38";
 			found = controller.find("dbtest", "find.filter2",filter.c_str());
 			TEST_ASSERT(found.size() == 2); 
@@ -624,9 +636,11 @@ class TestDBSuite: public Test::Suite
 				id.add("_id", guid);
 				Index* index = tree->find(id);
 				TEST_ASSERT(index != NULL);
-				BSONObj* key = index->key;
-				TEST_ASSERT(key != NULL);
-				TEST_ASSERT(key->getString("_id").compare(guid) == 0);
+				if (index != NULL) {
+					BSONObj* key = index->key;
+					TEST_ASSERT(key != NULL);
+					TEST_ASSERT(key->getString("_id").compare(guid) == 0);
+				}
 
 				ids.erase(i);
 			}
