@@ -240,6 +240,7 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 					break;
 				} else {
 					// Moves to the next node
+					assert(currentElement->next != NULL);
 					currentElement = currentElement->next;
 				}
 			}
