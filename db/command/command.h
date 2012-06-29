@@ -39,6 +39,25 @@ class Command {
         }
 
         COMMANDTYPE commandType() const;
+		  int resultCode() const {
+			  return _resultCode;
+		  }
+
+		  std::string resultMessage() const {
+			  return _resultMessage;
+		  }
+
+	 protected:
+		  void setResultCode(int rc) {
+			  _resultCode = rc;
+		  }
+
+		  void setResultMessage(std::string message) {
+			  _resultMessage = message;
+		  }
+
+		  int _resultCode;
+		  std::string _resultMessage;
 
     private:
         COMMANDTYPE _commandType;
