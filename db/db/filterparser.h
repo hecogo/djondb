@@ -187,6 +187,7 @@ class BinaryExpression: public BaseExpression {
 		virtual BaseExpression* copyExpression();
 
 		FILTER_OPERATORS oper() const;
+		bool full() const;
 	private:
 		FILTER_OPERATORS _oper;
 		BaseExpression* _left;

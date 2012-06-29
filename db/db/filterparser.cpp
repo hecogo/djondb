@@ -234,21 +234,11 @@ BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::it
 					((BinaryExpression*)expression)->push(waitingList.back());
 					waitingList.pop_back();
 					i++;
+					((BinaryExpression*)expression)->push(solveExpression(tokens, i));
 					break;
 			}
 		}
-		bool pushedToWait = false;
-		if (waitingList.size() > 0) {
-			// Check waiting list, if there's a binary waiting for that take this
-			BaseExpression* last = waitingList.back();
-			if ((last != NULL) && (last->type() == ET_BINARY)) {
-				((BinaryExpression*)last)->push(expression);
-				pushedToWait = true;
-			}
-		}
-		if (!pushedToWait) {
-			waitingList.push_back(expression);
-		}
+		waitingList.push_back(expression);
 
 	}
 
@@ -272,18 +262,16 @@ BaseExpression* createTree(std::list<Token*> tokens) {
 }
 
 void pushBuffer(std::list<Token*>& tokens, char* buffer, int& posBuffer) {
-	// if the buffer is not empty ($ is considered as empty because it's the prefix
-	// of another expression
-	if ((strlen(buffer) > 0) && (strcmp(buffer, "$") != 0)) {
+	if (strlen(buffer) > 0) {
 		int tempPos = 0;
 		Token::TOKEN_TYPE type = checkTokenType(buffer, tempPos);
 		if (type == Token::TT_NOTTOKEN) {
 			tokens.push_back(new Token(Token::TT_CONSTANT, buffer));
+			memset(buffer, 0, BUFFER_SIZE);
+			posBuffer = 0;
 		} else {
 			tokens.push_back(new Token(type, buffer));
 		}
-		memset(buffer, 0, BUFFER_SIZE);
-		posBuffer = 0;
 	}
 }
 
@@ -309,16 +297,10 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 
 	while (pos < len) {
 		bool charProcessed = false;
-		// push any pending buffer
-		if (chrs[pos] == ' ') {
-			pushBuffer(tokens, buffer, posBuffer);
-		}
 		while (!strOpen && (chrs[pos] == ' ')) {
 			pos++;
 		}
 		if ((chrs[pos] == '\'') || (chrs[pos] == '\"')) {
-			// Push the pending buffer
-			pushBuffer(tokens, buffer, posBuffer);
 			startStringChar = chrs[pos];
 			bool escaped = false;
 			do {
@@ -387,5 +369,6 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 
 	return parser;
 }
+
 
 

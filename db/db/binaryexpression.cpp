@@ -203,3 +203,7 @@ void BinaryExpression::push(BaseExpression* expression) {
 FILTER_OPERATORS BinaryExpression::oper() const {
 	return _oper;
 }
+
+bool BinaryExpression::full() const {
+	return ((_left != NULL) && (_right != NULL));
+}
