@@ -21,6 +21,8 @@
 #include "bson.h"
 #include "util.h"
 #include <string.h>
+#include <iostream>
+#include <sstream>
 #include <boost/crc.hpp>
 #include <boost/shared_ptr.hpp>
 #include <vector>
@@ -31,7 +33,6 @@ BPlusIndex::BPlusIndex()
     _head = new Bucket();
     initializeBucket(_head);
 }
-
 
 
 void cascadeDelete(Bucket* bucket) {
@@ -128,15 +129,49 @@ void BPlusIndex::initializeBucket(Bucket* const bucket)
 	bucket->parentBucket = NULL;
 }
 
+void debugInfo(Bucket* bucket) {
+	Logger* log = getLogger(NULL);
+
+	log->debug(0, "bucket root: %s", bucket->root->key);
+	BucketElement* c = bucket->root;
+	std::stringstream ss;
+	while (c != NULL) {
+		ss << c->key << ", ";
+		c = c->next;
+	}
+	log->debug(0, "elements: %s", ss.str().c_str());
+
+	if (bucket->left != NULL) {
+		log->debug(0, "printing left of: %s", bucket->root->key);
+		debugInfo(bucket->left);
+	}	
+	if (bucket->right != NULL) {
+		log->debug(0, "printing right of: %s", bucket->root->key);
+		debugInfo(bucket->right);
+	}
+
+	delete log;
+
+}
+
+void BPlusIndex::debug() {
+	debugInfo(_head);
+}
+
 void BPlusIndex::checkBucket(Bucket* const bucket)
 {
 	while (bucket->size > BUCKET_MAX_ELEMENTS) {
 		std::auto_ptr<Logger> log(getLogger(NULL));
 		// The bucked will be split
-		Bucket* leftBucket = new Bucket();
-		leftBucket->parentBucket = bucket;
-		initializeBucket(leftBucket);
-		bucket->left = leftBucket;
+		Bucket* leftBucket;
+		if (bucket->left != NULL) {
+			leftBucket = bucket->left;
+		} else {
+			leftBucket = new Bucket();
+			leftBucket->parentBucket = bucket;
+			initializeBucket(leftBucket);
+			bucket->left = leftBucket;
+		};	 
 
 		BucketElement* leftElement = bucket->root;
 		BucketElement* rightElement = bucket->tail;
@@ -156,10 +191,15 @@ void BPlusIndex::checkBucket(Bucket* const bucket)
 		rightElement->previous = NULL;
 
 		// Creates buckets
-		Bucket* rightBucket = new Bucket();
-		rightBucket->parentBucket = bucket;
-		initializeBucket(rightBucket);
-		bucket->right = rightBucket;
+		Bucket* rightBucket;
+		if (bucket->right != NULL) {
+			rightBucket = bucket->right;
+		} else {
+			rightBucket = new Bucket();
+			rightBucket->parentBucket = bucket;
+			initializeBucket(rightBucket);
+			bucket->right = rightBucket;
+		}
 
 		insertBucketElement(leftBucket, leftElement);
 		insertBucketElement(rightBucket, rightElement);
@@ -214,10 +254,16 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 			{
 				if (currentElement == bucket->root)
 				{
-					element->next = currentElement;
-					currentElement->previous = element;
-					bucket->root = element;
-					bucket->minKey = element->key;
+					// if the element is lesser than the root, then check the left child and insert it there
+					if (bucket->left != NULL) {
+						insertBucketElement(bucket->left, element);
+					} else  {
+						element->next = currentElement;
+						currentElement->previous = element;
+						bucket->root = element;
+						bucket->minKey = element->key;
+						bucket->size++;
+					}
 				}
 				else
 				{
@@ -225,8 +271,8 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 					element->previous = currentElement->previous;
 					currentElement->previous->next = element;
 					currentElement->previous = element;
+					bucket->size++;
 				}
-				bucket->size++;
 				break;
 			}
 			else
@@ -234,11 +280,15 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 				// the value is greater and should be added to the next
 				if (currentElement == bucket->tail)
 				{
-					currentElement->next = element;
-					element->previous = currentElement;
-					bucket->maxKey = element->key;
-					bucket->tail = element;
-					bucket->size++;
+					if (bucket->right != NULL) {
+						insertBucketElement(bucket->right, element);
+					} else {
+						currentElement->next = element;
+						element->previous = currentElement;
+						bucket->maxKey = element->key;
+						bucket->tail = element;
+						bucket->size++;
+					}
 					break;
 				} else {
 					// Moves to the next node
@@ -318,6 +368,21 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 					continue;
 				}
 			}
+			BucketElement* element = currentBucket->root;
+			while (element != NULL) {
+				comp = strcmp(key, element->key);
+				if (comp == 0) {
+					result = element;
+					break;
+				} else if (comp > 0) {
+					element = element->next;
+				} else {
+					break;
+				}
+			}
+			if (result) {
+				break;
+			}
 			if (create) {
 				BucketElement* element = new BucketElement();
 				initializeBucketElement(element);
@@ -326,11 +391,8 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 				insertBucketElement(currentBucket, element);
 				result = element;
 				created = true;
-				break;
-			} else {
-				result = NULL;
-				break;
 			}
+			break;
 		}
 	}
 	if (!created) {
