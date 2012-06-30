@@ -84,6 +84,7 @@ bool ExecuteString(v8::Handle<v8::String> source,
 v8::Handle<v8::Value> Print(const v8::Arguments& args);
 v8::Handle<v8::Value> find(const v8::Arguments& args);
 v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args);
+v8::Handle<v8::Value> showDbs(const v8::Arguments& args);
 v8::Handle<v8::Value> showNamespaces(const v8::Arguments& args);
 v8::Handle<v8::Value> Read(const v8::Arguments& args);
 v8::Handle<v8::Value> Load(const v8::Arguments& args);
@@ -103,6 +104,7 @@ char* commands[] = {
 	"print",
 	"find",
 	"dropNamespace",
+	"showDbs",
 	"showNamespaces",
 	"Read",
 	"Load",
@@ -160,6 +162,8 @@ v8::Persistent<v8::Context> CreateShellContext() {
 	global->Set(v8::String::New("find"), v8::FunctionTemplate::New(find));
 	// Bind the gloabl 'dropNamespace' function to the C++ Find callback.
 	global->Set(v8::String::New("dropNamespace"), v8::FunctionTemplate::New(dropNamespace));
+	// Bind the gloabl 'showDbs' function to the C++ Find callback.
+	global->Set(v8::String::New("showDbs"), v8::FunctionTemplate::New(showDbs));
 	// Bind the gloabl 'showNamespaces' function to the C++ Find callback.
 	global->Set(v8::String::New("showNamespaces"), v8::FunctionTemplate::New(showNamespaces));
 	// Bind the global 'read' function to the C++ Read callback.
@@ -289,6 +293,29 @@ v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
 		printf("ns cannot be dropped: %s", ns.c_str());
 	}
 	return v8::String::New("");
+}
+
+v8::Handle<v8::Value> showDbs(const v8::Arguments& args) {
+	if (args.Length() != 0) {
+		v8::ThrowException(v8::String::New("usage: showDbs"));
+	}
+
+	v8::HandleScope handle_scope;
+
+	if (__djonConnection == NULL) {
+		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+	}
+	std::vector<std::string>* dbs = __djonConnection->dbs();
+
+	v8::Handle<v8::Array> result = v8::Array::New();
+	int index = 0;
+	for (std::vector<std::string>::iterator i = dbs->begin(); i != dbs->end(); i++) {
+		std::string n = *i;
+		result->Set(v8::Number::New(index), v8::String::New(n.c_str()));
+		index++;
+	}
+	delete dbs;
+	return result;
 }
 
 v8::Handle<v8::Value> showNamespaces(const v8::Arguments& args) {

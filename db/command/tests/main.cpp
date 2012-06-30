@@ -74,6 +74,30 @@ class TestCommandSuite: public Test::Suite {
 			TEST_ASSERT(objResult->getString("name").compare("Cross") == 0);
 		}
 
+		void testShowdbs() {
+			FileOutputStream* fos = new FileOutputStream("test.dat", "wb");
+
+			CommandWriter* writer = new CommandWriter(fos);
+			ShowdbsCommand cmd;
+			writer->writeCommand(&cmd);
+
+			fos->close();
+			delete fos;
+			delete writer;
+
+			FileInputStream* fis = new FileInputStream("test.dat", "rb");
+			CommandReader* reader = new CommandReader(fis);
+
+			Command* resCmd = reader->readCommand();
+			TEST_ASSERT(resCmd->commandType() == SHOWDBS);
+
+			fis->close();
+
+			delete resCmd;
+			delete fis;
+			delete reader;
+		}
+
 		void testShownamespacesCommand() {
 			FileOutputStream* fos = new FileOutputStream("test.dat", "wb");
 

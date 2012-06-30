@@ -64,9 +64,25 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ADD(TestDriverBaseSuite::testInsertComplex);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
+			TEST_ADD(TestDriverBaseSuite::testDbsNamespaces);
 
 			TEST_ADD(TestDriverBaseSuite::testDropNamespace);
 			//TEST_ADD(TestDriverBaseSuite::testTransactions);
+		}
+
+		void testDbsNamespaces() {
+			Connection* conn = ConnectionManager::getConnection("localhost");
+
+		   std::string bson = "{ name: 'Test'}";
+			conn->insert("db1", "ns1", bson);
+			conn->insert("db2", "ns1", bson);
+			conn->insert("db3", "ns1", bson);
+			
+			std::vector<std::string>* dbs = conn->dbs();
+
+			TEST_ASSERT(dbs->size() >= 3);
+
+			delete dbs;
 		}
 
 		void testDropNamespace() {

@@ -27,6 +27,7 @@
 #include "updatecommand.h"
 #include "shutdowncommand.h"
 #include "shownamespacescommand.h"
+#include "showdbscommand.h"
 #include "bsoninputstream.h"
 #include "connectionmanager.h"
 #include "util.h"
@@ -161,6 +162,19 @@ bool Connection::update(const std::string& db, const std::string& ns, const BSON
 	cmd.readResult(_inputStream);
 
 	return true;
+}
+
+std::vector<std::string>* Connection::dbs() const {
+	if (_logger->isDebug()) _logger->debug(2, "dbs command.");
+
+	ShowdbsCommand cmd;
+	_commandWriter->writeCommand(&cmd);
+
+	cmd.readResult(_inputStream);
+
+	std::vector<std::string>* result = (std::vector<std::string>*)cmd.result();
+
+	return result;
 }
 
 std::vector<std::string>* Connection::namespaces(const std::string& db) const {

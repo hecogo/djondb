@@ -93,6 +93,7 @@ class TestDBSuite: public Test::Suite
 			TEST_ADD(TestDBSuite::testFindsByFilter);
 			TEST_ADD(TestDBSuite::testFindsByTextFilter);
 			TEST_ADD(TestDBSuite::testDropnamespace);
+			TEST_ADD(TestDBSuite::testDbs);
 			TEST_ADD(TestDBSuite::testNamespaces);
 			TEST_ADD(TestDBSuite::testErrorHandling);
 		}
@@ -108,7 +109,7 @@ class TestDBSuite: public Test::Suite
 		}
 
 		void testExpressions() {
-			cout << "testExpressions" << endl;
+			cout << "\ntestExpressions" << endl;
 			BSONObj dummy;
 			ConstantExpression exp("35");
 			ExpressionResult* result = exp.eval(dummy);
@@ -174,7 +175,22 @@ class TestDBSuite: public Test::Suite
 			TEST_ASSERT(*bresult8 == true);
 		}
 
+		void testDbs() {
+			cout << "\ntestDbs" << endl;
+			BSONObj* obj = BSONParser::parse("{ 'a': 'a'}");
+
+			controller.insert("db1", "ns1", obj);
+			controller.insert("db2", "ns1", obj);
+			controller.insert("db3", "ns1", obj);
+
+			std::vector<std::string>* dbs = controller.dbs();
+			TEST_ASSERT(dbs->size() >= 3);
+
+			delete dbs;
+		}
+
 		void testNamespaces() {
+			cout << "\ntestNamespaces" << endl;
 			BSONObj* obj = BSONParser::parse("{ 'a': 'a'}");
 
 			controller.insert("testnamespacesdb", "ns1", obj);
@@ -190,7 +206,7 @@ class TestDBSuite: public Test::Suite
 		}
 
 		void testFilterExpressionParser() {
-			cout << "testFilterExpressionParser" << endl;
+			cout << "\ntestFilterExpressionParser" << endl;
 			BSONObj obj;
 			obj.add("age", 35);
 			obj.add("state", 1);
@@ -325,7 +341,7 @@ class TestDBSuite: public Test::Suite
 		}
 
 		void testFilterExpressionParserEquals() {
-			cout << "testFilterExpressionParserEquals" << endl;
+			cout << "\ntestFilterExpressionParserEquals" << endl;
 			BSONObj obj;
 			obj.add("age", 35);
 
@@ -344,7 +360,7 @@ class TestDBSuite: public Test::Suite
 
 		void testInsertWithStringId()
 		{
-			cout << "testInsertWithStringId" << endl;
+			cout << "\ntestInsertWithStringId" << endl;
 			BSONObj obj;
 			std::string* id = uuid();
 			obj.add("_id", *id);
@@ -359,7 +375,7 @@ class TestDBSuite: public Test::Suite
 
 		void testInsertWithCharId()
 		{
-			cout << "testInsertWithCharId" << endl;
+			cout << "\ntestInsertWithCharId" << endl;
 			BSONObj obj;
 			std::string* id = uuid();
 			obj.add("_id", id->c_str());
@@ -374,7 +390,7 @@ class TestDBSuite: public Test::Suite
 
 		void testInsertWithoutId()
 		{
-			cout << "testInsertWithoutId" << endl;
+			cout << "\ntestInsertWithoutId" << endl;
 			BSONObj obj;
 			obj.add("name", "cross");
 			BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
@@ -384,7 +400,7 @@ class TestDBSuite: public Test::Suite
 		}
 
 		void testInsertComplexBSON() {
-			cout << "testInsertComplexBSON" << endl;
+			cout << "\ntestInsertComplexBSON" << endl;
 
 			controller.dropNamespace("dbtest", "sp1.customercomplex");
 			BSONObj obj;
@@ -414,7 +430,7 @@ class TestDBSuite: public Test::Suite
 
 		void testMassiveInsert()
 		{
-			cout << "testMassiveInsert" << endl;
+			cout << "\ntestMassiveInsert" << endl;
 			int inserts = 1000;
 			std::auto_ptr<Logger> log(getLogger(NULL));
 
@@ -458,14 +474,14 @@ class TestDBSuite: public Test::Suite
 			{
 				// If throughtput is too small fail
 				TEST_ASSERT((inserts / secs) > 10000);
-				cout << "Throughput: " << (inserts / secs) << " ops." << endl;
-				cout << "------------------------------------------------------------" << endl;
+				cout << "\nThroughput: " << (inserts / secs) << " ops." << endl;
+				cout << "\n------------------------------------------------------------" << endl;
 			}
 		}
 
 		void testFinds()
 		{
-			cout << "testFinds" << endl;
+			cout << "\ntestFinds" << endl;
 
 			std::auto_ptr<Logger> log(getLogger(NULL));
 
@@ -499,14 +515,14 @@ class TestDBSuite: public Test::Suite
 			if (secs > 0)
 			{
 				TEST_ASSERT((__ids.size() / secs) > 30);
-				cout << "Throughput: " << (__ids.size() / secs) << " ops." << endl;
-				cout << "------------------------------------------------------------" << endl;
+				cout << "\nThroughput: " << (__ids.size() / secs) << " ops." << endl;
+				cout << "\n------------------------------------------------------------" << endl;
 			}
 		}
 
 		void testFindsByFilter()
 		{
-			cout << "testFindsByFilter" << endl;
+			cout << "\ntestFindsByFilter" << endl;
 			// Insert some data
 			//
 			controller.dropNamespace("dbtest", "find.filter");
@@ -546,7 +562,7 @@ class TestDBSuite: public Test::Suite
 
 		void testFindsByTextFilter()
 		{
-			cout << "testFindsByTextFilter" << endl;
+			cout << "\ntestFindsByTextFilter" << endl;
 			// Insert some data
 			//
 			controller.dropNamespace("dbtest", "find.filter2");
@@ -579,7 +595,7 @@ class TestDBSuite: public Test::Suite
 
 		void testFindPrevious()
 		{
-			cout << "testFindPrevious" << endl;
+			cout << "\ntestFindPrevious" << endl;
 			std::auto_ptr<Logger> log(getLogger(NULL));
 
 			FileInputStream fis("temp.txt", "rb");
@@ -607,8 +623,8 @@ class TestDBSuite: public Test::Suite
 				else
 				{
 					std::string id2 = res->getString("_id");
-					//        cout << "Looking for: " << *id << endl;
-					//        cout << "Found        " << *id2 << endl;
+					//        cout << "\nLooking for: " << *id << endl;
+					//        cout << "\nFound        " << *id2 << endl;
 					if (id2.compare(*id) != 0)
 					{
 						TEST_FAIL("findFirst returned an incorrect result");
@@ -624,8 +640,8 @@ class TestDBSuite: public Test::Suite
 			if (secs > 0)
 			{
 				TEST_ASSERT((ids.size() / secs) > 30);
-				cout << "Throughput: " << (ids.size() / secs) << " ops." << endl;
-				cout << "------------------------------------------------------------" << endl;
+				cout << "\nThroughput: " << (ids.size() / secs) << " ops." << endl;
+				cout << "\n------------------------------------------------------------" << endl;
 			}
 		}
 
@@ -678,7 +694,7 @@ class TestDBSuite: public Test::Suite
 
 		void testSimpleIndex()
 		{
-			cout << "testSimpleIndex" << endl;
+			cout << "\ntestSimpleIndex" << endl;
 			FileInputStream fis("simple.dat", "rb");
 			std::vector<std::string> ids;
 			while (!fis.eof())
@@ -693,7 +709,7 @@ class TestDBSuite: public Test::Suite
 
 		void testComplexIndex()
 		{
-			cout << "testComplexIndex" << endl;
+			cout << "\ntestComplexIndex" << endl;
 			FileInputStream fis("guids.txt", "rb");
 			std::vector<std::string> ids;
 			while (!fis.eof())
@@ -707,7 +723,7 @@ class TestDBSuite: public Test::Suite
 		}
 
 		void testIndexFactory() {
-			cout << "testIndexFactory" << endl;
+			cout << "\ntestIndexFactory" << endl;
 			BSONObj test;
 			test.add("_id", "1");
 
@@ -736,7 +752,7 @@ class TestDBSuite: public Test::Suite
 
 		void testDropnamespace()
 		{
-			cout << "testDropnamespace" << endl;
+			cout << "\ntestDropnamespace" << endl;
 			BSONObj obj;
 			obj.add("name", "Test");
 
@@ -775,7 +791,7 @@ enum OutputType
 	static void
 usage()
 {
-	cout << "usage: mytest [MODE]\n"
+	cout << "\nusage: mytest [MODE]\n"
 		<< "where MODE may be one of:\n"
 		<< "  --compiler\n"
 		<< "  --html\n"
@@ -807,7 +823,7 @@ cmdline(int argc, char* argv[])
 			output = new Test::TextOutput(Test::TextOutput::Verbose);
 		else
 		{
-			cout << "invalid commandline argument: " << arg << endl;
+			cout << "\ninvalid commandline argument: " << arg << endl;
 			usage(); // will not return
 		}
 	}
@@ -841,7 +857,7 @@ int main(int argc, char* argv[])
 	}
 	catch (...)
 	{
-		cout << "unexpected exception encountered\n";
+		cout << "\nunexpected exception encountered\n";
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;

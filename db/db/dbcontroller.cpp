@@ -616,6 +616,16 @@ bool DBController::dropNamespace(char* db, char* ns) {
 	return result;
 }
 
+std::vector<std::string>* DBController::dbs() const {
+	std::vector<std::string>* result = new std::vector<std::string>();;
+
+	for (map<std::string, map<std::string, SpacesType>* >::const_iterator it = _spaces.begin(); it != _spaces.end(); it++) {
+		std::string db = it->first;
+		result->push_back(db);
+	}
+	return result;
+}
+
 std::vector<std::string>* DBController::namespaces(const char* db) const {
 	std::vector<std::string>* result = new std::vector<std::string>();;
 

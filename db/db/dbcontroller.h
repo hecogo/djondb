@@ -45,6 +45,7 @@ class DBController
         BSONObj* findFirst(char* db, char* ns, BSONObj* filter);
         BSONObj* findFirst(char* db, char* ns, const char* filter);
         BSONObj* readBSON(StreamType* stream);
+		  std::vector<std::string>* dbs() const;
 		  std::vector<std::string>* namespaces(const char* db) const;
 
     protected:
