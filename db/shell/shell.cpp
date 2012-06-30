@@ -32,7 +32,10 @@
 //       from this software without specific prior written permission.
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR // A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT 
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
 // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
 // DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
@@ -81,6 +84,7 @@ bool ExecuteString(v8::Handle<v8::String> source,
 v8::Handle<v8::Value> Print(const v8::Arguments& args);
 v8::Handle<v8::Value> find(const v8::Arguments& args);
 v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args);
+v8::Handle<v8::Value> showNamespaces(const v8::Arguments& args);
 v8::Handle<v8::Value> Read(const v8::Arguments& args);
 v8::Handle<v8::Value> Load(const v8::Arguments& args);
 v8::Handle<v8::Value> Quit(const v8::Arguments& args);
@@ -98,7 +102,8 @@ static bool run_shell;
 char* commands[] = {
 	"print",
 	"find",
-	"dropnamespace",
+	"dropNamespace",
+	"showNamespaces",
 	"Read",
 	"Load",
 	"quit",
@@ -155,6 +160,8 @@ v8::Persistent<v8::Context> CreateShellContext() {
 	global->Set(v8::String::New("find"), v8::FunctionTemplate::New(find));
 	// Bind the gloabl 'dropNamespace' function to the C++ Find callback.
 	global->Set(v8::String::New("dropNamespace"), v8::FunctionTemplate::New(dropNamespace));
+	// Bind the gloabl 'showNamespaces' function to the C++ Find callback.
+	global->Set(v8::String::New("showNamespaces"), v8::FunctionTemplate::New(showNamespaces));
 	// Bind the global 'read' function to the C++ Read callback.
 	global->Set(v8::String::New("read"), v8::FunctionTemplate::New(Read));
 	// Bind the global 'load' function to the C++ Load callback.
@@ -262,7 +269,7 @@ v8::Handle<v8::Value> shutdown(const v8::Arguments& args) {
 
 v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
 	if (args.Length() < 2) {
-		v8::ThrowException(v8::String::New("usage: db.dropNamespace(db, namespace)"));
+		v8::ThrowException(v8::String::New("usage: dropNamespace(db, namespace)"));
 	}
 
 	v8::HandleScope handle_scope;
@@ -282,6 +289,31 @@ v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
 		printf("ns cannot be dropped: %s", ns.c_str());
 	}
 	return v8::String::New("");
+}
+
+v8::Handle<v8::Value> showNamespaces(const v8::Arguments& args) {
+	if (args.Length() < 1) {
+		v8::ThrowException(v8::String::New("usage: showNamespaces(db)"));
+	}
+
+	v8::HandleScope handle_scope;
+	v8::String::Utf8Value strDB(args[0]);
+	std::string db = ToCString(strDB);
+
+	if (__djonConnection == NULL) {
+		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+	}
+	std::vector<std::string>* ns = __djonConnection->namespaces(db);
+
+	v8::Handle<v8::Array> result = v8::Array::New();
+	int index = 0;
+	for (std::vector<std::string>::iterator i = ns->begin(); i != ns->end(); i++) {
+		std::string n = *i;
+		result->Set(v8::Number::New(index), v8::String::New(n.c_str()));
+		index++;
+	}
+	delete ns;
+	return result;
 }
 
 v8::Handle<v8::Value> help(const v8::Arguments& args) {
@@ -327,20 +359,24 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 		}
 		*/
 
-	std::vector<BSONObj*> result = __djonConnection->find(db, ns, filter);
+	std::vector<BSONObj*>* result = __djonConnection->find(db, ns, filter);
 
 	std::stringstream ss;
 	ss << "[";
-	for (std::vector<BSONObj*>::const_iterator i = result.begin(); i != result.end(); i++) {
-		BSONObj* obj = *i;
-		if (i != result.begin()) {
-			ss << ", ";
+	if (result->size() > 0) {
+		for (std::vector<BSONObj*>::const_iterator i = result->begin(); i != result->end(); i++) {
+			BSONObj* obj = *i;
+			if (i != result->begin()) {
+				ss << ", ";
+			}
+			ss << obj->toChar();
 		}
-		ss << obj->toChar();
 	}
 	ss << "]";
 
 	std::string sresult = ss.str();
+
+	delete result;
 
 	return v8::String::New(sresult.c_str());
 }
@@ -553,8 +589,8 @@ int RunMain(int argc, char* argv[]) {
 	*/
 
 std::string readLine(char* prompt) {
-	
-   char* line = linenoise(prompt);
+
+	char* line = linenoise(prompt);
 	linenoiseHistoryAdd(line);
 	return std::string(line);
 }

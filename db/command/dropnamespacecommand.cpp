@@ -18,7 +18,8 @@
 
 #include "dropnamespacecommand.h"
 
-#include "bsonoutputstream.h"
+#include "inputstream.h"
+#include "outputstream.h"
 #include "dbcontroller.h"
 
 DropnamespaceCommand::DropnamespaceCommand()
@@ -37,29 +38,39 @@ DropnamespaceCommand::~DropnamespaceCommand() {
 
 void DropnamespaceCommand::execute() {
     const char* ns = _namespace->c_str();
-    dbController()->dropNamespace(const_cast<char*>(_db->c_str()), const_cast<char*>(ns));
+    _result = dbController()->dropNamespace(const_cast<char*>(_db->c_str()), const_cast<char*>(ns));
 }
 
 void* DropnamespaceCommand::result() {
-    return NULL;
+    return &_result;
+}
+
+void DropnamespaceCommand::writeCommand(OutputStream* out) const {
+	out->writeString(*_db);
+	out->writeString(*_namespace);
+}
+
+void DropnamespaceCommand::readResult(InputStream* is) {
+	_result = is->readInt();
 }
 
 void DropnamespaceCommand::writeResult(OutputStream* out) const {
+	out->writeInt((int)_result);
 }
 
 void DropnamespaceCommand::setNameSpace(const std::string& ns) {
-    _namespace = new std::string(ns);
+	_namespace = new std::string(ns);
 }
 
 const std::string* DropnamespaceCommand::nameSpace() const {
-    return _namespace;
+	return _namespace;
 }
 
 void DropnamespaceCommand::setDB(const std::string& db) {
-    _db = new std::string(db);
+	_db = new std::string(db);
 }
 
 const std::string* DropnamespaceCommand::DB() const {
-    return _db;
+	return _db;
 }
 

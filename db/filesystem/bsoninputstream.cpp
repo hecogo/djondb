@@ -101,16 +101,16 @@ BSONArrayObj* BSONInputStream::readBSONInnerArray() const {
 	return result;
 }
 
-std::vector<BSONObj*> BSONInputStream::readBSONArray() const {
+std::vector<BSONObj*>* BSONInputStream::readBSONArray() const {
 	if (_log->isDebug()) _log->debug(3, "BSONInputStream::readBSONArray");
 	int elements = _inputStream->readLong();
 	if (_log->isDebug()) _log->debug(3, "elements read: %d", elements);
-	std::vector<BSONObj*> result;
+	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
 
 	for (int x= 0; x < elements; x++) {
 		BSONObj* obj = readBSON();
 		if (_log->isDebug()) _log->debug(3, "obj: %s", obj->toChar());
-		result.push_back(obj);
+		result->push_back(obj);
 	}
 
 	return result;

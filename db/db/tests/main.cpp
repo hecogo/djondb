@@ -93,6 +93,8 @@ class TestDBSuite: public Test::Suite
 			TEST_ADD(TestDBSuite::testFindsByFilter);
 			TEST_ADD(TestDBSuite::testFindsByTextFilter);
 			TEST_ADD(TestDBSuite::testDropnamespace);
+			TEST_ADD(TestDBSuite::testNamespaces);
+			TEST_ADD(TestDBSuite::testErrorHandling);
 		}
 	private:
 
@@ -170,6 +172,21 @@ class TestDBSuite: public Test::Suite
 			TEST_ASSERT(result8->type() == ExpressionResult::RT_BOOLEAN);
 			bool* bresult8 = (bool*)result8->value();
 			TEST_ASSERT(*bresult8 == true);
+		}
+
+		void testNamespaces() {
+			BSONObj* obj = BSONParser::parse("{ 'a': 'a'}");
+
+			controller.insert("testnamespacesdb", "ns1", obj);
+			controller.insert("testnamespacesdb", "ns2", obj);
+			controller.insert("testnamespacesdb", "ns3", obj);
+
+			std::vector<std::string>* ns = controller.namespaces("testnamespacesdb");
+			TEST_ASSERT(ns->size() == 3);
+			TEST_ASSERT((*ns)[0].compare("ns1") == 0);
+			TEST_ASSERT((*ns)[1].compare("ns2") == 0);
+			TEST_ASSERT((*ns)[2].compare("ns3") == 0);
+			delete ns;
 		}
 
 		void testFilterExpressionParser() {
@@ -381,9 +398,9 @@ class TestDBSuite: public Test::Suite
 
 			controller.insert("dbtest", "sp1.customercomplex", &obj);
 
-			std::vector<BSONObj*> array = controller.find("dbtest", "sp1.customercomplex", "$'int' == 1");
-			TEST_ASSERT(array.size() == 1);
-			BSONObj* res = array[0];
+			std::vector<BSONObj*>* array = controller.find("dbtest", "sp1.customercomplex", "$'int' == 1");
+			TEST_ASSERT(array->size() == 1);
+			BSONObj* res = *array->begin();
 			TEST_ASSERT(res != NULL);
 			TEST_ASSERT(res->has("_id"));
 			TEST_ASSERT(res->getBSON("inner") != NULL);
@@ -391,6 +408,7 @@ class TestDBSuite: public Test::Suite
 			TEST_ASSERT(innerRes != NULL);
 			TEST_ASSERT(innerRes->has("int"));
 			TEST_ASSERT(*innerRes->getInt("int") == 2);
+			delete array;
 			delete res;
 		}
 
@@ -504,21 +522,26 @@ class TestDBSuite: public Test::Suite
 			BSONObj* filter = BSONParser::parse("{lastName: 'Crossley'}");
 
 			// Starting find by filter
-			std::vector<BSONObj*> found = controller.find("dbtest", "find.filter",*filter);
-			TEST_ASSERT(found.size() == 5); 
+			std::vector<BSONObj*>* found = controller.find("dbtest", "find.filter",*filter);
+			TEST_ASSERT(found->size() == 5); 
+			delete found;
 			delete filter;
 
 			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{}"));
-			TEST_ASSERT(found.size() == 8); 
+			TEST_ASSERT(found->size() == 8); 
+			delete found;
 
 			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan'}"));
-			TEST_ASSERT(found.size() == 7); 
+			TEST_ASSERT(found->size() == 7); 
+			delete found;
 
 			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Smith'}"));
-			TEST_ASSERT(found.size() == 1); 
+			TEST_ASSERT(found->size() == 1); 
+			delete found;
 
 			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Last'}"));
-			TEST_ASSERT(found.size() == 1); 
+			TEST_ASSERT(found->size() == 1); 
+			delete found;
 		}
 
 		void testFindsByTextFilter()
@@ -533,22 +556,25 @@ class TestDBSuite: public Test::Suite
 			controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Clark', age: 38}"));
 
 			std::string filter = "$'age' == 45";
-			std::vector<BSONObj*> found = controller.find("dbtest", "find.filter2",filter.c_str());
-			TEST_ASSERT(found.size() == 1); 
-			std::string name = found.at(0)->getString("lastName");
+			std::vector<BSONObj*>* found = controller.find("dbtest", "find.filter2",filter.c_str());
+			TEST_ASSERT(found->size() == 1); 
+			std::string name = found->at(0)->getString("lastName");
 			TEST_ASSERT(name.compare("Smith") == 0);
 
 			filter = "";
+			delete found;
 			found = controller.find("dbtest", "find.filter2",filter.c_str());
-			TEST_ASSERT(found.size() == 4); 
+			TEST_ASSERT(found->size() == 4); 
 
 			filter = "$'age' == 38";
+			delete found;
 			found = controller.find("dbtest", "find.filter2",filter.c_str());
-			TEST_ASSERT(found.size() == 2); 
-			name = found.at(0)->getString("lastName");
+			TEST_ASSERT(found->size() == 2); 
+			name = found->at(0)->getString("lastName");
 			TEST_ASSERT(name.compare("Crossley") == 0);
-			name = found.at(1)->getString("lastName");
+			name = found->at(1)->getString("lastName");
 			TEST_ASSERT(name.compare("Clark") == 0);
+			delete found;
 		}
 
 		void testFindPrevious()
@@ -614,8 +640,6 @@ class TestDBSuite: public Test::Suite
 			int x = 0;
 			for (std::vector<std::string>::iterator i = ids.begin(); i != ids.end(); i++)
 			{
-				cout << "\n=================================================================== " << endl;
-				cout << "Inserting " << *i << endl;
 				BSONObj id;
 				id.add("_id", *i);
 				tree->add(id, 0, 0);
@@ -723,10 +747,19 @@ class TestDBSuite: public Test::Suite
 
 			BSONObj filter;
 
-			std::vector<BSONObj*> finds = controller.find("dbtest", "ns.drop", filter);
+			std::vector<BSONObj*>* finds = controller.find("dbtest", "ns.drop", filter);
+			
+			TEST_ASSERT(finds->size() == 0);
 
-			TEST_ASSERT(finds.size() == 0);
+			delete finds;
 			delete res;
+		}
+
+		void testErrorHandling() {
+			// Test errors at filter expressions
+			//
+			// FilterParser* parser = FilterParser::parse("A = B");
+			// TEST_ASSERT(parser == NULL);
 		}
 
 };

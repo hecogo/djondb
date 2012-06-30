@@ -49,6 +49,12 @@ void* ShutdownCommand::result() {
 	return NULL;
 }
 
+void ShutdownCommand::writeCommand(OutputStream* out) const {
+}
+
+void ShutdownCommand::readResult(InputStream* is)  {
+}
+
 void ShutdownCommand::writeResult(OutputStream* out) const {
 	Logger* log = getLogger(NULL);
 	delete log;

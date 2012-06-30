@@ -196,7 +196,11 @@ int NetworkInputStream::readData(void* data, int len) {
 	// wait until a data is available to be readed
 	int readed = 0;
 	while (readed < len) {
+#ifdef DEBUG
+		if (waitAvailable(60) < 0) {
+#else 
 		if (waitAvailable(10) < 0) {
+#endif
 			assert(false);
 			return -1;
 		}

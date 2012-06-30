@@ -224,10 +224,10 @@ class TestFileSystemSuite: public Test::Suite
 			std::auto_ptr<FileInputStream> fis(new FileInputStream("bson.txt", "rb"));
 			std::auto_ptr<BSONInputStream> bsonIn(new BSONInputStream(fis.get()));
 
-			std::vector<BSONObj*> result = bsonIn->readBSONArray();
+			std::vector<BSONObj*>* result = bsonIn->readBSONArray();
 
-			TEST_ASSERT(result.size() == 10);
-			for (std::vector<BSONObj*>::const_iterator i = result.begin(); i != result.end(); i++) {
+			TEST_ASSERT(result->size() == 10);
+			for (std::vector<BSONObj*>::const_iterator i = result->begin(); i != result->end(); i++) {
 				BSONObj* obj = *i;
 				TEST_ASSERT(obj->getInt("int") != NULL);
 				TEST_ASSERT(*obj->getInt("int") == 1);
@@ -246,6 +246,7 @@ class TestFileSystemSuite: public Test::Suite
 			}
 
 			fis->close();
+			delete result;
 		}
 
 };

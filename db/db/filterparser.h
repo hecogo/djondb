@@ -236,7 +236,8 @@ class FilterParser {
 		~FilterParser();
 		ExpressionResult* eval(const BSONObj& bson);
 		
-		static FilterParser* parse(const std::string& expression) throw (ParseException);
+		static FilterParser* parse(const std::string& expression) ;
+			//throw (ParseException);
 
 	private:
 		FilterParser(const std::string& expression, BaseExpression* root, std::list<Token*> tokens);

@@ -17,7 +17,7 @@ class BSONInputStream
         virtual ~BSONInputStream();
 
         BSONObj* readBSON() const;
-		  std::vector<BSONObj*> readBSONArray() const;
+		  std::vector<BSONObj*>* readBSONArray() const;
 		  BSONArrayObj* readBSONInnerArray() const;
 
     protected:

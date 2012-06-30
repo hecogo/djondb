@@ -19,6 +19,9 @@
 #include "updatecommand.h"
 
 #include "bsonoutputstream.h"
+#include "inputstream.h"
+#include "outputstream.h"
+#include "bsoninputstream.h"
 #include "dbcontroller.h"
 
 UpdateCommand::UpdateCommand()
@@ -45,30 +48,41 @@ void* UpdateCommand::result() {
     return NULL;
 }
 
+void UpdateCommand::writeCommand(OutputStream* out) const {
+	out->writeString(*_db);
+	out->writeString(*_namespace);
+
+	std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
+	bsonout->writeBSON(*_bson);
+}
+
+void UpdateCommand::readResult(InputStream* is)  {
+}
+
 void UpdateCommand::writeResult(OutputStream* out) const {
 }
 
 void UpdateCommand::setNameSpace(const std::string& ns) {
-    _namespace = new std::string(ns);
+	_namespace = new std::string(ns);
 }
 
 const std::string* UpdateCommand::nameSpace() const {
-    return _namespace;
+	return _namespace;
 }
 
 void UpdateCommand::setBSON(const BSONObj bson) {
-    _bson = new BSONObj(bson);
+	_bson = new BSONObj(bson);
 }
 
 BSONObj* UpdateCommand::bson() const {
-    return _bson;
+	return _bson;
 }
 
 void UpdateCommand::setDB(const std::string& db) {
-    _db = new std::string(db);
+	_db = new std::string(db);
 }
 
 const std::string* UpdateCommand::DB() const {
-    return _db;
+	return _db;
 }
 

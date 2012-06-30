@@ -214,6 +214,9 @@ BaseExpression* solveParentesis(std::list<Token*>& tokens, std::list<Token*>::it
 
 BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::iterator& i) {
 	std::list<BaseExpression*> waitingList;
+	if (tokens.size() == 0) {
+		return NULL;
+	}
 	while (i != tokens.end()) {
 		Token* token = *i;
 		if (token->type() == Token::TT_CLOSEPARENTESIS) {
@@ -276,7 +279,8 @@ void pushBuffer(std::list<Token*>& tokens, char* buffer, int& posBuffer) {
 }
 
 // static
-FilterParser* FilterParser::parse(const std::string& expression) throw (ParseException) {
+FilterParser* FilterParser::parse(const std::string& expression) {
+	//throw (ParseException) {
 	try {
 		const char* chrs = expression.c_str();
 
