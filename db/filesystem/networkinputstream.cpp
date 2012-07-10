@@ -63,7 +63,6 @@ NetworkInputStream::NetworkInputStream(const NetworkInputStream& orig) {
 
 NetworkInputStream::~NetworkInputStream() {
 	free (_buffer);
-	assert(_bufferPos == _bufferSize);
 	//    closeStream();
 	delete _logger;
 }

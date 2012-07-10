@@ -53,7 +53,9 @@
 #include "djondb_client.h"
 #include <vector>
 #include <sstream>
+#ifndef WINDOWS
 #include "linenoise.h"
+#endif
 #include "util.h"
 
 #ifdef COMPRESS_STARTUP_DATA_BZ2
@@ -136,7 +138,7 @@ int main(int argc, char* argv[]) {
 	return result;
 }
 
-
+#ifndef WINDOWS
 void completion(const char *buf, linenoiseCompletions *lc) {
 	for (int x = 0; x < 13; x++) {
 		if (startsWith(commands[x], buf)) {
@@ -144,6 +146,7 @@ void completion(const char *buf, linenoiseCompletions *lc) {
 		}
 	}
 }
+#endif
 
 // Extracts a C string from a V8 Utf8Value.
 std::string ToCString(const v8::String::Utf8Value& value) {
@@ -178,7 +181,7 @@ v8::Persistent<v8::Context> CreateShellContext() {
 	global->Set(v8::String::New("insert"), v8::FunctionTemplate::New(insert));
 	// Bind the 'db.uuid' function
 	global->Set(v8::String::New("uuid"), v8::FunctionTemplate::New(fuuid));
-	// Bind the 'db.connect' function
+	// Bind the 'connect' function
 	global->Set(v8::String::New("connect"), v8::FunctionTemplate::New(connect));
 	// Bind the 'db.help' function
 	global->Set(v8::String::New("help"), v8::FunctionTemplate::New(help));
@@ -231,7 +234,7 @@ v8::Handle<v8::Value> toJson(v8::Handle<v8::Value> object)
 
 v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 	if (args.Length() < 3) {
-		v8::ThrowException(v8::String::New("usage: db.insert(db, namespace, json)"));
+		return v8::ThrowException(v8::String::New("usage: db.insert(db, namespace, json)"));
 	}
 
 	v8::HandleScope handle_scope;
@@ -249,7 +252,7 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 	}
 
 	if (__djonConnection == NULL) {
-		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
 	}
 	__djonConnection->insert(db, ns, json);
 
@@ -258,13 +261,13 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 
 v8::Handle<v8::Value> shutdown(const v8::Arguments& args) {
 	if (args.Length() != 0) {
-		v8::ThrowException(v8::String::New("usage: db.shutdown()"));
+		return v8::ThrowException(v8::String::New("usage: db.shutdown()"));
 	}
 
 	v8::HandleScope handle_scope;
 
 	if (__djonConnection == NULL) {
-		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
 	}
 	__djonConnection->shutdown();
 
@@ -273,7 +276,7 @@ v8::Handle<v8::Value> shutdown(const v8::Arguments& args) {
 
 v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
 	if (args.Length() < 2) {
-		v8::ThrowException(v8::String::New("usage: dropNamespace(db, namespace)"));
+		return v8::ThrowException(v8::String::New("usage: dropNamespace(db, namespace)"));
 	}
 
 	v8::HandleScope handle_scope;
@@ -283,7 +286,7 @@ v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
 	std::string ns = ToCString(str);
 
 	if (__djonConnection == NULL) {
-		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
 	}
 	bool result = __djonConnection->dropNamespace(db, ns);
 
@@ -297,13 +300,13 @@ v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
 
 v8::Handle<v8::Value> showDbs(const v8::Arguments& args) {
 	if (args.Length() != 0) {
-		v8::ThrowException(v8::String::New("usage: showDbs"));
+		return v8::ThrowException(v8::String::New("usage: showDbs"));
 	}
 
 	v8::HandleScope handle_scope;
 
 	if (__djonConnection == NULL) {
-		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
 	}
 	std::vector<std::string>* dbs = __djonConnection->dbs();
 
@@ -320,7 +323,7 @@ v8::Handle<v8::Value> showDbs(const v8::Arguments& args) {
 
 v8::Handle<v8::Value> showNamespaces(const v8::Arguments& args) {
 	if (args.Length() < 1) {
-		v8::ThrowException(v8::String::New("usage: showNamespaces(db)"));
+		return v8::ThrowException(v8::String::New("usage: showNamespaces(db)"));
 	}
 
 	v8::HandleScope handle_scope;
@@ -328,7 +331,7 @@ v8::Handle<v8::Value> showNamespaces(const v8::Arguments& args) {
 	std::string db = ToCString(strDB);
 
 	if (__djonConnection == NULL) {
-		v8::ThrowException(v8::String::New("You're not connected to any db, please use: db.connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
 	}
 	std::vector<std::string>* ns = __djonConnection->namespaces(db);
 
@@ -348,24 +351,31 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 		v8::String::Utf8Value str(args[0]);
 		std::string cmd = ToCString(str);
 	} else {
-		printf("connect(host)\n");
-		printf("insert(db, namespace, json)\n");
-		printf("find(db, namespace, filter)\n");
-		printf("load(file)\n");
-		printf("print(text)\n");
-		printf("dropNamespace(db, namespace)\n");
-		printf("shutdown()\n");
+		printf("connect('hostname')\n\tEstablish a connection with a server.\n");
+		printf("dropNamespace('db', 'namespace');\n\tDrops a namespace from the db.\n");
+		printf("find('db', 'namespace'[, 'filter']);\n\tExecutes a find using the provided filter.\n");
+		printf("help();\n\tThis help\n");
+		printf("insert('db', 'namespace', { json...object});\n\tInserts a new document.\n");
+		printf("load('file');\n\tLoads and executes a script.\n");
+		printf("print(data);\n\tPrint console messages.\n");
+		printf("quit();\n\tBye bye fellow.\n");
+		printf("read('file');\n\tReads the contents of a file.\n");
+		printf("showDbs();\n\tReturns a list of the available databases.\n");
+		printf("showNamespaces('db');\n\tReturns the namespaces in that database.\n");
+		printf("shutdown();\n\tRemotely shutdowns the server (Are you sure?).\n");
+		printf("uuid();\n\tGenerates a new UUID (Universal Unique Identifier).\n");
+		printf("version();\n\tReturns the current shell version.\n");
 	}
 	return v8::Undefined();
 }
 
 v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	if (args.Length() < 2) {
-		v8::ThrowException(v8::String::New("usage: db.find(db, namespace, filter)\ndb.find(db, namespace)"));
+		return v8::ThrowException(v8::String::New("usage: db.find(db, namespace, filter)\ndb.find(db, namespace)"));
 	}
 
 	if (__djonConnection == NULL) {
-		v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
 	}
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value strDB(args[0]);
@@ -410,21 +420,22 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 
 v8::Handle<v8::Value> fuuid(const v8::Arguments& args) {
 	if (args.Length() > 0) {
-		v8::ThrowException(v8::String::New("usage: db.uuid()"));
+		return v8::ThrowException(v8::String::New("usage: db.uuid()"));
 	}
 
 	std::string* suid = uuid();
 	v8::String::Utf8Value str();
 
 	const char* tmp = suid->c_str(); 
+	v8::Handle<v8::String> result(v8::String::New(tmp));
 	delete suid; 
 
-	return v8::String::New(tmp);
+	return result;
 }
 
 v8::Handle<v8::Value> connect(const v8::Arguments& args) {
 	if (args.Length() < 1) {
-		v8::ThrowException(v8::String::New("usage: db.connect(server)\n"));
+		return v8::ThrowException(v8::String::New("usage: connect(server)\n"));
 	}
 
 	v8::HandleScope handle_scope;
@@ -516,14 +527,21 @@ v8::Handle<v8::Value> Quit(const v8::Arguments& args) {
 	fflush(stdout);
 	fflush(stderr);
 
+#ifndef WINDOWS
 	linenoiseHistorySave(".djonshell_history");
+#endif
 	exit(exit_code);
 	return v8::Undefined();
 }
 
 
 v8::Handle<v8::Value> Version(const v8::Arguments& args) {
-	return v8::String::New(v8::V8::GetVersion());
+	std::stringstream ss;
+	ss << "djondb shell version: " << VERSION;
+	std::string smsg = ss.str();
+	const char* message = smsg.c_str();
+
+	return v8::String::New(message);
 }
 
 
@@ -568,6 +586,8 @@ char* getFile(const char* name) {
 
 // Process remaining command line arguments and execute files
 int RunMain(int argc, char* argv[]) {
+	__djonConnection = NULL;
+
 	for (int i = 1; i < argc; i++) {
 		const char* str = argv[i];
 		if (strcmp(str, "--shell") == 0) {
@@ -617,21 +637,33 @@ int RunMain(int argc, char* argv[]) {
 
 std::string readLine(char* prompt) {
 
+#ifndef WINDOWS
 	char* line = linenoise(prompt);
 	linenoiseHistoryAdd(line);
+#else
+	static const int kBufferSize = 1024;
+	char buffer[kBufferSize];
+	printf(prompt);
+	char* line = fgets(buffer, kBufferSize, stdin);
+#endif
 	return std::string(line);
 }
 
 // The read-eval-execute loop of the shell.
 void RunShell(v8::Handle<v8::Context> context) {
 	printf("djondb shell version %s\n", VERSION);
+	printf("Welcome to djondb shell.\n");
+	printf("Use help(); to get the commands available. \n(hint: The first command should be \"connect\" to playing with a server)\n");
+
 	static const int kBufferSize = 256;
 	// Enter the execution environment before evaluating any code.
 	v8::Context::Scope context_scope(context);
 	v8::Local<v8::String> name(v8::String::New("(shell)"));
 
+#ifndef WINDOWS
 	linenoiseHistoryLoad(".djonshell_history");
 	linenoiseSetCompletionCallback(completion);
+#endif
 	std::stringstream ss;
 	bool line = false;
 	const char* lastCmd = "";
@@ -645,32 +677,34 @@ void RunShell(v8::Handle<v8::Context> context) {
 		}
 		line = false;
 		std::string str = readLine(prompt);
-		//char* str = fgets(buffer, kBufferSize, stdin);
-		if (str[0] == '~') {
-			system("vi .tmp.js");
-			lastCmd = getFile(".tmp.js");
-			printf("Buffer loaded.\n");
-			continue;
-		} else if (str[0] == '.') {
-			if ((lastCmd == NULL) || (strlen(lastCmd) == 0)) {
+		if (str.length() > 0) {
+			//char* str = fgets(buffer, kBufferSize, stdin);
+			if (str[0] == '~') {
+				system("vi .tmp.js");
 				lastCmd = getFile(".tmp.js");
 				printf("Buffer loaded.\n");
+				continue;
+			} else if (str[0] == '.') {
+				if ((lastCmd == NULL) || (strlen(lastCmd) == 0)) {
+					lastCmd = getFile(".tmp.js");
+					printf("Buffer loaded.\n");
+				}
+				str = const_cast<char*>(lastCmd);
+			} else 
+				if ((str.length() >= 2) && (str[str.length() - 2] == '\\')) {
+					str[str.length() - 2] = ' '; 
+					line = true;
+				}
+			ss << str;
+			if (!line) {
+				v8::HandleScope handle_scope;
+				std::string sCmd = ss.str();
+				const char* cmd = sCmd.c_str();
+				ss.str("");
+				lastCmd = cmd;
+				_commands.push_back(std::string(cmd));
+				ExecuteString(v8::String::New(cmd), name, true, true);
 			}
-			str = const_cast<char*>(lastCmd);
-		} else 
-			if (str[str.length() - 2] == '\\') {
-				str[str.length() - 2] = ' '; 
-				line = true;
-			}
-		ss << str;
-		if (!line) {
-			v8::HandleScope handle_scope;
-			std::string sCmd = ss.str();
-			const char* cmd = sCmd.c_str();
-			ss.str("");
-			lastCmd = cmd;
-			_commands.push_back(std::string(cmd));
-			ExecuteString(v8::String::New(cmd), name, true, true);
 		}
 	}
 	printf("\n");
