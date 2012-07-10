@@ -13,7 +13,9 @@ class DropnamespaceCommand: public Command {
 
         virtual void execute();
         virtual void* result();
+        virtual void writeCommand(OutputStream* out) const;
         virtual void writeResult(OutputStream* out) const;
+        virtual void readResult(InputStream* is);
 
         void setNameSpace(const std::string& ns);
         const std::string* nameSpace() const;
@@ -22,6 +24,7 @@ class DropnamespaceCommand: public Command {
     private:
         const std::string* _namespace;
 		  const std::string* _db;
+		  bool _result;
 };
 
 #endif // DROPNAMESPACECOMMAND_H

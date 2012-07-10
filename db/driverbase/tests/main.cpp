@@ -61,11 +61,28 @@ class TestDriverBaseSuite: public Test::Suite {
 			_port = 1243;
 			TEST_ADD(TestDriverBaseSuite::testFinds);
 			TEST_ADD(TestDriverBaseSuite::testInsert);
+			TEST_ADD(TestDriverBaseSuite::testInsertComplex);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
+			TEST_ADD(TestDriverBaseSuite::testDbsNamespaces);
 
 			TEST_ADD(TestDriverBaseSuite::testDropNamespace);
 			//TEST_ADD(TestDriverBaseSuite::testTransactions);
+		}
+
+		void testDbsNamespaces() {
+			Connection* conn = ConnectionManager::getConnection("localhost");
+
+		   std::string bson = "{ name: 'Test'}";
+			conn->insert("db1", "ns1", bson);
+			conn->insert("db2", "ns1", bson);
+			conn->insert("db3", "ns1", bson);
+			
+			std::vector<std::string>* dbs = conn->dbs();
+
+			TEST_ASSERT(dbs->size() >= 3);
+
+			delete dbs;
 		}
 
 		void testDropNamespace() {
@@ -77,9 +94,58 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			TEST_ASSERT(result);
 
-			std::vector<BSONObj*> testresult = conn->find("db", "testdrop.namespace", std::string(""));
+			std::vector<BSONObj*>* testresult = conn->find("db", "testdrop.namespace", std::string(""));
 
-			TEST_ASSERT(testresult.size() == 0);
+			TEST_ASSERT(testresult->size() == 0);
+			delete testresult;
+		}
+
+		void testInsertComplex() {
+			cout << "\nTesting complex" << endl;
+			Connection* conn = ConnectionManager::getConnection("localhost");
+
+			if (!conn->open()) {
+				cout << "\nCould not connect to " << _host << endl;
+				exit(0);
+			}
+
+			conn->dropNamespace("test", "ns");
+
+			BSONObj obj;
+			std::string* id = uuid();
+			obj.add("_id", *id);
+			obj.add("name", "John");
+			BSONObj inner;
+			inner.add("innername", "Test");
+			obj.add("inner", inner);
+
+			conn->insert("test", "ns", obj);
+
+			std::vector<BSONObj*>* res = conn->find("test", "ns", "$'_id' == '" + *id + "'");
+			TEST_ASSERT(res->size() == 1);
+			BSONObj* bres = *res->begin();
+			TEST_ASSERT(bres->has("inner"));
+			BSONObj* innerres = bres->getBSON("inner");
+			TEST_ASSERT(innerres != NULL);
+			TEST_ASSERT(innerres->has("innername"));
+			TEST_ASSERT(((std::string)"Test").compare(innerres->getString("innername")) == 0);
+
+			// testing arrays
+			cout << "testInsertComplex: Testing arrays" << endl;
+			std::string* id2 = uuid();
+			conn->insert("test", "ns", "{ '_id': '" + *id2 + "', 'array': [ { 'x': 'test', 'y': 3},  { 'x': 'test2', 'y': 4}]  }");
+
+			std::vector<BSONObj*>* res2 = conn->find("test", "ns", "$'_id' == '" + *id2 + "'");
+			TEST_ASSERT(res2->size() == 1);
+			BSONObj* o2 = *res2->begin();
+			TEST_ASSERT(o2 != NULL);
+
+			TEST_ASSERT(o2->has("array"));
+
+
+			delete res;
+			delete res2;
+
 		}
 
 		void testInsert() {
@@ -218,13 +284,14 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			cout << "\nTestbyfilter" << endl;
 			std::string filter = "";
-			std::vector<BSONObj*> result = conn->find("db", "test.filter2", filter);			
-			TEST_ASSERT(result.size() > 0);
+			std::vector<BSONObj*>* result = conn->find("db", "test.filter2", filter);			
+			TEST_ASSERT(result->size() > 0);
 			filter = "$'name' == 'Test'";
+			delete result;
 			result = conn->find("db", "test.filter2", filter);			
-			TEST_ASSERT(result.size() > 0);
+			TEST_ASSERT(result->size() > 0);
 
-			BSONObj* objR = *result.begin();
+			BSONObj* objR = *result->begin();
 			TEST_ASSERT(objR != NULL);
 			TEST_ASSERT(objR->has("name"));
 			TEST_ASSERT(strcmp(objR->getChars("name"), "Test") == 0);
@@ -233,18 +300,19 @@ class TestDriverBaseSuite: public Test::Suite {
 			cout << "\nobj: " << temp << endl;
 
 			result = conn->find("db", "test.filter2", "$'name' == 'Test'");
-			TEST_ASSERT(result.size() == 1);
+			TEST_ASSERT(result->size() == 1);
 
 			result = conn->find("db", "test.filter2", "$'inner.x' == 1");
-			TEST_ASSERT(result.size() == 1);
+			TEST_ASSERT(result->size() == 1);
 
 			result = conn->find("db", "test.filter2", "$'inner.x' > 0");
-			TEST_ASSERT(result.size() == 1);
+			TEST_ASSERT(result->size() == 1);
 
 			result = conn->find("db", "test.filter2", "$'inner.x' > 1");
-			TEST_ASSERT(result.size() == 0);
+			TEST_ASSERT(result->size() == 0);
 
 			delete objR;
+			delete result;
 
 		}
 

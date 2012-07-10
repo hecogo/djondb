@@ -39,6 +39,10 @@ public:
 	void add(const BSONObj& obj);
 	BSONObj* get(int index) const;
    char* toChar() const;
+	typedef std::vector<BSONObj*>::iterator iterator;
+	
+	iterator begin();
+	iterator end();
 
 private:
 	std::vector<BSONObj*> _elements;

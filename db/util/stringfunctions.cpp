@@ -47,6 +47,14 @@ bool endsWith(char* source, char* check) {
     }
 }
 
+bool startsWith(const char* source, const char* check) {
+	if (strlen(source) < strlen(check)) {
+		return false;
+	}
+	int r = strncmp(source, check, strlen(check));
+	return (r == 0);
+}
+
 std::vector<std::string*>* tokenizer(const std::string source, const char* tokens) {
     std::vector<std::string*>* result = new std::vector<std::string*>();
     char* csource = strcpy(source);

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="service"
 	ProjectGUID="{565D9B86-9829-4BC3-9D9B-7ADE6A9D2968}"
 	RootNamespace="service"
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../network;../command;../db;../filesystem;../cache;../bson;../util;C:\development\boost_1_48_0\;..\windows\includes"
+				AdditionalIncludeDirectories="../network;../command;../db;../filesystem;../cache;../bson;../util;C:\development\boost;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

@@ -189,7 +189,9 @@ bool makeDir(const char* dir) {
 	std::vector<std::string> dirs = split(dir, FILESEPARATOR);
 	std::stringstream ss;
 
-//	ss << FILESEPARATOR;
+#ifndef WINDOWS
+	ss << FILESEPARATOR;
+#endif
 	for (std::vector<std::string>::const_iterator it = dirs.begin(); it != dirs.end(); it++) {
 		std::string cdir = *it;
 		ss << cdir << FILESEPARATOR;

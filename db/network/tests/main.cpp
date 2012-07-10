@@ -196,7 +196,7 @@ class TestNetworkSuite: public Test::Suite {
 				BSONObj obj;
 				obj.add("_id", *guid);
 				//obj->add("last", "Smith");
-				cmd->setBSON(obj);
+				cmd->setFilter("$'_id' == '" + *guid + "'");
 				std::string ns("myns");
 				cmd->setNameSpace(ns);
 				writer->writeCommand(cmd.get());
@@ -296,7 +296,7 @@ class TestNetworkSuite: public Test::Suite {
 
 				BSONObj obj;
 				obj.add("_id", guid);
-				cmd->setBSON(obj);
+				cmd->setFilter("$'_id' == '" + guid + "'");
 				cmd->setNameSpace("myns");
 				writer->writeCommand(cmd.get());
 

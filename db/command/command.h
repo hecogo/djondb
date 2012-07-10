@@ -8,6 +8,7 @@ using namespace std;
 class BSONObj;
 class DBController;
 class OutputStream;
+class InputStream;
 
 enum COMMANDTYPE {
     INSERT,
@@ -15,7 +16,9 @@ enum COMMANDTYPE {
     FIND,
     CLOSECONNECTION,
 	 DROPNAMESPACE,
-    SHUTDOWN
+    SHUTDOWN,
+	 SHOWDBS,
+	 SHOWNAMESPACES
 };
 
 class Command {
@@ -28,7 +31,9 @@ class Command {
         virtual void execute() = 0;
         virtual void* result() = 0;
 
+        virtual void writeCommand(OutputStream* out) const = 0;
         virtual void writeResult(OutputStream* out) const = 0;
+        virtual void readResult(InputStream* is) = 0;
 
         DBController* dbController() const {
             return  _dbController;
@@ -39,6 +44,25 @@ class Command {
         }
 
         COMMANDTYPE commandType() const;
+		  int resultCode() const {
+			  return _resultCode;
+		  }
+
+		  std::string resultMessage() const {
+			  return _resultMessage;
+		  }
+
+	 protected:
+		  void setResultCode(int rc) {
+			  _resultCode = rc;
+		  }
+
+		  void setResultMessage(std::string message) {
+			  _resultMessage = message;
+		  }
+
+		  int _resultCode;
+		  std::string _resultMessage;
 
     private:
         COMMANDTYPE _commandType;
@@ -58,7 +82,9 @@ class CloseCommand: public Command {
             return NULL;
         }
 
-        virtual void writeResult(OutputStream* out) const {};
+        virtual void writeCommand(OutputStream* out) const;
+        virtual void writeResult(OutputStream* out) const;
+        virtual void readResult(InputStream* is);
 };
 
 

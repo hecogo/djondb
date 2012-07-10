@@ -16,47 +16,58 @@
 // this program will be open sourced and all its derivated work will be too.
 // *********************************************************************************************************************
 
-#include "shutdowncommand.h"
+#include "showdbscommand.h"
 
-#include "bsonoutputstream.h"
 #include "dbcontroller.h"
 #include "outputstream.h"
-#include "util.h"
+#include "inputstream.h"
 
-ShutdownCommand::ShutdownCommand()
-: Command(SHUTDOWN)
+ShowdbsCommand::ShowdbsCommand()
+    : Command(SHOWDBS)
 {
-	//ctor
+	_results = NULL;
 }
 
-ShutdownCommand::~ShutdownCommand()
-{
+ShowdbsCommand::ShowdbsCommand(const ShowdbsCommand& orig)
+: Command(SHOWDBS) {
+	_results = NULL;
+	if (orig._results != NULL) {
+		this->_results = new std::vector<std::string>();
+		for (std::vector<std::string>::iterator i = orig._results->begin(); i != orig._results->end(); i++) {
+			this->_results->push_back(*i);
+		}
+	}
 }
 
-ShutdownCommand::ShutdownCommand(const ShutdownCommand& other)
-:Command(SHUTDOWN)
-{
+ShowdbsCommand::~ShowdbsCommand() {
 }
 
-void ShutdownCommand::execute() {
-	Logger* log = getLogger(NULL);
-	if (log->isDebug()) log->debug("executing shutdown command ");
-
-	delete log;
+void ShowdbsCommand::execute() {
+	_results = dbController()->dbs();
 }
 
-void* ShutdownCommand::result() {
-	return NULL;
+void* ShowdbsCommand::result() {
+    return _results;
 }
 
-void ShutdownCommand::writeCommand(OutputStream* out) const {
+void ShowdbsCommand::writeCommand(OutputStream* out) const {
 }
 
-void ShutdownCommand::readResult(InputStream* is)  {
+void ShowdbsCommand::readResult(InputStream* is)  {
+	int results = is->readInt();
+	_results = new std::vector<std::string>();
+	for (int x = 0; x < results; x++) {
+		std::string* db = is->readString();
+		_results->push_back(*db);
+		delete db;
+	}
 }
 
-void ShutdownCommand::writeResult(OutputStream* out) const {
-	Logger* log = getLogger(NULL);
-	delete log;
+void ShowdbsCommand::writeResult(OutputStream* out) const {
+	out->writeInt(_results->size());
+	for (std::vector<std::string>::iterator i = _results->begin(); i != _results->end(); i++) {
+		std::string db = *i;
+		out->writeString(db);
+	}
 }
 

@@ -93,6 +93,9 @@ class TestDBSuite: public Test::Suite
 			TEST_ADD(TestDBSuite::testFindsByFilter);
 			TEST_ADD(TestDBSuite::testFindsByTextFilter);
 			TEST_ADD(TestDBSuite::testDropnamespace);
+			TEST_ADD(TestDBSuite::testDbs);
+			TEST_ADD(TestDBSuite::testNamespaces);
+			TEST_ADD(TestDBSuite::testErrorHandling);
 		}
 	private:
 
@@ -106,24 +109,24 @@ class TestDBSuite: public Test::Suite
 		}
 
 		void testExpressions() {
-			cout << "testExpressions" << endl;
+			cout << "\ntestExpressions" << endl;
 			BSONObj dummy;
 			ConstantExpression exp("35");
 			ExpressionResult* result = exp.eval(dummy);
 
-			TEST_ASSERT(result->type() == RT_INT);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_INT);
 			int* i = (int*)result->value();
 			TEST_ASSERT(*i == 35);
 
 			ConstantExpression exp2("3.324");
 			ExpressionResult* result2 = exp2.eval(dummy);
-			TEST_ASSERT(result2->type() == RT_DOUBLE);
+			TEST_ASSERT(result2->type() == ExpressionResult::RT_DOUBLE);
 			double* d = (double*)result2->value();
 			TEST_ASSERT(*d == 3.324);
 
 			ConstantExpression exp3("'Test'");
 			ExpressionResult* result3 = exp3.eval(dummy);
-			TEST_ASSERT(result3->type() == RT_STRING);
+			TEST_ASSERT(result3->type() == ExpressionResult::RT_STRINGDB);
 			std::string* s = (std::string*)result3->value();
 			TEST_ASSERT(s != NULL);
 			TEST_ASSERT(s->compare("Test") == 0);
@@ -137,7 +140,7 @@ class TestDBSuite: public Test::Suite
 
 			SimpleExpression exp4("$'age'");
 			ExpressionResult* result4 = exp4.eval(obj);
-			TEST_ASSERT(result4->type() == RT_INT);
+			TEST_ASSERT(result4->type() == ExpressionResult::RT_INT);
 			int* i2 = (int*)result4->value();
 			TEST_ASSERT(i2 != NULL);
 			TEST_ASSERT(*i2 == 35);
@@ -159,7 +162,7 @@ class TestDBSuite: public Test::Suite
 			exp7.push(new SimpleExpression("$'age'"));
 			exp7.push(new ConstantExpression("35"));
 			ExpressionResult* result7 = exp7.eval(obj);
-			TEST_ASSERT(result7->type() == RT_BOOLEAN);
+			TEST_ASSERT(result7->type() == ExpressionResult::RT_BOOLEAN);
 			bool* bresult7 = (bool*)result7->value();
 			TEST_ASSERT(*bresult7 == true);
 
@@ -167,13 +170,43 @@ class TestDBSuite: public Test::Suite
 			exp8.push(new SimpleExpression("$'age'"));
 			exp8.push(new ConstantExpression("30"));
 			ExpressionResult* result8 = exp8.eval(obj);
-			TEST_ASSERT(result8->type() == RT_BOOLEAN);
+			TEST_ASSERT(result8->type() == ExpressionResult::RT_BOOLEAN);
 			bool* bresult8 = (bool*)result8->value();
 			TEST_ASSERT(*bresult8 == true);
 		}
 
+		void testDbs() {
+			cout << "\ntestDbs" << endl;
+			BSONObj* obj = BSONParser::parse("{ 'a': 'a'}");
+
+			controller.insert("db1", "ns1", obj);
+			controller.insert("db2", "ns1", obj);
+			controller.insert("db3", "ns1", obj);
+
+			std::vector<std::string>* dbs = controller.dbs();
+			TEST_ASSERT(dbs->size() >= 3);
+
+			delete dbs;
+		}
+
+		void testNamespaces() {
+			cout << "\ntestNamespaces" << endl;
+			BSONObj* obj = BSONParser::parse("{ 'a': 'a'}");
+
+			controller.insert("testnamespacesdb", "ns1", obj);
+			controller.insert("testnamespacesdb", "ns2", obj);
+			controller.insert("testnamespacesdb", "ns3", obj);
+
+			std::vector<std::string>* ns = controller.namespaces("testnamespacesdb");
+			TEST_ASSERT(ns->size() == 3);
+			TEST_ASSERT((*ns)[0].compare("ns1") == 0);
+			TEST_ASSERT((*ns)[1].compare("ns2") == 0);
+			TEST_ASSERT((*ns)[2].compare("ns3") == 0);
+			delete ns;
+		}
+
 		void testFilterExpressionParser() {
-			cout << "testFilterExpressionParser" << endl;
+			cout << "\ntestFilterExpressionParser" << endl;
 			BSONObj obj;
 			obj.add("age", 35);
 			obj.add("state", 1);
@@ -182,7 +215,7 @@ class TestDBSuite: public Test::Suite
 			FilterParser* parser = FilterParser::parse("$'age'");
 			ExpressionResult* result = parser->eval(obj);
 
-			TEST_ASSERT(result->type() == RT_INT);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_INT);
 			int* test = (int*)result->value();
 
 			TEST_ASSERT(test != NULL);
@@ -192,116 +225,123 @@ class TestDBSuite: public Test::Suite
 
 			parser = FilterParser::parse("");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bool* bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("$'age' == 35");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' == 35 )");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 1 ))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(($'age' == 36 ) and ($'state' == 1 ))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(!*bres);
 
 			parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 2 ))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(!*bres);
 
 			parser = FilterParser::parse("(($'age'==35) and ($'state'==1))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(('John' == $'name') and ($'age'==35))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(('John' == $'name') or ($'age'==36))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("(('Johnny' == $'name') or ($'age'==35))");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' > 15)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' < 45)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
-			
+
 			parser = FilterParser::parse("($'age' >= 15)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' >= 35)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'age' <= 45)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
-			
+
 			parser = FilterParser::parse("($'age' <= 35)");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			parser = FilterParser::parse("($'name' == \"John\")");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(*bres);
 
 			// Eval an attribute that does not exist
 			parser = FilterParser::parse("($'nn' == \"John\")");
 			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == RT_BOOLEAN);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
 			bres = (bool*)result->value();
 			TEST_ASSERT(!*bres);
+/* 
+			parser = FilterParser::parse("$'name' == \"John\" and $'age' > 25");
+			result = parser->eval(obj);
+			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+			bres = (bool*)result->value();
+			TEST_ASSERT(!*bres);
+			*/
 		}
 
 		void testFilterExpressionParserEquals() {
-			cout << "testFilterExpressionParserEquals" << endl;
+			cout << "\ntestFilterExpressionParserEquals" << endl;
 			BSONObj obj;
 			obj.add("age", 35);
 
@@ -320,7 +360,7 @@ class TestDBSuite: public Test::Suite
 
 		void testInsertWithStringId()
 		{
-			cout << "testInsertWithStringId" << endl;
+			cout << "\ntestInsertWithStringId" << endl;
 			BSONObj obj;
 			std::string* id = uuid();
 			obj.add("_id", *id);
@@ -335,7 +375,7 @@ class TestDBSuite: public Test::Suite
 
 		void testInsertWithCharId()
 		{
-			cout << "testInsertWithCharId" << endl;
+			cout << "\ntestInsertWithCharId" << endl;
 			BSONObj obj;
 			std::string* id = uuid();
 			obj.add("_id", id->c_str());
@@ -350,7 +390,7 @@ class TestDBSuite: public Test::Suite
 
 		void testInsertWithoutId()
 		{
-			cout << "testInsertWithoutId" << endl;
+			cout << "\ntestInsertWithoutId" << endl;
 			BSONObj obj;
 			obj.add("name", "cross");
 			BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
@@ -360,7 +400,9 @@ class TestDBSuite: public Test::Suite
 		}
 
 		void testInsertComplexBSON() {
-			cout << "testInsertComplexBSON" << endl;
+			cout << "\ntestInsertComplexBSON" << endl;
+
+			controller.dropNamespace("dbtest", "sp1.customercomplex");
 			BSONObj obj;
 			obj.add("int", 1);
 			obj.add("char", "test");
@@ -370,15 +412,25 @@ class TestDBSuite: public Test::Suite
 			inner.add("char", "testInner");
 			obj.add("inner", inner);
 
-			BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
+			controller.insert("dbtest", "sp1.customercomplex", &obj);
+
+			std::vector<BSONObj*>* array = controller.find("dbtest", "sp1.customercomplex", "$'int' == 1");
+			TEST_ASSERT(array->size() == 1);
+			BSONObj* res = *array->begin();
 			TEST_ASSERT(res != NULL);
 			TEST_ASSERT(res->has("_id"));
+			TEST_ASSERT(res->getBSON("inner") != NULL);
+			BSONObj* innerRes = res->getBSON("inner");
+			TEST_ASSERT(innerRes != NULL);
+			TEST_ASSERT(innerRes->has("int"));
+			TEST_ASSERT(*innerRes->getInt("int") == 2);
+			delete array;
 			delete res;
 		}
 
 		void testMassiveInsert()
 		{
-			cout << "testMassiveInsert" << endl;
+			cout << "\ntestMassiveInsert" << endl;
 			int inserts = 1000;
 			std::auto_ptr<Logger> log(getLogger(NULL));
 
@@ -422,14 +474,14 @@ class TestDBSuite: public Test::Suite
 			{
 				// If throughtput is too small fail
 				TEST_ASSERT((inserts / secs) > 10000);
-				cout << "Throughput: " << (inserts / secs) << " ops." << endl;
-				cout << "------------------------------------------------------------" << endl;
+				cout << "\nThroughput: " << (inserts / secs) << " ops." << endl;
+				cout << "\n------------------------------------------------------------" << endl;
 			}
 		}
 
 		void testFinds()
 		{
-			cout << "testFinds" << endl;
+			cout << "\ntestFinds" << endl;
 
 			std::auto_ptr<Logger> log(getLogger(NULL));
 
@@ -442,10 +494,16 @@ class TestDBSuite: public Test::Suite
 				BSONObj obj;
 				obj.add("_id", *id);
 				BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
+				TEST_ASSERT(res != NULL);
+				if (res == NULL) {
+					TEST_FAIL("res is null");
+					return;
+				}
 				std::string id2 = res->getString("_id");
 				if (id2.compare(*id) != 0)
 				{
 					TEST_FAIL("id not found");
+					return;
 				}
 				delete res;
 			}
@@ -457,14 +515,14 @@ class TestDBSuite: public Test::Suite
 			if (secs > 0)
 			{
 				TEST_ASSERT((__ids.size() / secs) > 30);
-				cout << "Throughput: " << (__ids.size() / secs) << " ops." << endl;
-				cout << "------------------------------------------------------------" << endl;
+				cout << "\nThroughput: " << (__ids.size() / secs) << " ops." << endl;
+				cout << "\n------------------------------------------------------------" << endl;
 			}
 		}
 
 		void testFindsByFilter()
 		{
-			cout << "testFindsByFilter" << endl;
+			cout << "\ntestFindsByFilter" << endl;
 			// Insert some data
 			//
 			controller.dropNamespace("dbtest", "find.filter");
@@ -480,26 +538,31 @@ class TestDBSuite: public Test::Suite
 			BSONObj* filter = BSONParser::parse("{lastName: 'Crossley'}");
 
 			// Starting find by filter
-			std::vector<BSONObj*> found = controller.find("dbtest", "find.filter",*filter);
-			TEST_ASSERT(found.size() == 5); 
+			std::vector<BSONObj*>* found = controller.find("dbtest", "find.filter",*filter);
+			TEST_ASSERT(found->size() == 5); 
+			delete found;
 			delete filter;
 
 			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{}"));
-			TEST_ASSERT(found.size() == 8); 
+			TEST_ASSERT(found->size() == 8); 
+			delete found;
 
 			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan'}"));
-			TEST_ASSERT(found.size() == 7); 
+			TEST_ASSERT(found->size() == 7); 
+			delete found;
 
 			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Smith'}"));
-			TEST_ASSERT(found.size() == 1); 
+			TEST_ASSERT(found->size() == 1); 
+			delete found;
 
 			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Last'}"));
-			TEST_ASSERT(found.size() == 1); 
+			TEST_ASSERT(found->size() == 1); 
+			delete found;
 		}
 
 		void testFindsByTextFilter()
 		{
-			cout << "testFindsByTextFilter" << endl;
+			cout << "\ntestFindsByTextFilter" << endl;
 			// Insert some data
 			//
 			controller.dropNamespace("dbtest", "find.filter2");
@@ -509,27 +572,30 @@ class TestDBSuite: public Test::Suite
 			controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Clark', age: 38}"));
 
 			std::string filter = "$'age' == 45";
-			std::vector<BSONObj*> found = controller.find("dbtest", "find.filter2",filter.c_str());
-			TEST_ASSERT(found.size() == 1); 
-			std::string name = found.at(0)->getString("lastName");
+			std::vector<BSONObj*>* found = controller.find("dbtest", "find.filter2",filter.c_str());
+			TEST_ASSERT(found->size() == 1); 
+			std::string name = found->at(0)->getString("lastName");
 			TEST_ASSERT(name.compare("Smith") == 0);
 
 			filter = "";
+			delete found;
 			found = controller.find("dbtest", "find.filter2",filter.c_str());
-			TEST_ASSERT(found.size() == 4); 
-			
+			TEST_ASSERT(found->size() == 4); 
+
 			filter = "$'age' == 38";
+			delete found;
 			found = controller.find("dbtest", "find.filter2",filter.c_str());
-			TEST_ASSERT(found.size() == 2); 
-			name = found.at(0)->getString("lastName");
+			TEST_ASSERT(found->size() == 2); 
+			name = found->at(0)->getString("lastName");
 			TEST_ASSERT(name.compare("Crossley") == 0);
-			name = found.at(1)->getString("lastName");
+			name = found->at(1)->getString("lastName");
 			TEST_ASSERT(name.compare("Clark") == 0);
+			delete found;
 		}
 
 		void testFindPrevious()
 		{
-			cout << "testFindPrevious" << endl;
+			cout << "\ntestFindPrevious" << endl;
 			std::auto_ptr<Logger> log(getLogger(NULL));
 
 			FileInputStream fis("temp.txt", "rb");
@@ -557,8 +623,8 @@ class TestDBSuite: public Test::Suite
 				else
 				{
 					std::string id2 = res->getString("_id");
-					//        cout << "Looking for: " << *id << endl;
-					//        cout << "Found        " << *id2 << endl;
+					//        cout << "\nLooking for: " << *id << endl;
+					//        cout << "\nFound        " << *id2 << endl;
 					if (id2.compare(*id) != 0)
 					{
 						TEST_FAIL("findFirst returned an incorrect result");
@@ -574,8 +640,8 @@ class TestDBSuite: public Test::Suite
 			if (secs > 0)
 			{
 				TEST_ASSERT((ids.size() / secs) > 30);
-				cout << "Throughput: " << (ids.size() / secs) << " ops." << endl;
-				cout << "------------------------------------------------------------" << endl;
+				cout << "\nThroughput: " << (ids.size() / secs) << " ops." << endl;
+				cout << "\n------------------------------------------------------------" << endl;
 			}
 		}
 
@@ -593,6 +659,7 @@ class TestDBSuite: public Test::Suite
 				BSONObj id;
 				id.add("_id", *i);
 				tree->add(id, 0, 0);
+				//tree->debug();
 				x++;
 			}
 			log->stopTimeRecord();
@@ -612,10 +679,12 @@ class TestDBSuite: public Test::Suite
 				BSONObj id;
 				id.add("_id", guid);
 				Index* index = tree->find(id);
-				TEST_ASSERT(index != NULL);
-				BSONObj* key = index->key;
-				TEST_ASSERT(key != NULL);
-				TEST_ASSERT(key->getString("_id").compare(guid) == 0);
+				TEST_ASSERT_MSG(index != NULL, ("guid not found: " + guid).c_str());
+				if (index != NULL) {
+					BSONObj* key = index->key;
+					TEST_ASSERT(key != NULL);
+					TEST_ASSERT(key->getString("_id").compare(guid) == 0);
+				}
 
 				ids.erase(i);
 			}
@@ -625,7 +694,7 @@ class TestDBSuite: public Test::Suite
 
 		void testSimpleIndex()
 		{
-			cout << "testSimpleIndex" << endl;
+			cout << "\ntestSimpleIndex" << endl;
 			FileInputStream fis("simple.dat", "rb");
 			std::vector<std::string> ids;
 			while (!fis.eof())
@@ -640,7 +709,7 @@ class TestDBSuite: public Test::Suite
 
 		void testComplexIndex()
 		{
-			cout << "testComplexIndex" << endl;
+			cout << "\ntestComplexIndex" << endl;
 			FileInputStream fis("guids.txt", "rb");
 			std::vector<std::string> ids;
 			while (!fis.eof())
@@ -654,7 +723,7 @@ class TestDBSuite: public Test::Suite
 		}
 
 		void testIndexFactory() {
-			cout << "testIndexFactory" << endl;
+			cout << "\ntestIndexFactory" << endl;
 			BSONObj test;
 			test.add("_id", "1");
 
@@ -683,7 +752,7 @@ class TestDBSuite: public Test::Suite
 
 		void testDropnamespace()
 		{
-			cout << "testDropnamespace" << endl;
+			cout << "\ntestDropnamespace" << endl;
 			BSONObj obj;
 			obj.add("name", "Test");
 
@@ -694,10 +763,19 @@ class TestDBSuite: public Test::Suite
 
 			BSONObj filter;
 
-			std::vector<BSONObj*> finds = controller.find("dbtest", "ns.drop", filter);
+			std::vector<BSONObj*>* finds = controller.find("dbtest", "ns.drop", filter);
+			
+			TEST_ASSERT(finds->size() == 0);
 
-			TEST_ASSERT(finds.size() == 0);
+			delete finds;
 			delete res;
+		}
+
+		void testErrorHandling() {
+			// Test errors at filter expressions
+			//
+			// FilterParser* parser = FilterParser::parse("A = B");
+			// TEST_ASSERT(parser == NULL);
 		}
 
 };
@@ -713,7 +791,7 @@ enum OutputType
 	static void
 usage()
 {
-	cout << "usage: mytest [MODE]\n"
+	cout << "\nusage: mytest [MODE]\n"
 		<< "where MODE may be one of:\n"
 		<< "  --compiler\n"
 		<< "  --html\n"
@@ -745,7 +823,7 @@ cmdline(int argc, char* argv[])
 			output = new Test::TextOutput(Test::TextOutput::Verbose);
 		else
 		{
-			cout << "invalid commandline argument: " << arg << endl;
+			cout << "\ninvalid commandline argument: " << arg << endl;
 			usage(); // will not return
 		}
 	}
@@ -779,7 +857,7 @@ int main(int argc, char* argv[])
 	}
 	catch (...)
 	{
-		cout << "unexpected exception encountered\n";
+		cout << "\nunexpected exception encountered\n";
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;

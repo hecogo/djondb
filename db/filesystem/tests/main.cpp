@@ -21,7 +21,7 @@
 #include <fileoutputstream.h>
 #include "bsonoutputstream.h"
 #include "bsoninputstream.h"
-#include "bsonobj.h"
+#include "bson.h"
 #include <string.h>
 #include <memory>
 #include <cpptest.h>
@@ -39,6 +39,7 @@ class TestFileSystemSuite: public Test::Suite
 			TEST_ADD(TestFileSystemSuite::testBSONStreams);
 			TEST_ADD(TestFileSystemSuite::testBSONStreamsComplex);
 			TEST_ADD(TestFileSystemSuite::testBSONStreamsArray);
+			TEST_ADD(TestFileSystemSuite::testInnerArrays);
 		}
 
 	private:
@@ -85,8 +86,7 @@ class TestFileSystemSuite: public Test::Suite
 			TEST_ASSERT(obj->getInt("int") != NULL);
 			TEST_ASSERT(*obj->getInt("int") == 1);
 
-			TEST_ASSERT(obj->getString("string") != NULL);
-			TEST_ASSERT(((std::string*)obj->getString("string"))->compare("test") == 0);
+			TEST_ASSERT(obj->getString("string").compare("test") == 0);
 
 			TEST_ASSERT(obj->getChars("char*") != NULL);
 			TEST_ASSERT(strcmp((char*) obj->getChars("char*"), "char*") == 0);
@@ -98,6 +98,38 @@ class TestFileSystemSuite: public Test::Suite
 			TEST_ASSERT(*obj->getDouble("double") == 1.1);
 
 			fis->close();
+
+		}
+
+		void testInnerArrays() {
+			// test bson inner arrays
+			std::auto_ptr<BSONObj> objTest(BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: [{innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'} ] }"));
+			std::auto_ptr<FileOutputStream> fos(new FileOutputStream("bson.txt", "wb"));
+			std::auto_ptr<BSONOutputStream> bsonOut(new BSONOutputStream(fos.get()));
+
+			bsonOut->writeBSON(*objTest.get());
+
+			fos->close();
+
+			std::auto_ptr<FileInputStream> fis(new FileInputStream("bson.txt", "rb"));
+			std::auto_ptr<BSONInputStream> bsonIn(new BSONInputStream(fis.get()));
+
+			BSONObj* obj = bsonIn->readBSON();
+			TEST_ASSERT(obj->getInt("age") != NULL);
+			TEST_ASSERT(*obj->getInt("age") == 1);
+			TEST_ASSERT(obj->getChars("name") != NULL);
+			TEST_ASSERT(strcmp(obj->getChars("name"), "John") == 0);
+
+			TEST_ASSERT(obj->getDouble("salary") != NULL);
+			TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
+
+			TEST_ASSERT(obj->getBSONArray("rel1") != NULL);
+			TEST_ASSERT(obj->getBSONArray("rel1")->length() == 4);
+			TEST_ASSERT(obj->getBSONArray("rel1")->get(0)->getChars("innertext") != NULL);
+			TEST_ASSERT(strcmp(obj->getBSONArray("rel1")->get(0)->getChars("innertext"), "inner text") == 0);
+
+			delete obj;
+
 		}
 
 		void testBSONStreamsComplex()
@@ -136,8 +168,7 @@ class TestFileSystemSuite: public Test::Suite
 			TEST_ASSERT(obj->getInt("int") != NULL);
 			TEST_ASSERT(*obj->getInt("int") == 1);
 
-			TEST_ASSERT(obj->getString("string") != NULL);
-			TEST_ASSERT(((std::string*)obj->getString("string"))->compare("test") == 0);
+			TEST_ASSERT(obj->getString("string").compare("test") == 0);
 
 			TEST_ASSERT(obj->getChars("char*") != NULL);
 			TEST_ASSERT(strcmp((char*) obj->getChars("char*"), "char*") == 0);
@@ -154,8 +185,7 @@ class TestFileSystemSuite: public Test::Suite
 			TEST_ASSERT(innerTest->getInt("int") != NULL);
 			TEST_ASSERT(*innerTest->getInt("int") == 1);
 
-			TEST_ASSERT(innerTest->getString("string") != NULL);
-			TEST_ASSERT(((std::string*)innerTest->getString("string"))->compare("test") == 0);
+			TEST_ASSERT(innerTest->getString("string").compare("test") == 0);
 
 			TEST_ASSERT(innerTest->getChars("char*") != NULL);
 			TEST_ASSERT(strcmp((char*) innerTest->getChars("char*"), "char*") == 0);
@@ -194,16 +224,15 @@ class TestFileSystemSuite: public Test::Suite
 			std::auto_ptr<FileInputStream> fis(new FileInputStream("bson.txt", "rb"));
 			std::auto_ptr<BSONInputStream> bsonIn(new BSONInputStream(fis.get()));
 
-			std::vector<BSONObj*> result = bsonIn->readBSONArray();
+			std::vector<BSONObj*>* result = bsonIn->readBSONArray();
 
-			TEST_ASSERT(result.size() == 10);
-			for (std::vector<BSONObj*>::const_iterator i = result.begin(); i != result.end(); i++) {
+			TEST_ASSERT(result->size() == 10);
+			for (std::vector<BSONObj*>::const_iterator i = result->begin(); i != result->end(); i++) {
 				BSONObj* obj = *i;
 				TEST_ASSERT(obj->getInt("int") != NULL);
 				TEST_ASSERT(*obj->getInt("int") == 1);
 
-				TEST_ASSERT(obj->getString("string") != NULL);
-				TEST_ASSERT(((std::string*)obj->getString("string"))->compare("test") == 0);
+				TEST_ASSERT(obj->getString("string").compare("test") == 0);
 
 				TEST_ASSERT(obj->getChars("char*") != NULL);
 				TEST_ASSERT(strcmp((char*) obj->getChars("char*"), "char*") == 0);
@@ -217,6 +246,7 @@ class TestFileSystemSuite: public Test::Suite
 			}
 
 			fis->close();
+			delete result;
 		}
 
 };

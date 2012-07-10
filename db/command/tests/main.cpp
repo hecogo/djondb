@@ -28,6 +28,7 @@
 #include "updatecommand.h"
 #include "findcommand.h"
 #include "dropnamespacecommand.h"
+#include "shownamespacescommand.h"
 #include "util.h"
 #include <cpptest.h>
 
@@ -40,6 +41,7 @@ class TestCommandSuite: public Test::Suite {
 			TEST_ADD(TestCommandSuite::testUpdateCommand);	
 			TEST_ADD(TestCommandSuite::testFindCommand);	
 			TEST_ADD(TestCommandSuite::testDropnamespaceCommand);	
+			TEST_ADD(TestCommandSuite::testShownamespacesCommand);	
 		}
 
 		void testInsertCommand() {
@@ -69,7 +71,58 @@ class TestCommandSuite: public Test::Suite {
 			BSONObj* objResult = rdCmd->bson();
 			TEST_ASSERT(objResult != NULL);
 			TEST_ASSERT(objResult->has("name"));	
-			TEST_ASSERT(objResult->getString("name")->compare("Cross") == 0);
+			TEST_ASSERT(objResult->getString("name").compare("Cross") == 0);
+		}
+
+		void testShowdbs() {
+			FileOutputStream* fos = new FileOutputStream("test.dat", "wb");
+
+			CommandWriter* writer = new CommandWriter(fos);
+			ShowdbsCommand cmd;
+			writer->writeCommand(&cmd);
+
+			fos->close();
+			delete fos;
+			delete writer;
+
+			FileInputStream* fis = new FileInputStream("test.dat", "rb");
+			CommandReader* reader = new CommandReader(fis);
+
+			Command* resCmd = reader->readCommand();
+			TEST_ASSERT(resCmd->commandType() == SHOWDBS);
+
+			fis->close();
+
+			delete resCmd;
+			delete fis;
+			delete reader;
+		}
+
+		void testShownamespacesCommand() {
+			FileOutputStream* fos = new FileOutputStream("test.dat", "wb");
+
+			CommandWriter* writer = new CommandWriter(fos);
+			ShownamespacesCommand cmd;
+			cmd.setDB("testdb");
+			writer->writeCommand(&cmd);
+
+			fos->close();
+			delete fos;
+			delete writer;
+
+			FileInputStream* fis = new FileInputStream("test.dat", "rb");
+			CommandReader* reader = new CommandReader(fis);
+
+			Command* resCmd = reader->readCommand();
+			TEST_ASSERT(resCmd->commandType() == SHOWNAMESPACES);
+			ShownamespacesCommand* sw = (ShownamespacesCommand*)resCmd;
+			TEST_ASSERT(sw->DB()->compare("testdb") == 0);
+
+			fis->close();
+
+			delete resCmd;
+			delete fis;
+			delete reader;
 		}
 
 		void testUpdateCommand() {
@@ -102,7 +155,7 @@ class TestCommandSuite: public Test::Suite {
 			BSONObj* objResult = rdCmd->bson();
 			TEST_ASSERT(objResult  != NULL);
 			TEST_ASSERT(objResult->has("name"));	
-			TEST_ASSERT(objResult->getString("name")->compare("Cross") == 0);
+			TEST_ASSERT(objResult->getString("name").compare("Cross") == 0);
 		}
 
 		void testFindCommand() {

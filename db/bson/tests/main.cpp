@@ -257,6 +257,8 @@ class TestBSONSuite : public Test::Suite
 			TEST_ASSERT(obj->getBSON("rel1") != NULL);
 			TEST_ASSERT(obj->getBSON("rel1")->getString("innertext").compare("inner text") == 0);
 
+			BSONArrayObj::iterator i = array->begin();
+			TEST_ASSERT(i != array->end());
 			delete array;
 		}
 

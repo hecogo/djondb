@@ -30,6 +30,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <exception>
 
 class BSONObj;
 
@@ -104,6 +105,26 @@ class Token {
 	private:
 		std::string* _content;
 		Token::TOKEN_TYPE _type;
+};
+
+class ParseException: public std::exception {
+	public:
+		ParseException(int code, const char* error) {
+			_errorCode = code;
+			_errorMessage = error;
+		}
+
+		virtual const char* what() const throw() {
+			return _errorMessage;
+		}
+
+		int errorCode() const {
+			return _errorCode;
+		}
+
+	private:
+		int _errorCode;
+		const char* _errorMessage;
 };
 
 class ExpressionResult {
@@ -187,6 +208,7 @@ class BinaryExpression: public BaseExpression {
 		virtual BaseExpression* copyExpression();
 
 		FILTER_OPERATORS oper() const;
+		bool full() const;
 	private:
 		FILTER_OPERATORS _oper;
 		BaseExpression* _left;
@@ -214,7 +236,8 @@ class FilterParser {
 		~FilterParser();
 		ExpressionResult* eval(const BSONObj& bson);
 		
-		static FilterParser* parse(const std::string& expression);
+		static FilterParser* parse(const std::string& expression) ;
+			//throw (ParseException);
 
 	private:
 		FilterParser(const std::string& expression, BaseExpression* root, std::list<Token*> tokens);

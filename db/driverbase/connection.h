@@ -39,11 +39,13 @@ namespace djondb {
 				bool insert(const std::string& db, const std::string& ns, const std::string& json);
             bool insert(const std::string& db, const std::string& ns, const BSONObj& obj);
             BSONObj* findByKey(const std::string& db, const std::string& ns, const std::string& id);
-				std::vector<BSONObj*> find(const std::string& db, const std::string& ns, const std::string& filter);
+				std::vector<BSONObj*>* find(const std::string& db, const std::string& ns, const std::string& filter);
             bool update(const std::string& db, const std::string& ns, const std::string& json);
             bool update(const std::string& db, const std::string& ns, const BSONObj& bson);
 
 				bool dropNamespace(const std::string& db, const std::string& ns);
+				std::vector<std::string>* dbs() const;
+				std::vector<std::string>* namespaces(const std::string& db) const;
 
 				std::string host() const;
 

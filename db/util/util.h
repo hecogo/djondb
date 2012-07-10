@@ -17,6 +17,8 @@
 #include "logger.h"
 #include "threads.h"
 #include "settings.h"
+#include "circular_queue.h"
+#include "errors.h"
 
 #include <string>
 #include <vector>

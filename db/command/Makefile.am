@@ -11,22 +11,24 @@ AM_CPPFLAGS += $(all_includes)
 lib_LTLIBRARIES = libdjon-command.la
 
 libdjon_command_la_SOURCES = command.cpp \
-                                                   commandreader.cpp \
-                                                   commandresult.cpp \
-                                                   commandwriter.cpp \
-                                                   findcommand.cpp \
-                                                   insertcommand.cpp \
-                                                   updatecommand.cpp \
-                                                   command.h \
-                                                   commandreader.h \
-                                                   commandresult.h \
-                                                   commandwriter.h \
-                                                   findcommand.h \
-                                                   insertcommand.h \
-                                                   updatecommand.h \
-																	dropnamespacecommand.h \
-																	dropnamespacecommand.cpp \
-																	shutdowncommand.cpp
+									  commandreader.cpp \
+									  commandresult.cpp \
+									  commandwriter.cpp \
+									  findcommand.cpp \
+									  insertcommand.cpp \
+									  updatecommand.cpp \
+									  command.h \
+									  commandreader.h \
+									  commandresult.h \
+									  commandwriter.h \
+									  findcommand.h \
+									  insertcommand.h \
+									  updatecommand.h \
+									  dropnamespacecommand.h \
+									  dropnamespacecommand.cpp \
+									  shutdowncommand.cpp \
+									  showdbscommand.cpp \
+									  shownamespacescommand.cpp
 
 TESTS = test-command
 check_PROGRAMS = test-command

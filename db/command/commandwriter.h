@@ -9,6 +9,7 @@ class InsertCommand;
 class FindCommand;
 class DropnamespaceCommand;
 class ShutdownCommand;
+class ShownamespacesCommand;
 
 class CommandWriter
 {
@@ -27,6 +28,7 @@ class CommandWriter
 		int writeInsert(InsertCommand* cmd, OutputStream* out);
 		int writeDropnamespace(DropnamespaceCommand* cmd, OutputStream* out);
 		int writeShutdown(ShutdownCommand* cmd, OutputStream* out);
+		int writeShownamespaces(ShownamespacesCommand* cmd, OutputStream* out);
 
 	private:
 		OutputStream* _stream;

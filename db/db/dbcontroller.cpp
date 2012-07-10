@@ -82,11 +82,16 @@ void DBController::saveDatabases() {
 		for (std::map<std::string, SpacesType>::iterator i = spaces->begin(); i != spaces->end(); i++) {
 			SpacesType space = i->second;
 			std::string ns = space.ns;
-			FILE_TYPE type = space.type;
 			fos->writeString(db);
 			fos->writeString(ns);
-			fos->writeInt(static_cast<int>(type));
-			space.stream->close();
+			fos->writeInt(space.streams->size());
+			for (std::map<FILE_TYPE, StreamType*>::iterator istream = space.streams->begin(); istream != space.streams->end(); istream++) {
+				FILE_TYPE type = istream->first;
+				fos->writeInt(static_cast<int>(type));
+				StreamType* stream = istream->second;
+				stream->close();
+			}
+			delete space.streams;
 		}
 		delete spaces;
 	}
@@ -125,25 +130,28 @@ void DBController::initialize(std::string dataDir) {
 	while (!fis->eof()) {
 		std::auto_ptr<std::string> db(fis->readString());
 		std::auto_ptr<std::string> ns(fis->readString());
-		FILE_TYPE type = static_cast<FILE_TYPE>(fis->readInt());
+		int streams = fis->readInt();
+		for (int x = 0; x < streams; x++) {
+			FILE_TYPE type = static_cast<FILE_TYPE>(fis->readInt());
+			StreamType* stream = open(*(db.get()), *(ns.get()), type);
 
-		StreamType* stream = open(*(db.get()), *(ns.get()), type);
-		long currentPos = stream->currentPos();
-		if (type == INDEX_FTYPE) {
-			stream->seek(0);
-			IndexAlgorithm* impl = NULL;
-			while (!stream->eof()) {
-				BSONObj* obj = readBSON(stream);
+			if (type == INDEX_FTYPE) {
+				long currentPos = stream->currentPos();
+				stream->seek(0);
+				IndexAlgorithm* impl = NULL;
+				while (!stream->eof()) {
+					BSONObj* obj = readBSON(stream);
 
-				if (!impl) {
-					impl = IndexFactory::indexFactory.index(db->c_str(), ns->c_str(), *obj);
+					if (!impl) {
+						impl = IndexFactory::indexFactory.index(db->c_str(), ns->c_str(), *obj);
+					}
+					long indexPos = stream->readLong();
+					long posData = stream->readLong();
+					impl->add(*obj, posData, indexPos);
+					delete obj;
 				}
-				long indexPos = stream->readLong();
-				long posData = stream->readLong();
-				impl->add(*obj, posData, indexPos);
-				delete obj;
+				stream->seek(currentPos);
 			}
-			stream->seek(currentPos);
 		}
 	}
 	fis->close();
@@ -238,7 +246,7 @@ void DBController::update(char* db, char* ns, BSONObj* obj) {
 	CacheManager::objectCache()->add(id, new BSONObj(*obj));
 }
 
-StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
+std::string DBController::fileName(std::string ns, FILE_TYPE type) const {
 	std::stringstream ss;
 	ss << ns << ".";
 	switch (type) {
@@ -254,6 +262,11 @@ StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 	}
 
 	std::string fileName = ss.str();
+
+	return fileName;
+}
+
+StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 	StreamType* stream = NULL;
 
 	map<std::string, SpacesType>* spaces = NULL;
@@ -265,11 +278,16 @@ StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 		spaces = itDB->second;
 	}
 
-	map<std::string, SpacesType>::iterator it = spaces->find(fileName);
+	map<std::string, SpacesType>::iterator it = spaces->find(ns);
 
+	map<FILE_TYPE, StreamType*>* streams = NULL;
 	if (it != spaces->end()) {
-		stream = (it->second).stream;
-	}
+		streams = (it->second).streams;
+		map<FILE_TYPE, StreamType*>::iterator istreams = streams->find(type);
+		if (istreams != streams->end()) {
+			stream = istreams->second;
+		}
+	} 
 
 	if (stream != NULL) {
 		return stream;
@@ -277,14 +295,21 @@ StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 
 	std::string filedir = concatStrings(_dataDir, db);
 	filedir += "/";
-	assert(makeDir(filedir.c_str()));
-	std::string streamfile = concatStrings(filedir, fileName);
+	if (!existDir(filedir.c_str())) {
+		assert(makeDir(filedir.c_str()));
+	}
+	std::string file = fileName(ns, type);
+	std::string streamfile = concatStrings(filedir, file);
 	StreamType* output = new StreamType(streamfile, "ab+");
-	SpacesType space;
-	space.ns = ns;
-	space.stream = output;
-	space.type = type;
-	spaces->insert(pair<std::string, SpacesType>(fileName, space));
+	if (streams) {
+		streams->insert(pair<FILE_TYPE, StreamType*>(type, output));
+	} else {
+		SpacesType space;
+		space.ns = ns;
+		space.streams = new map<FILE_TYPE, StreamType*>();
+		space.streams->insert(pair<FILE_TYPE, StreamType*>(type, output));
+		spaces->insert(pair<std::string, SpacesType>(ns, space));
+	}
 
 	return output;
 }
@@ -297,10 +322,13 @@ bool DBController::close(char* db, char* ns) {
 		if (it != spaces->end()) {
 			SpacesType space = it->second;
 
-			StreamType* stream = space.stream;
-			stream->close();
-			delete(stream);
-			stream = 0;
+			map<FILE_TYPE, StreamType*>* streams = space.streams;
+			for (map<FILE_TYPE, StreamType*>::iterator istreams = streams->begin(); istreams != streams->end(); istreams++) {
+				StreamType* stream = istreams->second;
+				stream->close();
+				delete stream;
+				stream = 0;
+			}
 			spaces->erase(it);
 		}
 	}
@@ -340,7 +368,7 @@ void DBController::insertIndex(char* db, char* ns, BSONObj* bson, long filePos) 
 	out->writeLong(filePos);
 }
 
-std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const BSONObj& filter) {
+std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const BSONObj& filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, bsonFilter: %s", db, ns, filter.toChar());
 	std::string filedir = _dataDir + db;
 	filedir = filedir + "/";
@@ -351,7 +379,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const BSONO
 	std::string filename = ss.str();
 
 	FileInputStream* fis = new FileInputStream(filename.c_str(), "rb");
-	std::vector<BSONObj*> result;
+	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
 
 	BSONInputStream* bis = new BSONInputStream(fis);
 	std::map<t_keytype, BSONContent* >::const_iterator testValIter = filter.begin();
@@ -366,7 +394,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const BSONO
 				BSONContent* content = readed->getContent(keyname);
 				if (*content == *testVal) {
 					if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), readed->toChar());
-					result.push_back(readed);
+					result->push_back(readed);
 				}
 			}
 		}
@@ -374,16 +402,16 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const BSONO
 		// now filter the results with the other keys
 		testValIter++;
 		for ( ;testValIter != filter.end(); testValIter++) {
-			std::vector<BSONObj*> rsTmp;
+			std::vector<BSONObj*>* rsTmp = new std::vector<BSONObj*>();
 			testVal = testValIter->second;
 			keyname = testValIter->first;
-			for (std::vector<BSONObj*>::iterator i = result.begin(); i != result.end(); i++) {
+			for (std::vector<BSONObj*>::iterator i = result->begin(); i != result->end(); i++) {
 				BSONObj* obj = *i;
 				if (obj->has(keyname)) {
 					BSONContent* content = obj->getContent(keyname);
 					if (*content == *testVal) {
 						if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), obj->toChar());
-						rsTmp.push_back(obj);
+						rsTmp->push_back(obj);
 					}
 				}
 			}
@@ -393,7 +421,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const BSONO
 		if (_logger->isDebug()) _logger->debug(2, "the filter is empty, all the records will be included from namespace: %s", ns);
 		while (!fis->eof()) {
 			BSONObj* readed = bis->readBSON();
-			result.push_back(readed);
+			result->push_back(readed);
 		}
 
 	}
@@ -401,10 +429,10 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const BSONO
 	return result;
 }
 
-std::vector<BSONObj*> DBController::find(char* db, char* ns, const BSONObj& filter) {
+std::vector<BSONObj*>* DBController::find(char* db, char* ns, const BSONObj& filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, bsonFilter: %s", db, ns, filter.toChar());
 
-	std::vector<BSONObj*> result;
+	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
 	if (filter.has("_id")) {
 		std::string id = filter.getString("_id");
 
@@ -424,14 +452,14 @@ std::vector<BSONObj*> DBController::find(char* db, char* ns, const BSONObj& filt
 			std::stringstream ss;
 			ss << filedir << ns << ".dat";
 
-			std::string fileName = ss.str();
+			std::string file = ss.str();
 
-			StreamType* input = new StreamType(fileName, "rb");
+			StreamType* input = new StreamType(file, "rb");
 			input->seek(index->posData);
 
 			BSONObj* obj = readBSON(input);
 			if (_logger->isDebug()) _logger->debug(2, "found a match using _id: %s", obj->toChar());
-			result.push_back(obj);
+			result->push_back(obj);
 			input->close();
 		}
 	} else {
@@ -447,9 +475,9 @@ BSONObj* DBController::findFirst(char* db, char* ns, BSONObj* filter) {
 	if (CacheManager::objectCache()->containsKey(id)) {
 		return (*CacheManager::objectCache())[id];
 	}
-	std::vector<BSONObj*> temp = find(db, ns, *filter);
-	if (temp.size() == 1) {
-		BSONObj* element = *temp.begin();
+	std::auto_ptr<std::vector<BSONObj*> > temp(find(db, ns, *filter));
+	if (temp->size() == 1) {
+		BSONObj* element = *temp->begin();
 		CacheManager::objectCache()->add(id, new BSONObj(*element));
 		return element;
 	} else {
@@ -457,10 +485,10 @@ BSONObj* DBController::findFirst(char* db, char* ns, BSONObj* filter) {
 	}
 }
 
-std::vector<BSONObj*> DBController::find(char* db, char* ns, const char* filter) {
+std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, filter: %s", db, ns, filter);
 
-	std::vector<BSONObj*> result;
+	std::vector<BSONObj*>* result;
 
 	result = findFullScan(db, ns, filter);
 
@@ -507,7 +535,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
 	return bsonResult;
 }
 
-std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const char* filter) {
+std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const char* filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, filter: %s", db, ns, filter);
 	std::string filedir = _dataDir + db;
 	filedir = filedir + "/";
@@ -518,7 +546,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const char*
 	std::string filename = ss.str();
 
 	FileInputStream* fis = new FileInputStream(filename.c_str(), "rb");
-	std::vector<BSONObj*> result;
+	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
 
 	BSONInputStream* bis = new BSONInputStream(fis);
 
@@ -534,7 +562,7 @@ std::vector<BSONObj*> DBController::findFullScan(char* db, char* ns, const char*
 			match = *bres;
 		}
 		if (match) {
-			result.push_back(obj);
+			result->push_back(obj);
 		} else {
 			delete obj;
 		}
@@ -557,23 +585,59 @@ bool DBController::dropNamespace(char* db, char* ns) {
 	}
 	map<std::string, SpacesType>* spaces = itspaces->second;
 
+	vector<std::string> keysToRemove;
+
 	for (map<std::string, SpacesType>::iterator it = spaces->begin(); it != spaces->end(); it++) {
 		std::string key = it->first;
-		std::string filename = key.substr(0, key.find_last_of("."));
 
-		if (filename.compare(ns) == 0) {
+		if (key.compare(ns) == 0) {
 			SpacesType space = it->second;
 
 			std::string filedir = _dataDir + std::string(db) + "/";
 
-			// drops the file
-			if (remove((filedir + key).c_str()) != 0) {
-				result = false;
-				break;
+			for (map<FILE_TYPE, StreamType*>::iterator istream = space.streams->begin(); istream != space.streams->end(); istream++) {
+				FILE_TYPE type = istream->first;
+				std::string file = fileName(std::string(ns), type);
+
+				// drops the file
+				if (remove((filedir + file).c_str()) != 0) {
+					result = false;
+					break;
+				}
 			}
-			spaces->erase(it);
+			keysToRemove.push_back(key);
 			result = true;
 		}
+	}
+	// remove the elementsss
+	for (std::vector<std::string>::iterator it = keysToRemove.begin(); it != keysToRemove.end(); it++) {
+		spaces->erase(*it);
+	} 
+	return result;
+}
+
+std::vector<std::string>* DBController::dbs() const {
+	std::vector<std::string>* result = new std::vector<std::string>();;
+
+	for (map<std::string, map<std::string, SpacesType>* >::const_iterator it = _spaces.begin(); it != _spaces.end(); it++) {
+		std::string db = it->first;
+		result->push_back(db);
+	}
+	return result;
+}
+
+std::vector<std::string>* DBController::namespaces(const char* db) const {
+	std::vector<std::string>* result = new std::vector<std::string>();;
+
+	map<std::string, map<std::string, SpacesType>* >::const_iterator itspaces = _spaces.find(std::string(db));
+	if (itspaces != _spaces.end()) {
+		map<std::string, SpacesType>* spaces = itspaces->second;
+		for (map<std::string, SpacesType>::iterator it = spaces->begin(); it != spaces->end(); it++) {
+			std::string key = it->first;
+			std::string ns = key.substr(0, key.find_last_of("."));
+			result->push_back(ns);
+		}
+
 	}
 	return result;
 }

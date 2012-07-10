@@ -26,6 +26,7 @@
 
 #include "filterparser.h"
 #include <string.h>
+#include "util.h"
 
 BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::iterator& i);
 const int BUFFER_SIZE = 1024;
@@ -202,17 +203,20 @@ BaseExpression* solveParentesis(std::list<Token*>& tokens, std::list<Token*>::it
 	// Jumps the starting parentesis
 	i++;
 	//Token* currentToken = *i;
-//	if (currentToken->type() == Token::TT_OPENPARENTESIS) {
-//		expression = solveParentesis(tokens, i);
-//	} else {
-		expression = solveExpression(tokens, i);
-		i++;
-//	}
+	//	if (currentToken->type() == Token::TT_OPENPARENTESIS) {
+	//		expression = solveParentesis(tokens, i);
+	//	} else {
+	expression = solveExpression(tokens, i);
+	i++;
+	//	}
 	return expression;
 }
 
 BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::iterator& i) {
 	std::list<BaseExpression*> waitingList;
+	if (tokens.size() == 0) {
+		return NULL;
+	}
 	while (i != tokens.end()) {
 		Token* token = *i;
 		if (token->type() == Token::TT_CLOSEPARENTESIS) {
@@ -248,8 +252,7 @@ BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::it
 	if (waitingList.size() == 1) {
 		return waitingList.back();
 	} else {
-		// ERROR 
-		return NULL;
+		throw "Error parsing the expression";
 	}
 }
 
@@ -277,97 +280,105 @@ void pushBuffer(std::list<Token*>& tokens, char* buffer, int& posBuffer) {
 
 // static
 FilterParser* FilterParser::parse(const std::string& expression) {
-	const char* chrs = expression.c_str();
+	//throw (ParseException) {
+	try {
+		const char* chrs = expression.c_str();
 
-	char buffer[BUFFER_SIZE];
-	memset(buffer, 0, BUFFER_SIZE);
-	int pos = 0;
-	int posBuffer = 0;
-	int len = strlen(chrs);
+		char buffer[BUFFER_SIZE];
+		memset(buffer, 0, BUFFER_SIZE);
+		int pos = 0;
+		int posBuffer = 0;
+		int len = strlen(chrs);
 
-	Token::TOKEN_TYPE token_type = Token::TT_NOTTOKEN;
+		Token::TOKEN_TYPE token_type = Token::TT_NOTTOKEN;
 
-	BaseExpression* rootExpression = NULL;
-	std::list<Token*> tokens;
-	bool strOpen = false;
-	char startStringChar = '\'';
-	const char* VALID_CHARS = "$abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
-	int openParentesis = 0;
-	FILTER_OPERATORS lastOperator;
+		BaseExpression* rootExpression = NULL;
+		std::list<Token*> tokens;
+		bool strOpen = false;
+		char startStringChar = '\'';
+		const char* VALID_CHARS = "$abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+		int openParentesis = 0;
+		FILTER_OPERATORS lastOperator;
 
-	while (pos < len) {
-		bool charProcessed = false;
-		while (!strOpen && (chrs[pos] == ' ')) {
-			pos++;
-		}
-		if ((chrs[pos] == '\'') || (chrs[pos] == '\"')) {
-			startStringChar = chrs[pos];
-			bool escaped = false;
-			do {
+		while (pos < len) {
+			bool charProcessed = false;
+			while (!strOpen && (chrs[pos] == ' ')) {
+				pos++;
+			}
+			if ((chrs[pos] == '\'') || (chrs[pos] == '\"')) {
+				startStringChar = chrs[pos];
+				bool escaped = false;
+				do {
+					buffer[posBuffer] = chrs[pos];
+					posBuffer++;
+					pos++;
+				} while (chrs[pos] != startStringChar);
 				buffer[posBuffer] = chrs[pos];
 				posBuffer++;
-				pos++;
-			} while (chrs[pos] != startStringChar);
-			buffer[posBuffer] = chrs[pos];
-			posBuffer++;
-			Token::TOKEN_TYPE type;
-			if (buffer[0] == '$') {
-				type = Token::TT_EXPRESION;
-			} else {
-				type = Token::TT_CONSTANT;
-			}
-			tokens.push_back(new Token(type, std::string(buffer)));
-			memset(buffer, 0, BUFFER_SIZE);
-			posBuffer = 0;
-			/* 
-				} else if ((!strOpen) && (chrs[pos] == '(')) {
-				pushBuffer(tokens, buffer, posBuffer);
-				tokens.push_back(new Token(Token::TT_OPENPARENTESIS));
-				openParentesis++;
-				charProcessed = true;
-				} else if ((!strOpen) && (chrs[pos] == ')')) {
-				pushBuffer(tokens, buffer, posBuffer);
-				tokens.push_back(new Token(Token::TT_CLOSEPARENTESIS));
-				charProcessed = true;
-				openParentesis--;
-				if (openParentesis < 0) {
-			// ERROR
-			}
-			*/
-		} else if (strchr(VALID_CHARS, chrs[pos]) != NULL) {
-			buffer[posBuffer] = chrs[pos];
-			posBuffer++;
-		} else {
-			pushBuffer(tokens, buffer, posBuffer);
-			Token::TOKEN_TYPE type = checkTokenType(chrs, pos);
-			tokens.push_back(new Token(type, std::string(buffer)));
-
-			if (type == Token::TT_OPENPARENTESIS)
-				openParentesis++;
-			else if (type == Token::TT_CLOSEPARENTESIS) {
-				openParentesis--;
-				if (openParentesis < 0) {
-					// ERROR
+				Token::TOKEN_TYPE type;
+				if (buffer[0] == '$') {
+					type = Token::TT_EXPRESION;
+				} else {
+					type = Token::TT_CONSTANT;
 				}
+				tokens.push_back(new Token(type, std::string(buffer)));
+				memset(buffer, 0, BUFFER_SIZE);
+				posBuffer = 0;
+				/* 
+					} else if ((!strOpen) && (chrs[pos] == '(')) {
+					pushBuffer(tokens, buffer, posBuffer);
+					tokens.push_back(new Token(Token::TT_OPENPARENTESIS));
+					openParentesis++;
+					charProcessed = true;
+					} else if ((!strOpen) && (chrs[pos] == ')')) {
+					pushBuffer(tokens, buffer, posBuffer);
+					tokens.push_back(new Token(Token::TT_CLOSEPARENTESIS));
+					charProcessed = true;
+					openParentesis--;
+					if (openParentesis < 0) {
+				// ERROR
+				}
+				*/
+			} else if (strchr(VALID_CHARS, chrs[pos]) != NULL) {
+				buffer[posBuffer] = chrs[pos];
+				posBuffer++;
+			} else {
+				pushBuffer(tokens, buffer, posBuffer);
+				Token::TOKEN_TYPE type = checkTokenType(chrs, pos);
+				tokens.push_back(new Token(type, std::string(buffer)));
+
+				if (type == Token::TT_OPENPARENTESIS)
+					openParentesis++;
+				else if (type == Token::TT_CLOSEPARENTESIS) {
+					openParentesis--;
+					if (openParentesis < 0) {
+						// ERROR
+					}
+				}
+				memset(buffer, 0, BUFFER_SIZE);
+				posBuffer = 0;
 			}
-			memset(buffer, 0, BUFFER_SIZE);
-			posBuffer = 0;
+
+			pos++;
 		}
 
-		pos++;
+		if (strlen(buffer) > 0) {
+			// all the other options has been processed, if the buffer contains something
+			// it should be a constant
+			tokens.push_back(new Token(Token::TT_CONSTANT, buffer));
+		}
+
+		rootExpression = createTree(tokens);
+
+		FilterParser* parser = new FilterParser(expression, rootExpression, tokens);
+
+		return parser;
 	}
-
-	if (strlen(buffer) > 0) {
-		// all the other options has been processed, if the buffer contains something
-		// it should be a constant
-		tokens.push_back(new Token(Token::TT_CONSTANT, buffer));
+	catch (char* e) {
+		std::string error = "An error ocurred parsing the expression: " + expression + ". Error description: " + e;
+		throw ParseException(ERROR_Parsing, error.c_str());
 	}
-
-	rootExpression = createTree(tokens);
-
-	FilterParser* parser = new FilterParser(expression, rootExpression, tokens);
-
-	return parser;
 }
+
 
 

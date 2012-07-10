@@ -19,15 +19,20 @@
 #include "insertcommand.h"
 
 #include "bsonoutputstream.h"
+#include "bsoninputstream.h"
 #include "dbcontroller.h"
+#include "inputstream.h"
+#include "outputstream.h"
 
 InsertCommand::InsertCommand()
     : Command(INSERT)
 {
+	_bsonResult = NULL;
 }
 
 InsertCommand::InsertCommand(const InsertCommand& orig)
 : Command(INSERT) {
+	_bsonResult = NULL;
 }
 
 InsertCommand::~InsertCommand() {
@@ -45,33 +50,51 @@ void* InsertCommand::result() {
     return _bsonResult;
 }
 
+void InsertCommand::writeCommand(OutputStream* out) const {
+	out->writeString(*_db);
+	out->writeString(*_namespace);
+
+	std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
+	bsonout->writeBSON(*_bson);
+}
+
+void InsertCommand::readResult(InputStream* is) {
+	int result = is->readInt();
+	if (result) {
+		BSONInputStream* bis = new BSONInputStream(is);
+		_bsonResult = bis->readBSON();
+		delete bis;
+	}
+}
+
 void InsertCommand::writeResult(OutputStream* out) const {
-    if (_bsonResult) {
-        BSONOutputStream* bsonout = new BSONOutputStream(out);
-        bsonout->writeBSON(*_bsonResult);
-    }
+	out->writeInt((_bsonResult != NULL)? 1: 0);
+	if (_bsonResult) {
+		BSONOutputStream* bsonout = new BSONOutputStream(out);
+		bsonout->writeBSON(*_bsonResult);
+	}
 }
 
 void InsertCommand::setNameSpace(const std::string ns) {
-    _namespace = new std::string(ns);
+	_namespace = new std::string(ns);
 }
 const std::string* InsertCommand::nameSpace() const {
-    return _namespace;
+	return _namespace;
 }
 
 void InsertCommand::setBSON(const BSONObj bson) {
-    _bson = new BSONObj(bson);
+	_bson = new BSONObj(bson);
 }
 
 BSONObj* InsertCommand::bson() const {
-    return _bson;
+	return _bson;
 }
 
 void InsertCommand::setDB(const std::string& db) {
-    _db = new std::string(db);
+	_db = new std::string(db);
 }
 
 const std::string* InsertCommand::DB() const {
-    return _db;
+	return _db;
 }
 

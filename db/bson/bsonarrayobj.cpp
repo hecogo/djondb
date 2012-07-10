@@ -77,3 +77,12 @@ char* BSONArrayObj::toChar() const {
 
 	return result;
 }
+
+BSONArrayObj::iterator BSONArrayObj::begin() {
+	return _elements.begin();
+}
+
+BSONArrayObj::iterator BSONArrayObj::end() {
+	return _elements.end();
+}
+
