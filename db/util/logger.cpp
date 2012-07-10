@@ -198,6 +198,8 @@ void Logger::print(std::string type, std::string text) {
 	} else {
 		cout << type << ": " << text << endl;
 	}
+#else
+		cout << type << ": " << text << endl;
 #endif
 }
 
