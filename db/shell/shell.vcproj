@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="shell"
 	ProjectGUID="{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}"
+	RootNamespace="shell"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -17,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -62,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\bson\Debug;c:\workspace\personal\djondb\db\third_party\libs;C:\workspace\djondb\db\libs;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug"
+				AdditionalLibraryDirectories="..\bson\Debug;c:\workspace\personal\djondb\db\third_party\libs;C:\workspace\djondb\db\libs;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug;..\windows\libs"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -93,8 +94,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -114,6 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="c:\workspace\personal\djondb\db\third_party\includes;C:\development\pthreads.2;..\util;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -132,7 +134,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\bson\Debug;c:\workspace\personal\djondb\db\third_party\libs;C:\workspace\djondb\db\libs;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug;..\windows\libs"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

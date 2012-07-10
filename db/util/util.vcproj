@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="util"
 	ProjectGUID="{C5EB45F0-68D0-426D-A04A-47439917D92F}"
 	RootNamespace="util"
@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\libs"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="0"
@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalLibraryDirectories="C:\workspace\personal\djondb\db\windows\libs"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -83,9 +83,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(SolutionDir)\libs"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
+			ManagedExtensions="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -104,6 +105,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="C:\development\boost;..\windows\includes"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -122,6 +124,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalLibraryDirectories="C:\workspace\personal\djondb\db\windows\libs"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -162,6 +165,10 @@
 			</File>
 			<File
 				RelativePath=".\errorhandle.h"
+				>
+			</File>
+			<File
+				RelativePath=".\errors.h"
 				>
 			</File>
 			<File

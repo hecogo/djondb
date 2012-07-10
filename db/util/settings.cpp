@@ -37,7 +37,7 @@ void readSettings() {
 #ifndef WINDOWS
 	char* ccont = readFile("/etc/djondb.conf");
 #else
-	char* ccont = readFile("C:\\workspace\\personal\\djondb\\db\\windows\\djondb.conf");
+	char* ccont = readFile("djondb.conf");
 #endif
    std::string content = std::string(ccont);
 

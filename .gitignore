@@ -30,3 +30,4 @@ Debug
 *.user
 *.ncb
 *.suo
+*.obj
