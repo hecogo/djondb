@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="shell"
 	ProjectGUID="{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}"
+	RootNamespace="shell"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -17,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -39,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="c:\workspace\personal\djondb\db\third_party\includes;C:\development\pthreads.2;..\util;C:\development\boost;..\bson;..\driverbase"
+				AdditionalIncludeDirectories="..\third_party\includes;..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\bson\Debug;c:\workspace\personal\djondb\db\third_party\libs;C:\workspace\djondb\db\libs;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug"
+				AdditionalLibraryDirectories="../windows/libs;../third_party/libs;../third_party/libs/$(ConfigurationName)"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -93,8 +94,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -114,6 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="..\third_party\includes;..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -132,7 +134,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="../windows/libs;../third_party/libs;../third_party/libs/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -166,6 +170,10 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{8D4F581B-05E3-41D3-8EF3-DF77FE97E40B}"
 			RelativePathToProject="..\driverbase\driverbase.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{C5EB45F0-68D0-426D-A04A-47439917D92F}"
+			RelativePathToProject="..\util\util.vcproj"
 		/>
 	</References>
 	<Files>

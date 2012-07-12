@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="bson"
 	ProjectGUID="{669CDCF4-AAAA-4DA1-9A43-E4DA0C3D08D7}"
 	RootNamespace="bson"
@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(SolutionDir)\libs"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -80,8 +80,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(SolutionDir)\libs"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -101,6 +101,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="../util;C:\development\boost;..\windows\includes"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
