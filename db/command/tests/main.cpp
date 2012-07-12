@@ -28,6 +28,7 @@
 #include "updatecommand.h"
 #include "findcommand.h"
 #include "dropnamespacecommand.h"
+#include "showdbscommand.h"
 #include "shownamespacescommand.h"
 #include "util.h"
 #include <cpptest.h>
