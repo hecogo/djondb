@@ -28,19 +28,28 @@ SolidCompression=yes
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
+[Dirs]
+Name: "{app}\"; Permissions: everyone-modify
+
+[Files]
+
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\workspace\personal\djondb\db\windows\Debug\djondb_win.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\workspace\personal\djondb\db\windows\Debug\driverbase.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\workspace\personal\djondb\db\windows\Debug\msvcm90.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\workspace\personal\djondb\db\windows\Debug\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\workspace\personal\djondb\db\windows\Debug\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\workspace\personal\djondb\db\windows\Debug\pthreadVC2.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\workspace\personal\djondb\db\windows\Debug\djondb_shell.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\workspace\personal\djondb\db\windows\Release\djondb_win.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\workspace\personal\djondb\db\windows\Release\driverbase.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\workspace\personal\djondb\db\windows\Release\msvcm90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\workspace\personal\djondb\db\windows\Release\msvcp90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\workspace\personal\djondb\db\windows\Release\msvcr90.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\workspace\personal\djondb\db\windows\Release\pthreadVC2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\workspace\personal\djondb\db\windows\Release\djondb_shell.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\workspace\personal\djondb\db\windows\djondb.conf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\workspace\personal\djondb\db\windows\installer\vcredist_x86_vs2010.exe"; DestDir: {tmp}
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+
+[Run]
+Filename: {tmp}\vcredist_x86_vs2010.exe; Parameters: "/passive /Q:a /c:""msiexec /qb /i vcredist.msi"" "; StatusMsg: Installing 2010 RunTime...
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

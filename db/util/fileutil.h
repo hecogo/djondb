@@ -24,7 +24,7 @@ bool removeFile(const char* file);
 #ifndef WINDOWS
 #define FILESEPARATOR "/"
 #else
-#define FILESEPARATOR "\\"
+#define FILESEPARATOR (char*)"\\"
 #endif
 
 #endif	/* _FILEUTIL_H */

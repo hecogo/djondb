@@ -100,8 +100,8 @@ void DBController::saveDatabases() {
 
 void DBController::initialize() {
 	std::string dataDir = getSetting("DATA_DIR");
-	if ((dataDir.length() > 0) && !endsWith(dataDir.c_str(), "/")) {
-		dataDir = dataDir + "/";
+	if ((dataDir.length() > 0) && !endsWith(dataDir.c_str(), FILESEPARATOR)) {
+		dataDir = dataDir + FILESEPARATOR;
 	} else {
 		dataDir = dataDir;
 	}
@@ -111,7 +111,7 @@ void DBController::initialize() {
 }
 
 void DBController::initialize(std::string dataDir) {
-	if (_logger->isInfo()) _logger->info("DBController initializing");
+	if (_logger->isInfo()) _logger->info("DBController initializing. Data dir");
 
 	_dataDir = dataDir;
 
@@ -267,6 +267,7 @@ std::string DBController::fileName(std::string ns, FILE_TYPE type) const {
 }
 
 StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
+	std::auto_ptr<Logger> log(getLogger(NULL));
 	StreamType* stream = NULL;
 
 	map<std::string, SpacesType>* spaces = NULL;
@@ -294,9 +295,11 @@ StreamType* DBController::open(std::string db, std::string ns, FILE_TYPE type) {
 	}
 
 	std::string filedir = concatStrings(_dataDir, db);
-	filedir += "/";
+	filedir += FILESEPARATOR;
+	if (log->isDebug()) log->debug(3, "DBController::open checking directory %s", filedir.c_str());
 	if (!existDir(filedir.c_str())) {
-		assert(makeDir(filedir.c_str()));
+		if (log->isDebug()) log->debug(3, "DBController::open creating directory %s", filedir.c_str());
+		makeDir(filedir.c_str());
 	}
 	std::string file = fileName(ns, type);
 	std::string streamfile = concatStrings(filedir, file);
@@ -371,7 +374,7 @@ void DBController::insertIndex(char* db, char* ns, BSONObj* bson, long filePos) 
 std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const BSONObj& filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, bsonFilter: %s", db, ns, filter.toChar());
 	std::string filedir = _dataDir + db;
-	filedir = filedir + "/";
+	filedir = filedir + FILESEPARATOR;
 
 	std::stringstream ss;
 	ss << filedir << ns << ".dat";
@@ -447,7 +450,7 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const BSONObj& fil
 			//    out->close();
 
 			std::string filedir = _dataDir + db;
-			filedir = filedir + "/";
+			filedir = filedir + FILESEPARATOR;
 
 			std::stringstream ss;
 			ss << filedir << ns << ".dat";
@@ -498,7 +501,7 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter
 BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFirst db: %s, ns: %s, filter: %s", db, ns, filter);
 	std::string filedir = _dataDir + db;
-	filedir = filedir + "/";
+	filedir = filedir + FILESEPARATOR;
 
 	std::stringstream ss;
 	ss << filedir << ns << ".dat";
@@ -538,7 +541,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
 std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const char* filter) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, filter: %s", db, ns, filter);
 	std::string filedir = _dataDir + db;
-	filedir = filedir + "/";
+	filedir = filedir + FILESEPARATOR;
 
 	std::stringstream ss;
 	ss << filedir << ns << ".dat";
@@ -593,7 +596,7 @@ bool DBController::dropNamespace(char* db, char* ns) {
 		if (key.compare(ns) == 0) {
 			SpacesType space = it->second;
 
-			std::string filedir = _dataDir + std::string(db) + "/";
+			std::string filedir = _dataDir + std::string(db) + FILESEPARATOR;
 
 			for (map<FILE_TYPE, StreamType*>::iterator istream = space.streams->begin(); istream != space.streams->end(); istream++) {
 				FILE_TYPE type = istream->first;

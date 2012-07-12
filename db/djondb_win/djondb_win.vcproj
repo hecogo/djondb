@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="pthreadVC2.lib Rpcrt4.lib Ws2_32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../windows/lib"
+				AdditionalLibraryDirectories="../windows/libs;../windows/libs/x86"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"

@@ -133,6 +133,8 @@ bool existFile(const char* fileName) {
 }
 
 bool existDir(const char* dir) {
+	Logger* log = getLogger(NULL);
+	if (log->isDebug()) log->debug(3, "existDir(%s)", dir);
 	bool exists = true;
 #ifndef WINDOWS
     DIR *dp;
@@ -145,26 +147,29 @@ bool existDir(const char* dir) {
 #else 
 	String^ folder = Marshal::PtrToStringAnsi((IntPtr) (char *) dir);;
 	exists = Directory::Exists(folder);
+	if (log->isDebug()) log->debug(3, "Directory::Exists(%s) returns: %d", dir, exists);
 #endif //#ifndef WINDOWS
+	delete log;
     return exists;
 }
 
 bool checkFileCreation(const char* dir) {
+	Logger* log = getLogger(NULL);
+	if (log->isDebug()) log->debug(3, "checkFileCreation(%s)", dir);
 	char* file = (char*)malloc(strlen(dir) + 10);
 	memset(file, 0, strlen(dir) + 10);
 	strcat(file, dir);
-	if (!endsWith(dir, "/")) {
-		strcat(file, "/file.chk");
-	} else {
-		strcat(file, "file.chk");
+	if (!endsWith(dir, FILESEPARATOR)) {
+		strcat(file, FILESEPARATOR);
 	}
+	strcat(file, "file.chk");
 
 	FILE* f = fopen(file, "w");
 	bool result = true;
 	if (f == NULL) {
 		char* error = strerror(errno);
 		setLastError(errno, error);
-		
+		if (log->isDebug()) log->debug(3, "the file cannot be opened at: %s ,due to: %s ", dir, error);
 		result = false;
 	}
 	if (f != NULL) {
@@ -172,6 +177,7 @@ bool checkFileCreation(const char* dir) {
 	}
 
 	removeFile(file);
+	delete log;
 	return result;
 }
 
@@ -185,7 +191,8 @@ bool removeFile(const char* file) {
 }
 
 bool makeDir(const char* dir) {
-
+	Logger* logger = getLogger(NULL);
+	if (logger->isDebug()) logger->debug(3, "makeDir(%s)", dir);
 	std::vector<std::string> dirs = split(dir, FILESEPARATOR);
 	std::stringstream ss;
 
@@ -205,7 +212,6 @@ bool makeDir(const char* dir) {
 			int res = _mkdir(currentdir.c_str());
 #endif
 			if (res < 0) {
-				Logger* logger = getLogger(NULL);
 				char* error = strerror(errno);
 				logger->error("An error ocurred creating the directory %s. Error: %s", dir, error);
 				delete logger;
@@ -213,5 +219,6 @@ bool makeDir(const char* dir) {
 			}
 		}
 	}
+	delete logger;
 	return true;
 }

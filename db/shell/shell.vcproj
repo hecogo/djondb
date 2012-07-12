@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\bson\Debug;c:\workspace\personal\djondb\db\third_party\libs;C:\workspace\djondb\db\libs;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug;..\windows\libs"
+				AdditionalLibraryDirectories="../windows/libs;../third_party/libs/$(ConfigurationName)"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -136,7 +136,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\bson\Debug;c:\workspace\personal\djondb\db\third_party\libs;C:\workspace\djondb\db\libs;..\network\Debug;&quot;C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib&quot;;..\driverbase\Debug;..\windows\Debug;..\windows\libs"
+				AdditionalLibraryDirectories="../windows/libs;../third_party/libs/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -170,6 +170,10 @@
 		<ProjectReference
 			ReferencedProjectIdentifier="{8D4F581B-05E3-41D3-8EF3-DF77FE97E40B}"
 			RelativePathToProject="..\driverbase\driverbase.vcproj"
+		/>
+		<ProjectReference
+			ReferencedProjectIdentifier="{C5EB45F0-68D0-426D-A04A-47439917D92F}"
+			RelativePathToProject="..\util\util.vcproj"
 		/>
 	</References>
 	<Files>
