@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="shell"
 	ProjectGUID="{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}"
 	RootNamespace="shell"
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="c:\workspace\personal\djondb\db\third_party\includes;C:\development\pthreads.2;..\util;C:\development\boost;..\bson;..\driverbase"
+				AdditionalIncludeDirectories="..\third_party\includes;..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../windows/libs;../third_party/libs/$(ConfigurationName)"
+				AdditionalLibraryDirectories="../windows/libs;../third_party/libs;../third_party/libs/$(ConfigurationName)"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="c:\workspace\personal\djondb\db\third_party\includes;C:\development\pthreads.2;..\util;C:\development\boost;..\bson;..\driverbase"
+				AdditionalIncludeDirectories="..\third_party\includes;..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -136,7 +136,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../windows/libs;../third_party/libs/$(ConfigurationName)"
+				AdditionalLibraryDirectories="../windows/libs;../third_party/libs;../third_party/libs/$(ConfigurationName)"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

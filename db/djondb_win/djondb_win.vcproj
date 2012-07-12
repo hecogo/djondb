@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9.00"
+	Version="9,00"
 	Name="djondb_win"
 	ProjectGUID="{6CE5F68C-E601-4021-9E44-5A0575BC87D2}"
 	RootNamespace="djondb_win"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="pthreadVC2.lib Rpcrt4.lib Ws2_32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../windows/libs;../windows/libs/x86"
+				AdditionalLibraryDirectories="../windows/libs;../windows/libs/x86;../third_party/libs"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -138,7 +138,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="pthreadVC2.lib Rpcrt4.lib Ws2_32.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../windows/lib"
+				AdditionalLibraryDirectories="../windows/libs;../windows/libs/x86;../third_party/libs"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
