@@ -101,7 +101,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost;..\windows\includes"
+				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost;..\third_party\includes;..\windows\includes"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -155,6 +155,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\filtergrammar\filterLexer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\filtergrammar\filterParser.h"
+				>
+			</File>
+			<File
 				RelativePath=".\filterparser.h"
 				>
 			</File>
@@ -203,6 +211,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\filtergrammar\filterLexer.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\filtergrammar\filterParser.c"
+				>
+			</File>
+			<File
 				RelativePath=".\filterparser.cpp"
 				>
 			</File>
@@ -223,6 +239,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\..\..\filtergrammar\filter.tokens"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
