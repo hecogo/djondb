@@ -24,7 +24,7 @@ filter_expr returns [char* val]
 	: boolean_expr (OR boolean_expr)* (AND boolean_expr)* {
 	};
 
-boolean_expr returns [char*]
+boolean_expr returns [char* val]
 	: (LPAREN NOT? binary_expr | unary_expr RPAREN) |
 	(NOT? binary_expr | unary_expr);
 	

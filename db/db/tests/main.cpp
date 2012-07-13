@@ -38,6 +38,11 @@
 #include "indexfactory.h"
 #include "math.h"
 #include <cpptest.h>
+#include "filter_expressionLexer.h"
+#include "filter_expressionParser.h"
+
+#include    <antlr3treeparser.h>
+#include    <antlr3defs.h>
 
 using namespace std;
 
@@ -479,6 +484,29 @@ class TestDBSuite: public Test::Suite
 			}
 		}
 
+		void testAntlrParser() {
+			pANTLR3_INPUT_STREAM           input;
+			pfilter_expressionLexer               lex;
+			pANTLR3_COMMON_TOKEN_STREAM    tokens;
+			pfilter_expressionParser              parser;
+
+			char* filter = "a == 1";
+			input  = antlr3StringStreamNew          ((pANTLR3_UINT8)filter, 4, strlen(filter), "name");
+			lex    = filter_expressionLexerNew                (input);
+			tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
+			parser = filter_expressionParserNew               (tokens);
+
+			parser ->start_point(parser);
+
+			// Must manually clean up
+			//
+			parser ->free(parser);
+			tokens ->free(tokens);
+			lex    ->free(lex);
+			input  ->close(input);
+
+		}
+
 		void testFinds()
 		{
 			cout << "\ntestFinds" << endl;
@@ -764,7 +792,7 @@ class TestDBSuite: public Test::Suite
 			BSONObj filter;
 
 			std::vector<BSONObj*>* finds = controller.find("dbtest", "ns.drop", filter);
-			
+
 			TEST_ASSERT(finds->size() == 0);
 
 			delete finds;
