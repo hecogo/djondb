@@ -8,6 +8,8 @@ options {
 //#include <stdlib.h>
    #include <stdlib.h>
    #include <stdio.h>
+   #include "filterparser.h"
+   
 }
 @postinclude
  {
@@ -20,29 +22,29 @@ start_point returns [void* val]
 	{
 	};
 	
-filter_expr returns [char* val]
+filter_expr returns [BaseExpression* val]
 	: boolean_expr (OR boolean_expr)* (AND boolean_expr)* {
 	};
 
-boolean_expr returns [char* val]
+boolean_expr returns [BaseExpression* val]
 	: (LPAREN NOT? binary_expr | unary_expr RPAREN) |
 	(NOT? binary_expr | unary_expr);
 	
-binary_expr returns [char* val]
+binary_expr returns [BaseExpression* val]
 	: (LPAREN (unary_expr) operand_expr (unary_expr) RPAREN) |
 	  ((unary_expr) operand_expr (unary_expr));
 	
-unary_expr returns [char* val]
+unary_expr returns [BaseExpression* val]
 	: (constant_expr | xpath_expr);
 	
-xpath_expr returns [char* val]
+xpath_expr returns [BaseExpression* val]
 	: XPATH {
 	};
 
-constant_expr returns [char* val]
+constant_expr returns [BaseExpression* val]
 	: INT | STRING;
 
-operand_expr returns [char* val]
+operand_expr returns [BaseExpression* val]
 	: OPER;
 	
 NOT	:	'not';

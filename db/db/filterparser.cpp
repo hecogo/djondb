@@ -27,6 +27,11 @@
 #include "filterparser.h"
 #include <string.h>
 #include "util.h"
+#include "baseexpression.h"
+#include "constantexpression.h"
+#include "unaryexpression.h"
+#include "simpleexpression.h"
+#include "binaryexpression.h"
 
 BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::iterator& i);
 const int BUFFER_SIZE = 1024;
@@ -185,10 +190,10 @@ BaseExpression* solveToken(Token* token) {
 	}
 	switch (extype) {
 		case ET_CONSTANT:
-			result = new ConstantExpression(*token->content());
+			result = new ConstantExpression(token->content()->c_str());
 			break;
 		case ET_SIMPLE: 
-			result = new SimpleExpression(*token->content());
+			result = new SimpleExpression(token->content()->c_str());
 			break;
 		case ET_BINARY:
 			result = new BinaryExpression(oper);

@@ -22,12 +22,12 @@
 // charge yourself if you want), bare in mind that you will be required to provide a copy of the license terms that ensures
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
-
+#include "simpleexpression.h"
 
 #include "filterparser.h"
 #include "bson.h"
 
-SimpleExpression::SimpleExpression(const std::string& expression)
+SimpleExpression::SimpleExpression(const char* expression)
 	:BaseExpression(ET_SIMPLE)
 {
 	_expression = expression;
@@ -43,7 +43,7 @@ SimpleExpression::~SimpleExpression() {
 }
 
 ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
-	std::string expression = _expression.substr(2, _expression.length() - 3);
+	std::string expression = std::string(_expression).substr(2, strlen(_expression) - 3);
 	BSONContent content = bson.getXpath(expression);
 
 	ExpressionResult::RESULT_TYPE type;

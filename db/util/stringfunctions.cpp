@@ -35,6 +35,10 @@ char* strcpy(char* str, int len) {
     return result;
 }
 
+const char* strcpy(const char* str, int len) {
+	return const_cast<const char*>(strcpy(const_cast<char*>(str), len));
+}
+
 bool endsWith(char* source, char* check) {
     if (strlen(source) < strlen(check)) {
         return false;

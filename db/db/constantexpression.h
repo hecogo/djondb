@@ -1,10 +1,10 @@
 // =====================================================================================
-//  Filename:  unaryexpression.cpp
+//  Filename:  constantexpression.h
 // 
-//  Description:  
+//  Description:  <F7>
 // 
 //  Version:  1.0
-//  Created:  04/24/2012 10:42:18 AM
+//  Created:  07/17/2012 08:43:09 AM
 //  Revision:  none
 //  Compiler:  gcc
 // 
@@ -22,53 +22,28 @@
 // charge yourself if you want), bare in mind that you will be required to provide a copy of the license terms that ensures
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
+#ifndef CONSTANTEXPRESSION_INCLUDE_H
+#define CONSTANTEXPRESSION_INCLUDE_H
 
-#include "filterparser.h"
-#include "unaryexpression.h"
+#include "filterdefs.h"
+#include "baseexpression.h"
+#include "expressionresult.h"
 
-UnaryExpression::UnaryExpression(FILTER_OPERATORS oper)
-	:BaseExpression(ET_UNARY)
-{
-	_expression = NULL;
-	_oper = oper;
-}
+class ConstantExpression: public BaseExpression {
+	public:
+		ConstantExpression(const char* expression);
+		ConstantExpression(const ConstantExpression& orig);
+		virtual ~ConstantExpression();
 
-UnaryExpression::UnaryExpression(const UnaryExpression& orig)
-	:BaseExpression(ET_UNARY)
-{
-	if (orig._expression != NULL) {
-		this->_expression = _expression->copyExpression();
-	}
-}
+		virtual ExpressionResult* eval(const BSONObj& bson);
+		virtual BaseExpression* copyExpression();
+	private:
+		const char* _expression;
+		ExpressionResult* _value;
 
-UnaryExpression::~UnaryExpression() {
-	if (_expression) delete _expression;
-}
+	private:
+		void parseConstantExpression();
+};
 
-ExpressionResult* UnaryExpression::eval(const BSONObj& bson) {
-/* /
-	switch (_oper) {
-		case FO_PARENTESIS:
-			return _expression->eval(bson);
-	}
-*/
-	return NULL;
-}
 
-BaseExpression* UnaryExpression::copyExpression() {
-	UnaryExpression* result = new UnaryExpression(_oper);
-	if (_expression != NULL) {
-		result->push(_expression);
-	}
-	return result;
-}
-
-void UnaryExpression::push(BaseExpression* expression) {
-
-	if (_expression == NULL) {
-		_expression = expression;
-	} else {
-		// ERROR
-	}
-}
-
+#endif // CONSTANTEXPRESSION_INCLUDE_H

@@ -23,7 +23,9 @@
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
 
+#include "binaryexpression.h"
 #include "filterparser.h"
+#include <string>
 #include <string.h>
 #include <memory>
 

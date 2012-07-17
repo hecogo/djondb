@@ -26,6 +26,7 @@
 #include "bsonoutputstream.h"
 #include "bsoninputstream.h"
 #include "filterparser.h"
+#include "baseexpression.h"
 
 #include "cachemanager.h"
 #include "indexfactory.h"
@@ -513,7 +514,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
 
 	BSONInputStream* bis = new BSONInputStream(fis);
 
-	FilterParser* parser = FilterParser::parse(std::string(filter));
+	FilterParser* parser = FilterParser::parse(filter);
 
 	BSONObj* bsonResult = NULL;
 	while (!fis->eof()) {
@@ -553,7 +554,7 @@ std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const char
 
 	BSONInputStream* bis = new BSONInputStream(fis);
 
-	FilterParser* parser = FilterParser::parse(std::string(filter));
+	FilterParser* parser = FilterParser::parse(filter);
 
 	while (!fis->eof()) {
 		BSONObj* obj = bis->readBSON();

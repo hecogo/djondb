@@ -491,7 +491,7 @@ class TestDBSuite: public Test::Suite
 			pfilter_expressionParser              parser;
 
 			char* filter = "a == 1";
-			input  = antlr3StringStreamNew          ((pANTLR3_UINT8)filter, 4, strlen(filter), "name");
+			input  = antlr3NewAsciiStringInPlaceStream((pANTLR3_UINT8)filter, (ANTLR3_INT8)strlen(filter), (pANTLR3_UINT8)"name");
 			lex    = filter_expressionLexerNew                (input);
 			tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
 			parser = filter_expressionParserNew               (tokens);

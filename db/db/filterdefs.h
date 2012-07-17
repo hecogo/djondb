@@ -1,10 +1,10 @@
 // =====================================================================================
-//  Filename:  unaryexpression.cpp
+//  Filename:  filterdefs.h
 // 
 //  Description:  
 // 
 //  Version:  1.0
-//  Created:  04/24/2012 10:42:18 AM
+//  Created:  07/17/2012 08:44:23 AM
 //  Revision:  none
 //  Compiler:  gcc
 // 
@@ -22,53 +22,30 @@
 // charge yourself if you want), bare in mind that you will be required to provide a copy of the license terms that ensures
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
+#ifndef FILTERDEFS_INCLUDED_H
+#define FILTERDEFS_INCLUDED_H
 
-#include "filterparser.h"
-#include "unaryexpression.h"
+enum FILTER_OPERATORS {
+	FO_NOTOPERATOR,
+	FO_TOKEN,
+	FO_AND,
+	FO_OR,
+	FO_EQUALS,
+	FO_NOT_EQUALS,
+	FO_PARENTESIS_OPEN,
+	FO_PARENTESIS_CLOSE,
+	FO_NOT,
+	FO_LESSTHAN,
+   FO_LESSEQUALTHAN,
+	FO_GREATERTHAN,
+	FO_GREATEREQUALTHAN
+};
 
-UnaryExpression::UnaryExpression(FILTER_OPERATORS oper)
-	:BaseExpression(ET_UNARY)
-{
-	_expression = NULL;
-	_oper = oper;
-}
+enum EXPRESSION_TYPE {
+	ET_CONSTANT,
+	ET_SIMPLE,
+	ET_BINARY,
+	ET_UNARY
+};
 
-UnaryExpression::UnaryExpression(const UnaryExpression& orig)
-	:BaseExpression(ET_UNARY)
-{
-	if (orig._expression != NULL) {
-		this->_expression = _expression->copyExpression();
-	}
-}
-
-UnaryExpression::~UnaryExpression() {
-	if (_expression) delete _expression;
-}
-
-ExpressionResult* UnaryExpression::eval(const BSONObj& bson) {
-/* /
-	switch (_oper) {
-		case FO_PARENTESIS:
-			return _expression->eval(bson);
-	}
-*/
-	return NULL;
-}
-
-BaseExpression* UnaryExpression::copyExpression() {
-	UnaryExpression* result = new UnaryExpression(_oper);
-	if (_expression != NULL) {
-		result->push(_expression);
-	}
-	return result;
-}
-
-void UnaryExpression::push(BaseExpression* expression) {
-
-	if (_expression == NULL) {
-		_expression = expression;
-	} else {
-		// ERROR
-	}
-}
-
+#endif // FILTERDEFS_INCLUDED_H

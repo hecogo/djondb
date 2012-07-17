@@ -1,10 +1,10 @@
 // =====================================================================================
-//  Filename:  unaryexpression.cpp
+//  Filename:  expressionresult.h
 // 
 //  Description:  
 // 
 //  Version:  1.0
-//  Created:  04/24/2012 10:42:18 AM
+//  Created:  07/17/2012 08:45:15 AM
 //  Revision:  none
 //  Compiler:  gcc
 // 
@@ -22,53 +22,30 @@
 // charge yourself if you want), bare in mind that you will be required to provide a copy of the license terms that ensures
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
+#ifndef EXPRESSIONRESULT_INCLUDED_H
+#define EXPRESSIONRESULT_INCLUDED_H
 
-#include "filterparser.h"
-#include "unaryexpression.h"
+class ExpressionResult {
+	public: 
+		enum RESULT_TYPE {
+			RT_INT,
+			RT_DOUBLE,
+			RT_BOOLEAN,
+			RT_STRINGDB,
+			RT_BSON,
+			RT_NULL
+		};
+	public:
+		ExpressionResult(RESULT_TYPE type, void* value);
+		ExpressionResult(const ExpressionResult& orig);
+		~ExpressionResult();
 
-UnaryExpression::UnaryExpression(FILTER_OPERATORS oper)
-	:BaseExpression(ET_UNARY)
-{
-	_expression = NULL;
-	_oper = oper;
-}
+		RESULT_TYPE type();
+		void* value();
 
-UnaryExpression::UnaryExpression(const UnaryExpression& orig)
-	:BaseExpression(ET_UNARY)
-{
-	if (orig._expression != NULL) {
-		this->_expression = _expression->copyExpression();
-	}
-}
+	private:
+		void* _value;
+		RESULT_TYPE _type;
+};
 
-UnaryExpression::~UnaryExpression() {
-	if (_expression) delete _expression;
-}
-
-ExpressionResult* UnaryExpression::eval(const BSONObj& bson) {
-/* /
-	switch (_oper) {
-		case FO_PARENTESIS:
-			return _expression->eval(bson);
-	}
-*/
-	return NULL;
-}
-
-BaseExpression* UnaryExpression::copyExpression() {
-	UnaryExpression* result = new UnaryExpression(_oper);
-	if (_expression != NULL) {
-		result->push(_expression);
-	}
-	return result;
-}
-
-void UnaryExpression::push(BaseExpression* expression) {
-
-	if (_expression == NULL) {
-		_expression = expression;
-	} else {
-		// ERROR
-	}
-}
-
+#endif // EXPRESSIONRESULT_INCLUDED_H

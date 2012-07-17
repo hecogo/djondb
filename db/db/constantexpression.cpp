@@ -23,12 +23,11 @@
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
 
-
-#include "filterparser.h"
+#include "constantexpression.h"
 #include "bson.h"
 #include <assert.h>
 
-ConstantExpression::ConstantExpression(const std::string& expression)
+ConstantExpression::ConstantExpression(const char* expression)
 	:BaseExpression(ET_CONSTANT)
 {
 	_expression = expression;
@@ -66,15 +65,15 @@ BaseExpression* ConstantExpression::copyExpression() {
 
 void ConstantExpression::parseConstantExpression() {
 	if (strchr("0123456789.", _expression[0]) != NULL) {
-		if (strchr(_expression.c_str(), '.') != NULL) {
-			double d = atof(_expression.c_str());
+		if (strchr(_expression, '.') != NULL) {
+			double d = atof(_expression);
 			_value = new ExpressionResult(ExpressionResult::RT_DOUBLE, &d);
 		} else {
-			int i = atoi(_expression.c_str());
+			int i = atoi(_expression);
 			_value = new ExpressionResult(ExpressionResult::RT_INT, &i);
 		}
 	} else if ((_expression[0] == '\'') || (_expression[0] == '\"')) {
-		std::string s(_expression.substr(1, _expression.length() - 2));
+		std::string s(std::string(_expression).substr(1, strlen(_expression) - 2));
 		_value = new ExpressionResult(ExpressionResult::RT_STRINGDB, &s);
 	} else {
 		assert(false);
