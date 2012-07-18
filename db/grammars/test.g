@@ -13,10 +13,16 @@ boolean_expr
 	(NOT? (b3=binary_expr 
 	| b4=unary_expr 
 	));
-	
-binary_expr 
-	: (LPAREN (b1=unary_expr) o1=operand_expr (b2=unary_expr) RPAREN) |
-	  ((b3=unary_expr) o2=operand_expr (b4=unary_expr));
+
+binary_expr
+	:	binary_noparent_expr | binary_parent_expr;
+		
+binary_noparent_expr
+	:
+	  (b3=unary_expr ) o2=operand_expr b4=unary_expr;
+
+binary_parent_expr 
+	: (LPAREN binary_expr RPAREN);
 	
 unary_expr 
 	: (c1=constant_expr | x1=xpath_expr);
@@ -24,6 +30,7 @@ unary_expr
 xpath_expr 
 	: XPATH;
 
+	
 constant_expr
 	: (INT
 	 | STRING);
@@ -50,12 +57,6 @@ COMMENT
     |   '/*' ( options {greedy=false;} : . )* '*/' {$channel=HIDDEN;}
     ;
 
-WS  :   ( ' '
-        | '\t'
-        | '\r'
-        | '\n'
-        ) {$channel=HIDDEN;}
-    ;
 
 STRING 		: 	'\"' ( options{ greedy=false; }: (~('\"') | ('\\"')) )* '\"' | '\'' ( options{ greedy=false; }: (~('\'') | ('\\\'')) )* '\'' ;
 
@@ -106,3 +107,9 @@ SEMICOLON
 
 // CHAR:  '\'' ( ESC_SEQ | ~('\''|'\\') ) '\''
 //    ;
+WS  :   ( ' '
+        | '\t'
+        | '\r'
+        | '\n'
+        ) {$channel=HIDDEN;}
+    ;

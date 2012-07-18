@@ -290,33 +290,34 @@ void pushBuffer(std::list<Token*>& tokens, char* buffer, int& posBuffer) {
 
 // static
 FilterParser* FilterParser::parse(const std::string& expression) {
-	//throw (ParseException) {
-	pANTLR3_INPUT_STREAM           input;
-	pfilter_expressionLexer               lex;
-	pANTLR3_COMMON_TOKEN_STREAM    tokens;
-	pfilter_expressionParser              parser;
-
-	char* filter = "a == 1";
-	input  = antlr3NewAsciiStringInPlaceStream((pANTLR3_UINT8)filter, (ANTLR3_INT8)strlen(filter), (pANTLR3_UINT8)"name");
-	lex    = filter_expressionLexerNew                (input);
-	tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
-	parser = filter_expressionParserNew               (tokens);
-
-	BaseExpression* rootExpression = parser ->start_point(parser);
-
-	// Must manually clean up
-	//
-	parser ->free(parser);
-	tokens ->free(tokens);
-	lex    ->free(lex);
-	input  ->close(input);
-	
+	BaseExpression* rootExpression = NULL;
 	std::list<Token*> lTokens;
+	if (expression.length() != 0) {
+		//throw (ParseException) {
+		pANTLR3_INPUT_STREAM           input;
+		pfilter_expressionLexer               lex;
+		pANTLR3_COMMON_TOKEN_STREAM    tokens;
+		pfilter_expressionParser              parser;
 
+		const char* filter = expression.c_str();
+		input  = antlr3NewAsciiStringInPlaceStream((pANTLR3_UINT8)filter, (ANTLR3_INT8)strlen(filter), (pANTLR3_UINT8)"name");
+		lex    = filter_expressionLexerNew                (input);
+		tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
+		parser = filter_expressionParserNew               (tokens);
+
+		rootExpression = parser ->start_point(parser);
+
+		// Must manually clean up
+		//
+		parser ->free(parser);
+		tokens ->free(tokens);
+		lex    ->free(lex);
+		input  ->close(input);
+	}
 	FilterParser* filterparser = new FilterParser(expression, rootExpression, lTokens);
 
 	return filterparser;
-}
+	}
 
 
 

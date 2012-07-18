@@ -170,7 +170,7 @@ class TestDBSuite: public Test::Suite
 
 			BinaryExpression exp7(FO_EQUALS);
 			exp7.push(new SimpleExpression("$'age'"));
-			exp7.push(new ConstantExpression("35"));
+			exp7.push(new ConstantExpression(35));
 			ExpressionResult* result7 = exp7.eval(obj);
 			TEST_ASSERT(result7->type() == ExpressionResult::RT_BOOLEAN);
 			bool* bresult7 = (bool*)result7->value();

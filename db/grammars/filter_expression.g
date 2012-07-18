@@ -29,25 +29,30 @@ start_point returns [BaseExpression* val]
 	};
 	
 filter_expr returns [BaseExpression* val]
-	: b1=boolean_expr (OR b2=boolean_expr)* (AND b3=boolean_expr)* {
-		BaseExpression* expr1 = $b1.val;
-		BaseExpression* result = expr1;
-		if ($b2.val != NULL) {
-		    BaseExpression* expr2 = $b2.val;
-		    BinaryExpression* binary = new BinaryExpression(FO_OR);
-		    binary->push(result);
-		    binary->push(expr2);
-		    result = binary;
-		}
-		if ($b3.val != NULL) {
-		    BaseExpression* expr3 = $b3.val;
-		    BinaryExpression* binary = new BinaryExpression(FO_AND);
-		    binary->push(result);
-		    binary->push(expr3);
-		    result = binary;
-		}
-		val = result;
-	};
+	 @init {
+	 BaseExpression* result = NULL;
+	}
+	@after {
+	   $val = result;
+	}:
+	 b1=boolean_expr {
+	        BaseExpression* expr1 = $b1.val;
+	        result = expr1;
+	}
+	(OR b2=boolean_expr{
+	    BaseExpression* expr2 = $b2.val;
+	    BinaryExpression* binary = new BinaryExpression(FO_OR);
+	    binary->push(result);
+	    binary->push(expr2);
+	    result = binary;
+	})* 
+	 (AND b3=boolean_expr{
+	    BaseExpression* expr3 = $b3.val;
+	    BinaryExpression* binary = new BinaryExpression(FO_AND);
+	    binary->push(result);
+	    binary->push(expr3);
+	    result = binary;
+	})* ;
 
 boolean_expr returns [BaseExpression* val]
 	: 
@@ -61,34 +66,43 @@ boolean_expr returns [BaseExpression* val]
 	));
 	
 binary_expr returns [BaseExpression* val]
-	: (LPAREN (b1=unary_expr) o1=operand_expr (b2=unary_expr) RPAREN) |
-	  ((b3=unary_expr) o2=operand_expr (b4=unary_expr)) {
-	  	FILTER_OPERATORS oper;
-	  	BaseExpression* e1 = NULL;
-	  	BaseExpression* e2 = NULL;
-	  	if ($o1.text != NULL) {
-	  	   oper = parseFilterOperator((char*)$o1.text->chars);
-	  	   e1 = $b1.val;
-	  	   e2 = $b2.val;
-	  	} else if ($o2.text != NULL) {
-	  	   oper = parseFilterOperator((char*)$o2.text->chars);
-	  	   e1 = $b3.val;
-	  	   e2 = $b4.val;
-	  	}
-	  	BinaryExpression* result = new BinaryExpression(oper);
-	  	result->push(e1);
-	  	result->push(e2);
-	  	$val = result;
+	:	binary_noparent_expr 
+	{
+	   $val = $binary_noparent_expr.val;
+	} | binary_parent_expr {
+	   $val = $binary_parent_expr.val;
+	};
+		
+binary_noparent_expr returns [BaseExpression* val]
+@init {
+FILTER_OPERATORS oper;
+BinaryExpression* result = NULL;
+}
+@after {
+   $val = result;
+}
+	:
+	  (b1=unary_expr ) o=operand_expr b2=unary_expr {
+  	      oper = parseFilterOperator((char*)$o.text->chars);
+	      result = new BinaryExpression(oper);
+	      result->push($b1.val);
+	      result->push($b2.val);
 	  };
+
+binary_parent_expr  returns [BaseExpression* val]
+	: (LPAREN binary_expr RPAREN){
+	$val = $binary_expr.val;
+	};
 	
 unary_expr returns [BaseExpression* val]
-	: (c1=constant_expr | x1=xpath_expr) {
-		if ($c1.val != NULL) {
-		   $val = c1;
-		} else {
-		   $val = x1;
-		}
-	};
+	@init {
+	     val = NULL;
+	}
+	: (c1=constant_expr {
+	        $val = c1;
+	} | x1=xpath_expr {
+	        $val = x1;
+	});
 	
 xpath_expr returns [BaseExpression* val]
 	: XPATH {

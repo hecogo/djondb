@@ -31,13 +31,13 @@
 SimpleExpression::SimpleExpression(const char* expression)
 	:BaseExpression(ET_SIMPLE)
 {
-	_expression = expression;
+	_expression = strcpy(expression, strlen(expression));
 }
 
 SimpleExpression::SimpleExpression(const SimpleExpression& orig)
 	:BaseExpression(ET_SIMPLE)
 {
-	_expression = orig._expression;
+	_expression = strcpy(orig._expression, strlen(orig._expression));
 }
 
 SimpleExpression::~SimpleExpression() {
