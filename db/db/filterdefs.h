@@ -24,12 +24,12 @@
 // =====================================================================================
 #ifndef FILTERDEFS_INCLUDED_H
 #define FILTERDEFS_INCLUDED_H
+#include "stringfunctions.h"
 
 enum FILTER_OPERATORS {
-	FO_NOTOPERATOR,
+	FO_NONE,
 	FO_TOKEN,
-	FO_AND,
-	FO_OR,
+	FO_AND, FO_OR,
 	FO_EQUALS,
 	FO_NOT_EQUALS,
 	FO_PARENTESIS_OPEN,
@@ -48,4 +48,5 @@ enum EXPRESSION_TYPE {
 	ET_UNARY
 };
 
+FILTER_OPERATORS parseFilterOperator(const char* text);
 #endif // FILTERDEFS_INCLUDED_H

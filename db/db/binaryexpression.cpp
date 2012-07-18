@@ -24,7 +24,8 @@
 // =====================================================================================
 
 #include "binaryexpression.h"
-#include "filterparser.h"
+
+#include "expressionresult.h"
 #include <string>
 #include <string.h>
 #include <memory>

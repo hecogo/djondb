@@ -32,6 +32,11 @@
 #include "unaryexpression.h"
 #include "simpleexpression.h"
 #include "binaryexpression.h"
+#include "expressionresult.h"
+#include "filter_expressionLexer.h"
+#include "filter_expressionParser.h"
+#include    <antlr3treeparser.h>
+#include    <antlr3defs.h>
 
 BaseExpression* solveExpression(std::list<Token*>& tokens, std::list<Token*>::iterator& i);
 const int BUFFER_SIZE = 1024;
@@ -286,103 +291,31 @@ void pushBuffer(std::list<Token*>& tokens, char* buffer, int& posBuffer) {
 // static
 FilterParser* FilterParser::parse(const std::string& expression) {
 	//throw (ParseException) {
-	try {
-		const char* chrs = expression.c_str();
+	pANTLR3_INPUT_STREAM           input;
+	pfilter_expressionLexer               lex;
+	pANTLR3_COMMON_TOKEN_STREAM    tokens;
+	pfilter_expressionParser              parser;
 
-		char buffer[BUFFER_SIZE];
-		memset(buffer, 0, BUFFER_SIZE);
-		int pos = 0;
-		int posBuffer = 0;
-		int len = strlen(chrs);
+	char* filter = "a == 1";
+	input  = antlr3NewAsciiStringInPlaceStream((pANTLR3_UINT8)filter, (ANTLR3_INT8)strlen(filter), (pANTLR3_UINT8)"name");
+	lex    = filter_expressionLexerNew                (input);
+	tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
+	parser = filter_expressionParserNew               (tokens);
 
-		Token::TOKEN_TYPE token_type = Token::TT_NOTTOKEN;
+	BaseExpression* rootExpression = parser ->start_point(parser);
 
-		BaseExpression* rootExpression = NULL;
-		std::list<Token*> tokens;
-		bool strOpen = false;
-		char startStringChar = '\'';
-		const char* VALID_CHARS = "$abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_";
-		int openParentesis = 0;
-		FILTER_OPERATORS lastOperator;
+	// Must manually clean up
+	//
+	parser ->free(parser);
+	tokens ->free(tokens);
+	lex    ->free(lex);
+	input  ->close(input);
+	
+	std::list<Token*> lTokens;
 
-		while (pos < len) {
-			bool charProcessed = false;
-			while (!strOpen && (chrs[pos] == ' ')) {
-				pos++;
-			}
-			if ((chrs[pos] == '\'') || (chrs[pos] == '\"')) {
-				startStringChar = chrs[pos];
-				bool escaped = false;
-				do {
-					buffer[posBuffer] = chrs[pos];
-					posBuffer++;
-					pos++;
-				} while (chrs[pos] != startStringChar);
-				buffer[posBuffer] = chrs[pos];
-				posBuffer++;
-				Token::TOKEN_TYPE type;
-				if (buffer[0] == '$') {
-					type = Token::TT_EXPRESION;
-				} else {
-					type = Token::TT_CONSTANT;
-				}
-				tokens.push_back(new Token(type, std::string(buffer)));
-				memset(buffer, 0, BUFFER_SIZE);
-				posBuffer = 0;
-				/* 
-					} else if ((!strOpen) && (chrs[pos] == '(')) {
-					pushBuffer(tokens, buffer, posBuffer);
-					tokens.push_back(new Token(Token::TT_OPENPARENTESIS));
-					openParentesis++;
-					charProcessed = true;
-					} else if ((!strOpen) && (chrs[pos] == ')')) {
-					pushBuffer(tokens, buffer, posBuffer);
-					tokens.push_back(new Token(Token::TT_CLOSEPARENTESIS));
-					charProcessed = true;
-					openParentesis--;
-					if (openParentesis < 0) {
-				// ERROR
-				}
-				*/
-			} else if (strchr(VALID_CHARS, chrs[pos]) != NULL) {
-				buffer[posBuffer] = chrs[pos];
-				posBuffer++;
-			} else {
-				pushBuffer(tokens, buffer, posBuffer);
-				Token::TOKEN_TYPE type = checkTokenType(chrs, pos);
-				tokens.push_back(new Token(type, std::string(buffer)));
+	FilterParser* filterparser = new FilterParser(expression, rootExpression, lTokens);
 
-				if (type == Token::TT_OPENPARENTESIS)
-					openParentesis++;
-				else if (type == Token::TT_CLOSEPARENTESIS) {
-					openParentesis--;
-					if (openParentesis < 0) {
-						// ERROR
-					}
-				}
-				memset(buffer, 0, BUFFER_SIZE);
-				posBuffer = 0;
-			}
-
-			pos++;
-		}
-
-		if (strlen(buffer) > 0) {
-			// all the other options has been processed, if the buffer contains something
-			// it should be a constant
-			tokens.push_back(new Token(Token::TT_CONSTANT, buffer));
-		}
-
-		rootExpression = createTree(tokens);
-
-		FilterParser* parser = new FilterParser(expression, rootExpression, tokens);
-
-		return parser;
-	}
-	catch (char* e) {
-		std::string error = "An error ocurred parsing the expression: " + expression + ". Error description: " + e;
-		throw ParseException(ERROR_Parsing, error.c_str());
-	}
+	return filterparser;
 }
 
 

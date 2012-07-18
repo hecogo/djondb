@@ -28,12 +28,14 @@
 #define INCLUDE_FILTERPARSER_H
 
 #include "filterdefs.h"
-#include "baseexpression.h"
-#include "expressionresult.h"
+#include "bson.h"
 #include <string>
 #include <vector>
 #include <list>
 #include <exception>
+
+class BaseExpression;
+class ExpressionResult;
 
 class Token {
 	public:

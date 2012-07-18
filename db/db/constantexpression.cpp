@@ -25,18 +25,40 @@
 
 #include "constantexpression.h"
 #include "bson.h"
+#include "expressionresult.h"
 #include <assert.h>
 
-ConstantExpression::ConstantExpression(const char* expression)
-	:BaseExpression(ET_CONSTANT)
+	ConstantExpression::ConstantExpression(const char* expression)
+:BaseExpression(ET_CONSTANT)
 {
-	_expression = expression;
-	_value = NULL;
-	parseConstantExpression();
+	_expression = new std::string(expression);
+	_intValue = NULL;
+	_doubleValue = NULL;
+	_value = new ExpressionResult(ExpressionResult::RT_STRINGDB, _expression);
 }
 
-ConstantExpression::ConstantExpression(const ConstantExpression& orig)
-	:BaseExpression(ET_CONSTANT)
+	ConstantExpression::ConstantExpression(int expression)
+:BaseExpression(ET_CONSTANT)
+{
+	_expression = NULL;
+	_intValue = new int();
+	*_intValue = expression;
+	_doubleValue = NULL;
+	_value = new ExpressionResult(ExpressionResult::RT_INT, _intValue);
+}
+
+	ConstantExpression::ConstantExpression(double expression)
+:BaseExpression(ET_CONSTANT)
+{
+	_expression = NULL;
+	_intValue = NULL;
+	_doubleValue = new double();
+	*_doubleValue = expression;
+	_value = new ExpressionResult(ExpressionResult::RT_DOUBLE, _doubleValue);
+}
+
+	ConstantExpression::ConstantExpression(const ConstantExpression& orig)
+:BaseExpression(ET_CONSTANT)
 {
 	_expression = orig._expression;
 	if (orig._value) {
@@ -50,6 +72,9 @@ ConstantExpression::~ConstantExpression() {
 	if (_value) {
 		delete _value;
 	}
+	if (_expression != NULL) delete _expression;
+	if (_intValue != NULL) delete _intValue;
+	if (_doubleValue != NULL) delete _doubleValue;
 	_value = NULL;
 }
 
@@ -59,24 +84,15 @@ ExpressionResult* ConstantExpression::eval(const BSONObj& bson) {
 }
 
 BaseExpression* ConstantExpression::copyExpression() {
-	ConstantExpression* result = new ConstantExpression(this->_expression);
+	ConstantExpression* result;
+	if (_expression != NULL) {
+		result = new ConstantExpression(this->_expression->c_str());
+	} else if (_intValue != NULL) {
+		result = new ConstantExpression(*this->_intValue);
+	} else {
+		result = new ConstantExpression(*this->_doubleValue);
+	}
 	return result;
 }
 
-void ConstantExpression::parseConstantExpression() {
-	if (strchr("0123456789.", _expression[0]) != NULL) {
-		if (strchr(_expression, '.') != NULL) {
-			double d = atof(_expression);
-			_value = new ExpressionResult(ExpressionResult::RT_DOUBLE, &d);
-		} else {
-			int i = atoi(_expression);
-			_value = new ExpressionResult(ExpressionResult::RT_INT, &i);
-		}
-	} else if ((_expression[0] == '\'') || (_expression[0] == '\"')) {
-		std::string s(std::string(_expression).substr(1, strlen(_expression) - 2));
-		_value = new ExpressionResult(ExpressionResult::RT_STRINGDB, &s);
-	} else {
-		assert(false);
-	}
-}
 

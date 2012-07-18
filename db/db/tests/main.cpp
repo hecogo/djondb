@@ -40,6 +40,11 @@
 #include <cpptest.h>
 #include "filter_expressionLexer.h"
 #include "filter_expressionParser.h"
+#include "constantexpression.h"
+#include "unaryexpression.h"
+#include "simpleexpression.h"
+#include "binaryexpression.h"
+#include "expressionresult.h"
 
 #include    <antlr3treeparser.h>
 #include    <antlr3defs.h>
@@ -116,20 +121,20 @@ class TestDBSuite: public Test::Suite
 		void testExpressions() {
 			cout << "\ntestExpressions" << endl;
 			BSONObj dummy;
-			ConstantExpression exp("35");
+			ConstantExpression exp(35);
 			ExpressionResult* result = exp.eval(dummy);
 
 			TEST_ASSERT(result->type() == ExpressionResult::RT_INT);
 			int* i = (int*)result->value();
 			TEST_ASSERT(*i == 35);
 
-			ConstantExpression exp2("3.324");
+			ConstantExpression exp2(3.324);
 			ExpressionResult* result2 = exp2.eval(dummy);
 			TEST_ASSERT(result2->type() == ExpressionResult::RT_DOUBLE);
 			double* d = (double*)result2->value();
 			TEST_ASSERT(*d == 3.324);
 
-			ConstantExpression exp3("'Test'");
+			ConstantExpression exp3("Test");
 			ExpressionResult* result3 = exp3.eval(dummy);
 			TEST_ASSERT(result3->type() == ExpressionResult::RT_STRINGDB);
 			std::string* s = (std::string*)result3->value();
@@ -173,7 +178,7 @@ class TestDBSuite: public Test::Suite
 
 			BinaryExpression exp8(FO_GREATERTHAN);
 			exp8.push(new SimpleExpression("$'age'"));
-			exp8.push(new ConstantExpression("30"));
+			exp8.push(new ConstantExpression(30));
 			ExpressionResult* result8 = exp8.eval(obj);
 			TEST_ASSERT(result8->type() == ExpressionResult::RT_BOOLEAN);
 			bool* bresult8 = (bool*)result8->value();

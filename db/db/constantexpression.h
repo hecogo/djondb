@@ -25,20 +25,24 @@
 #ifndef CONSTANTEXPRESSION_INCLUDE_H
 #define CONSTANTEXPRESSION_INCLUDE_H
 
-#include "filterdefs.h"
 #include "baseexpression.h"
-#include "expressionresult.h"
+
+class ExpressionResult;
 
 class ConstantExpression: public BaseExpression {
 	public:
 		ConstantExpression(const char* expression);
+		ConstantExpression(int expression);
+		ConstantExpression(double expression);
 		ConstantExpression(const ConstantExpression& orig);
 		virtual ~ConstantExpression();
 
 		virtual ExpressionResult* eval(const BSONObj& bson);
 		virtual BaseExpression* copyExpression();
 	private:
-		const char* _expression;
+		std::string* _expression;
+		int* _intValue;
+		double* _doubleValue;
 		ExpressionResult* _value;
 
 	private:

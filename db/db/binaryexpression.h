@@ -25,9 +25,9 @@
 #ifndef BINARYEXPRESSION_INCLUDE_H
 #define BINARYEXPRESSION_INCLUDE_H
 
-#include "filterdefs.h"
 #include "baseexpression.h"
-#include "expressionresult.h"
+
+class ExpressionResult;
 
 class BinaryExpression: public BaseExpression {
 	public:

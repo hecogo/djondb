@@ -27,6 +27,7 @@ long countChar(const char* s, const char c);
 std::string concatStrings(const std::string& a, const std::string& b);
 
 std::vector<std::string> splitLines(std::string);
+bool compareInsensitive(const char* text1, const char* text2);
 
 #endif	/* _STRINGFUNCTIONS_H */
 

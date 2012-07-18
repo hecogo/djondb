@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <sstream>
+#include <boost/algorithm/string.hpp>
 
 char* strcpy(std::string str) {
     return strcpy(const_cast<char*>(str.c_str()), str.length());
@@ -197,4 +198,8 @@ std::string concatStrings(const std::string& a, const std::string& b) {
 	std::string result = ss.str();
 
 	return result;
+}
+
+bool compareInsensitive(const char* text1, const char* text2) {
+	return boost::iequals(std::string(text1), std::string(text2));
 }

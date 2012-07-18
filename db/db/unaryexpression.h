@@ -27,7 +27,8 @@
 
 #include "filterdefs.h"
 #include "baseexpression.h"
-#include "expressionresult.h"
+
+class ExpressionResult;
 
 class UnaryExpression: public BaseExpression {
 	public:

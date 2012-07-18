@@ -27,6 +27,7 @@
 #include "bsoninputstream.h"
 #include "filterparser.h"
 #include "baseexpression.h"
+#include "expressionresult.h"
 
 #include "cachemanager.h"
 #include "indexfactory.h"

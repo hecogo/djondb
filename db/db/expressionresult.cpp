@@ -15,6 +15,7 @@
  *
  * =====================================================================================
  */
+#include "expressionresult.h"
 #include "filterparser.h"
 #include "bson.h"
 #include <assert.h>

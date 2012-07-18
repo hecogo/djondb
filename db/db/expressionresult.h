@@ -25,6 +25,8 @@
 #ifndef EXPRESSIONRESULT_INCLUDED_H
 #define EXPRESSIONRESULT_INCLUDED_H
 
+#include "filterdefs.h"
+
 class ExpressionResult {
 	public: 
 		enum RESULT_TYPE {

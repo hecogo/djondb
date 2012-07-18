@@ -25,9 +25,9 @@
 #ifndef SIMPLEEXPRESSION_INCLUDE_H
 #define SIMPLEEXPRESSION_INCLUDE_H
 
-#include "filterdefs.h"
 #include "baseexpression.h"
-#include "expressionresult.h"
+
+class ExpressionResult;
 
 class SimpleExpression: public BaseExpression {
 	public:

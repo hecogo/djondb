@@ -31,8 +31,9 @@ libdjon_db_la_SOURCES = bplusindex.cpp \
 								unaryexpression.h \
 								binaryexpression.h \
 								filterparser.h \
-								filter_expressionLexer.c \
-								filter_expressionParser.c
+								filterdefs.cpp \
+								filter_expressionLexer.cpp \
+								filter_expressionParser.cpp
 
 library_includedir=$(includedir)/djon-db-1.0/djon-db
 #library_include_HEADERS = bson.h

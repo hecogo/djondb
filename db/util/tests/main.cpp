@@ -193,6 +193,11 @@ class TestUtilSuite : public Test::Suite
 			std::string sc2 = "World!";
 			std::string resultconcat = concatStrings(sc1, sc2);
 			TEST_ASSERT(resultconcat.compare("Hello World!") == 0);
+
+			// case insensitive comparation
+			const char* sci1 = "TEst";
+			const char* sci2 = "teSt";
+			TEST_ASSERT(compareInsensitive(sci1, sci2));
 		}
 
 		void testUUID()

@@ -25,10 +25,9 @@
 #define BASEEXPRESSION_INCLUDE_H
 
 #include "filterdefs.h"
-#include "baseexpression.h"
-#include "expressionresult.h"
 
 class BSONObj;
+class ExpressionResult;
 
 class BaseExpression {
 	public:
