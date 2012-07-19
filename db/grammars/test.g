@@ -1,74 +1,48 @@
 grammar test;
 
-start_point 
-        @init{
-	} : filter_expr EOF 
+start_point  : filter_expr EOF
 ;
 	
 filter_expr 
-	 @init {
-	}
-	@after {
-	}:
-	 b1=boolean_expr {
-	}
-	(OR b2=boolean_expr{
-	})* 
-	 (AND b3=boolean_expr{
-	})* ;
+	:
+	boolean_expr ;
 
-boolean_expr
-	: 
-	NOT? b3=binary_expr 
-	{
-	}
-	| b4=unary_expr {
-	};
+boolean_expr 
+	:   (unary_expr  |  binary_expr | comparison_expr);
+	
+
 	
 binary_expr 
-	:	binary_noparent_expr 
-	{
-	} | binary_parent_expr {
-	};
-		
-binary_noparent_expr 
-@init {
-}
-@after {
-}
-	:
-	  (b1=unary_expr ) o=operand_expr b2=unary_expr {
-	  };
-
-binary_parent_expr  
-	: LPAREN binary_expr RPAREN {
-	};
+	: (side_expr ) OPER_BINARY 	(side_expr);
 	
+side_expr
+	: u1=unary_expr | binary_paren_expr | (LPAREN c1=comparison_expr RPAREN);
+	
+binary_paren_expr
+:(LPAREN b2=binary_expr RPAREN
+	 );
+
+comparison_expr 
+	: (LPAREN u1=unary_expr o1=OPER u2=unary_expr RPAREN)
+	| (u3=unary_expr o2=OPER u4=unary_expr );
+		
 unary_expr 
-	@init {
-	}
-	: (c1=constant_expr {
-	} | x1=xpath_expr {
-	});
+	: (c1=constant_expr  | x1=xpath_expr );
 	
 xpath_expr 
-	: XPATH {
-	};
+	: XPATH ;
 
-constant_expr 
-	: (INT
-	{
-	} | STRING{
-	});
+constant_expr returns [BaseExpression* val]
+	: (INT  | STRING);
 
-operand_expr 
+operand_expr returns [BaseExpression* val]
 	: OPER;
 	
 NOT	:	'not';
-AND 	:	 'and';
-OR	:	'or';
 
-OPER	:	('==' | '>' | '>=' | '<' | '<=' | AND | OR);
+OPER	:	('==' | '>' | '>=' | '<' | '<=' );
+OPER_BINARY
+	:	'and' | 'or';
 
 INT :	'0'..'9'+;
 

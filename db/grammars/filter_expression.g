@@ -18,7 +18,6 @@ options {
    
 }
 
-/*
 @postinclude {
 static void displayRecognitionErrorNew  (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames) throw(ParseException)
 { 
@@ -36,81 +35,82 @@ static void displayRecognitionErrorNew  (pANTLR3_BASE_RECOGNIZER recognizer, pAN
 //  RECOGNIZER->antlr3RecognitionExceptionNew = antlr3RecognitionExceptionNewNew;
 //  RECOGNIZER->mismatch                      = mismatchNew;
 }
-*/
 
 start_point returns [BaseExpression* val]
         @init{
-	} : filter_expr EOF 
+	} : filter_expr EOF
 	{
 	    $val = $filter_expr.val;
 	};
 	
 filter_expr returns [BaseExpression* val]
-	 @init {
-	 BaseExpression* result = NULL;
-	}
-	@after {
-	   $val = result;
-	}:
-	 b1=boolean_expr {
-	        BaseExpression* expr1 = $b1.val;
-	        result = expr1;
-	}
-	(OR b2=boolean_expr{
-	    BaseExpression* expr2 = $b2.val;
-	    BinaryExpression* binary = new BinaryExpression(FO_OR);
-	    binary->push(result);
-	    binary->push(expr2);
-	    result = binary;
-	})* 
-	 (AND b3=boolean_expr{
-	    BaseExpression* expr3 = $b3.val;
-	    BinaryExpression* binary = new BinaryExpression(FO_AND);
-	    binary->push(result);
-	    binary->push(expr3);
-	    result = binary;
-	})* ;
+	:
+	boolean_expr {
+	$val = $boolean_expr.val;
+	} ;
 
 boolean_expr returns [BaseExpression* val]
-	: 
-	(NOT? (b3=binary_expr 
-	{
-	    $val = $b3.val;
-	}
-	| b4=unary_expr {
-	    $val = $b4.val;
-	}	
-	));
-	
-binary_expr returns [BaseExpression* val]
-	:	binary_noparent_expr 
-	{
-	   $val = $binary_noparent_expr.val;
-	} | binary_parent_expr {
-	   $val = $binary_parent_expr.val;
+	:  unary_expr {
+	    $val = $unary_expr.val;
+	} | binary_expr {
+	    $val = $binary_expr.val;
+	} | comparison_expr {
+	    $val = $comparison_expr.val;
 	};
-		
-binary_noparent_expr returns [BaseExpression* val]
+	
+
+binary_expr returns [BaseExpression* val]
 @init {
-FILTER_OPERATORS oper;
-BinaryExpression* result = NULL;
+    FILTER_OPERATORS oper = FO_NONE;
+    BaseExpression* left = NULL;
+    BaseExpression* right = NULL;
+    BinaryExpression* result = NULL;
 }
 @after {
-   $val = result;
+    result = new BinaryExpression(oper);
+    result->push(left);
+    result->push(right);
 }
-	:
-	  (b1=unary_expr ) o=operand_expr b2=unary_expr {
-  	      oper = parseFilterOperator((char*)$o.text->chars);
-	      result = new BinaryExpression(oper);
-	      result->push($b1.val);
-	      result->push($b2.val);
-	  };
+	:	(u1=unary_expr{
+	   left = $u1.val;
+	} | (LPAREN b1=binary_expr RPAREN{
+	   left = $b1.val;
+	}) | (LPAREN c1=comparison_expr RPAREN{
+	    left = $c1.val;
+	})) OPER_BINARY {
+	   oper = parseFilterOperator((char*)$OPER_BINARY.text->chars);
+	}(u2=unary_expr{
+	   right = $u2.val;
+	} | (LPAREN b2=binary_expr RPAREN{
+	   right = $b2.val;
+	}) | (LPAREN c2=comparison_expr RPAREN{
+	    right = $c2.val;
+	}));
 
-binary_parent_expr  returns [BaseExpression* val]
-	: LPAREN binary_expr RPAREN {
-	$val = $binary_expr.val;
+comparison_expr returns [BaseExpression* val]
+@init
+{
+FILTER_OPERATORS oper = FO_NONE;
+BinaryExpression* result = NULL;
+}
+@after
+{
+$val = result;
+}
+	: (LPAREN u1=unary_expr o1=OPER u2=unary_expr RPAREN)
+	{
+	   oper = parseFilterOperator((char*)$o1.text->chars);
+	   result = new BinaryExpression(oper);
+	   result->push($u1.val);
+	   result->push($u2.val);
+	}	| (u3=unary_expr o2=OPER u4=unary_expr )
+	{
+	   oper = parseFilterOperator((char*)$o2.text->chars);
+	   result = new BinaryExpression(oper);
+	   result->push($u3.val);
+	   result->push($u4.val);
 	};
-	
+		
 unary_expr returns [BaseExpression* val]
 	@init {
 	     val = NULL;
@@ -147,10 +147,10 @@ operand_expr returns [BaseExpression* val]
 	: OPER;
 	
 NOT	:	'not';
-AND 	:	 'and';
-OR	:	'or';
 
-OPER	:	('==' | '>' | '>=' | '<' | '<=' | AND | OR);
+OPER	:	('==' | '>' | '>=' | '<' | '<=' );
+OPER_BINARY
+	:	'and' | 'or';
 
 INT :	'0'..'9'+;
 
