@@ -49,4 +49,17 @@ enum EXPRESSION_TYPE {
 };
 
 FILTER_OPERATORS parseFilterOperator(const char* text);
+
+class ParseException: public std::exception {
+	public:
+		ParseException(int code, const char* error);
+		ParseException(const ParseException& orig);
+		virtual const char* what() const throw();
+		int errorCode() const;
+
+	private:
+		int _errorCode;
+		const char* _errorMessage;
+};
+
 #endif // FILTERDEFS_INCLUDED_H

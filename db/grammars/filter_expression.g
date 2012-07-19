@@ -6,20 +6,37 @@ options {
 
 @parser::includes {
 //#include <stdlib.h>
-   #include <stdlib.h>
-   #include <stdio.h>
    #include "filterparser.h"
    #include "filterdefs.h"
    #include "constantexpression.h"
    #include "unaryexpression.h"
    #include "simpleexpression.h"
    #include "binaryexpression.h"
+   #include <stdlib.h>
+   #include <stdio.h>
+   #include <strings.h>
    
 }
-@postinclude
- {
- 
+
+/*
+@postinclude {
+static void displayRecognitionErrorNew  (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames) throw(ParseException)
+{ 
+    switch (recognizer->state->exception->type) {
+    	case ANTLR3_UNWANTED_TOKEN_EXCEPTION:
+		break;
+	default:
+		throw ParseException(1, "error");
+    }
+}
  }
+
+@parser::apifuncs {
+  RECOGNIZER->displayRecognitionError       = displayRecognitionErrorNew;
+//  RECOGNIZER->antlr3RecognitionExceptionNew = antlr3RecognitionExceptionNewNew;
+//  RECOGNIZER->mismatch                      = mismatchNew;
+}
+*/
 
 start_point returns [BaseExpression* val]
         @init{
@@ -90,7 +107,7 @@ BinaryExpression* result = NULL;
 	  };
 
 binary_parent_expr  returns [BaseExpression* val]
-	: (LPAREN binary_expr RPAREN){
+	: LPAREN binary_expr RPAREN {
 	$val = $binary_expr.val;
 	};
 	
@@ -117,7 +134,13 @@ constant_expr returns [BaseExpression* val]
 	    int i = atoi((char*)$INT.text->chars);
 	    $val = new ConstantExpression(i);
 	} | STRING{
-	    $val = new ConstantExpression((char*)$STRING.text->chars);
+	    char* ptext = (char*)$STRING.text->chars;
+	    char* text = (char*)malloc(strlen(ptext) - 1);
+	    memset(text, 0, strlen(ptext) - 1);
+	    memcpy(text, ptext + 1, strlen(ptext) - 2);
+	    
+	    $val = new ConstantExpression(text);
+	    free (text);
 	});
 
 operand_expr returns [BaseExpression* val]
@@ -166,7 +189,7 @@ fragment
 ESC_SEQ
     :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
     |   UNICODE_ESC
-    |   OCTAL_ESC
+        |   OCTAL_ESC
     ;
 
 fragment

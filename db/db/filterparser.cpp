@@ -289,9 +289,12 @@ void pushBuffer(std::list<Token*>& tokens, char* buffer, int& posBuffer) {
 }
 
 // static
-FilterParser* FilterParser::parse(const std::string& expression) {
+FilterParser* FilterParser::parse(const std::string& expression) throw(ParseException) {
 	BaseExpression* rootExpression = NULL;
 	std::list<Token*> lTokens;
+
+	int errorCode = -1;
+	const char* errorMessage;
 	if (expression.length() != 0) {
 		//throw (ParseException) {
 		pANTLR3_INPUT_STREAM           input;
@@ -305,7 +308,12 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 		tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
 		parser = filter_expressionParserNew               (tokens);
 
-		rootExpression = parser ->start_point(parser);
+		try {
+			rootExpression = parser ->start_point(parser);
+		} catch (ParseException& e) {
+			errorCode = e.errorCode();
+			errorMessage = e.what();
+		}
 
 		// Must manually clean up
 		//
@@ -313,6 +321,9 @@ FilterParser* FilterParser::parse(const std::string& expression) {
 		tokens ->free(tokens);
 		lex    ->free(lex);
 		input  ->close(input);
+	}
+	if (errorCode > -1) {
+		throw ParseException(errorCode, errorMessage);
 	}
 	FilterParser* filterparser = new FilterParser(expression, rootExpression, lTokens);
 

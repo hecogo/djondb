@@ -217,137 +217,141 @@ class TestDBSuite: public Test::Suite
 
 		void testFilterExpressionParser() {
 			cout << "\ntestFilterExpressionParser" << endl;
-			BSONObj obj;
-			obj.add("age", 35);
-			obj.add("state", 1);
-			obj.add("name", "John");
+			try {
+				BSONObj obj;
+				obj.add("age", 35);
+				obj.add("state", 1);
+				obj.add("name", "John");
 
-			FilterParser* parser = FilterParser::parse("$'age'");
-			ExpressionResult* result = parser->eval(obj);
+				FilterParser* parser = FilterParser::parse("$'age'");
+				ExpressionResult* result = parser->eval(obj);
 
-			TEST_ASSERT(result->type() == ExpressionResult::RT_INT);
-			int* test = (int*)result->value();
+				TEST_ASSERT(result->type() == ExpressionResult::RT_INT);
+				int* test = (int*)result->value();
 
-			TEST_ASSERT(test != NULL);
-			TEST_ASSERT(*test == 35);
+				TEST_ASSERT(test != NULL);
+				TEST_ASSERT(*test == 35);
 
-			delete parser;
+				delete parser;
 
-			parser = FilterParser::parse("");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bool* bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bool* bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("$'age' == 35");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("$'age' == 35");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("($'age' == 35 )");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("($'age' == 35 )");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 1 ))");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 1 ))");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("(($'age' == 36 ) and ($'state' == 1 ))");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(!*bres);
+				parser = FilterParser::parse("(($'age' == 36 ) and ($'state' == 1 ))");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(!*bres);
 
-			parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 2 ))");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(!*bres);
+				parser = FilterParser::parse("(($'age' == 35 ) and ($'state' == 2 ))");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(!*bres);
 
-			parser = FilterParser::parse("(($'age'==35) and ($'state'==1))");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("(($'age'==35) and ($'state'==1))");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("(('John' == $'name') and ($'age'==35))");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("(('John' == $'name') and ($'age'==35))");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("(('John' == $'name') or ($'age'==36))");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("(('John' == $'name') or ($'age'==36))");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("(('Johnny' == $'name') or ($'age'==35))");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("(('Johnny' == $'name') or ($'age'==35))");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("($'age' > 15)");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("($'age' > 15)");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("($'age' < 45)");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("($'age' < 45)");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("($'age' >= 15)");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("($'age' >= 15)");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("($'age' >= 35)");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("($'age' >= 35)");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("($'age' <= 45)");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("($'age' <= 45)");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("($'age' <= 35)");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("($'age' <= 35)");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			parser = FilterParser::parse("($'name' == \"John\")");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(*bres);
+				parser = FilterParser::parse("($'name' == \"John\")");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(*bres);
 
-			// Eval an attribute that does not exist
-			parser = FilterParser::parse("($'nn' == \"John\")");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(!*bres);
-/* 
-			parser = FilterParser::parse("$'name' == \"John\" and $'age' > 25");
-			result = parser->eval(obj);
-			TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
-			bres = (bool*)result->value();
-			TEST_ASSERT(!*bres);
-			*/
+				// Eval an attribute that does not exist
+				parser = FilterParser::parse("($'nn' == \"John\")");
+				result = parser->eval(obj);
+				TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+				bres = (bool*)result->value();
+				TEST_ASSERT(!*bres);
+				/* 
+					parser = FilterParser::parse("$'name' == \"John\" and $'age' > 25");
+					result = parser->eval(obj);
+					TEST_ASSERT(result->type() == ExpressionResult::RT_BOOLEAN);
+					bres = (bool*)result->value();
+					TEST_ASSERT(!*bres);
+					*/
+			} catch (ParseException& e) {
+				TEST_FAIL(e.what());
+			}
 		}
 
 		void testFilterExpressionParserEquals() {

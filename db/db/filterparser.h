@@ -87,33 +87,13 @@ class Token {
 		Token::TOKEN_TYPE _type;
 };
 
-class ParseException: public std::exception {
-	public:
-		ParseException(int code, const char* error) {
-			_errorCode = code;
-			_errorMessage = error;
-		}
-
-		virtual const char* what() const throw() {
-			return _errorMessage;
-		}
-
-		int errorCode() const {
-			return _errorCode;
-		}
-
-	private:
-		int _errorCode;
-		const char* _errorMessage;
-};
-
 class FilterParser {
 	public:
 		FilterParser(const FilterParser& orig);
 		~FilterParser();
 		ExpressionResult* eval(const BSONObj& bson);
 		
-		static FilterParser* parse(const std::string& expression) ;
+		static FilterParser* parse(const std::string& expression) throw(ParseException) ;
 			//throw (ParseException);
 
 	private:
