@@ -38,6 +38,18 @@ using namespace djondb;
 Connection::Connection(std::string host)
 {
 	_host = host;
+	_port = SERVER_PORT;
+	_inputStream = NULL;
+	_outputStream = NULL;
+	_commandWriter = NULL;
+	_open = false;
+	_logger = getLogger(NULL);
+}
+
+Connection::Connection(std::string host, int port)
+{
+	_host = host;
+	_port = port;
 	_inputStream = NULL;
 	_outputStream = NULL;
 	_commandWriter = NULL;
@@ -47,6 +59,7 @@ Connection::Connection(std::string host)
 
 Connection::Connection(const Connection& orig) {
 	this->_host = orig._host;
+	this->_port = orig._port;
 	this->_inputStream = orig._inputStream;
 	this->_open =  orig._open;
 	this->_outputStream = orig._outputStream;
@@ -63,7 +76,7 @@ Connection::~Connection()
 bool Connection::open() {
 	if (_logger->isDebug()) _logger->debug("Openning connection");
 	_outputStream = new NetworkOutputStream();
-	int socket = _outputStream->open(_host.c_str(), 1243);
+	int socket = _outputStream->open(_host.c_str(), _port);
 	if (socket > 0) {
 		_inputStream = new NetworkInputStream(socket);
 		_open = true;

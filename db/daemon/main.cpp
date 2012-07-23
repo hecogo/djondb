@@ -72,11 +72,12 @@ bool __stopRunning;
  **************************************************************************/
 void PrintUsage(int argc, char *argv[]) {
 	if (argc >=1) {
-		printf("Usage: %s -h -nn", argv[0]);
-		printf("  Options:n");
-		printf("      -ntDon't fork off as a daemon.n");
-		printf("      -htShow this help screen.n");
-		printf("n");
+		printf("Usage: %s -h -n -p PORT\n", argv[0]);
+		printf("  Options:\n");
+		printf("      -n\tDon't fork off as a daemon.\n");
+		printf("      -h\tShow this help screen.\n");
+		printf("      -p port\tChange the default port (1243).");
+		printf("\n");
 	}
 }
 
@@ -156,7 +157,7 @@ int main(int argc, char *argv[]) {
 	signal(SIGQUIT, signal_handler);
 
 	int c;
-	while( (c = getopt(argc, argv, "nh|help")) != -1) {
+	while( (c = getopt(argc, argv, "nhp:|help")) != -1) {
 		switch(c){
 			case 'h':
 				PrintUsage(argc, argv);
@@ -165,10 +166,22 @@ int main(int argc, char *argv[]) {
 			case 'n':
 				daemonize = 0;
 				break;
+			case 'p': {
+							 char* port = optarg;
+							 setSetting("SERVER_PORT", port);
+							 break;
+						 }
+			case '?':
+						 if (optopt == 'c') {
+							 PrintUsage(argc, argv);
+							 exit(0);
+							 break;
+						 }
+
 			default:
-				PrintUsage(argc, argv);
-				exit(0);
-				break;
+						 PrintUsage(argc, argv);
+						 exit(0);
+						 break;
 		}
 	}
 
@@ -231,7 +244,7 @@ int main(int argc, char *argv[]) {
 			break;
 		}
 		sleep(1);
-		
+
 		if (!service_running()) {
 			syslog(LOG_INFO, "service down");
 			exit(0);

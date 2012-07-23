@@ -12,7 +12,6 @@
 #include <vector>
 
 char* strcpy(char* str, int len);
-const char* strcpy(const char* str, int len);
 char* strcpy(std::string str);
 bool endsWith(char* source, char* check);
 bool startsWith(const char* source, const char* check);

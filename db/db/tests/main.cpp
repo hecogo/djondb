@@ -422,7 +422,7 @@ class TestDBSuite: public Test::Suite
 			obj.add("char", "test");
 
 			BSONObj inner;
-			inner.add("int", 2);
+			inner.add("int", 200000);
 			inner.add("char", "testInner");
 			obj.add("inner", inner);
 
@@ -430,16 +430,18 @@ class TestDBSuite: public Test::Suite
 
 			std::vector<BSONObj*>* array = controller.find("dbtest", "sp1.customercomplex", "$'int' == 1");
 			TEST_ASSERT(array->size() == 1);
-			BSONObj* res = *array->begin();
-			TEST_ASSERT(res != NULL);
-			TEST_ASSERT(res->has("_id"));
-			TEST_ASSERT(res->getBSON("inner") != NULL);
-			BSONObj* innerRes = res->getBSON("inner");
-			TEST_ASSERT(innerRes != NULL);
-			TEST_ASSERT(innerRes->has("int"));
-			TEST_ASSERT(*innerRes->getInt("int") == 2);
+			if (array->size() == 1) {
+				BSONObj* res = *array->begin();
+				TEST_ASSERT(res != NULL);
+				TEST_ASSERT(res->has("_id"));
+				TEST_ASSERT(res->getBSON("inner") != NULL);
+				BSONObj* innerRes = res->getBSON("inner");
+				TEST_ASSERT(innerRes != NULL);
+				TEST_ASSERT(innerRes->has("int"));
+				TEST_ASSERT(*innerRes->getInt("int") == 200000);
+				delete res;
+			}
 			delete array;
-			delete res;
 		}
 
 		void testMassiveInsert()

@@ -252,7 +252,7 @@ v8::Handle<v8::Value> insert(const v8::Arguments& args) {
 	}
 
 	if (__djonConnection == NULL) {
-		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server, [port])"));
 	}
 	__djonConnection->insert(db, ns, json);
 
@@ -267,7 +267,7 @@ v8::Handle<v8::Value> shutdown(const v8::Arguments& args) {
 	v8::HandleScope handle_scope;
 
 	if (__djonConnection == NULL) {
-		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server, [port])"));
 	}
 	__djonConnection->shutdown();
 
@@ -286,7 +286,7 @@ v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args) {
 	std::string ns = ToCString(str);
 
 	if (__djonConnection == NULL) {
-		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server, [port])"));
 	}
 	bool result = __djonConnection->dropNamespace(db, ns);
 
@@ -306,7 +306,7 @@ v8::Handle<v8::Value> showDbs(const v8::Arguments& args) {
 	v8::HandleScope handle_scope;
 
 	if (__djonConnection == NULL) {
-		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server, [port])"));
 	}
 	std::vector<std::string>* dbs = __djonConnection->dbs();
 
@@ -331,7 +331,7 @@ v8::Handle<v8::Value> showNamespaces(const v8::Arguments& args) {
 	std::string db = ToCString(strDB);
 
 	if (__djonConnection == NULL) {
-		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server, [port])"));
 	}
 	std::vector<std::string>* ns = __djonConnection->namespaces(db);
 
@@ -351,7 +351,7 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 		v8::String::Utf8Value str(args[0]);
 		std::string cmd = ToCString(str);
 	} else {
-		printf("connect('hostname')\n\tEstablish a connection with a server.\n");
+		printf("connect('hostname', [port])\n\tEstablish a connection with a server.\n");
 		printf("dropNamespace('db', 'namespace');\n\tDrops a namespace from the db.\n");
 		printf("find('db', 'namespace'[, 'filter']);\n\tExecutes a find using the provided filter.\n");
 		printf("help();\n\tThis help\n");
@@ -375,7 +375,7 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	}
 
 	if (__djonConnection == NULL) {
-		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server)"));
+		return v8::ThrowException(v8::String::New("You're not connected to any db, please use: connect(server, [port])"));
 	}
 	v8::HandleScope handle_scope;
 	v8::String::Utf8Value strDB(args[0]);
@@ -435,7 +435,7 @@ v8::Handle<v8::Value> fuuid(const v8::Arguments& args) {
 
 v8::Handle<v8::Value> connect(const v8::Arguments& args) {
 	if (args.Length() < 1) {
-		return v8::ThrowException(v8::String::New("usage: connect(server)\n"));
+		return v8::ThrowException(v8::String::New("usage: connect(server, [port])\n"));
 	}
 
 	v8::HandleScope handle_scope;
@@ -444,7 +444,11 @@ v8::Handle<v8::Value> connect(const v8::Arguments& args) {
 	if (__djonConnection != NULL) {
 		__djonConnection->close();
 	}
-	__djonConnection = ConnectionManager::getConnection(server);
+	int port = SERVER_PORT;
+	if (args.Length() == 2) {
+		port = args[1]->Int32Value();	
+	}
+	__djonConnection = ConnectionManager::getConnection(server, port);
 	if (__djonConnection->open()) {
 		printf("Connected to %s\n", server.c_str());
 	} else {

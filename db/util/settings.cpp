@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include "fileutil.h"
 #include "stringfunctions.h" 
+#include <map>
 
 std::map<std::string, std::string> __settingsValues;
 bool __settingsLoaded;
@@ -39,15 +40,19 @@ void readSettings() {
 #else
 	char* ccont = readFile("djondb.conf");
 #endif
-   std::string content = std::string(ccont);
+	std::string content = std::string(ccont);
 
 	std::vector<std::string> lines = splitLines(content);
 	for (std::vector<std::string>::const_iterator i = lines.begin(); i != lines.end(); i++) {
-		std::vector<std::string> vals = split(*i, "=");
-		std::string key = vals[0];
-		std::string value = vals[1];
+		std::string line = *i;
+		// omit the parameter if the line is commented
+		if (!startsWith(line.c_str(), (char*)"#")) {
+			std::vector<std::string> vals = split(line, "=");
+			std::string key = vals[0];
+			std::string value = vals[1];
 
-	   __settingsValues.insert(std::pair<std::string, std::string>(key, value));
+			__settingsValues.insert(std::pair<std::string, std::string>(key, value));
+		}
 	}
 	__settingsLoaded = true;
 	free(ccont);
@@ -65,4 +70,13 @@ std::string getSetting(std::string key) {
 	} else {
 		return "";
 	}
+}
+
+void setSetting(std::string key, std::string value) {
+	if (__settingsLoaded == false) {
+		readSettings();
+	}
+
+	// This will override the settings file with the new value
+	__settingsValues.insert(std::pair<std::string, std::string>(key, value));
 }

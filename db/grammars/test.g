@@ -1,48 +1,50 @@
 grammar test;
 
-start_point  : filter_expr EOF
-;
+start_point 
+        : filter_expr EOF
+	;
 	
 filter_expr 
 	:
 	boolean_expr ;
 
-boolean_expr 
-	:   (unary_expr  |  binary_expr | comparison_expr);
-	
+/*complex_expr
+	:	(boolean_expr | (LPAREN boolean_expr RPAREN)) (OPER (boolean_expr | (LPAREN boolean_expr RPAREN)))*;
+*/	
+boolean_expr
+	:	boolean_term (OR boolean_term)*;
 
+boolean_term
+	:	boolean_value (AND boolean_value)*;
 	
-binary_expr 
-	: (side_expr ) OPER_BINARY 	(side_expr);
+boolean_value
+	:	parenthesized_boolean |
+	nonparentherized_boolean;	
 	
-side_expr
-	: u1=unary_expr | binary_paren_expr | (LPAREN c1=comparison_expr RPAREN);
+parenthesized_boolean
+	: LPAREN boolean_expr RPAREN;
 	
-binary_paren_expr
-:(LPAREN b2=binary_expr RPAREN
-	 );
-
-comparison_expr 
-	: (LPAREN u1=unary_expr o1=OPER u2=unary_expr RPAREN)
-	| (u3=unary_expr o2=OPER u4=unary_expr );
+nonparentherized_boolean: unary_expr ( OPER unary_expr)*;
 		
 unary_expr 
-	: (c1=constant_expr  | x1=xpath_expr );
+	 
+	: (x1=xpath_expr  | c1=constant_expr );
 	
 xpath_expr 
 	: XPATH ;
 
-constant_expr returns [BaseExpression* val]
-	: (INT  | STRING);
+constant_expr 
+	: (INT
+	 | STRING);
 
-operand_expr returns [BaseExpression* val]
+operand_expr 
 	: OPER;
 	
 NOT	:	'not';
+AND	:	'and';
+OR	:	'or';
 
-OPER	:	('==' | '>' | '>=' | '<' | '<=' );
-OPER_BINARY
-	:	'and' | 'or';
+OPER	:	('==' | '>' | '>=' | '<' | '<=');
 
 INT :	'0'..'9'+;
 

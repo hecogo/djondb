@@ -31,7 +31,7 @@
 SimpleExpression::SimpleExpression(const char* expression)
 	:BaseExpression(ET_SIMPLE)
 {
-	_expression = strcpy(expression, strlen(expression));
+	_expression = strcpy(const_cast<char*>(expression), strlen(expression));
 }
 
 SimpleExpression::SimpleExpression(const SimpleExpression& orig)
@@ -41,6 +41,7 @@ SimpleExpression::SimpleExpression(const SimpleExpression& orig)
 }
 
 SimpleExpression::~SimpleExpression() {
+	if (_expression != NULL) free(_expression);
 }
 
 ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {

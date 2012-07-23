@@ -50,8 +50,7 @@
 	#define socklen_t int
 #endif
 
-#define SERVER_PORT 1243
-
+int __networkservice_port = SERVER_PORT;
 
 // Just declared to be used later
 void *startSocketListener(void* arg);
@@ -85,7 +84,11 @@ void NetworkService::start() { //throw (NetworkException*) {
     if (running()) {
         throw new NetworkException(new string("The network service is already active. Try stopping it first"));
     }
-    if (log->isInfo()) log->info("Starting network service");
+	std::string serverPort = getSetting("SERVER_PORT");
+	if (serverPort.length() > 0) {
+		__networkservice_port = atoi(serverPort.c_str());
+	}
+    if (log->isInfo()) log->info("Starting network service. port: %d", __networkservice_port);
 
     __dbController = new DBController();
     __dbController->initialize();
@@ -168,9 +171,8 @@ void *startSocketListener(void* arg) {
 	FD_ZERO(&read_fds);
 
 	sockaddr_in addr;
-	int port = SERVER_PORT;
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(port); // the port should be converted to network byte order
+	addr.sin_port = htons(__networkservice_port); // the port should be converted to network byte order
 	addr.sin_addr.s_addr = INADDR_ANY; // Server address, any to take the current ip address of the host
 	int reuse = 1;
 	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *) & reuse, sizeof (reuse)) < 0) {

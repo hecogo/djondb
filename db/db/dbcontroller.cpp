@@ -92,6 +92,7 @@ void DBController::saveDatabases() {
 				fos->writeInt(static_cast<int>(type));
 				StreamType* stream = istream->second;
 				stream->close();
+				delete stream;
 			}
 			delete space.streams;
 		}

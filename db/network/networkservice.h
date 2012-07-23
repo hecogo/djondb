@@ -10,6 +10,8 @@
 
 //#include "network.h"
 
+#define SERVER_PORT 1243
+
 class NetworkService {
 public:
     NetworkService();

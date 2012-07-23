@@ -50,66 +50,73 @@ filter_expr returns [BaseExpression* val]
 	} ;
 
 boolean_expr returns [BaseExpression* val]
-	:  unary_expr {
-	    $val = $unary_expr.val;
-	} | binary_expr {
-	    $val = $binary_expr.val;
-	} | comparison_expr {
-	    $val = $comparison_expr.val;
-	};
-	
-
-binary_expr returns [BaseExpression* val]
 @init {
-    FILTER_OPERATORS oper = FO_NONE;
-    BaseExpression* left = NULL;
-    BaseExpression* right = NULL;
-    BinaryExpression* result = NULL;
+   BaseExpression* result = NULL;
 }
 @after {
-    result = new BinaryExpression(oper);
-    result->push(left);
-    result->push(right);
+   $val = result;
 }
-	:	(u1=unary_expr{
-	   left = $u1.val;
-	} | (LPAREN b1=binary_expr RPAREN{
-	   left = $b1.val;
-	}) | (LPAREN c1=comparison_expr RPAREN{
-	    left = $c1.val;
-	})) OPER_BINARY {
-	   oper = parseFilterOperator((char*)$OPER_BINARY.text->chars);
-	}(u2=unary_expr{
-	   right = $u2.val;
-	} | (LPAREN b2=binary_expr RPAREN{
-	   right = $b2.val;
-	}) | (LPAREN c2=comparison_expr RPAREN{
-	    right = $c2.val;
-	}));
+	:	b1=boolean_term 
+	{
+	   result = $b1.val;
+	}
+	(OR b2=boolean_term {
+	   BinaryExpression* be = new BinaryExpression(FO_OR);
+	   be->push(result);
+	   be->push($b2.val);
+	   result = be;
+	})*;
 
-comparison_expr returns [BaseExpression* val]
-@init
-{
-FILTER_OPERATORS oper = FO_NONE;
-BinaryExpression* result = NULL;
+boolean_term returns [BaseExpression* val]
+@init {
+   BaseExpression* result = NULL;
 }
-@after
-{
-$val = result;
+@after {
+   $val = result;
 }
-	: (LPAREN u1=unary_expr o1=OPER u2=unary_expr RPAREN)
+	:	b1=boolean_value
 	{
-	   oper = parseFilterOperator((char*)$o1.text->chars);
-	   result = new BinaryExpression(oper);
-	   result->push($u1.val);
-	   result->push($u2.val);
-	}	| (u3=unary_expr o2=OPER u4=unary_expr )
-	{
-	   oper = parseFilterOperator((char*)$o2.text->chars);
-	   result = new BinaryExpression(oper);
-	   result->push($u3.val);
-	   result->push($u4.val);
-	};
+	   result = $b1.val;
+	}
+	 (AND b2=boolean_value
+	 {
+	   BinaryExpression* be = new BinaryExpression(FO_AND);
+	   be->push(result);
+	   be->push($b2.val);
+	   result = be;
+	 })*;
+	
+boolean_value returns [BaseExpression* val]
+	:	parenthesized_boolean {
+	   $val = $parenthesized_boolean.val;
+	} |
+	nonparentherized_boolean{
+	   $val = $nonparentherized_boolean.val;
+	};	
+	
+parenthesized_boolean returns [BaseExpression* val]
+	: LPAREN boolean_expr {
+	   $val = $boolean_expr.val;
+	} RPAREN;
+	
+nonparentherized_boolean returns [BaseExpression* val]
+@init {
+   BaseExpression* result = NULL;
+}
+@after {
+   $val = result;
+}
+	: u1=unary_expr {
+	   result = $u1.val;
+	} ( OPER u2=unary_expr {
+	   FILTER_OPERATORS oper = parseFilterOperator((char*)$OPER.text->chars);
+	   BinaryExpression* be = new BinaryExpression(oper);
+	   be->push(result);
+	   be->push($u2.val);
+	   result = be;
+	})*;
+
+
 		
 unary_expr returns [BaseExpression* val]
 	@init {
@@ -149,8 +156,8 @@ operand_expr returns [BaseExpression* val]
 NOT	:	'not';
 
 OPER	:	('==' | '>' | '>=' | '<' | '<=' );
-OPER_BINARY
-	:	'and' | 'or';
+OR	:	'or';
+AND	:	'and';
 
 INT :	'0'..'9'+;
 

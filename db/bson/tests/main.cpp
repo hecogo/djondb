@@ -221,14 +221,16 @@ class TestBSONSuite : public Test::Suite
 		{
 			cout << "testParserRelation" << endl;
 
-			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: {innertext: 'inner text'}}");
+			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', rel1: {innertext: 'inner text', salary: 150000, rent: 10000}}");
 			TEST_ASSERT(obj->getInt("age") != NULL);
 			TEST_ASSERT(*obj->getInt("age") == 1);
 			TEST_ASSERT(obj->getChars("name") != NULL);
 			TEST_ASSERT(strcmp(obj->getChars("name"), "John") == 0);
 
-			TEST_ASSERT(obj->getDouble("salary") != NULL);
-			TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
+			int salary = obj->getXpath("rel1.salary");
+			TEST_ASSERT(salary == 150000);
+			int rent = obj->getXpath("rel1.rent");
+			TEST_ASSERT(rent == 10000);
 
 			TEST_ASSERT(obj->getBSON("rel1") != NULL);
 			TEST_ASSERT(obj->getBSON("rel1")->getString("innertext").compare("inner text") == 0);

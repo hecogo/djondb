@@ -29,6 +29,7 @@ namespace djondb {
             virtual ~ConnectionManager();
 
             static Connection* getConnection(std::string host);
+            static Connection* getConnection(std::string host, int port);
 
             static void releaseConnection(Connection* conn);
 

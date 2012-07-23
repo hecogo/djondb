@@ -78,7 +78,7 @@ ExpressionResult::ExpressionResult(const ExpressionResult& orig) {
 }
 
 ExpressionResult::~ExpressionResult() {
-	if (_value) {
+	if (_value != NULL) {
 		switch (_type) {
 			case ExpressionResult::RT_INT:
 				delete ((int*)_value);
@@ -91,6 +91,12 @@ ExpressionResult::~ExpressionResult() {
 				break;
 			case ExpressionResult::RT_BSON:
 				delete ((BSONObj*)_value);
+				break;
+			case ExpressionResult::RT_STRINGDB:
+				delete ((std::string*)_value);
+				break;
+			default:
+				assert(false);
 				break;
 		}
 	}

@@ -177,6 +177,7 @@ bool checkFileCreation(const char* dir) {
 	}
 
 	removeFile(file);
+	free (file);
 	delete log;
 	return result;
 }

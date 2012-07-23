@@ -40,6 +40,7 @@ ShowdbsCommand::ShowdbsCommand(const ShowdbsCommand& orig)
 }
 
 ShowdbsCommand::~ShowdbsCommand() {
+  	if (_results != NULL)  delete _results;
 }
 
 void ShowdbsCommand::execute() {
@@ -47,7 +48,14 @@ void ShowdbsCommand::execute() {
 }
 
 void* ShowdbsCommand::result() {
-    return _results;
+	std::vector<std::string>* result = NULL;
+  	if (_results != NULL) {
+		result = new std::vector<std::string>();
+		for (std::vector<std::string>::iterator i = _results->begin(); i != _results->end(); i++) {
+			result->push_back(*i);
+		}
+	}
+  return result;
 }
 
 void ShowdbsCommand::writeCommand(OutputStream* out) const {

@@ -19,6 +19,7 @@
 #include <iostream>
 #include <fileinputstream.h>
 #include <fileoutputstream.h>
+#include <fileinputoutputstream.h>
 #include "bsonoutputstream.h"
 #include "bsoninputstream.h"
 #include "bson.h"
@@ -34,8 +35,8 @@ class TestFileSystemSuite: public Test::Suite
 	public:
 		TestFileSystemSuite()
 		{
-			TEST_ADD(TestFileSystemSuite::testFileOutputStream);
-			TEST_ADD(TestFileSystemSuite::testFileInputStream);
+			TEST_ADD(TestFileSystemSuite::testFileStreams);
+			TEST_ADD(TestFileSystemSuite::testFileInputOutputStreams);
 			TEST_ADD(TestFileSystemSuite::testBSONStreams);
 			TEST_ADD(TestFileSystemSuite::testBSONStreamsComplex);
 			TEST_ADD(TestFileSystemSuite::testBSONStreamsArray);
@@ -43,20 +44,59 @@ class TestFileSystemSuite: public Test::Suite
 		}
 
 	private:
-		void testFileOutputStream()
+		void testFileStreams()
 		{
-			FileOutputStream stream("test.txt", "wb");
-			stream.writeChars("Hello World!", 12);
-			stream.close();
+			FileOutputStream streamo("test.txt", "wb");
+			char* test = (char*)malloc(200001);
+			memset(test, 0, 200001);
+			memset(test, 'a', 200000);
+			streamo.writeChars("Hello World!", 12);
+			streamo.writeShortInt(2);
+			streamo.writeInt(200000);
+			streamo.writeLong(200000L);
+			streamo.writeChars(test, strlen(test));
+			streamo.close();
+
+			FileInputStream streami("test.txt", "rb");
+			char* text = streami.readChars();
+			TEST_ASSERT(strcmp(text, "Hello World!") == 0);
+			int i1 = streami.readShortInt();
+			TEST_ASSERT(i1 == 2);
+			int i2 = streami.readInt();
+			TEST_ASSERT(i2 == 200000);
+			long l = streami.readLong();
+			TEST_ASSERT(l == 200000);
+			char* tchar = streami.readChars();
+			TEST_ASSERT(strcmp(test, tchar) == 0);
+			streami.close();
+			free(test);
 		}
 
-		void testFileInputStream()
+		void testFileInputOutputStreams()
 		{
-			FileInputStream stream("test.txt", "rb");
-			char* text = stream.readChars();
+			FileInputOutputStream streamo("test.txt", "rwb");
+			char* test = (char*)malloc(200001);
+			memset(test, 0, 200001);
+			memset(test, 'a', 200000);
+			streamo.writeChars("Hello World!", 12);
+			streamo.writeShortInt(2);
+			streamo.writeInt(200000);
+			streamo.writeLong(200000L);
+			streamo.writeChars(test, strlen(test));
 
+			streamo.seek(0);
+			char* text = streamo.readChars();
 			TEST_ASSERT(strcmp(text, "Hello World!") == 0);
-			stream.close();
+			int i1 = streamo.readShortInt();
+			TEST_ASSERT(i1 == 2);
+			int i2 = streamo.readInt();
+			TEST_ASSERT(i2 == 200000);
+			long l = streamo.readLong();
+			TEST_ASSERT(l == 200000);
+			char* tchar = streamo.readChars();
+			TEST_ASSERT(strcmp(test, tchar) == 0);
+			streamo.close();
+			free(test);
 		}
 
 		void testBSONStreams()

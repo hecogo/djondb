@@ -100,7 +100,8 @@ ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& op
 
 	if (valLeft->type() != valRight->type()) {
 		// ERROR types does not match
-		return NULL;
+
+		return new ExpressionResult(ExpressionResult::RT_NULL, NULL);
 	}
 
 	bool resultGreather = false; // this will compare only greather than, and at the end will invert

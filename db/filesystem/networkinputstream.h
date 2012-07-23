@@ -18,6 +18,8 @@ class NetworkInputStream : public InputStream
     public:
         virtual unsigned char readChar();
         /* Reads 2 bytes in the input (little endian order) */
+        virtual short int readShortInt ();
+        /* Reads 4 bytes in the input (little endian order) */
         virtual int readInt ();
         /* Reads 4 bytes in the input (little endian order) */
         virtual long readLong ();

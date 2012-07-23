@@ -29,5 +29,6 @@
 #include <string>
 
 std::string getSetting(std::string);
+void setSetting(std::string key, std::string value);
 
 #endif // SETTINGS_H_INCLUDED

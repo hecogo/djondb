@@ -19,6 +19,7 @@
 #include "connectionmanager.h"
 
 #include "connection.h"
+#include <sstream>
 
 #ifdef WINDOWS
 	#include <winsock.h>
@@ -39,7 +40,7 @@ ConnectionManager::~ConnectionManager()
 #endif
 }
 
-Connection* ConnectionManager::getConnection(std::string host) {
+Connection* ConnectionManager::getConnection(std::string host, int port) {
 #ifdef WINDOWS
 	if (!__initialized) {
 		WORD wVersionRequested;
@@ -58,7 +59,10 @@ Connection* ConnectionManager::getConnection(std::string host) {
 		__initialized = true;
 	}
 #endif
-    std::map<std::string, ConnectionReference>::iterator i = _connections.find(host);
+	std::stringstream ss;
+	ss << host << "_" << port;
+	std::string shost = ss.str();
+    std::map<std::string, ConnectionReference>::iterator i = _connections.find(shost);
     if (i != _connections.end()) {
         ConnectionReference reference = i->second;
         reference._references++;
@@ -69,12 +73,16 @@ Connection* ConnectionManager::getConnection(std::string host) {
         };
     }
 
-    Connection* conn = new Connection(host);
+    Connection* conn = new Connection(host, port);
     ConnectionReference ref;
     ref._references = 1;
     ref._connection = conn;
     _connections.insert(pair<std::string, ConnectionReference>(host, ref));
     return conn;
+}
+
+Connection* ConnectionManager::getConnection(std::string host) {
+	return getConnection(host, SERVER_PORT);
 }
 
 void ConnectionManager::releaseConnection(Connection* conn) {

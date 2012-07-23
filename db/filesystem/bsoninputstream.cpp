@@ -25,8 +25,8 @@
 
 BSONInputStream::BSONInputStream(InputStream* is)
 {
-    _inputStream = is;
-	 _log = getLogger(NULL);
+	_inputStream = is;
+	_log = getLogger(NULL);
 }
 
 BSONInputStream::~BSONInputStream()
@@ -36,64 +36,99 @@ BSONInputStream::~BSONInputStream()
 
 BSONObj* BSONInputStream::readBSON() const {
 	Logger* log = getLogger(NULL);
-    BSONObj* obj = new BSONObj();
-    int elements = _inputStream->readLong();
-	 if (log->isDebug()) log->debug("BSONInputStream::readBSON elements: %d", elements);
-	 BSONInputStream* bis;
-    for (int x = 0; x < elements; x++) {
-        std::auto_ptr<string> key(_inputStream->readString());
+	BSONObj* obj = new BSONObj();
+	int elements = _inputStream->readLong();
+	if (log->isDebug()) log->debug("BSONInputStream::readBSON elements: %d", elements);
+	BSONInputStream* bis;
+	for (int x = 0; x < elements; x++) {
+		std::auto_ptr<string> key(_inputStream->readString());
 
-	     if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s", key->c_str());
-        int type = _inputStream->readLong();
-        void* data = NULL;
-		  BSONObj* inner;
-        switch (type) {
-            case BSON_TYPE:
-					 inner = readBSON();
-					 obj->add(*key.get(), *inner);
-					 delete inner;
-                break;
-            case INT_TYPE:
-                obj->add(*key.get(), _inputStream->readInt());
-                break;
-            case LONG_TYPE:
-                obj->add(*key.get(), _inputStream->readLong());
-                break;
-            case DOUBLE_TYPE:
-                obj->add(*key.get(), _inputStream->readDoubleIEEE());
-                break;
-            case PTRCHAR_TYPE:
-                data = _inputStream->readChars();
-                obj->add(*key.get(), (char*)data);
-                free((char*)data);
-                break;
-            case STRING_TYPE:
-                data = _inputStream->readString();
-                obj->add(*key.get(), *(std::string*)data);
-                delete (std::string*)data;
-                break;
-				case BSONARRAY_TYPE:
-					 {
-						 BSONArrayObj* array = readBSONInnerArray();
-						 obj->add(*key.get(), *array);
-						 delete array;
-						 break;
-					 }
-		  }
-	 }
-	 delete log;
-	 return obj;
+		int type = _inputStream->readLong();
+		void* data = NULL;
+		BSONObj* inner;
+		switch (type) {
+			case BSON_TYPE: {
+									 inner = readBSON();
+#ifdef DEBUG
+									 if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, (BSONObj)", key->c_str());
+#endif
+									 obj->add(*key.get(), *inner);
+									 delete inner;
+									 break;
+								 }
+			case INT_TYPE: {
+									int i = _inputStream->readInt();
+									obj->add(*key.get(), i);
+#ifdef DEBUG
+									if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %d", key->c_str(), i);
+#endif
+									break;
+								}
+			case LONG_TYPE: {
+									 long l = _inputStream->readLong();
+#ifdef DEBUG
+									 if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %d", key->c_str(), l);
+#endif
+									 obj->add(*key.get(), l);
+									 break;
+								 }
+			case DOUBLE_TYPE: {
+										double d = _inputStream->readDoubleIEEE();
+#ifdef DEBUG
+										if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %d", key->c_str(), d);
+#endif
+										obj->add(*key.get(), d);
+										break;
+									}
+			case PTRCHAR_TYPE: {
+										 data = _inputStream->readChars();
+#ifdef DEBUG
+										 if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %s", key->c_str(), data);
+#endif
+										 obj->add(*key.get(), (char*)data);
+										 free((char*)data);
+										 break;
+									 }
+			case STRING_TYPE: {
+										data = _inputStream->readString();
+#ifdef DEBUG
+										if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %s", key->c_str(), ((std::string*)data)->c_str());
+#endif
+										obj->add(*key.get(), *(std::string*)data);
+										delete (std::string*)data;
+										break;
+									}
+			case BSONARRAY_TYPE:
+									{
+										BSONArrayObj* array = readBSONInnerArray();
+#ifdef DEBUG
+										if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, (BSONArray)", key->c_str());
+#endif
+										obj->add(*key.get(), *array);
+										delete array;
+										break;
+									}
+		}
+	}
+	delete log;
+	return obj;
 }
 
 BSONArrayObj* BSONInputStream::readBSONInnerArray() const {
+#ifdef DEBUG
 	if (_log->isDebug()) _log->debug(3, "BSONInputStream::readBSONInnerArray");
+#endif
 	int elements = _inputStream->readLong();
+#ifdef DEBUG
 	if (_log->isDebug()) _log->debug(3, "elements read: %d", elements);
+#endif
 	BSONArrayObj* result = new BSONArrayObj();
 
 	for (int x= 0; x < elements; x++) {
 		BSONObj* obj = readBSON();
+#ifdef DEBUG
 		if (_log->isDebug()) _log->debug(3, "obj: %s", obj->toChar());
+#endif
 		result->add(*obj);
 		delete obj;
 	}
@@ -102,14 +137,20 @@ BSONArrayObj* BSONInputStream::readBSONInnerArray() const {
 }
 
 std::vector<BSONObj*>* BSONInputStream::readBSONArray() const {
+#ifdef DEBUG
 	if (_log->isDebug()) _log->debug(3, "BSONInputStream::readBSONArray");
+#endif
 	int elements = _inputStream->readLong();
+#ifdef DEBUG
 	if (_log->isDebug()) _log->debug(3, "elements read: %d", elements);
+#endif
 	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
 
 	for (int x= 0; x < elements; x++) {
 		BSONObj* obj = readBSON();
+#ifdef DEBUG
 		if (_log->isDebug()) _log->debug(3, "obj: %s", obj->toChar());
+#endif
 		result->push_back(obj);
 	}
 

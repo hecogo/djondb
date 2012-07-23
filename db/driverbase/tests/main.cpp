@@ -73,6 +73,11 @@ class TestDriverBaseSuite: public Test::Suite {
 		void testDbsNamespaces() {
 			Connection* conn = ConnectionManager::getConnection("localhost");
 
+			if (!conn->open()) {
+				cout << "\nCannot connect to localhost" << endl;
+				exit(0);
+			}
+
 		   std::string bson = "{ name: 'Test'}";
 			conn->insert("db1", "ns1", bson);
 			conn->insert("db2", "ns1", bson);
@@ -87,6 +92,11 @@ class TestDriverBaseSuite: public Test::Suite {
 
 		void testDropNamespace() {
 			Connection* conn = ConnectionManager::getConnection("localhost");
+
+			if (!conn->open()) {
+				cout << "\nCannot connect to localhost" << endl;
+				exit(0);
+			}
 
 			conn->insert("db", "testdrop.namespace", "{ name: 'Test' }");
 
@@ -146,6 +156,21 @@ class TestDriverBaseSuite: public Test::Suite {
 			delete res;
 			delete res2;
 
+			// testing a customer
+			conn->dropNamespace("db", "testcustomer");
+			BSONObj* customer = BSONParser::parse("{ 'name': 'Martin', 'lastName': 'Scor', 'finantial': { 'salary': 150000, 'rent': 10000} }");
+			conn->insert("db", "testcustomer", *customer);
+			delete customer;
+
+			res2 = conn->find("db", "testcustomer", "$'name' == 'Martin'");
+			TEST_ASSERT(res2->size() == 1);
+			if (res2->size() == 1) {
+				BSONObj* objCustomer = *res2->begin();
+				int d = objCustomer->getXpath("finantial.salary");
+				TEST_ASSERT(d == 150000);
+				delete objCustomer;
+			}
+			delete res2;
 		}
 
 		void testInsert() {

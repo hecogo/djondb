@@ -43,14 +43,21 @@ unsigned char FileInputStream::readChar() {
 }
 
 /* Reads 2 bytes in the input (little endian order) */
-int FileInputStream::readInt () {
+short int FileInputStream::readShortInt () {
     int v = readChar() | readChar() << 8;
     return v;
 }
 
 /* Reads 4 bytes in the input (little endian order) */
+int FileInputStream::readInt () {
+    int v = readShortInt() | readShortInt() << 16;
+
+    return v;
+}
+
+/* Reads 4 bytes in the input (little endian order) */
 long FileInputStream::readLong () {
-    long v = readInt() | readInt() << 16;
+    long v = readShortInt() | readShortInt() << 16;
 
     return v;
 }

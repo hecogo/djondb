@@ -17,6 +17,8 @@ class NetworkInputStream;
 class CommandWriter;
 class Transaction;
 
+#define SERVER_PORT 1243
+
 namespace djondb {
 
     class LibraryExport Connection
@@ -24,6 +26,7 @@ namespace djondb {
         public:
             /** Default constructor */
             Connection(std::string host);
+            Connection(std::string host, int port);
             Connection(const Connection& orig);
 
             /** Default destructor */
@@ -56,6 +59,7 @@ namespace djondb {
 				CommandWriter*        _commandWriter;
 
 				std::string _host;
+				int _port;
 				bool _open;
 				Logger* _logger;
 	 };

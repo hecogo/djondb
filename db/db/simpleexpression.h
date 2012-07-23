@@ -38,7 +38,7 @@ class SimpleExpression: public BaseExpression {
 		virtual ExpressionResult* eval(const BSONObj& bson);
 		virtual BaseExpression* copyExpression();
 	private:
-		const char* _expression;
+		char* _expression;
 };
 
 #endif // SIMPLEEXPRESSION_INCLUDE_H
