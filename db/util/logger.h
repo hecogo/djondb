@@ -21,42 +21,47 @@
 using namespace std;
 
 class Logger {
-    private:
-        bool m_debug;
-        bool m_info;
-        bool m_warn;
-        void* m_clazz;
-		  int _detail;
+	private:
+		class Config {
+			public:
+			bool m_debug;
+			bool m_info;
+			bool m_warn;
+			int _detail;
 
-        int _interval;
-        #ifdef LINUX
-        timespec _ts1;
-        timespec _ts2;
-	#else
-        struct timeval _ts1;
-        struct timeval _ts2;
-        #endif
+		};
+		void* m_clazz;
+		static Config* _configSettings;
+
+		int _interval;
+#ifdef LINUX
+		timespec _ts1;
+		timespec _ts2;
+#else
+		struct timeval _ts1;
+		struct timeval _ts2;
+#endif
 
 
-	 private:
-		  void print(std::string type, std::string message);
+	private:
+		void print(std::string type, std::string message);
 
-    public:
-        Logger(void* clazz);
-        bool isDebug();
-        bool isInfo();
-        bool isWarn();
-        void debug(string message, ...);
-        void debug(int detail, string message, ...);
-        void error(string error, ...);
-        void error(exception ex);
-        void info(string message, ...);
-        void warn(string warn, ...);
+	public:
+		Logger(void* clazz);
+		bool isDebug();
+		bool isInfo();
+		bool isWarn();
+		void debug(string message, ...);
+		void debug(int detail, string message, ...);
+		void error(string error, ...);
+		void error(exception ex);
+		void info(string message, ...);
+		void warn(string warn, ...);
 
-        void startTimeRecord();
-        void stopTimeRecord();
+		void startTimeRecord();
+		void stopTimeRecord();
 
-        DTime recordedTime();
+		DTime recordedTime();
 };
 
 Logger* getLogger(void* clazz);

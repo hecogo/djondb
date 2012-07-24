@@ -37,6 +37,8 @@
 
 #include <boost/algorithm/string.hpp>
 
+Logger::Config* Logger::_configSettings;
+
 #define PRINT(TYPE, CLAZZ) \
 	char* buffer = (char*)malloc(1000); \
 memset(buffer, 0, 1000); \
@@ -62,8 +64,8 @@ timespec diff(timespec start, timespec end)
 		temp.tv_sec = end.tv_sec-start.tv_sec;
 		temp.tv_nsec = end.tv_nsec-start.tv_nsec;
 	}
-	return temp;
-}
+	return temp; 
+} 
 #endif
 
 #ifndef LINUX // This works in mac and linux
@@ -165,30 +167,37 @@ Logger* getLogger(void* clazz) {
 
 Logger::Logger(void* clazz) {
 	m_clazz = clazz;
-	m_info = true;
-	m_warn = true;
-	// this will be readed from a configuration file
-	// but right now it'll be hardcoded by config.h
-	std::string debug_conf = getSetting("debug");
-	if (boost::iequals(debug_conf, std::string("true"))) {
-		m_debug = true;
-	} else {
-		m_debug = false;
+	if (_configSettings == NULL) {
+		// this will be readed from a configuration file
+		// but right now it'll be hardcoded by config.h
+		bool debug = false;
+		std::string debug_conf = getSetting("debug");
+		if (boost::iequals(debug_conf, std::string("true"))) {
+			debug = true;
+		} else {
+			debug = false;
+		}
+
+		std::string logLevel = getSetting("loglevel");
+		int detail = 0;
+		if (debug && (logLevel.length() > 0)) {
+			detail = atoi(logLevel.c_str());
+			if (detail > 3) {
+				warn("loglevel is greater than 3, adjusted to be equals to 3");
+				detail = 3;
+			}
+			if (detail < 0) {
+				warn("loglevel is less than 0, adjusted to be equals to 0");
+				detail = 0;
+			}
+		}
+		_configSettings = new Logger::Config();
+		_configSettings->m_debug = debug;
+		_configSettings->m_warn = true;
+		_configSettings->m_info = true;
+		_configSettings->_detail = detail;
 	}
 
-	std::string logLevel = getSetting("loglevel");
-	_detail = 0;
-	if (m_debug && (logLevel.length() > 0)) {
-		_detail = atoi(logLevel.c_str());
-		if (_detail > 3) {
-			warn("loglevel is greater than 3, adjusted to be equals to 3");
-			_detail = 3;
-		}
-		if (_detail < 0) {
-			warn("loglevel is less than 0, adjusted to be equals to 0");
-			_detail = 0;
-		}
-	}
 }
 
 void Logger::print(std::string type, std::string text) {
@@ -199,7 +208,7 @@ void Logger::print(std::string type, std::string text) {
 		cout << type << ": " << text << endl;
 	}
 #else
-		cout << type << ": " << text << endl;
+	cout << type << ": " << text << endl;
 #endif
 }
 
@@ -220,13 +229,13 @@ void Logger::print(std::string type, std::string text) {
 
 void Logger::debug(string message, ...) {
 	// default debug behaviour is maximum detail
-	if (_detail >= 3) {
+	if (_configSettings->_detail >= 3) {
 		PRINT("DEBUG", m_clazz);
 	}
 }
 
 void Logger::debug(int detail, string message, ...) {
-	if (detail <= _detail) {
+	if (detail <= _configSettings->_detail) {
 		PRINT("DEBUG", m_clazz);
 	}
 }
@@ -250,15 +259,15 @@ void Logger::error(exception ex) {
 }
 
 bool Logger::isDebug() {
-	return m_debug;
+	return _configSettings->m_debug;
 }
 
 bool Logger::isInfo() {
-	return m_info;
+	return _configSettings->m_info;
 }
 
 bool Logger::isWarn() {
-	return m_warn;
+	return _configSettings->m_warn;
 }
 
 void Logger::startTimeRecord() {

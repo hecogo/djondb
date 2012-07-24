@@ -6,7 +6,7 @@
 
 typedef char* INDEXPOINTERTYPE;
 
-const int BUCKET_MAX_ELEMENTS = 9; // Should be even (3, 5, 7)
+const int BUCKET_MAX_ELEMENTS = 3; // Should be even (3, 5, 7)
 
 struct BucketElement {
     Index* index;
