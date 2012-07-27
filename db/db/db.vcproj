@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost;..\windows\includes"
+				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost;..\third_party\includes;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -147,7 +147,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\baseexpression.h"
+				>
+			</File>
+			<File
+				RelativePath=".\binaryexpression.h"
+				>
+			</File>
+			<File
 				RelativePath=".\bplusindex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\constantexpression.h"
 				>
 			</File>
 			<File
@@ -155,11 +167,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\filtergrammar\filterLexer.h"
+				RelativePath=".\expressionresult.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\filtergrammar\filterParser.h"
+				RelativePath=".\filter_expressionLexer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\filter_expressionParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\filterdefs.h"
 				>
 			</File>
 			<File
@@ -176,6 +196,14 @@
 			</File>
 			<File
 				RelativePath=".\indexmanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\simpleexpression.h"
+				>
+			</File>
+			<File
+				RelativePath=".\unaryexpression.h"
 				>
 			</File>
 		</Filter>
@@ -211,11 +239,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\filtergrammar\filterLexer.c"
+				RelativePath=".\filter_expressionLexer.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\filtergrammar\filterParser.c"
+				RelativePath=".\filter_expressionParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\filterdefs.cpp"
 				>
 			</File>
 			<File

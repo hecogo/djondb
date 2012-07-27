@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="shell"
 	ProjectGUID="{486DE774-34B1-48F1-8EDA-6DC7F12E24E6}"
 	RootNamespace="shell"
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\third_party\includes;..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
+				AdditionalIncludeDirectories="..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
+				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB antlr3c.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../windows/libs;../third_party/libs;../third_party/libs/$(ConfigurationName)"
+				AdditionalLibraryDirectories="../windows/libs;..\third_party\libs;&quot;../third_party/libs/$(ConfigurationName)&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\third_party\includes;..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
+				AdditionalIncludeDirectories="..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -134,9 +134,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB"
+				AdditionalDependencies="v8_base.lib v8_snapshot.lib util.lib driverbase.lib bson.lib WS2_32.lib Rpcrt4.lib WINMM.LIB antlr3c.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../windows/libs;../third_party/libs;../third_party/libs/$(ConfigurationName)"
+				AdditionalLibraryDirectories="../windows/libs;..\third_party\libs;&quot;../third_party/libs/$(ConfigurationName)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
