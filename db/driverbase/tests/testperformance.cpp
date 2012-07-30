@@ -31,7 +31,7 @@ class TestPerfomance {
 		}
 
 		void testPerfomance(int port, int top = 10000000) {
-			Connection* conn = ConnectionManager::getConnection("ec2-50-16-108-156.compute-1.amazonaws.com", port);
+			Connection* conn = ConnectionManager::getConnection("localhost", port);
 
 			if (!conn->open()) {
 				cout << "Not connected" << endl;
@@ -109,7 +109,7 @@ int main(int argc, char** arg) {
 		}
 	}
 	TestPerfomance p;
-	if (top > -1) {
+	if (top  <= 0) {
 		p.testPerfomance(port);
 	} else {
 		p.testPerfomance(port, top);

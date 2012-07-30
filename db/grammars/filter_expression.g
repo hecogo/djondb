@@ -15,7 +15,7 @@ options {
    #include <stdlib.h>
    #include <stdio.h>
    #include <strings.h>
-   
+   #include <iostream>
 }
 
 @postinclude {
