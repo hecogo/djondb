@@ -10,7 +10,7 @@ function insertInDb(r) {
 }
 
 load('random.js');
-connect('localhost');
+connect('ec2-50-16-108-156.compute-1.amazonaws.com');
 
 var r = generate(1000000);
 print("starting inserts");

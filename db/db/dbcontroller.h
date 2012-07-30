@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include "filterdefs.h"
 
 class FileInputOutputStream;
 class FileInputStream;
@@ -41,9 +42,9 @@ class DBController
 		  bool dropNamespace(char* db, char* ns);
         void update(char* db, char* ns, BSONObj* bson);
         std::vector<BSONObj*>* find(char* db, char* ns, const BSONObj& filter);
-        std::vector<BSONObj*>* find(char* db, char* ns, const char* filter);
+        std::vector<BSONObj*>* find(char* db, char* ns, const char* filter) throw (ParseException);
         BSONObj* findFirst(char* db, char* ns, BSONObj* filter);
-        BSONObj* findFirst(char* db, char* ns, const char* filter);
+        BSONObj* findFirst(char* db, char* ns, const char* filter) throw (ParseException);
         BSONObj* readBSON(StreamType* stream);
 		  std::vector<std::string>* dbs() const;
 		  std::vector<std::string>* namespaces(const char* db) const;
@@ -53,7 +54,7 @@ class DBController
 		  std::map<std::string, std::map<std::string, SpacesType>* > _spaces;
         StreamType* open(std::string db, std::string ns, FILE_TYPE type);
 		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, const BSONObj& filter);
-		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, const char* filter);
+		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, const char* filter) throw (ParseException);
 		  Logger* _logger;
 		  std::string fileName(std::string ns, FILE_TYPE type) const;
 

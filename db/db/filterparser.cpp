@@ -308,11 +308,10 @@ FilterParser* FilterParser::parse(const std::string& expression) throw(ParseExce
 		tokens = antlr3CommonTokenStreamSourceNew  (ANTLR3_SIZE_HINT, TOKENSOURCE(lex));
 		parser = filter_expressionParserNew               (tokens);
 
-		try {
-			rootExpression = parser ->start_point(parser);
-		} catch (ParseException& e) {
-			errorCode = e.errorCode();
-			errorMessage = e.what();
+		rootExpression = parser ->start_point(parser);
+		if (parser->pParser->rec->state->exception != NULL) {
+			errorCode = 1;
+			errorMessage = (char*)parser->pParser->rec->state->exception->message;
 		}
 
 		// Must manually clean up
@@ -328,7 +327,7 @@ FilterParser* FilterParser::parse(const std::string& expression) throw(ParseExce
 	FilterParser* filterparser = new FilterParser(expression, rootExpression, lTokens);
 
 	return filterparser;
-	}
+}
 
 
 

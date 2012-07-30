@@ -435,7 +435,7 @@ std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const BSON
 	return result;
 }
 
-std::vector<BSONObj*>* DBController::find(char* db, char* ns, const BSONObj& filter) {
+std::vector<BSONObj*>* DBController::find(char* db, char* ns, const BSONObj& filter)  {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, bsonFilter: %s", db, ns, filter.toChar());
 
 	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
@@ -491,7 +491,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, BSONObj* filter) {
 	}
 }
 
-std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter) {
+std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter) throw(ParseException) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, filter: %s", db, ns, filter);
 
 	std::vector<BSONObj*>* result;
@@ -501,7 +501,7 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter
 	return result;
 }
 
-BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
+BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) throw(ParseException) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFirst db: %s, ns: %s, filter: %s", db, ns, filter);
 	std::string filedir = _dataDir + db;
 	filedir = filedir + FILESEPARATOR;
@@ -541,7 +541,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) {
 	return bsonResult;
 }
 
-std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const char* filter) {
+std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const char* filter) throw(ParseException) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, filter: %s", db, ns, filter);
 	std::string filedir = _dataDir + db;
 	filedir = filedir + FILESEPARATOR;

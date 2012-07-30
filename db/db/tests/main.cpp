@@ -96,9 +96,10 @@ class TestDBSuite: public Test::Suite
 			TEST_ADD(TestDBSuite::testInsertWithCharId);
 			TEST_ADD(TestDBSuite::testInsertWithoutId);
 
-			TEST_ADD(TestDBSuite::testFindPrevious);
+			// TEST_ADD(TestDBSuite::testFindPrevious);
 			TEST_ADD(TestDBSuite::testMassiveInsert);
 			TEST_ADD(TestDBSuite::testFinds);
+			TEST_ADD(TestDBSuite::testFindsFilterErrors);
 			TEST_ADD(TestDBSuite::testInsertComplexBSON);
 			TEST_ADD(TestDBSuite::testFindsByFilter);
 			TEST_ADD(TestDBSuite::testFindsByTextFilter);
@@ -556,6 +557,20 @@ class TestDBSuite: public Test::Suite
 				TEST_ASSERT((__ids.size() / secs) > 30);
 				cout << "\nThroughput: " << (__ids.size() / secs) << " ops." << endl;
 				cout << "\n------------------------------------------------------------" << endl;
+			}
+		}
+
+		void testFindsFilterErrors() {
+			// This will check for several filters with parsing errors
+			cout << "\ntestFindsFilterErrors" << endl;
+
+
+			std::string filter("a x n"); // bad constants
+			try {
+				controller.find("dbtest", "sp1.customer", filter.c_str());
+				TEST_FAIL("An error should occur");
+			} catch (ParseException& e) {
+				cout << "\nException --> " << e.what() << endl;
 			}
 		}
 

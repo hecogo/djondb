@@ -21,19 +21,30 @@ options {
 @postinclude {
 static void displayRecognitionErrorNew  (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames) throw(ParseException)
 { 
+cout << "Override the fucking errors " << endl;
+/*
     switch (recognizer->state->exception->type) {
     	case ANTLR3_UNWANTED_TOKEN_EXCEPTION:
 		break;
 	default:
-		throw ParseException(1, "error");
+		throw ParseException(1, (char*)recognizer->state->exception->message);
     }
+    */
+}
+static void reportOverride(pANTLR3_BASE_RECOGNIZER recognizer) {
+ cout << "overrideing report" << endl;
 }
  }
 
 @parser::apifuncs {
-  RECOGNIZER->displayRecognitionError       = displayRecognitionErrorNew;
+ RECOGNIZER->displayRecognitionError       = displayRecognitionErrorNew;
+// RECOGNIZER->reportError = reportOverride;
 //  RECOGNIZER->antlr3RecognitionExceptionNew = antlr3RecognitionExceptionNewNew;
 //  RECOGNIZER->mismatch                      = mismatchNew;
+}
+
+@rulecatch {
+   cout << "Nothing" << endl;
 }
 
 start_point returns [BaseExpression* val]
