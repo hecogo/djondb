@@ -159,6 +159,7 @@ char* BSONObj::toChar() const {
 					break;
 				}
 		}
+		assert(pos < 2000);
 	}
 	result[pos] = '}';
 	return strdup(result);
