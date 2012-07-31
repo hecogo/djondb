@@ -177,7 +177,11 @@ class TestBSONSuite : public Test::Suite
 			obj.add("double", 1.1);
 
 			char* json = obj.toChar();
-			TEST_ASSERT(strcmp(json, "{ \"char*\" :\"char*\",\"double\" :1.1,\"int\" :1,\"long\" :1,\"string\" :\"test\"} ") == 0);
+			int res = strcmp(json, "{ \"char*\" : \"char*\", \"double\" : 1.100000, \"int\" : 1, \"long\" : 1, \"string\" : \"test\"}");
+			TEST_ASSERT(res == 0);
+			if (res != 0) {
+				cout << "\nResult: " << json << endl;
+			}
 
 			free(json);
 		}

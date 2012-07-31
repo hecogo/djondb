@@ -24,7 +24,7 @@ library_includedir=$(includedir)/djondb_0.1
 library_include_HEADERS = bson.h bsonobj.h bsonparser.h bsondefs.h bsoncontent.h bsonarrayobj.h
 
 TESTS = test-bson
-bin_PROGRAMS = test-bson
+bin_PROGRAMS = test-bson test-performance
 check_PROGRAMS = test-bson
 test_bson_LDADD = libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lXss -lcpptest
 if !MAC
@@ -33,3 +33,8 @@ else
 endif
 test_bson_SOURCES = tests/main.cpp
 
+test_performance_SOURCES = tests/testperformance.cpp
+test_performance_LDADD = libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lXss
+if !MAC
+     test_performance_LDADD += -lrt -luuid
+endif

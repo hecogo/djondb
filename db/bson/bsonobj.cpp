@@ -26,6 +26,7 @@
 #include <string>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -90,50 +91,77 @@ void BSONObj::add(t_keytype key, const BSONArrayObj& val) {
 
 
 char* BSONObj::toChar() const {
-	std::stringstream ss;
-	ss << "{ ";
+	char result[2000];
+	memset(result, 0, 2000);
+
+	int pos = 0;
+	result[0] = '{';
+	pos += 1;
+
 	bool first = true;
-	BSONArrayObj* array;
+	
 	for (std::map<t_keytype, BSONContent* >::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
 		if (!first) {
-			ss << ",";
+			result[pos] = ',';
+			pos++;
 		}
 		first = false;
 		BSONContent* content = i->second;
 		t_keytype key = i->first;
-		ss << "\"" << key << "\" :";
+		sprintf(result + pos, " \"%s\" : ", key.c_str());
+		pos += key.length() + 6;
+		//ss << "\"" << key << "\" :";
 		switch (content->type())  {
 			case BSON_TYPE:
-				ss << ((BSONObj*)content->_element)->toChar();
-				break;
+				{
+					char* bchar = ((BSONObj*)content->_element)->toChar();
+					sprintf(result + pos, "%s", bchar);
+					pos += strlen(bchar);
+					break;
+				}
 			case BSONARRAY_TYPE:
-				ss << ((BSONArrayObj*)content->_element)->toChar();
-				break;
-			case INT_TYPE:
-				ss << *((int*)content->_element);
-				break;
+				{
+					char* achar = ((BSONArrayObj*)content->_element)->toChar();
+					sprintf(result + pos, "%s", achar);
+					pos += strlen(achar);
+					break;
+				}
+			case INT_TYPE: 
+				{
+					sprintf(result + pos, "%d", *((int*)content->_element));
+					pos = strlen(result);
+					break;
+				}
 			case LONG_TYPE:
-				ss << *((long*)content->_element);
-				break;
+				{
+					sprintf(result + pos, "%ld", *((long*)content->_element));
+					pos = strlen(result);
+					break;
+				}
 			case DOUBLE_TYPE:
-				ss << *((double*)content->_element);
-				break;
+				{
+					sprintf(result + pos, "%f", *((double*)content->_element));
+					pos = strlen(result);
+					break;
+				}
 			case PTRCHAR_TYPE:
-				ss << "\"" << (char*)content->_element << "\"";
-				break;
+				{
+					char* c = (char*)content->_element;
+					sprintf(result + pos, "\"%s\"", c);
+					pos += strlen(c) + 2;
+					break;
+				}
 			case STRING_TYPE:
-				ss << "\"" << ((std::string*)content->_element)->c_str() << "\"";
-				break;
+				{
+					const char* c = ((std::string*)content->_element)->c_str();
+					sprintf(result + pos, "\"%s\"", c);
+					pos += strlen(c) + 2;
+					break;
+				}
 		}
 	}
-	ss << "} ";
-	std::string s = ss.str();
-	const char* temp = s.c_str();
-	int len = s.length();
-	char* res = (char*)malloc(len +1);
-	memset(res, 0, len + 1);
-	memcpy(res, temp, len);
-	return res;
+	result[pos] = '}';
+	return strdup(result);
 }
 
 int* BSONObj::getInt(t_keytype key) const {
