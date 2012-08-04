@@ -30,6 +30,7 @@
 
 using namespace std;
 
+#define MAX_BSONOBJ_BUFFER 8000
 BSONObj::BSONObj()
 {
 }
@@ -91,8 +92,10 @@ void BSONObj::add(t_keytype key, const BSONArrayObj& val) {
 
 
 char* BSONObj::toChar() const {
-	char result[2000];
-	memset(result, 0, 2000);
+	Logger* log = getLogger(NULL);
+	
+	char* result = (char*)malloc(MAX_BSONOBJ_BUFFER);
+	memset(result, 0, MAX_BSONOBJ_BUFFER);
 
 	int pos = 0;
 	result[0] = '{';
@@ -111,58 +114,51 @@ char* BSONObj::toChar() const {
 		sprintf(result + pos, " \"%s\" : ", key.c_str());
 		pos += key.length() + 6;
 		//ss << "\"" << key << "\" :";
+		char* chr;
+		const char* cstr;
 		switch (content->type())  {
 			case BSON_TYPE:
-				{
-					char* bchar = ((BSONObj*)content->_element)->toChar();
-					sprintf(result + pos, "%s", bchar);
-					pos += strlen(bchar);
+					chr = ((BSONObj*)content->_element)->toChar();
+					sprintf(result + pos, "%s", chr);
+					free(chr);
 					break;
-				}
 			case BSONARRAY_TYPE:
-				{
-					char* achar = ((BSONArrayObj*)content->_element)->toChar();
-					sprintf(result + pos, "%s", achar);
-					pos += strlen(achar);
+					chr = ((BSONArrayObj*)content->_element)->toChar();
+					sprintf(result + pos, "%s", chr);
+					free(chr);
 					break;
-				}
 			case INT_TYPE: 
-				{
 					sprintf(result + pos, "%d", *((int*)content->_element));
-					pos = strlen(result);
 					break;
-				}
 			case LONG_TYPE:
-				{
 					sprintf(result + pos, "%ld", *((long*)content->_element));
-					pos = strlen(result);
 					break;
-				}
 			case DOUBLE_TYPE:
-				{
 					sprintf(result + pos, "%f", *((double*)content->_element));
-					pos = strlen(result);
 					break;
-				}
 			case PTRCHAR_TYPE:
-				{
-					char* c = (char*)content->_element;
-					sprintf(result + pos, "\"%s\"", c);
-					pos += strlen(c) + 2;
+					chr = (char*)content->_element;
+					sprintf(result + pos, "\"%s\"", chr);
 					break;
-				}
 			case STRING_TYPE:
-				{
-					const char* c = ((std::string*)content->_element)->c_str();
-					sprintf(result + pos, "\"%s\"", c);
-					pos += strlen(c) + 2;
+					cstr = ((std::string*)content->_element)->c_str();
+					sprintf(result + pos, "\"%s\"", cstr);
 					break;
-				}
 		}
-		assert(pos < 2000);
+		pos = strlen(result);
+		assert(pos < MAX_BSONOBJ_BUFFER);
 	}
 	result[pos] = '}';
-	return strdup(result);
+	result[pos+1] = 0;
+	pos++;
+
+	int len = strlen(result);
+
+	char* cresult = strcpy(result);
+
+	delete log;
+	free(result);
+	return cresult;
 }
 
 int* BSONObj::getInt(t_keytype key) const {

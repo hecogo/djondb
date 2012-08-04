@@ -42,8 +42,8 @@ class TestPerfomance {
 			//
 			Logger* log = getLogger(NULL);
 			log->startTimeRecord();
-			int tests[] = { 10, 100, 1000, 10000, 1000000, 10000000};
-			for (int i = 0; i < 5; i++) {
+			int tests[] = { 10, 100, 1000, 10000, 100000, 1000000, 10000000};
+			for (int i = 0; i < 7; i++) {
 				if (tests[i] > top) {
 					break;
 				}
@@ -67,6 +67,7 @@ class TestPerfomance {
 
 				DTime time = log->recordedTime();
 
+				cout << "Total secs: " << time.totalSecs() << endl;
 				if (time.totalSecs() > 0) {
 					cout << "Performance over: " << tests[i] << " inserts:" << (tests[i] / time.totalSecs()) << endl;
 				} else {

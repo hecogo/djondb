@@ -41,16 +41,22 @@ CommandReader::~CommandReader()
 }
 
 InsertCommand* parseInsert(InputStream* is)  {
+	 Logger* log = getLogger(NULL);
     InsertCommand* command = new InsertCommand();
     std::string* db = is->readString();
     command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
+
+	 /*
+	 std::string* s = is->readString();
+	 BSONObj* obj = BSONParser::parse(*s);
+	 delete s;
+	 */
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
     BSONObj* obj = bsonis->readBSON();
     command->setBSON(*obj);
-
-	 Logger* log = getLogger(NULL);
+	 
 	 delete log;
 
     delete ns;

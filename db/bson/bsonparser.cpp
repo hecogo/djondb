@@ -92,7 +92,8 @@ BSONObj* convertStruct(struct BSONStruct* param) {
 BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 	BSONObj* res = new BSONObj();
 	int state = 0; // 0 - nothing, 1 - name, 2- value
-	char buffer[256];
+	int lenBuffer = strlen(c);
+	char* buffer = (char*)malloc(lenBuffer);
 	char* name = NULL;
 	void* value = NULL;
 	int len = 0;
@@ -107,7 +108,7 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 				value = parseBSON(c, x);
 				type = BSON_TYPE;
 			} else if (state == 0) {
-				memset(buffer, 0, 256);
+				memset(buffer, 0, lenBuffer);
 				state = 1;// name
 				type = INT_TYPE;
 			} else { // state == 1
@@ -127,7 +128,7 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 					strcpy((char*)value, buffer);
 				}
 				len = 0;
-				memset(buffer, 0, 256);
+				memset(buffer, 0, lenBuffer);
 				switch (type) {
 					case INT_TYPE:{
 										  int iVal = atoi((char*)value);
@@ -178,7 +179,7 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 			memset(name, 0, len + 1);
 			strcpy(name, buffer);
 			len = 0;
-			memset(buffer, 0, 256);
+			memset(buffer, 0, lenBuffer);
 			state = 2; //value
 		} else {
 			if (c[x] == '\'') {
@@ -223,6 +224,8 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 
 	}
 	pos = x;
+
+	free(buffer);
 	return res;
 }
 

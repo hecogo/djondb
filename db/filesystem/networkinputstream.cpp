@@ -178,7 +178,7 @@ bool NetworkInputStream::isClosed() {
 
 int NetworkInputStream::checkStatus() {
 	if (_open) {
-		int res = waitAvailable(10);
+		int res = waitAvailable(2000);
 		if (res < 0) {
 			closeStream();
 		}

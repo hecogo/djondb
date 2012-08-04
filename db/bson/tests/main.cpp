@@ -29,6 +29,7 @@ class TestBSONSuite : public Test::Suite
 	public:
 		TestBSONSuite()
 		{
+			TEST_ADD(TestBSONSuite::testBigBSON);
 			TEST_ADD(TestBSONSuite::testBSON);
 			TEST_ADD(TestBSONSuite::testCopyBSON);
 			TEST_ADD(TestBSONSuite::testParserTrivial);
@@ -103,6 +104,42 @@ class TestBSONSuite : public Test::Suite
 			std::string s = obj->getString("xxx");
 			TEST_ASSERT(s.length() == 0);
 			delete obj;
+		}
+
+		void testBigBSON()
+		{
+			cout << "testBigBSON" << endl;
+			BSONObj* obj = new BSONObj();
+
+			int chars = 1000;
+			// Add in
+			obj->add("int", 1);
+			obj->add("string", std::string(chars, 'a'));
+			char* temp = (char*)malloc(chars+1);
+			memset(temp, 0, chars+1);
+			memset(temp, 'a', chars);
+			obj->add("char*", temp);
+
+			BSONObj rel;
+			rel.add("innertext", temp);
+			obj->add("rel1", rel);
+			free(temp);
+
+			char* json = obj->toChar();
+
+			BSONObj* obj2 = BSONParser::parse(json);
+			free(json);
+			
+			TEST_ASSERT(obj->getInt("int") != NULL);
+			TEST_ASSERT(*obj->getInt("int") == 1);
+
+			TEST_ASSERT(obj->getString("string").compare(std::string(chars, 'a')) == 0);
+
+			TEST_ASSERT(obj->getBSON("rel1") != NULL);
+			TEST_ASSERT(obj->getBSON("rel1")->getString("innertext").compare(std::string(chars, 'a')) == 0);
+			
+			delete obj;
+			delete obj2;
 		}
 
 		void testCopyBSON()
@@ -183,6 +220,18 @@ class TestBSONSuite : public Test::Suite
 				cout << "\nResult: " << json << endl;
 			}
 
+			free(json);
+
+			BSONObj inner;
+			inner.add("int", 1);
+			inner.add("string", std::string("test"));
+			inner.add("char*", (char*)"char*");
+			inner.add("long", 1L);
+			inner.add("double", 1.1);
+			obj.add("inner", inner);
+
+			json = obj.toChar();
+			cout << "\nResult: " << json << endl;
 			free(json);
 		}
 

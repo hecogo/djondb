@@ -140,6 +140,7 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
 			int sent = 0;
 			while (sent < size) {
 				sent += send(_socket, &buffer[sent], size - sent, __sendFlags_networkoutput);
+				assert(sent > 0);
 				//            sent += write(_socket, &buffer[sent], size - sent);
 			}
 		}

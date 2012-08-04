@@ -54,25 +54,32 @@ void InsertCommand::writeCommand(OutputStream* out) const {
 	out->writeString(*_db);
 	out->writeString(*_namespace);
 
+	/*
+	out->writeString(_bson->toChar());
+	*/
 	std::auto_ptr<BSONOutputStream> bsonout(new BSONOutputStream(out));
 	bsonout->writeBSON(*_bson);
 }
 
 void InsertCommand::readResult(InputStream* is) {
+	/*
 	int result = is->readInt();
 	if (result) {
 		BSONInputStream* bis = new BSONInputStream(is);
 		_bsonResult = bis->readBSON();
 		delete bis;
 	}
+	*/
 }
 
 void InsertCommand::writeResult(OutputStream* out) const {
+	/*
 	out->writeInt((_bsonResult != NULL)? 1: 0);
 	if (_bsonResult) {
 		BSONOutputStream* bsonout = new BSONOutputStream(out);
 		bsonout->writeBSON(*_bsonResult);
 	}
+	*/
 }
 
 void InsertCommand::setNameSpace(const std::string ns) {
