@@ -21,7 +21,6 @@ options {
 @postinclude {
 static void displayRecognitionErrorNew  (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames) throw(ParseException)
 { 
-cout << "Override the fucking errors " << endl;
 /*
     switch (recognizer->state->exception->type) {
     	case ANTLR3_UNWANTED_TOKEN_EXCEPTION:
@@ -32,7 +31,6 @@ cout << "Override the fucking errors " << endl;
     */
 }
 static void reportOverride(pANTLR3_BASE_RECOGNIZER recognizer) {
- cout << "overrideing report" << endl;
 }
  }
 
@@ -44,7 +42,6 @@ static void reportOverride(pANTLR3_BASE_RECOGNIZER recognizer) {
 }
 
 @rulecatch {
-   cout << "Nothing" << endl;
 }
 
 start_point returns [BaseExpression* val]

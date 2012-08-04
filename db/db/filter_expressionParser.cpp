@@ -47,7 +47,6 @@
 
 static void displayRecognitionErrorNew  (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames) throw(ParseException)
 { 
-cout << "Override the fucking errors " << endl;
 /*
     switch (recognizer->state->exception->type) {
     	case ANTLR3_UNWANTED_TOKEN_EXCEPTION:
@@ -58,7 +57,6 @@ cout << "Override the fucking errors " << endl;
     */
 }
 static void reportOverride(pANTLR3_BASE_RECOGNIZER recognizer) {
- cout << "overrideing report" << endl;
 }
  
 /* ----------------------------------------- */
@@ -553,9 +551,7 @@ start_point(pfilter_expressionParser ctx)
     //
     goto rulestart_pointEx; /* Prevent compiler warnings */
     rulestart_pointEx: ;
-
-
-               cout << "Nothing" << endl;
+                // cout << "Nothing" << endl;
 
     return val;
 }
@@ -612,7 +608,7 @@ filter_expr(pfilter_expressionParser ctx)
     rulefilter_exprEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }
@@ -733,7 +729,7 @@ boolean_expr(pfilter_expressionParser ctx)
     ruleboolean_exprEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }
@@ -854,7 +850,7 @@ boolean_term(pfilter_expressionParser ctx)
     ruleboolean_termEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }
@@ -979,7 +975,7 @@ boolean_value(pfilter_expressionParser ctx)
     ruleboolean_valueEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }
@@ -1050,7 +1046,7 @@ parenthesized_boolean(pfilter_expressionParser ctx)
     ruleparenthesized_booleanEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }
@@ -1176,7 +1172,7 @@ nonparentherized_boolean(pfilter_expressionParser ctx)
     rulenonparentherized_booleanEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }
@@ -1301,7 +1297,7 @@ unary_expr(pfilter_expressionParser ctx)
     ruleunary_exprEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }
@@ -1356,7 +1352,7 @@ xpath_expr(pfilter_expressionParser ctx)
     rulexpath_exprEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }
@@ -1478,7 +1474,7 @@ constant_expr(pfilter_expressionParser ctx)
     ruleconstant_exprEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }
@@ -1518,7 +1514,7 @@ operand_expr(pfilter_expressionParser ctx)
     ruleoperand_exprEx: ;
 
 
-               cout << "Nothing" << endl;
+               //cout << "Nothing" << endl;
 
     return val;
 }

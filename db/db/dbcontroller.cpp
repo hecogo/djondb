@@ -207,6 +207,15 @@ BSONObj* DBController::insert(char* db, char* ns, BSONObj* obj) {
 		result->add("_id", *tid);
 		delete tid;
 	}
+	if (!obj->has("_revision")) {
+		if (_logger->isDebug()) _logger->debug(2, "BSON does not contain revision, DBController is creating one");
+		string* trev = uuid();
+		std::string key("_revision");
+		obj->add(key, *trev);
+		result = new BSONObj();
+		result->add("_revision", *trev);
+		delete trev;
+	}
 
 	std::string id;
 	if (obj->type("_id") == STRING_TYPE) {

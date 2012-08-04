@@ -141,6 +141,11 @@ bool Connection::insert(const std::string& db, const std::string& ns, const BSON
 		obj.add("_id", *id);
 		delete id;
 	}
+	if (!obj.has("_revision")) {
+		std::string* rev = uuid();
+		obj.add("_revision", *rev);
+		delete rev;
+	}
 	cmd.setBSON(obj);
 	cmd.setNameSpace(ns);
 	_commandWriter->writeCommand(&cmd);
