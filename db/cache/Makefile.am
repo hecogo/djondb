@@ -21,7 +21,7 @@ library_include_HEADERS = cache.h
 
 TESTS = test-cache
 check_PROGRAMS = test-cache
-test_cache_LDADD = libdjon-cache.la -lX11 -lXss -lrt -luuid -lcpptest -ldjon-bson -ldjon-util
+test_cache_LDADD = libdjon-cache.la  -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest
 test_cache_SOURCES = tests/main.cpp
 
 djon_cache_libincludedir = $(libdir)/djon-cache-1.0/include
