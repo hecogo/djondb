@@ -34,12 +34,17 @@ class PriorityCache
 
 	protected:
 	private:
+		void erasePriority(const K& key);
+		typename list<K>::iterator findPriority(const K& key);
+
+	private:
 		map<K, V> _elements;
 		list<K> _priority;
 		int _top;
 		bool (*_keyComparator)(K, K);
 
 	private:
+		/*
 		class CacheElement {
 			CacheElement(K k) {
 				_k = k;
@@ -51,6 +56,7 @@ class PriorityCache
 
 			K _k;
 		};
+		*/
 };
 
 	template <class K, class V>
@@ -85,11 +91,13 @@ typename PriorityCache<K, V>::iterator PriorityCache<K,V>::end() {
 template <class K, class V>
 void PriorityCache<K,V>::erase(iterator position) {
 	_elements.erase(position);
+	erasePriority(position->first);
 }
 
 template <class K, class V>
 void PriorityCache<K,V>::clear() {
-	return _elements.clear();
+	_priority.clear();
+	_elements.clear();
 }
 
 template <class K, class V>
@@ -106,48 +114,67 @@ void PriorityCache<K, V>::erase(const K& key)
 		_elements.erase(i);
 	}
 
-	/*
+	erasePriority(key);
+}
+
+template <class K, class V>
+typename list<K>::iterator PriorityCache<K, V>::findPriority(const K& key) {
+	typename list<K>::iterator itPriority = _priority.begin();
+	for (; itPriority != _priority.end(); itPriority++) {
+		K k = *itPriority;
+
+		bool found = false;
+
+		if (_keyComparator) {
+			found = _keyComparator(key, k);
+		} else {
+			found = key == k;
+		}
+
+		if (found) {
+			break;
+		}
+	}
+	return itPriority;
+}
+
+template <class K, class V>
+void PriorityCache<K, V>::erasePriority(const K& key) {
 	if (_keyComparator == NULL) {
 		_priority.remove(key);
 	} else {
-		bool found = false;
-		typename list<K>::iterator itPriority = _priority.begin();
-		for (; itPriority != _priority.end(); itPriority++) {
-			K k = *itPriority;
-
-			if (_keyComparator) {
-				found = _keyComparator(key, k);
-			} else {
-				found = key == k;
-			}
-
-			if (found) {
-				break;
-			}
-		}
-		if (found) {
+		typename std::list<K>::iterator itPriority = findPriority(key);
+		if (itPriority != _priority.end()) {
 			_priority.erase(itPriority);
 		}
 	}
-	*/
 }
 
 template <class K, class V>
 void PriorityCache<K, V>::add(const K& key, const V& val) {
+	if (_priority.size() == _top) {
+		K keyPriority = _priority.back();
+		erase(keyPriority);
+	}
+	erase(key);
 	typename map<K,V>::const_iterator i = _elements.find(key);
 	if (i != _elements.end()) {
 		_elements.erase(key);
 	}
 	_elements.insert(pair<K, V> (key, val));
+
+	_priority.push_front(key);
 }
 
 template <class K, class V>
 typename PriorityCache<K, V>::iterator PriorityCache<K,V>::get(const K& key) {
 	typename map<K,V>::iterator i = _elements.find(key);
+	// Priorize the element
 	if (i != _elements.end()) {
-		return i;
+		erasePriority(key);
+		_priority.push_front(key);
 	}
-	return _elements.end();
+	return i;
 }
 
 template <class K, class V>

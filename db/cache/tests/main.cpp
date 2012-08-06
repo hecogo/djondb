@@ -101,10 +101,29 @@ private:
 			 TEST_ASSERT(strcmp(i->second, "a") == 0);
 		 }
 
-
 		 // Test remove
 		 cache.erase(1);
-		 PriorityCache<int, char*>::iterator i = cache[1];
+		 PriorityCache<int, char*>::iterator i2 = cache[1];
+		 TEST_ASSERT(i2 == cache.end());
+
+		 // Test replace
+		 cache.add(2, "x");
+		 PriorityCache<int, char*>::iterator i3 = cache[2];
+		 TEST_ASSERT(i3 != cache.end());
+		 if (i3 != cache.end()) {
+			 TEST_ASSERT(strcmp(i3->second, "x") == 0);
+		 }
+
+		 // test top
+		 cache.add(4, "d");
+		 cache[3]; // pops ups the 3 priority
+		 cache.add(5, "e");
+		 i = cache[4];
+		 TEST_ASSERT(i != cache.end());
+		 if (i != cache.end()) {
+			 TEST_ASSERT(strcmp(i->second, "d") == 0);
+		 }
+		 i = cache[2];
 		 TEST_ASSERT(i == cache.end());
 	 }
 };

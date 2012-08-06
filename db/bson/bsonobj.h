@@ -53,9 +53,14 @@ class BSONObj
 
         char* toChar() const;
 
-        std::map<t_keytype, BSONContent* >::const_iterator begin() const;
-        std::map<t_keytype, BSONContent* >::const_iterator end() const;
+		  typedef typename std::map<t_keytype, BSONContent* >::iterator iterator;
+		  typedef typename std::map<t_keytype, BSONContent* >::const_iterator const_iterator;
+
+        iterator begin() const;
+        iterator end() const;
         int length() const;
+
+		  bool operator ==(const BSONObj& obj) const;
 
     protected:
     private:

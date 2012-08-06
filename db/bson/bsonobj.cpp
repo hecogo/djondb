@@ -264,11 +264,11 @@ BSONContent* BSONObj::getContent(t_keytype key, BSONTYPE ttype) const {
 	return content;
 }
 
-std::map<t_keytype, BSONContent* >::const_iterator BSONObj::begin() const {
+typename BSONObj::iterator BSONObj::begin() const {
 	return _elements.begin();
 }
 
-std::map<t_keytype, BSONContent* >::const_iterator BSONObj::end() const {
+typename BSONObj::iterator BSONObj::end() const {
 	return _elements.end();
 }
 
@@ -355,3 +355,18 @@ BSONContent BSONObj::getXpath(const std::string& xpath) const {
 
 	return BSONContent();
 }
+
+bool BSONObj::operator ==(const BSONObj& obj) const {
+	bool equals = true;
+	for (BSONObj::iterator it = this->begin(); it != this->end(); it++) {
+		t_keytype key = it->first;
+		BSONContent* content = it->second;
+
+		BSONContent* other = obj.get(key);
+		if (*content != *other) {
+			return false;
+		}
+	}
+	return true;
+}
+

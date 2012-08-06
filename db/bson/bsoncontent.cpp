@@ -162,6 +162,10 @@ bool BSONContent::operator ==(const BSONContent& content) {
 					}
 					break;
 				case BSON_TYPE:
+					{
+						BSONObj* obj1 = (BSONObj*)cont1;
+						BSONObj* obj2 = (BSONObj*)cont2;
+					}
 				case BSONARRAY_TYPE:
 					return false;
 					break;
