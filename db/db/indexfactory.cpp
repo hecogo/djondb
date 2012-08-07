@@ -20,10 +20,26 @@
 
 #include "bson.h"
 #include "bplusindex.h"
+#include <stdio.h>
 #include <sstream>
 #include <string>
 
 IndexFactory IndexFactory::indexFactory;
+
+std::string indexkey(const char* ns, const std::set<std::string>& keys) {
+	char buffer[3000];
+	memset(buffer, 0, 3000);
+	sprintf(buffer, "ns:%s", ns);
+	int pos = strlen(ns);
+	for (std::set<std::string>::iterator it = keys.begin(); it != keys.end(); it++) {
+		std::string s = *it;
+		sprintf(buffer + pos, "%s:", s.c_str());
+		pos += s.length();
+	}
+
+	std::string skey = std::string(buffer);
+	return skey;
+}
 
 IndexFactory::IndexFactory()
 {
@@ -42,16 +58,18 @@ IndexFactory::~IndexFactory()
 	}
 }
 
-bool IndexFactory::containsIndex(const char* db, const char* ns, BSONObj key) {
+bool IndexFactory::containsIndex(const char* db, const char* ns, const std::string& key) {
+	std::set<std::string> keys;
+	keys.insert(key);
+	return containsIndex(db, ns, keys);
+}
+
+bool IndexFactory::containsIndex(const char* db, const char* ns, const std::set<std::string>& keys) {
 	map<std::string, map<std::string, IndexAlgorithm*>* >::iterator itIndexes = _indexes.find(std::string(db));
 	if (itIndexes != _indexes.end()) {	
 		std::map<std::string, IndexAlgorithm*>* indexes = itIndexes->second;
-		std::stringstream ss;
-		ss << "ns:" << ns << ":";
-		for (std::map<t_keytype, BSONContent* >::const_iterator i = key.begin(); i != key.end(); i++) {
-			ss << i->first << ";";
-		}
-		std::string skey = ss.str();
+		std::string skey = indexkey(ns, keys); 
+
 		map<std::string, IndexAlgorithm*>::iterator iIndex = indexes->find(skey);
 		if (iIndex == indexes->end()) {
 			return false;
@@ -63,7 +81,13 @@ bool IndexFactory::containsIndex(const char* db, const char* ns, BSONObj key) {
 	}
 }
 
-IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, BSONObj key) {
+IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, const std::string& key) {
+	std::set<std::string> skeys;
+	skeys.insert(key);
+	return index(db, ns, skeys);
+}
+
+IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, const std::set<std::string>& keys) {
 	map<std::string, map<std::string, IndexAlgorithm*>* >::iterator itIndexes = _indexes.find(db);
 	std::map<std::string, IndexAlgorithm*>* indexes;
 	if (itIndexes == _indexes.end()) {
@@ -72,12 +96,9 @@ IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, BSONObj key)
 	} else {
 		indexes = itIndexes->second;
 	}
-	std::stringstream ss;
-	ss << "ns:" << ns << ":";
-	for (std::map<t_keytype, BSONContent* >::const_iterator i = key.begin(); i != key.end(); i++) {
-		ss << i->first << ";";
-	}
-	std::string skey = ss.str();
+
+	std::string skey = indexkey(ns, keys);
+
 	map<std::string, IndexAlgorithm*>::iterator iIndex = indexes->find(skey);
 	IndexAlgorithm* indexImpl;
 	if (iIndex == indexes->end()) {

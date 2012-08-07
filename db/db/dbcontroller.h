@@ -11,6 +11,7 @@ class FileInputStream;
 class BSONObj;
 class Command;
 class Logger;
+class FilterParser;
 
 enum FILE_TYPE {
     DATA_FTYPE,
@@ -54,7 +55,7 @@ class DBController
 		  std::map<std::string, std::map<std::string, SpacesType>* > _spaces;
         StreamType* open(std::string db, std::string ns, FILE_TYPE type);
 		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, const BSONObj& filter);
-		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, const char* filter) throw (ParseException);
+		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, FilterParser* parser) throw (ParseException);
 		  Logger* _logger;
 		  std::string fileName(std::string ns, FILE_TYPE type) const;
 

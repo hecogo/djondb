@@ -2,9 +2,15 @@
 #define BPLUSINDEX_H
 
 #include "index.h"
+template <class K, class V>
+class PriorityCache;
+
 #include <boost/shared_ptr.hpp>
 
 typedef char* INDEXPOINTERTYPE;
+
+#define COMPAREKEYS(k1, k2) \
+	(strcmp(k1, k2) == 0);
 
 const int BUCKET_MAX_ELEMENTS = 3; // Should be even (3, 5, 7)
 
@@ -44,6 +50,7 @@ class BPlusIndex: public IndexAlgorithm
     protected:
     private:
         Bucket* _head;
+		  PriorityCache<INDEXPOINTERTYPE, Index*>* _priorityCache;
 
     private:
         bool insertElement(const Index& elem);

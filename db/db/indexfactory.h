@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <set>
 
 class IndexAlgorithm;
 
@@ -16,8 +17,10 @@ class IndexFactory
         virtual ~IndexFactory();
 
         static IndexFactory indexFactory;
-        IndexAlgorithm* index(const char* db, const char* ns, BSONObj key);
-		  bool containsIndex(const char* db, const char* ns, BSONObj key);
+        IndexAlgorithm* index(const char* db, const char* ns, const std::set<std::string>& keys);
+        IndexAlgorithm* index(const char* db, const char* ns, const std::string& key);
+		  bool containsIndex(const char* db, const char* ns, const std::string& key);
+		  bool containsIndex(const char* db, const char* ns, const std::set<std::string>& keys);
     protected:
     private:
         IndexFactory();

@@ -24,6 +24,7 @@ class BSONContent {
 		  }
 
 		  bool operator ==(const BSONContent& content);
+		  bool operator !=(const BSONContent& content);
 		  operator int();
 		  operator long();
 		  operator double();

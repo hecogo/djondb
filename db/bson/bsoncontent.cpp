@@ -165,6 +165,68 @@ bool BSONContent::operator ==(const BSONContent& content) {
 					{
 						BSONObj* obj1 = (BSONObj*)cont1;
 						BSONObj* obj2 = (BSONObj*)cont2;
+						result = (*obj1 == *obj2);
+					}
+				case BSONARRAY_TYPE:
+					result = false;
+					break;
+				default:
+					break;
+			}
+			return result;
+		}	
+	}
+}
+
+bool BSONContent::operator !=(const BSONContent& content) {
+	if (this->_type != content._type) {
+		return true;
+	} else {
+		void* cont1 = this->_element;
+		void* cont2 = content._element;
+		// if the pointers are equal it's pointless to compare the contents
+		if (cont1 == cont2) {
+			return false;
+		} else {
+			bool result;
+			switch (this->_type) {
+				case STRING_TYPE:
+					result = ((std::string*)cont1)->compare(*(std::string*)cont2) != 0;
+					break;
+				case PTRCHAR_TYPE: 
+					{
+						char* c1 = (char*)cont1;
+						char* c2 = (char*)cont2;
+						result = strcmp(c1, c2) != 0;
+					}
+					break;
+				case INT_TYPE: 
+					{
+						int i1 = *(int*)cont1;
+						int i2 = *(int*)cont2;
+						result = (i1 != i2);
+					}
+					break;
+				case LONG_TYPE:
+					{
+						long l1 = *(long*)cont1;
+						long l2 = *(long*)cont2;
+						result = (l1 != l2);
+					}
+					break;
+				case DOUBLE_TYPE:
+					{
+						long l1 = *(long*)cont1;
+						long l2 = *(long*)cont2;
+						result = (l1 != l2);
+					}
+					break;
+				case BSON_TYPE:
+					{
+						BSONObj* obj1 = (BSONObj*)cont1;
+						BSONObj* obj2 = (BSONObj*)cont2;
+
+						result = (*obj1 != *obj2);
 					}
 				case BSONARRAY_TYPE:
 					return false;
@@ -198,15 +260,15 @@ BSONContent::operator double() {
 /*
  * To make the user of this library easier the char* will not be implemented, use std::string instead
  * otherwise the user should handle the free of the char*
-BSONContent::operator char*() {
-	assert(_type == PTRCHAR_TYPE);
-	char* content = (char*)_element;
-	char* result = (char*)malloc(strlen(content + 1));
-	memset(result, 0, strlen(content + 1));
-	memcpy(result, content, strlen(content));
-	return result; 
-}
-*/
+ BSONContent::operator char*() {
+ assert(_type == PTRCHAR_TYPE);
+ char* content = (char*)_element;
+ char* result = (char*)malloc(strlen(content + 1));
+ memset(result, 0, strlen(content + 1));
+ memcpy(result, content, strlen(content));
+ return result; 
+ }
+ */
 
 BSONContent::operator std::string() {
 	assert((_type == STRING_TYPE) || (_type == PTRCHAR_TYPE));

@@ -20,6 +20,7 @@
 
 #include "bson.h"
 #include "util.h"
+#include "prioritycache.h"
 #include <string.h>
 #include <iostream>
 #include <sstream>
@@ -27,10 +28,14 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
+bool compareIndex(INDEXPOINTERTYPE ix1, INDEXPOINTERTYPE ix2) {
+	return COMPAREKEYS(ix1, ix2);
+}
+
 BPlusIndex::BPlusIndex()
 {
-
     _head = new Bucket();
+	 _priorityCache = new PriorityCache<INDEXPOINTERTYPE, Index*>(1000, compareIndex);
     initializeBucket(_head);
 }
 
@@ -94,17 +99,33 @@ Index* BPlusIndex::find(const BSONObj& elem)
 //    crc32.process_bytes(key, strlen(key));
 //    long value = crc32.checksum();
 
-	Index index;
-	index.key = new BSONObj(elem);
-	BucketElement* element = findBucketElement(_head, index, false);
+	Logger* log = getLogger(NULL);
+	
 	Index* result = NULL;
-	if (element != NULL) {
-		result = element->index;
+	INDEXPOINTERTYPE key = elem.toChar();
+	PriorityCache<INDEXPOINTERTYPE, Index*>::iterator it = _priorityCache->get(key);
+	if (it != _priorityCache->end()) {
+		result = it->second;
 	}
-	if (index.key) {
-		delete index.key;
-		index.key = NULL;
+	if (log->isDebug()) {
+		if (result != NULL) {
+			log->debug(3, "BPlusIndex::find %s found in priority cache");
+		}
 	}
+	if (result == NULL) {
+		Index index;
+		index.key = new BSONObj(elem);
+		BucketElement* element = findBucketElement(_head, index, false);
+		if (element != NULL) {
+			result = element->index;
+		}
+		if (index.key) {
+			delete index.key;
+			index.key = NULL;
+		}
+	}
+	free(key);
+	delete log;
 	return result;
 }
 
@@ -219,6 +240,7 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 	log->debug("inserting element. key: %s", element->key);
 	log->debug("current bucket. min: %s, max: %s, size: %d", bucket->minKey, bucket->maxKey, bucket->size);
 #endif
+
 	INDEXPOINTERTYPE key = element->key;
 	BucketElement* currentElement = bucket->root;
 	if (currentElement == NULL) {
@@ -324,6 +346,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 	INDEXPOINTERTYPE key = bkey->toChar();
 	BucketElement* result = NULL;
 	bool created = false;
+
 	if (currentBucket->size == 0)
 	{
 		if (!create) {
@@ -399,6 +422,8 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 		free(key);
 		delete index->key;
 		delete index;
+	} else {
+		_priorityCache->add(key, index);
 	}
 
 	return result;

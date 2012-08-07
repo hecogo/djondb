@@ -146,7 +146,12 @@ void DBController::initialize(std::string dataDir) {
 					BSONObj* obj = readBSON(stream);
 
 					if (!impl) {
-						impl = IndexFactory::indexFactory.index(db->c_str(), ns->c_str(), *obj);
+						std::set<std::string> skeys;
+						for (BSONObj::const_iterator i = obj->begin(); i != obj->end(); i++) {
+							std::string key = i->first;
+							skeys.insert(key);
+						}
+						impl = IndexFactory::indexFactory.index(db->c_str(), ns->c_str(), skeys);
 					}
 					long indexPos = stream->readLong();
 					long posData = stream->readLong();
@@ -351,9 +356,11 @@ bool DBController::close(char* db, char* ns) {
 }
 
 void DBController::updateIndex(char* db, char* ns, BSONObj* bson, long filePos) {
+
+	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, "_id");
+
 	BSONObj indexBSON;
 	indexBSON.add("_id", bson->getString("_id"));
-	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, indexBSON);
 	Index* index = impl->find(indexBSON);
 
 	index->posData = filePos;
@@ -372,7 +379,8 @@ void DBController::insertIndex(char* db, char* ns, BSONObj* bson, long filePos) 
 	BSONObj indexBSON;
 	std::string id = bson->getString("_id");
 	indexBSON.add("_id", id);
-	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, indexBSON);
+	
+	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, "_id");
 
 	StreamType* out = open(std::string(db), std::string(ns), INDEX_FTYPE);
 
@@ -449,11 +457,12 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const BSONObj& fil
 
 	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
 	if (filter.has("_id")) {
-		std::string id = filter.getString("_id");
+
+		IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, "_id");
 
 		BSONObj indexBSON;
+		std::string id = filter.getString("_id");
 		indexBSON.add("_id", id);
-		IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, indexBSON);
 		Index* index = impl->find(indexBSON);
 
 		if (index != NULL) {
@@ -505,7 +514,9 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter
 
 	std::vector<BSONObj*>* result;
 
-	result = findFullScan(db, ns, filter);
+	FilterParser* parser = FilterParser::parse(filter);
+
+	result = findFullScan(db, ns, parser);
 
 	return result;
 }
@@ -550,8 +561,8 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) throw(P
 	return bsonResult;
 }
 
-std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const char* filter) throw(ParseException) {
-	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, filter: %s", db, ns, filter);
+std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, FilterParser* parser) throw(ParseException) {
+	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan with parser db: %s, ns: %s", db, ns);
 	std::string filedir = _dataDir + db;
 	filedir = filedir + FILESEPARATOR;
 
@@ -564,8 +575,6 @@ std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const char
 	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
 
 	BSONInputStream* bis = new BSONInputStream(fis);
-
-	FilterParser* parser = FilterParser::parse(filter);
 
 	while (!fis->eof()) {
 		BSONObj* obj = bis->readBSON();

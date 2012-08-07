@@ -58,40 +58,28 @@ filter_expr returns [BaseExpression* val]
 	} ;
 
 boolean_expr returns [BaseExpression* val]
-@init {
-   BaseExpression* result = NULL;
-}
-@after {
-   $val = result;
-}
 	:	b1=boolean_term 
 	{
-	   result = $b1.val;
+	   $val = $b1.val;
 	}
 	(OR b2=boolean_term {
 	   BinaryExpression* be = new BinaryExpression(FO_OR);
-	   be->push(result);
+	   be->push($val);
 	   be->push($b2.val);
-	   result = be;
+	   $val = be;
 	})*;
 
 boolean_term returns [BaseExpression* val]
-@init {
-   BaseExpression* result = NULL;
-}
-@after {
-   $val = result;
-}
 	:	b1=boolean_value
 	{
-	   result = $b1.val;
+	   $val = $b1.val;
 	}
 	 (AND b2=boolean_value
 	 {
 	   BinaryExpression* be = new BinaryExpression(FO_AND);
-	   be->push(result);
+	   be->push($val);
 	   be->push($b2.val);
-	   result = be;
+	   $val = be;
 	 })*;
 	
 boolean_value returns [BaseExpression* val]
@@ -108,20 +96,14 @@ parenthesized_boolean returns [BaseExpression* val]
 	} RPAREN;
 	
 nonparentherized_boolean returns [BaseExpression* val]
-@init {
-   BaseExpression* result = NULL;
-}
-@after {
-   $val = result;
-}
 	: u1=unary_expr {
-	   result = $u1.val;
+	   $val = $u1.val;
 	} ( OPER u2=unary_expr {
 	   FILTER_OPERATORS oper = parseFilterOperator((char*)$OPER.text->chars);
 	   BinaryExpression* be = new BinaryExpression(oper);
-	   be->push(result);
+	   be->push($val);
 	   be->push($u2.val);
-	   result = be;
+	   $val = be;
 	})*;
 
 

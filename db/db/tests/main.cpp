@@ -86,15 +86,14 @@ class TestDBSuite: public Test::Suite
 			fos.writeString(std::string("13"));
 			fos.close();
 
-			TEST_ADD(TestDBSuite::testExpressions);
-			TEST_ADD(TestDBSuite::testFilterExpressionParser);
-			TEST_ADD(TestDBSuite::testFilterExpressionParserEquals);
 			TEST_ADD(TestDBSuite::testSimpleIndex);
 			TEST_ADD(TestDBSuite::testComplexIndex);
 			TEST_ADD(TestDBSuite::testIndexFactory);
+			TEST_ADD(TestDBSuite::testExpressions);
+			TEST_ADD(TestDBSuite::testFilterExpressionParser);
+			TEST_ADD(TestDBSuite::testFilterExpressionParserEquals);
 			TEST_ADD(TestDBSuite::testInsertWithStringId);
 			TEST_ADD(TestDBSuite::testInsertWithCharId);
-			TEST_ADD(TestDBSuite::testInsertWithoutId);
 
 			// TEST_ADD(TestDBSuite::testFindPrevious);
 			TEST_ADD(TestDBSuite::testMassiveInsert);
@@ -224,16 +223,8 @@ class TestDBSuite: public Test::Suite
 				obj.add("state", 1);
 				obj.add("name", "John");
 
-				FilterParser* parser = FilterParser::parse("$'age'");
-				ExpressionResult* result = parser->eval(obj);
-
-				TEST_ASSERT(result->type() == ExpressionResult::RT_INT);
-				int* test = (int*)result->value();
-
-				TEST_ASSERT(test != NULL);
-				TEST_ASSERT(*test == 35);
-
-				delete parser;
+				FilterParser* parser = NULL;
+				ExpressionResult* result = NULL;
 
 				parser = FilterParser::parse("");
 				result = parser->eval(obj);
@@ -401,17 +392,6 @@ class TestDBSuite: public Test::Suite
 			{
 				delete res;
 			}
-		}
-
-		void testInsertWithoutId()
-		{
-			cout << "\ntestInsertWithoutId" << endl;
-			BSONObj obj;
-			obj.add("name", "cross");
-			BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
-			TEST_ASSERT(res != NULL);
-			TEST_ASSERT(res->has("_id"));
-			delete res;
 		}
 
 		void testInsertComplexBSON() {
@@ -778,29 +758,23 @@ class TestDBSuite: public Test::Suite
 
 		void testIndexFactory() {
 			cout << "\ntestIndexFactory" << endl;
-			BSONObj test;
-			test.add("_id", "1");
 
-			IndexAlgorithm* index = IndexFactory::indexFactory.index("dbtest", "ns.a", test);
+			IndexAlgorithm* index = IndexFactory::indexFactory.index("dbtest", "ns.a", "_id");
 			TEST_ASSERT(index != NULL);
 
 			// Let's check if the factory returns the same instance for the same key
-			IndexAlgorithm* indexCompare = IndexFactory::indexFactory.index("dbtest", "ns.a", test);
+			IndexAlgorithm* indexCompare = IndexFactory::indexFactory.index("dbtest", "ns.a", "_id");
 			TEST_ASSERT(index == indexCompare);
 
 			// Let's change the keys and test if a new IndexAlgorithm will be returned
-			BSONObj test2;
-			test2.add("key", "a");
-			IndexAlgorithm* indexCompare2 = IndexFactory::indexFactory.index("dbtest", "ns.a", test2);
+			IndexAlgorithm* indexCompare2 = IndexFactory::indexFactory.index("dbtest", "ns.a", "key");
 			TEST_ASSERT(index != indexCompare2);
 
 			// Checking the contains method
-			bool res = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", test);
+			bool res = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", "_id");
 			TEST_ASSERT(res);
 
-			BSONObj test3;
-			test3.add("nkey", "b");
-			bool res2 = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", test3);
+			bool res2 = IndexFactory::indexFactory.containsIndex("dbtest", "ns.a", "nkey");
 			TEST_ASSERT(!res2);
 		}
 

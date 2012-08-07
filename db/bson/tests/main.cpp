@@ -31,6 +31,7 @@ class TestBSONSuite : public Test::Suite
 		{
 			TEST_ADD(TestBSONSuite::testBigBSON);
 			TEST_ADD(TestBSONSuite::testBSON);
+			TEST_ADD(TestBSONSuite::testEquals);
 			TEST_ADD(TestBSONSuite::testCopyBSON);
 			TEST_ADD(TestBSONSuite::testParserTrivial);
 			TEST_ADD(TestBSONSuite::testParserSimple);
@@ -106,6 +107,29 @@ class TestBSONSuite : public Test::Suite
 			delete obj;
 		}
 
+		void testEquals() {
+			cout << "\ntestEquals" << endl;
+			BSONObj obj1;
+			obj1.add("int", 1);
+			obj1.add("double", 1.2);
+			obj1.add("string", std::string("Test"));
+
+			BSONObj obj2;
+			obj2.add("int", 1);
+			obj2.add("double", 1.2);
+			obj2.add("string", std::string("Test"));
+
+			TEST_ASSERT(obj1 == obj2);
+
+			obj2.add("string2", std::string("Test"));
+			TEST_ASSERT(obj1 != obj2);
+			obj1.add("string2", std::string("Test"));
+			TEST_ASSERT(obj1 == obj2);
+
+			obj1.add("test", 1);
+			obj2.add("other", 2);
+			TEST_ASSERT(obj1 != obj2);
+		}
 		void testBigBSON()
 		{
 			cout << "testBigBSON" << endl;

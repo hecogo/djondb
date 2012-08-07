@@ -56,11 +56,12 @@ class BSONObj
 		  typedef typename std::map<t_keytype, BSONContent* >::iterator iterator;
 		  typedef typename std::map<t_keytype, BSONContent* >::const_iterator const_iterator;
 
-        iterator begin() const;
-        iterator end() const;
+        const_iterator begin() const;
+        const_iterator end() const;
         int length() const;
 
 		  bool operator ==(const BSONObj& obj) const;
+		  bool operator !=(const BSONObj& obj) const;
 
     protected:
     private:

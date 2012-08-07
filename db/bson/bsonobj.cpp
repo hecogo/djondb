@@ -264,11 +264,11 @@ BSONContent* BSONObj::getContent(t_keytype key, BSONTYPE ttype) const {
 	return content;
 }
 
-typename BSONObj::iterator BSONObj::begin() const {
+typename BSONObj::const_iterator BSONObj::begin() const {
 	return _elements.begin();
 }
 
-typename BSONObj::iterator BSONObj::end() const {
+typename BSONObj::const_iterator BSONObj::end() const {
 	return _elements.end();
 }
 
@@ -357,16 +357,55 @@ BSONContent BSONObj::getXpath(const std::string& xpath) const {
 }
 
 bool BSONObj::operator ==(const BSONObj& obj) const {
-	bool equals = true;
-	for (BSONObj::iterator it = this->begin(); it != this->end(); it++) {
+	if (this->has("_id") && obj.has("_id")) {
+		BSONContent* idThis = this->getContent("_id");
+		BSONContent* idOther = obj.getContent("_id");
+
+		return (*idThis == *idOther);
+	}
+	// Element count
+	if (this->length() != obj.length()) {
+		return false;
+	}
+	for (BSONObj::const_iterator it = this->begin(); it != this->end(); it++) {
 		t_keytype key = it->first;
 		BSONContent* content = it->second;
 
-		BSONContent* other = obj.get(key);
+		BSONContent* other = obj.getContent(key);
+		if (other == NULL) {
+			return false;
+		}
 		if (*content != *other) {
 			return false;
 		}
 	}
 	return true;
+}
+
+bool BSONObj::operator !=(const BSONObj& obj) const {
+	if (this->has("_id") && obj.has("_id")) {
+		BSONContent* idThis = this->getContent("_id");
+		BSONContent* idOther = obj.getContent("_id");
+
+		return (*idThis != *idOther);
+	}
+
+	// Element count
+	if (this->length() != obj.length()) {
+		return true;
+	}
+	for (BSONObj::const_iterator it = this->begin(); it != this->end(); it++) {
+		t_keytype key = it->first;
+		BSONContent* content = it->second;
+
+		BSONContent* other = obj.getContent(key);
+		if (other == NULL) {
+			return true;
+		}
+		if (*content != *other) {
+			return true;
+		}
+	}
+	return false;
 }
 
