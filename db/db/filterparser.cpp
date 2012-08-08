@@ -287,11 +287,18 @@ void pushBuffer(std::list<Token*>& tokens, char* buffer, int& posBuffer) {
 		}
 	}
 }
+const std::set<std::string> FilterParser::tokens() const {
+	return _xpathTokens;
+}
+void FilterParser::setTokens(std::set<std::string> tokens) {
+	_xpathTokens = tokens;
+}
 
 // static
 FilterParser* FilterParser::parse(const std::string& expression) throw(ParseException) {
 	BaseExpression* rootExpression = NULL;
 	std::list<Token*> lTokens;
+	std::set<std::string> xpathTokens;
 
 	int errorCode = -1;
 	const char* errorMessage;
@@ -309,6 +316,7 @@ FilterParser* FilterParser::parse(const std::string& expression) throw(ParseExce
 		parser = filter_expressionParserNew               (tokens);
 
 		rootExpression = parser ->start_point(parser);
+		xpathTokens = __parser_tokens();
 		if (parser->pParser->rec->state->exception != NULL) {
 			errorCode = 1;
 			errorMessage = (char*)parser->pParser->rec->state->exception->message;
@@ -325,9 +333,10 @@ FilterParser* FilterParser::parse(const std::string& expression) throw(ParseExce
 		throw ParseException(errorCode, errorMessage);
 	}
 	FilterParser* filterparser = new FilterParser(expression, rootExpression, lTokens);
+	filterparser->setTokens(xpathTokens);
 
 	return filterparser;
-}
+	}
 
 
 

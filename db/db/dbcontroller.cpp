@@ -516,7 +516,14 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter
 
 	FilterParser* parser = FilterParser::parse(filter);
 
-	result = findFullScan(db, ns, parser);
+	std::set<std::string> tokens = parser->tokens();
+
+	if (IndexFactory::indexFactory.contains(db->c_str(), ns->c_str(), skeys)) {
+		IndexAlgorithm* impl = IndexFactory::indexFactor.index(db->c_str(), ns->c_str(), skeys);
+
+	} else {
+		result = findFullScan(db, ns, parser);
+	}
 
 	return result;
 }

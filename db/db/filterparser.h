@@ -33,6 +33,7 @@
 #include <vector>
 #include <list>
 #include <exception>
+#include <set>
 
 class BaseExpression;
 class ExpressionResult;
@@ -92,17 +93,21 @@ class FilterParser {
 		FilterParser(const FilterParser& orig);
 		~FilterParser();
 		ExpressionResult* eval(const BSONObj& bson);
+		const std::set<std::string> tokens() const;
 		
 		static FilterParser* parse(const std::string& expression) throw(ParseException) ;
 			//throw (ParseException);
 
 	private:
 		FilterParser(const std::string& expression, BaseExpression* root, std::list<Token*> tokens);
+		void setTokens(std::set<std::string> tokens);
 
 	private:
 		std::string _expression;
 	   BaseExpression* _root;
 		std::list<Token*> _tokens;
+
+		std::set<std::string> _xpathTokens;
 
 };
 #endif // INCLUDE_FILTERPARSER_H

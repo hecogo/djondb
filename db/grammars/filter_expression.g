@@ -16,9 +16,14 @@ options {
    #include <stdio.h>
    #include <strings.h>
    #include <iostream>
+   #include <set>
+
+   std::set<std::string> __parser_tokens();
 }
 
 @postinclude {
+std::set<std::string> __parser_field_tokens;
+   
 static void displayRecognitionErrorNew  (pANTLR3_BASE_RECOGNIZER recognizer, pANTLR3_UINT8 * tokenNames) throw(ParseException)
 { 
 /*
@@ -31,6 +36,14 @@ static void displayRecognitionErrorNew  (pANTLR3_BASE_RECOGNIZER recognizer, pAN
     */
 }
 static void reportOverride(pANTLR3_BASE_RECOGNIZER recognizer) {
+}
+
+void addToken(char* token) {
+       __parser_field_tokens.insert(std::string(token));
+}
+
+std::set<std::string> __parser_tokens() {
+      return __parser_field_tokens;
 }
  }
 
@@ -122,6 +135,7 @@ xpath_expr returns [BaseExpression* val]
 	: XPATH {
 	     char* text = (char*)$XPATH.text->chars;
 	     SimpleExpression* result = new SimpleExpression(text);
+	     addToken(text);
 	     $val = result;
 	};
 
