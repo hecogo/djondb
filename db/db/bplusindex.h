@@ -2,6 +2,8 @@
 #define BPLUSINDEX_H
 
 #include "index.h"
+#include <list>
+
 template <class K, class V>
 class PriorityCache;
 
@@ -46,20 +48,25 @@ class BPlusIndex: public IndexAlgorithm
         virtual void add(const BSONObj& elem, long filePos, long indexPos);
         virtual Index* find(const BSONObj& elem);
         virtual void remove(const BSONObj& elem);
+		  virtual std::list<Index*> find(FilterParser* parser);
+
 		  void debug();
-    protected:
-    private:
-        Bucket* _head;
+	 protected:
+	 private:
+		  Bucket* _head;
 		  PriorityCache<INDEXPOINTERTYPE, Index*>* _priorityCache;
 
-    private:
-        bool insertElement(const Index& elem);
-        BucketElement* findBucketElement(Bucket* start, const Index& idx, bool create);
-        void initializeBucket(Bucket* const element);
-        void initializeBucketElement(BucketElement* const elem);
+	 private:
+		  bool insertElement(const Index& elem);
+		  BucketElement* findBucketElement(Bucket* start, const Index& idx, bool create);
+		  void initializeBucket(Bucket* const element);
+		  void initializeBucketElement(BucketElement* const elem);
 
-        void insertBucketElement(Bucket* bucket, BucketElement* element);
-        void checkBucket(Bucket* const bucket);
+		  void insertBucketElement(Bucket* bucket, BucketElement* element);
+		  void checkBucket(Bucket* const bucket);
+
+		  std::list<Index*> find(FilterParser* parser, Bucket* bucket);
+		  std::list<Index*> findElements(FilterParser* parser, Bucket* bucket);
 };
 
 #endif // BPLUSINDEX_H

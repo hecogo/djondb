@@ -518,8 +518,34 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter
 
 	std::set<std::string> tokens = parser->tokens();
 
-	if (IndexFactory::indexFactory.contains(db->c_str(), ns->c_str(), skeys)) {
-		IndexAlgorithm* impl = IndexFactory::indexFactor.index(db->c_str(), ns->c_str(), skeys);
+	if (IndexFactory::indexFactory.containsIndex(db, ns, tokens)) {
+		IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, tokens);
+
+		std::list<Index*> elements = impl->find(parser);
+
+		std::string filedir = _dataDir + db;
+		filedir = filedir + FILESEPARATOR;
+
+		std::stringstream ss;
+		ss << filedir << ns << ".dat";
+
+		std::string filename = ss.str();
+		result = new std::vector<BSONObj*>();
+		FileInputStream* fis = new FileInputStream(filename.c_str(), "rb");
+
+		BSONInputStream* bis = new BSONInputStream(fis);
+		for (std::list<Index*>::iterator it = elements.begin(); it != elements.end(); it++) {
+			Index* index = *it;
+
+			long posData = index->posData;
+			fis->seek(posData);
+
+			BSONObj* obj = bis->readBSON();
+
+			result->push_back(obj);
+		}
+		delete bis;
+		delete fis;
 
 	} else {
 		result = findFullScan(db, ns, parser);

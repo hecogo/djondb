@@ -15,6 +15,7 @@ options {
    #include <stdlib.h>
    #include <stdio.h>
    #include <strings.h>
+   #include <string>
    #include <iostream>
    #include <set>
 
@@ -39,7 +40,9 @@ static void reportOverride(pANTLR3_BASE_RECOGNIZER recognizer) {
 }
 
 void addToken(char* token) {
-       __parser_field_tokens.insert(std::string(token));
+	std::string expression = std::string(token).substr(2, strlen(token) - 3);
+
+       __parser_field_tokens.insert(expression);
 }
 
 std::set<std::string> __parser_tokens() {

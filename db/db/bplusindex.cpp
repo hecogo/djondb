@@ -21,6 +21,8 @@
 #include "bson.h"
 #include "util.h"
 #include "prioritycache.h"
+#include "filterparser.h"
+#include "expressionresult.h"
 #include <string.h>
 #include <iostream>
 #include <sstream>
@@ -434,4 +436,47 @@ bool BPlusIndex::insertElement(const Index& elem)
 	BucketElement* res = findBucketElement(_head, elem, true);
 
 	return (res != NULL);
+}
+
+std::list<Index*> BPlusIndex::findElements(FilterParser* parser, Bucket* bucket) {
+	BucketElement* element = bucket->root;
+
+	std::list<Index*> result;
+
+	while (element != NULL) {
+		Index* index = element->index;
+		BSONObj* obj = index->key;
+		ExpressionResult* eresult = parser->eval(*obj);
+		if (eresult->type() == ExpressionResult::RT_BOOLEAN) {
+			bool* bres = (bool*)eresult->value();
+			if (*bres) {
+				result.push_back(index);
+			}
+		}
+		delete eresult;
+		element = element->next;
+	}
+	return result;
+}
+
+std::list<Index*> BPlusIndex::find(FilterParser* parser, Bucket* bucket) {
+	std::list<Index*> result;
+
+	std::list<Index*> i = findElements(parser, bucket);
+	result.insert(result.end(), i.begin(), i.end());
+
+	if (bucket->left != NULL) {
+		i = find(parser, bucket->left);
+		result.insert(result.end(), i.begin(), i.end());
+	}
+	if (bucket->right != NULL) {
+		i = find(parser, bucket->right);
+		result.insert(result.end(), i.begin(), i.end());
+	}
+
+	return result;
+}
+
+std::list<Index*> BPlusIndex::find(FilterParser* parser) {
+	return find(parser, _head);
 }
