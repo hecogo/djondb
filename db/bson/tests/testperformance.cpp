@@ -19,6 +19,7 @@
 
 #include "bson.h"
 #include "util.h"
+#include <iostream>
 
 void testToChar() {
 	BSONObj obj;

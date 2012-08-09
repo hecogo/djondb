@@ -25,9 +25,11 @@ class IndexFactory
     private:
         IndexFactory();
 
+		  IndexAlgorithm* findIndex(std::vector<IndexAlgorithm*> algorithms, const std::set<std::string>& keys);
+
     private:
 
-        map<std::string, map<std::string, IndexAlgorithm*>* > _indexes;
+        map<std::string, map<std::string, std::vector<IndexAlgorithm*> >* > _indexes;
 };
 
 #endif // INDEXFACTORY_H
