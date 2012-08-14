@@ -67,14 +67,12 @@ bool IndexFactory::containsIndex(const char* db, const char* ns, const std::stri
 bool IndexFactory::containsIndex(const char* db, const char* ns, const std::set<std::string>& keys) {
 	map<std::string, map<std::string, IndexAlgorithm*>* >::iterator itIndexes = _indexes.find(std::string(db));
 	if (itIndexes != _indexes.end()) {	
-		std::map<std::string, IndexAlgorithm*>* indexes = itIndexes->second;
-		std::string skey = indexkey(ns, keys); 
+		std::map<std::string, std::vector<IndexAlgorithm* > >* indexesByNS = itIndexes->second;
 
-		map<std::string, IndexAlgorithm*>::iterator iIndex = indexes->find(skey);
-		if (iIndex == indexes->end()) {
-			return false;
-		} else {
-			return true;
+		std::map<std::string, std::vector<IndexAlgorithm* > >::iterator itIndexesByNS = indexesByNS->find(std::string(ns));
+
+		if (itIndexesByNS != indexesByNS->end()) {
+			std::vector<Index:
 		}
 	} else {
 		return false;
