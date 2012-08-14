@@ -31,7 +31,7 @@
 SimpleExpression::SimpleExpression(const char* expression)
 	:BaseExpression(ET_SIMPLE)
 {
-	_expression = strcpy(const_cast<char*>(expression), strlen(expression));
+	_expression = strcpy(const_cast<char*>(expression), 2, strlen(expression) - 3);
 }
 
 SimpleExpression::SimpleExpression(const SimpleExpression& orig)
@@ -45,8 +45,7 @@ SimpleExpression::~SimpleExpression() {
 }
 
 ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
-	std::string expression = std::string(_expression).substr(2, strlen(_expression) - 3);
-	BSONContent content = bson.getXpath(expression);
+	BSONContent content = bson.getXpath(_expression);
 
 	ExpressionResult::RESULT_TYPE type;
 	ExpressionResult* result = NULL;
@@ -86,4 +85,8 @@ ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
 BaseExpression* SimpleExpression::copyExpression() {
 	SimpleExpression* result = new SimpleExpression(this->_expression);
 	return result;
+}
+
+const char* SimpleExpression::expression() const {
+	return const_cast<const char*>(_expression);
 }

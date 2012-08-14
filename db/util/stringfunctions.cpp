@@ -29,11 +29,15 @@ char* strcpy(std::string str) {
     return strcpy(const_cast<char*>(str.c_str()), str.length());
 }
 
-char* strcpy(char* str, int len) {
+char* strcpy(char* str, int offset, int len) {
     char* result = (char*)malloc(len + 1);
     memset(result, 0, len +1);
-    memcpy(result, str, len);
+    memcpy(result, str + offset, len);
     return result;
+}
+
+char* strcpy(char* str, int len) {
+	return strcpy(str, 0, len);
 }
 
 bool endsWith(char* source, char* check) {

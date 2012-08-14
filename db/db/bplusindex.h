@@ -45,7 +45,7 @@ class BPlusIndex: public IndexAlgorithm
         BPlusIndex();
         virtual ~BPlusIndex();
 
-        virtual void add(const BSONObj& elem, long filePos, long indexPos);
+        virtual void add(const BSONObj& elem, std::string documentId, long filePos, long indexPos);
         virtual Index* find(const BSONObj& elem);
         virtual void remove(const BSONObj& elem);
 		  virtual std::list<Index*> find(FilterParser* parser);

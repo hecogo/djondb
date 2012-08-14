@@ -82,9 +82,10 @@ BPlusIndex::~BPlusIndex()
     }
 }
 
-void BPlusIndex::add(const BSONObj& elem, long filePos, long indexPos)
+void BPlusIndex::add(const BSONObj& elem, const std::string documentId, long filePos, long indexPos)
 {
     Index index;
+	 index.documentId = documentId;
     index.key = new BSONObj(elem);
     index.posData = filePos;
 	 index.indexPos = indexPos;
@@ -340,6 +341,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 {
 	Index* index = new Index();
 	index->key = new BSONObj(*idx.key);
+	index->documentId = idx.documentId;
 	index->indexPos = idx.indexPos;
 	index->posData = idx.posData;
 

@@ -113,6 +113,16 @@ void DBController::initialize(std::string dataDir) {
 			if (type == INDEX_FTYPE) {
 				long currentPos = stream->currentPos();
 				stream->seek(0);
+
+				char* dbversion = stream->readChars(11);
+
+				int mark = stream->readChars(10);
+				// check if the file is marked as versioned version (0.1 version does not have this mark)
+				int dbversion = 0.1;
+				if (mark == 1234) {
+
+
+				}
 				IndexAlgorithm* impl = NULL;
 				while (!stream->eof()) {
 					BSONObj* obj = readBSON(stream);

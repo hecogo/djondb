@@ -30,10 +30,10 @@ class TestUtilSuite : public Test::Suite
 {
 	public:
 		TestUtilSuite() {
-			TEST_ADD(TestUtilSuite::testDates)
-				TEST_ADD(TestUtilSuite::testTimes)
-				TEST_ADD(TestUtilSuite::testStrings)
-				TEST_ADD(TestUtilSuite::testUUID);
+			TEST_ADD(TestUtilSuite::testDates);
+			TEST_ADD(TestUtilSuite::testTimes);
+			TEST_ADD(TestUtilSuite::testStrings);
+			TEST_ADD(TestUtilSuite::testUUID);
 			TEST_ADD(TestUtilSuite::testSettings);
 			TEST_ADD(TestUtilSuite::testFileUtils);
 			TEST_ADD(TestUtilSuite::testCircularQueue);
@@ -87,7 +87,7 @@ class TestUtilSuite : public Test::Suite
 			TEST_ASSERT(c.previous() == 1);
 			TEST_ASSERT(c.previous() == 3);
 			TEST_ASSERT(c.previous() == 2);
-			
+
 			c.push_back(4);
 			TEST_ASSERT(c.current() == 4);
 			TEST_ASSERT(c.previous() == 3);
@@ -128,6 +128,13 @@ class TestUtilSuite : public Test::Suite
 			TEST_ASSERT(strcmp(test, res) == 0);
 			TEST_ASSERT(test != res);
 			free(res);
+
+			// test offset
+			char* testOffSet = "Hello world!";
+			char* res2 = strcpy(testOffSet, 6, 5);
+			TEST_ASSERT(strcmp("world", res2) == 0);
+			TEST_ASSERT(testOffSet != res2);
+			free(res2);
 
 			//copy string
 			std::string s = "Hello world!";
