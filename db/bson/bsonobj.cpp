@@ -46,48 +46,48 @@ BSONObj::~BSONObj()
 
 /*
 	void BSONObj::add(t_keytype key, void* val) {
-	BSONCONTENT_FILL(key, PTR, val);
+	fillContent(key, PTR, val);
 	}
 	*/
 
 void BSONObj::add(t_keytype key, int val) {
 	int* internalValue = new int();
 	*internalValue = val;
-	BSONCONTENT_FILL(key, INT_TYPE, internalValue);
+	fillContent(key, INT_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, double val) {
 	double* internalValue = new double();
 	*internalValue = val;
-	BSONCONTENT_FILL(key, DOUBLE_TYPE, internalValue);
+	fillContent(key, DOUBLE_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, long val) {
 	long* internalValue = new long();
 	*internalValue = val;
-	BSONCONTENT_FILL(key, LONG_TYPE, internalValue);
+	fillContent(key, LONG_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, char* val) {
 	char* internalValue = (char*)malloc(strlen(val) + 1);
 	memset(internalValue, 0, strlen(val) + 1);
 	strcpy(internalValue, val);
-	BSONCONTENT_FILL(key, PTRCHAR_TYPE, internalValue);
+	fillContent(key, PTRCHAR_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, std::string val) {
 	std::string* internalValue = new std::string(val);
-	BSONCONTENT_FILL(key, STRING_TYPE, internalValue);
+	fillContent(key, STRING_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, const BSONObj& val) {
 	BSONObj* internalValue = new BSONObj(val);
-	BSONCONTENT_FILL(key, BSON_TYPE, internalValue);
+	fillContent(key, BSON_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, const BSONArrayObj& val) {
 	BSONArrayObj* internalValue = new BSONArrayObj(val);
-	BSONCONTENT_FILL(key, BSONARRAY_TYPE, internalValue);
+	fillContent(key, BSONARRAY_TYPE, internalValue);
 }
 
 
@@ -409,3 +409,16 @@ bool BSONObj::operator !=(const BSONObj& obj) const {
 	return false;
 }
 
+void BSONObj::fillContent(t_keytype kkey, BSONTYPE ttype, void* vval) {
+	std::map<t_keytype, BSONContent* >::iterator i = _elements.find(kkey);
+	if (i != _elements.begin()) {
+		// Removes the previous element
+		BSONContent* current = i->second;
+		delete current;
+		_elements.erase(i);
+	}
+	BSONContent* content = new BSONContent(); 
+	content->setType(ttype); 
+	content->_element = vval; 
+	_elements.insert(pair<t_keytype, BSONContent* >(kkey, content));
+}

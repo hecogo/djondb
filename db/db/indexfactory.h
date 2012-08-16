@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <set>
+#include <vector>
 
 class IndexAlgorithm;
 

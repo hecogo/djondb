@@ -100,7 +100,7 @@ IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, const std::s
 	map<std::string, IndexAlgorithm*>::iterator iIndex = indexes->find(skey);
 	IndexAlgorithm* indexImpl;
 	if (iIndex == indexes->end()) {
-		indexImpl = new BPlusIndex();
+		indexImpl = new BPlusIndex(keys);
 		indexes->insert(pair<std::string, IndexAlgorithm*>(skey, indexImpl));
 	} else {
 		indexImpl = iIndex->second;

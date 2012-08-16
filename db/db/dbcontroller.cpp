@@ -114,12 +114,12 @@ void DBController::initialize(std::string dataDir) {
 				long currentPos = stream->currentPos();
 				stream->seek(0);
 
-				char* dbversion = stream->readChars(11);
+				char* version = stream->readChars(11);
 
-				int mark = stream->readChars(10);
+				std::string mark = stream->readChars(10);
 				// check if the file is marked as versioned version (0.1 version does not have this mark)
-				int dbversion = 0.1;
-				if (mark == 1234) {
+				Version dbversion("0.1");
+				if (mark.compare("1234") == 0) {
 
 
 				}
@@ -137,7 +137,7 @@ void DBController::initialize(std::string dataDir) {
 					}
 					long indexPos = stream->readLong();
 					long posData = stream->readLong();
-					impl->add(*obj, posData, indexPos);
+					impl->add(*obj, obj->getString("_id"), posData, indexPos);
 					delete obj;
 				}
 				stream->seek(currentPos);
@@ -203,6 +203,8 @@ BSONObj* DBController::insert(char* db, char* ns, BSONObj* obj) {
 		result->add("_revision", *trev);
 		delete trev;
 	}
+	// _status flag
+	obj->add("_status", 1);
 
 	std::string id;
 	if (obj->type("_id") == STRING_TYPE) {
@@ -245,6 +247,44 @@ void DBController::update(char* db, char* ns, BSONObj* obj) {
 	CacheManager::objectCache()->add(id, new BSONObj(*obj));
 }
 
+void DBController::deleteRecord(char* db, char* ns, const std::string& documentId, const std::string& revision) {
+	if (_logger->isDebug()) _logger->debug(2, "DBController::update db: %s, ns: %s, documentId: %s, revision: %s", db, ns, documentId.c_str(), revision.c_str());
+	StreamType* streamData = StreamManager::getStreamManager()->open(std::string(db), std::string(ns), DATA_FTYPE);
+
+	//    long crcStructure = checkStructure(obj);
+
+	//    char* text = obj->toChar();
+	//    streamData->writeChars(text, strlen(text));
+	//    free(text);
+
+	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, "_id");
+
+	BSONObj indexBSON;
+	indexBSON.add("_id", documentId);
+	Index* index = impl->find(indexBSON);
+	if (index != NULL) {
+
+		// TODO check the revision id
+		StreamType* out = StreamManager::getStreamManager()->open(db, ns, DATA_FTYPE);
+		out->flush();
+
+		long currentPos = out->currentPos();
+
+		out->seek(index->posData);
+
+		BSONObj* obj = readBSON(out);
+		obj->add("_status", 2); // DELETED
+
+		writeBSON(out, obj);
+
+		out->seek(currentPos);
+
+		std::string id = obj->getString("_id");
+
+		CacheManager::objectCache()->add(id, new BSONObj(*obj));
+	}
+}
+
 void DBController::updateIndex(char* db, char* ns, BSONObj* bson, long filePos) {
 
 	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, "_id");
@@ -269,12 +309,12 @@ void DBController::insertIndex(char* db, char* ns, BSONObj* bson, long filePos) 
 	BSONObj indexBSON;
 	std::string id = bson->getString("_id");
 	indexBSON.add("_id", id);
-	
+
 	IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, "_id");
 
 	StreamType* out = StreamManager::getStreamManager()->open(std::string(db), std::string(ns), INDEX_FTYPE);
 
-	impl->add(indexBSON, filePos, out->currentPos());
+	impl->add(indexBSON, id, filePos, out->currentPos());
 
 	writeBSON(out, &indexBSON);
 	out->writeLong(out->currentPos());
@@ -530,7 +570,7 @@ std::vector<std::string>* DBController::dbs() const {
 std::vector<std::string>* DBController::namespaces(const char* db) const {
 	return StreamManager::getStreamManager()->namespaces(db);
 }
-		  
+
 bool DBController::dropNamespace(char* db, char* ns) {
 	return StreamManager::getStreamManager()->dropNamespace(db, ns);
 }

@@ -42,7 +42,7 @@ struct Bucket {
 class BPlusIndex: public IndexAlgorithm
 {
     public:
-        BPlusIndex();
+        BPlusIndex(std::set<std::string> keys);
         virtual ~BPlusIndex();
 
         virtual void add(const BSONObj& elem, std::string documentId, long filePos, long indexPos);

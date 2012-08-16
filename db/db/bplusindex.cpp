@@ -34,7 +34,8 @@ bool compareIndex(INDEXPOINTERTYPE ix1, INDEXPOINTERTYPE ix2) {
 	return COMPAREKEYS(ix1, ix2);
 }
 
-BPlusIndex::BPlusIndex()
+BPlusIndex::BPlusIndex(std::set<std::string> keys)
+	: IndexAlgorithm(keys)
 {
     _head = new Bucket();
 	 _priorityCache = new PriorityCache<INDEXPOINTERTYPE, Index*>(1000, compareIndex);

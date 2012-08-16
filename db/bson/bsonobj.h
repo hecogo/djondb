@@ -11,14 +11,6 @@
 
 using namespace std;
 
-#define BSONCONTENT_FILL(kkey, ttype, vval) \
-    BSONContent* content = new BSONContent(); \
-    content->setType(ttype); \
-    content->_element = vval; \
-    _elements.insert(pair<t_keytype, BSONContent* >(kkey, content));
-
-
-
 class BSONObj
 {
     public:
@@ -64,8 +56,10 @@ class BSONObj
 		  bool operator !=(const BSONObj& obj) const;
 
     protected:
-    private:
-        std::map<t_keytype, BSONContent* > _elements;
+	 private:
+		  void fillContent(t_keytype kkey, BSONTYPE ttype, void* vval);
+	 private:
+		  std::map<t_keytype, BSONContent* > _elements;
 };
 
 #endif // BSONOBJ_H
