@@ -114,14 +114,15 @@ void DBController::initialize(std::string dataDir) {
 				long currentPos = stream->currentPos();
 				stream->seek(0);
 
-				char* version = stream->readChars(11);
 
 				std::string mark = stream->readChars(10);
 				// check if the file is marked as versioned version (0.1 version does not have this mark)
 				Version dbversion("0.1");
 				if (mark.compare("1234") == 0) {
-
-
+					char* version = stream->readChars(11);
+					dbversion = Version(version);
+				} else {
+					stream->seek(0);
 				}
 				IndexAlgorithm* impl = NULL;
 				while (!stream->eof()) {
