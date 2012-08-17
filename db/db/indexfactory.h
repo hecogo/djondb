@@ -12,6 +12,12 @@ using namespace std;
 
 class BSONObj;
 
+typedef std::vector<IndexAlgorithm*> listAlgorithmsType;
+typedef listAlgorithmsType* listAlgorithmsTypePtr;
+typedef map<std::string, listAlgorithmsTypePtr> listByNSType;
+typedef listByNSType* listByNSTypePtr;
+typedef map<std::string, listByNSTypePtr> listByDbType;
+
 class IndexFactory
 {
     public:
@@ -26,11 +32,11 @@ class IndexFactory
     private:
         IndexFactory();
 
-		  IndexAlgorithm* findIndex(std::vector<IndexAlgorithm*> algorithms, const std::set<std::string>& keys);
+		  IndexAlgorithm* findIndex(const listAlgorithmsTypePtr& algorithms, const std::set<std::string>& keys);
 
     private:
 
-        map<std::string, map<std::string, std::vector<IndexAlgorithm*> >* > _indexes;
+        listByDbType _indexes;
 };
 
 #endif // INDEXFACTORY_H

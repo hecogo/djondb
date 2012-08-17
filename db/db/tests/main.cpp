@@ -681,7 +681,9 @@ class TestDBSuite: public Test::Suite
 
 		void testIndex(std::vector<std::string> ids)
 		{
-			std::auto_ptr<BPlusIndex> tree(new BPlusIndex());
+			std::set<std::string> keys;
+			keys.insert("_id");
+			std::auto_ptr<BPlusIndex> tree(new BPlusIndex(keys));
 
 			std::auto_ptr<Logger> log(getLogger(NULL));
 
@@ -691,8 +693,9 @@ class TestDBSuite: public Test::Suite
 			for (std::vector<std::string>::iterator i = ids.begin(); i != ids.end(); i++)
 			{
 				BSONObj id;
-				id.add("_id", *i);
-				tree->add(id, 0, 0);
+				std::string sid = *i;
+				id.add("_id", sid);
+				tree->add(id, sid, 0, 0);
 				//tree->debug();
 				x++;
 			}

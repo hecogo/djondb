@@ -48,14 +48,21 @@ IndexFactory::IndexFactory()
 
 IndexFactory::~IndexFactory()
 {
-	for (map<std::string, map<std::string, IndexAlgorithm*>* >::iterator iDb = _indexes.begin(); iDb != _indexes.end(); iDb++) {
-		map<std::string, IndexAlgorithm*>* indexes = iDb->second;
-		for (map<std::string, IndexAlgorithm*>::iterator i = indexes->begin(); i != indexes->end(); i++) {
-			IndexAlgorithm* alg = i->second;
-			delete alg;
+	for (listByDbType::iterator idbs = _indexes.begin(); idbs != _indexes.end(); idbs++) {
+		listByNSTypePtr ins = idbs->second;
+		for (listByNSType::iterator i = ins->begin(); i != ins->end(); i++) {
+			listAlgorithmsTypePtr indexes = i->second;
+			for (listAlgorithmsType::iterator iindex = indexes->begin(); iindex != indexes->end(); iindex++) {
+				IndexAlgorithm* alg = *iindex;
+				delete alg;
+			}
+			indexes->clear();
+			delete indexes;
 		}
-		delete indexes;
+		ins->clear();
+		delete ins;
 	}
+	_indexes.clear();
 }
 
 bool IndexFactory::containsIndex(const char* db, const char* ns, const std::string& key) {
@@ -64,19 +71,58 @@ bool IndexFactory::containsIndex(const char* db, const char* ns, const std::stri
 	return containsIndex(db, ns, keys);
 }
 
-bool IndexFactory::containsIndex(const char* db, const char* ns, const std::set<std::string>& keys) {
-	map<std::string, map<std::string, IndexAlgorithm*>* >::iterator itIndexes = _indexes.find(std::string(db));
-	if (itIndexes != _indexes.end()) {	
-		std::map<std::string, std::vector<IndexAlgorithm* > >* indexesByNS = itIndexes->second;
+IndexAlgorithm* IndexFactory::findIndex(const listAlgorithmsTypePtr& algs, const std::set<std::string>& keys) {
+	IndexAlgorithm* result = NULL;
 
-		std::map<std::string, std::vector<IndexAlgorithm* > >::iterator itIndexesByNS = indexesByNS->find(std::string(ns));
+	for (listAlgorithmsType::const_iterator i = algs->begin(); i != algs->end(); i++) {
+		IndexAlgorithm* impl = *i;
+		std::set<std::string> implKeys = impl->keys();
 
-		if (itIndexesByNS != indexesByNS->end()) {
-			std::vector<Index:
+		std::set<std::string>::const_iterator iKeys = keys.begin();
+		std::set<std::string>::const_iterator implItKeys = implKeys.begin();
+
+		bool found = true;
+		while (true) {
+			if ((iKeys != keys.end()) && (implItKeys != implKeys.end())) {
+				std::string key1 = *iKeys;
+				std::string key2 = *implItKeys;
+
+				if (key1.compare(key2) != 0) {
+					found = false;
+					break;
+				}
+				iKeys++;
+				implItKeys++;
+			} else {
+				found = false;
+				break;
+			}
 		}
-	} else {
-		return false;
+		// If all the keys match the implementation keys then this is an exact index
+		if (found) {
+			result = impl;
+			break;
+		}
 	}
+	return result;
+}
+
+bool IndexFactory::containsIndex(const char* db, const char* ns, const std::set<std::string>& keys) {
+	bool result = false;
+	listByDbType::const_iterator itIndexes = _indexes.find(std::string(db));
+	if (itIndexes != _indexes.end()) {	
+		listByNSTypePtr byns = itIndexes->second;
+		listByNSType::const_iterator itIndexesNS = byns->find(std::string(ns));
+		if (itIndexesNS != byns->end()) {
+			listAlgorithmsTypePtr algorithms = itIndexesNS->second;
+
+			IndexAlgorithm* impl = findIndex(algorithms, keys);
+			if (impl != NULL) {
+				result = true;
+			}
+		}
+	}
+	return result;
 }
 
 IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, const std::string& key) {
@@ -86,24 +132,29 @@ IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, const std::s
 }
 
 IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, const std::set<std::string>& keys) {
-	map<std::string, map<std::string, IndexAlgorithm*>* >::iterator itIndexes = _indexes.find(db);
-	std::map<std::string, IndexAlgorithm*>* indexes;
-	if (itIndexes == _indexes.end()) {
-		indexes = new std::map<std::string, IndexAlgorithm*>();
-		_indexes.insert(pair<std::string, map<std::string, IndexAlgorithm*>* >(std::string(db), indexes));
+	listByDbType::iterator itIndexesByDB = _indexes.find(db);
+	listByNSTypePtr indexesByNs;
+	if (itIndexesByDB == _indexes.end()) {
+		indexesByNs = new listByNSType();
+		_indexes.insert(pair<std::string, listByNSTypePtr >(std::string(db), indexesByNs));
 	} else {
-		indexes = itIndexes->second;
+		indexesByNs = itIndexesByDB->second;
 	}
 
-	std::string skey = indexkey(ns, keys);
+	listByNSType::iterator itNs = indexesByNs->find(std::string(ns));
 
-	map<std::string, IndexAlgorithm*>::iterator iIndex = indexes->find(skey);
-	IndexAlgorithm* indexImpl;
-	if (iIndex == indexes->end()) {
-		indexImpl = new BPlusIndex(keys);
-		indexes->insert(pair<std::string, IndexAlgorithm*>(skey, indexImpl));
+	listAlgorithmsTypePtr algorithms;
+	if (itNs == indexesByNs->end()) {
+		algorithms = new listAlgorithmsType();
+		indexesByNs->insert(pair<std::string, listAlgorithmsTypePtr >(std::string(ns), algorithms));
 	} else {
-		indexImpl = iIndex->second;
+		algorithms = itNs->second;
+	}
+
+	IndexAlgorithm* indexImpl = findIndex(algorithms, keys);
+	if (indexImpl == NULL) {
+		indexImpl = new BPlusIndex(keys);
+		algorithms->push_back(indexImpl);
 	}
 
 	return indexImpl;
