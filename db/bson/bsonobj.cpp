@@ -411,7 +411,7 @@ bool BSONObj::operator !=(const BSONObj& obj) const {
 
 void BSONObj::fillContent(t_keytype kkey, BSONTYPE ttype, void* vval) {
 	std::map<t_keytype, BSONContent* >::iterator i = _elements.find(kkey);
-	if (i != _elements.begin()) {
+	if (i != _elements.end()) {
 		// Removes the previous element
 		BSONContent* current = i->second;
 		delete current;

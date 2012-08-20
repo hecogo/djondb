@@ -93,6 +93,10 @@ IndexAlgorithm* IndexFactory::findIndex(const listAlgorithmsTypePtr& algs, const
 				}
 				iKeys++;
 				implItKeys++;
+				// get to the end of both sides and all the keys are equal
+				if ((iKeys == keys.end()) && (implItKeys == implKeys.end())) {
+					break;
+				}
 			} else {
 				found = false;
 				break;
