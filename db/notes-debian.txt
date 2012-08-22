@@ -1,0 +1,11 @@
+
+to find out what packages your package needs to be built run the command:
+
+$ dpkg-depcheck -d ./configure
+To manually find exact build dependencies for /usr/bin/foo, execute
+
+$ objdump -p /usr/bin/foo | grep NEEDED
+and for each library listed, e.g., libfoo.so.6, execute
+
+$ dpkg -S libfoo.so.6
+Then just take the -dev version of every package as a Build-Depends entry. If you use ldd for this purpose, it will report indirect lib dependencies as well, resulting in the problem of excessive build dependencies.
