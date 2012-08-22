@@ -134,7 +134,7 @@ bool StreamManager::close(char* db, char* ns) {
 }
 
 void StreamManager::saveDatabases() {
-	if (_logger->isInfo()) _logger->debug(2, "DBController::saveDatabases");
+	if (_logger->isDebug()) _logger->debug(2, "StreamManager::saveDatabases");
 
 	std::auto_ptr<FileOutputStream> fos(new FileOutputStream(const_cast<char*>( (_dataDir + "djondb.dat").c_str()), "wb"));
 	for (std::map<std::string, std::map<std::string, SpacesType>* >::iterator idb = _spaces.begin(); idb != _spaces.end(); idb++) {

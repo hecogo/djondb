@@ -102,7 +102,6 @@ void NetworkService::stop() { //throw (NetworkException*) {
 	if (!_running) {
 		throw new NetworkException(new string("The network service is not running. Try starting it first"));
 	}
-	setRunning(false);
 	if (processing > 0) {
 		cout << "Stop requested but still working" << endl;
 	}
@@ -116,6 +115,7 @@ void NetworkService::stop() { //throw (NetworkException*) {
 		}
 	}
 	__dbController->shutdown();
+	setRunning(false);
 #ifndef WINDOWS
 	int res = close(sock);
 #else
@@ -183,7 +183,7 @@ void *startSocketListener(void* arg) {
 		log->error(std::string("Error binding"));
 	}
 	listen(sock, 5);
-	if (log->isDebug()) log->debug(1, "Accepting new connections");
+	if (log->isInfo()) log->info("Accepting new connections");
 	service->setRunning(true);
 
 	// Sets the nonblocking option for this socket
