@@ -31,7 +31,7 @@ std::string indexkey(const char* ns, const std::set<std::string>& keys) {
 	memset(buffer, 0, 3000);
 	sprintf(buffer, "ns:%s", ns);
 	int pos = strlen(ns);
-	for (std::set<std::string>::iterator it = keys.begin(); it != keys.end(); it++) {
+	for (std::set<std::string>::const_iterator it = keys.begin(); it != keys.end(); it++) {
 		std::string s = *it;
 		sprintf(buffer + pos, "%s:", s.c_str());
 		pos += s.length();

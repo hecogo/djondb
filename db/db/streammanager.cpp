@@ -42,7 +42,8 @@ void StreamManager::setDataDir(const std::string& dataDir) {
 }
 
 std::string StreamManager::fileName(std::string ns, FILE_TYPE type) const {
-	char* cfile = (char*)malloc(ns.length() + 4);
+	char* cfile = (char*)malloc(ns.length() + 5);
+	memset(cfile, 0, ns.length() + 5);
 	char* fileType;
 	switch (type) {
 		case DATA_FTYPE:

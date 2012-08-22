@@ -264,11 +264,11 @@ BSONContent* BSONObj::getContent(t_keytype key, BSONTYPE ttype) const {
 	return content;
 }
 
-typename BSONObj::const_iterator BSONObj::begin() const {
+BSONObj::const_iterator BSONObj::begin() const {
 	return _elements.begin();
 }
 
-typename BSONObj::const_iterator BSONObj::end() const {
+BSONObj::const_iterator BSONObj::end() const {
 	return _elements.end();
 }
 

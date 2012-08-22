@@ -203,6 +203,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\streammanager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\unaryexpression.h"
 				>
 			</File>
@@ -264,6 +268,10 @@
 			</File>
 			<File
 				RelativePath=".\simpleexpression.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\streammanager.cpp"
 				>
 			</File>
 			<File
