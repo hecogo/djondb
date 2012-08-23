@@ -266,11 +266,11 @@ class TestBSONSuite : public Test::Suite
 			BSONObj* testEmpty = BSONParser::parse("{}");
 			TEST_ASSERT(testEmpty->length() == 0);
 
-			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John', salary: 3500.25}");
+			BSONObj* obj = BSONParser::parse("{age: 1, name: 'John:test\\'test2\\'', salary: 3500.25}");
 			TEST_ASSERT(obj->getInt("age") != NULL);
 			TEST_ASSERT(*obj->getInt("age") == 1);
 			TEST_ASSERT(obj->getChars("name") != NULL);
-			TEST_ASSERT(strcmp(obj->getChars("name"), "John") == 0);
+			TEST_ASSERT(strcmp(obj->getChars("name"), "John:test\\'test2\\'") == 0);
 
 			TEST_ASSERT(obj->getDouble("salary") != NULL);
 			TEST_ASSERT(*obj->getDouble("salary") == 3500.25);

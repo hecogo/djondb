@@ -19,4 +19,22 @@ enum BSONTYPE {
 //    PTR
 };
 
+class BSONParseException: public std::exception {
+	public:
+		BSONParseException(const char* error) {
+			_errorMessage = error;
+		}
+
+		BSONParseException(const BSONParseException& orig) {
+			this->_errorMessage = orig._errorMessage;
+		}
+
+		virtual const char* what() const throw() {
+			return _errorMessage;
+		}
+
+	private:
+		const char* _errorMessage;
+};
+
 #endif //BSON_DEFS_H_INCLUDED

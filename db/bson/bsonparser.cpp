@@ -20,7 +20,7 @@
 
 #include "bsonobj.h"
 #include "bsonarrayobj.h"
-
+#include <stdio.h>
 
 struct BSONStruct {
 	char* name;
@@ -182,31 +182,30 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 			memset(buffer, 0, lenBuffer);
 			state = 2; //value
 		} else {
-			if (c[x] == '\'') {
-				if (stringOpen == 1) {
-					stringOpen = 0;
-					continue;
-				}
-				if (stringOpen == 0) {
-					stringOpen = 1;
-					if (state == 2) {
-						type = STRING_TYPE;
+			if (c[x] == '\'' || (c[x] == '\"')) {
+				// Collect all the characters
+				type = STRING_TYPE;
+				char stringChar = c[x];
+				bool escaped = false;
+				x++;
+				int startPos = x;
+				while ((x < strlen(c)) && ((c[x] != stringChar) || (escaped))) {
+					if (c[x] == '\\') {
+						escaped = true;
+					} else {
+						escaped = false;
 					}
-					continue;
+					buffer[len] = c[x];
+					len++;
+					x++;
 				}
-			}
-			if (c[x] == '\"') {
-				if (stringOpen == 2) {
-					stringOpen = 0;
-					continue;
+				if (x >= strlen(c)) {
+					char c[100];
+					sprintf(c, "An error ocurred parsing the bson. Error: unclosed string at %d",  startPos);
+
+					throw new BSONParseException(c);
 				}
-				if (stringOpen == 0) {
-					stringOpen = 2;
-					if (state == 2) {
-						type = STRING_TYPE;
-					}
-					continue;
-				}
+				continue;
 			}
 
 			if (c[x] == ' ' && stringOpen == 0) {
