@@ -45,8 +45,8 @@ class BSONObj
 
         char* toChar() const;
 
-		  typedef typename std::map<t_keytype, BSONContent* >::iterator iterator;
-		  typedef typename std::map<t_keytype, BSONContent* >::const_iterator const_iterator;
+		  typedef std::map<t_keytype, BSONContent* >::iterator iterator;
+		  typedef std::map<t_keytype, BSONContent* >::const_iterator const_iterator;
 
         const_iterator begin() const;
         const_iterator end() const;

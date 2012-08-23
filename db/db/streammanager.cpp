@@ -19,6 +19,7 @@
 #include "fileoutputstream.h"
 #include <stdlib.h>
 #include <memory>
+#include <cstring>
 
 StreamManager* StreamManager::_manager;
 

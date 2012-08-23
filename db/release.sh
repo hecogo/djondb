@@ -13,8 +13,8 @@ make DESTDIR=`pwd` install
 rm usr/bin/test*
 rm -rf ../debian/usr
 mv usr ../debian/
-cp /usr/lib/x86_64-linux-gnu/libantlr3c-3.2.so.0 ../debian/usr/lib
-cp /usr/lib/libv8.so.3.7.12.22 ../debian/usr/lib
+# cp /usr/lib/x86_64-linux-gnu/libantlr3c-3.2.so.0 ../debian/usr/lib
+# cp /usr/lib/libv8.so.3.7.12.22 ../debian/usr/lib
 
 cd ..
 sh debian.sh
