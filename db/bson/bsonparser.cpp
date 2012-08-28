@@ -181,6 +181,8 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 			len = 0;
 			memset(buffer, 0, lenBuffer);
 			state = 2; //value
+			// default type
+			type = INT_TYPE;
 		} else {
 			if (c[x] == '\'' || (c[x] == '\"')) {
 				// Collect all the characters
