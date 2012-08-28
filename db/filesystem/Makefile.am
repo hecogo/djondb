@@ -28,9 +28,6 @@ libdjon_filesystem_la_SOURCES = bsoninputstream.cpp \
                                                          networkoutputstream.h \
                                                          outputstream.h
 
-library_includedir=$(includedir)/djon-filesystem-1.0/djon-filesystem
-#library_include_HEADERS = bson.h
-
 TESTS = test-filesystem
 check_PROGRAMS = test-filesystem
 test_filesystem_LDADD = libdjon-filesystem.la -ldjon-bson -ldjon-util -lpthread -lX11 -lXss -lrt -luuid -lcpptest

@@ -13,3 +13,6 @@ endif
 
 #include aminclude.am
 
+library_includedir=$(includedir)/djondb
+library_include_HEADERS=config.h
+
