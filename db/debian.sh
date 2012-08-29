@@ -15,7 +15,7 @@ chmod +x debian/usr/bin/*
 strip debian/usr/bin/djondbd
 strip debian/usr/bin/djon-shell
 
-strip --strip-unneeded debian/usr/lib/djondb/*.so*
+strip --strip-unneeded debian/usr/lib/*.so*
 
 fakeroot dpkg-deb --build debian djondb.deb
 lintian djondb.deb
