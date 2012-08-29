@@ -20,7 +20,7 @@ libdjon_bson_la_SOURCES = bsonobj.cpp \
 			  bsonparser.cpp \
 			  bsonparser.h
 
-library_includedir=$(includedir)/djondb_0.1
+library_includedir=$(includedir)/djondb
 library_include_HEADERS = bson.h bsonobj.h bsonparser.h bsondefs.h bsoncontent.h bsonarrayobj.h
 
 TESTS = test-bson
