@@ -9,7 +9,7 @@ AM_CFLAGS += $(all_includes)
 AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-bson.la
-
+libdjon_bson_la_LDFLAGS = -static
 libdjon_bson_la_SOURCES = bsonobj.cpp \
 			  bsonobj.h \
 			  bsonarrayobj.cpp \

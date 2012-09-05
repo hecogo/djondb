@@ -10,6 +10,7 @@ AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-network.la
 
+libdjon_network_la_LDFLAGS = -static# -fPIC
 libdjon_network_la_SOURCES = networkservice.cpp \
                            network.h \
                            networkservice.h

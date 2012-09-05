@@ -10,6 +10,7 @@ AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-filesystem.la
 
+libdjon_filesystem_la_LDFLAGS = -static
 libdjon_filesystem_la_SOURCES = bsoninputstream.cpp \
                                                          bsonoutputstream.cpp \
                                                          fileinputoutputstream.cpp \

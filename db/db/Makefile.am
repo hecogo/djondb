@@ -10,6 +10,7 @@ AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-db.la
 
+libdjon_db_la_LDFLAGS = -static# -fPIC
 libdjon_db_la_SOURCES = bplusindex.cpp \
 								dbcontroller.cpp \
 								indexfactory.cpp \

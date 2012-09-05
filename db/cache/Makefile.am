@@ -10,6 +10,7 @@ AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-cache.la
 
+libdjon_cache_la_LDFLAGS = -static
 libdjon_cache_la_SOURCES = cachemanager.cpp \
                                                     structure.cpp \
                                                     structure.h \

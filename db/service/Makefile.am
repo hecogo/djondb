@@ -10,6 +10,7 @@ AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-service.la
 
+libdjon_service_la_LDFLAGS = -static# -fPIC
 libdjon_service_la_SOURCES = service.h \
                            service.cpp
 

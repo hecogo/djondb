@@ -4,6 +4,7 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 include $(top_srcdir)/common.mk
 
 lib_LTLIBRARIES = libdjon-util.la
+libdjon_util_la_LDFLAGS = -static
 libdjon_util_la_LIBADD = -lX11 -lXss -lrt -luuid 
 libdjon_util_la_SOURCES = util.cpp \
 			  fileutil.cpp \

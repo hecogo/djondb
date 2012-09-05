@@ -10,6 +10,7 @@ AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-command.la
 
+libdjon_command_la_LDFLAGS = -static# -fPIC
 libdjon_command_la_SOURCES = command.cpp \
 									  commandreader.cpp \
 									  commandresult.cpp \

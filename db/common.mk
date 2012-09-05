@@ -1,6 +1,6 @@
-AM_CFLAGS = # -Wall -Wextra 
-AM_CPPFLAGS = # -Wall -Wextra 
-AM_CXXFLAGS = #-fpic
+AM_CFLAGS = -fPIC # -Wall -Wextra 
+AM_CPPFLAGS = -fPIC # -Wall -Wextra 
+AM_CXXFLAGS = -fPIC 
 
 if DEBUG
 AM_CPPFLAGS += -g3 -O3
