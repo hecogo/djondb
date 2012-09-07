@@ -20,6 +20,7 @@
 #include <fileinputstream.h>
 #include <fileoutputstream.h>
 #include <fileinputoutputstream.h>
+#include <memorystream.h>
 #include "bsonoutputstream.h"
 #include "bsoninputstream.h"
 #include "bson.h"
@@ -41,6 +42,7 @@ class TestFileSystemSuite: public Test::Suite
 			TEST_ADD(TestFileSystemSuite::testBSONStreamsComplex);
 			TEST_ADD(TestFileSystemSuite::testBSONStreamsArray);
 			TEST_ADD(TestFileSystemSuite::testInnerArrays);
+			TEST_ADD(TestFileSystemSuite::testMemoryStream);
 		}
 
 	private:
@@ -70,6 +72,17 @@ class TestFileSystemSuite: public Test::Suite
 			TEST_ASSERT(strcmp(test, tchar) == 0);
 			streami.close();
 			free(test);
+		}
+
+		void testMemoryStream() {
+			MemoryStream ms(10);
+			char* text = "test1234567890darn0987654321";
+			ms.writeChars(text, strlen(text));
+
+			ms.seek(0);
+			char* res = ms.readChars();
+
+			TEST_ASSERT(strcmp(res, text) == 0);
 		}
 
 		void testFileInputOutputStreams()
@@ -139,6 +152,19 @@ class TestFileSystemSuite: public Test::Suite
 
 			fis->close();
 
+		}
+
+		void testBSONSelect() {
+			std::auto_ptr<BSONObj> objTest(BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: [{innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'} ] }"));
+			MemoryStream ms;
+			BSONOutputStream bos(&ms);
+			bos.writeBSON(*objTest.get());
+
+			ms.seek(0);
+			BSONInputStream bis(&ms);
+			BSONObj* result = bis.readBSON();
+
+			TEST_ASSERT(*result == *objTest.get());
 		}
 
 		void testInnerArrays() {

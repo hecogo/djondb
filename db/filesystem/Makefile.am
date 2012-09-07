@@ -12,22 +12,13 @@ lib_LTLIBRARIES = libdjon-filesystem.la
 
 libdjon_filesystem_la_LDFLAGS = -static
 libdjon_filesystem_la_SOURCES = bsoninputstream.cpp \
-                                                         bsonoutputstream.cpp \
-                                                         fileinputoutputstream.cpp \
-                                                         fileinputstream.cpp \
-                                                         fileoutputstream.cpp \
-                                                         networkinputstream.cpp \
-                                                         networkoutputstream.cpp \
-                                                         bsoninputstream.h \
-                                                         bsonoutputstream.h \
-                                                         defs.h \
-                                                         fileinputoutputstream.h \
-                                                         fileinputstream.h \
-                                                         fileoutputstream.h \
-                                                         inputstream.h \
-                                                         networkinputstream.h \
-                                                         networkoutputstream.h \
-                                                         outputstream.h
+										  bsonoutputstream.cpp \
+										  fileinputoutputstream.cpp \
+										  fileinputstream.cpp \
+										  fileoutputstream.cpp \
+										  networkinputstream.cpp \
+										  networkoutputstream.cpp \
+										  memorystream.cpp 
 
 TESTS = test-filesystem
 check_PROGRAMS = test-filesystem

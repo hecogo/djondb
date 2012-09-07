@@ -102,6 +102,7 @@ class TestDBSuite: public Test::Suite
 			TEST_ADD(TestDBSuite::testInsertComplexBSON);
 			TEST_ADD(TestDBSuite::testFindsByFilter);
 			TEST_ADD(TestDBSuite::testFindsByTextFilter);
+			TEST_ADD(TestDBSuite::testFindPartial);
 			TEST_ADD(TestDBSuite::testDropnamespace);
 			TEST_ADD(TestDBSuite::testDbs);
 			TEST_ADD(TestDBSuite::testNamespaces);
@@ -538,6 +539,36 @@ class TestDBSuite: public Test::Suite
 				cout << "\nThroughput: " << (__ids.size() / secs) << " ops." << endl;
 				cout << "\n------------------------------------------------------------" << endl;
 			}
+		}
+
+		void testFindPartial() {
+			controller.dropNamespace("testdb", "partial");
+
+			std::string record("{ 'name': 'John', 'lastName': 'Smith', 'address': { 'phone': '555-12345', 'type': 'home'} }");
+
+			BSONObj* obj = BSONParser::parse(record.c_str());
+
+			controller.insert("testdb", "partial", obj);
+
+			std::vector<BSONObj*>* result = controller.find("testdb", "partial", "$\"name\", $\"lastName\"", "");
+
+			TEST_ASSERT(result != NULL);
+			if (result != NULL) {
+				BSONObj testObj;
+				testObj.add("name", "John");
+				testObj.add("lastName", "Smith");
+				TEST_ASSERT(result->size() == 1);
+				if (result->size() > 0) {
+					BSONObj* test = *result->begin();
+
+					TEST_ASSERT(*test == testObj);
+
+					delete test;
+				}
+				delete result;
+			}
+
+			delete obj;
 		}
 
 		void testFindsFilterErrors() {
