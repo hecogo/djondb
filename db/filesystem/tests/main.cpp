@@ -43,6 +43,7 @@ class TestFileSystemSuite: public Test::Suite
 			TEST_ADD(TestFileSystemSuite::testBSONStreamsArray);
 			TEST_ADD(TestFileSystemSuite::testInnerArrays);
 			TEST_ADD(TestFileSystemSuite::testMemoryStream);
+			TEST_ADD(TestFileSystemSuite::testBSONSelect);
 		}
 
 	private:
@@ -161,10 +162,13 @@ class TestFileSystemSuite: public Test::Suite
 			bos.writeBSON(*objTest.get());
 
 			ms.seek(0);
-			BSONInputStream bis(&ms);
-			BSONObj* result = bis.readBSON();
+			BSONObj expected;
+			expected.add("age", 1);
 
-			TEST_ASSERT(*result == *objTest.get());
+			BSONInputStream bis(&ms);
+			BSONObj* result = bis.readBSON("$\"age\"");
+
+			TEST_ASSERT(*result == expected);
 		}
 
 		void testInnerArrays() {

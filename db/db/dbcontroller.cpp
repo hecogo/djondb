@@ -440,7 +440,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, BSONObj* filter) {
 	}
 }
 
-std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* select, const char* filter) throw(ParseException) {
+std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter) throw(ParseException) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, filter: %s", db, ns, filter);
 
 	std::vector<BSONObj*>* result;
@@ -471,7 +471,7 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* select
 			long posData = index->posData;
 			fis->seek(posData);
 
-			BSONObj* obj = bis->readBSON(select);
+			BSONObj* obj = bis->readBSON();
 
 			result->push_back(obj);
 		}

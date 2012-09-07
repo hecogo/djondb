@@ -30,7 +30,7 @@ class DBController
         void update(char* db, char* ns, BSONObj* bson);
         void deleteRecord(char* db, char* ns, const std::string& documentId, const std::string& revision);
         std::vector<BSONObj*>* find(char* db, char* ns, const BSONObj& filter);
-        std::vector<BSONObj*>* find(char* db, char* ns, const char* select, const char* filter) throw (ParseException);
+        std::vector<BSONObj*>* find(char* db, char* ns, const char* filter) throw (ParseException);
         BSONObj* findFirst(char* db, char* ns, BSONObj* filter);
         BSONObj* findFirst(char* db, char* ns, const char* filter) throw (ParseException);
         BSONObj* readBSON(StreamType* stream);

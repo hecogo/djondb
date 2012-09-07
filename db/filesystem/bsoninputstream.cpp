@@ -20,6 +20,7 @@
 #include "inputstream.h"
 #include "bson.h"
 #include "util.h"
+#include "memorystream.h"
 
 #include <memory>
 
@@ -35,6 +36,10 @@ BSONInputStream::~BSONInputStream()
 }
 
 BSONObj* BSONInputStream::readBSON() const {
+	return readBSON("*");
+}
+
+BSONObj* BSONInputStream::readBSON(const char* select) const {
 	Logger* log = getLogger(NULL);
 	BSONObj* obj = new BSONObj();
 	int elements = _inputStream->readLong();
@@ -155,4 +160,35 @@ std::vector<BSONObj*>* BSONInputStream::readBSONArray() const {
 	}
 
 	return result;
+}
+
+std::vector bsoninputstream::splitSelect(const char* select) const {
+	std::vector<std::string> elements = split(std::string(select), ",");
+
+	return elements;
+}
+
+char* bsoninputstream::subselect(const char* select, const char* name) const {
+	std::vector<std::string> elements = splitSelect(select);
+	MemoryStream ms(2048);
+
+	char* startXpath = format("%s.", name);
+	int lenStartXpath = strlen(startXpath);
+	bool first = true;
+	for (std::vector<std::string>::const_iterator i = elements.begin(); i != elements.end(); i++) {
+		std::string element = *i;
+		if (startsWith(element, "$")) {
+			// Remvoes the $" " from the element
+			element = strcpy(element.c_str(), 2, element.length() - 3);
+			if (startsWith(element.c_str(), startXpath)) {
+				 char* suffix = strcpy(element, lenStartXpath, strlen(element) - lenStartXpath);
+				 ms.writeChars(suffix);
+				 if (!first) {
+					 ms.writeChars(", ");
+				 }
+				 first = false;
+				 free(suffix);
+			}
+		}
+	}
 }

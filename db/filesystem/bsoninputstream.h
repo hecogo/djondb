@@ -17,10 +17,14 @@ class BSONInputStream
         virtual ~BSONInputStream();
 
         BSONObj* readBSON() const;
+        BSONObj* readBSON(const char* select) const;
 		  std::vector<BSONObj*>* readBSONArray() const;
 		  BSONArrayObj* readBSONInnerArray() const;
 
     protected:
+	 private:
+		  std::vector splitSelect(const char* select) const;
+		  char* subselect(const char* select, const char* elment) const;
     private:
         InputStream* _inputStream;
 		  Logger* _log;
