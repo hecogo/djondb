@@ -205,6 +205,11 @@ class TestUtilSuite : public Test::Suite
 			const char* sci1 = "TEst";
 			const char* sci2 = "teSt";
 			TEST_ASSERT(compareInsensitive(sci1, sci2));
+
+			char* untrimmed = " Hello";
+			char* trimExpected = "Hello";
+			char* result = trim(untrimmed, strlen(untrimmed));
+			TEST_ASSERT(strcmp(trimExpected, result) == 0);
 		}
 
 		void testUUID()

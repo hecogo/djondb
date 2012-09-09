@@ -1,7 +1,9 @@
 #ifndef BSONINPUTSTREAM_H
 #define BSONINPUTSTREAM_H
 
+#include <set>
 #include <vector>
+#include <string>
 
 class BSONObj;
 class BSONArrayObj;
@@ -19,11 +21,13 @@ class BSONInputStream
         BSONObj* readBSON() const;
         BSONObj* readBSON(const char* select) const;
 		  std::vector<BSONObj*>* readBSONArray() const;
+		  std::vector<BSONObj*>* readBSONArray(const char* select) const;
 		  BSONArrayObj* readBSONInnerArray() const;
+		  BSONArrayObj* readBSONInnerArray(const char* select) const;
 
     protected:
 	 private:
-		  std::vector splitSelect(const char* select) const;
+		  std::set<std::string> splitSelect(const char* select) const;
 		  char* subselect(const char* select, const char* elment) const;
     private:
         InputStream* _inputStream;

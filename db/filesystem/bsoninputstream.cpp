@@ -41,29 +41,48 @@ BSONObj* BSONInputStream::readBSON() const {
 
 BSONObj* BSONInputStream::readBSON(const char* select) const {
 	Logger* log = getLogger(NULL);
+
+	bool select_all = (strcmp("*", select) == 0);
+	std::set<std::string> columns;
+	if (!select_all) {
+		columns = splitSelect(select);
+	}
 	BSONObj* obj = new BSONObj();
 	int elements = _inputStream->readLong();
 	if (log->isDebug()) log->debug("BSONInputStream::readBSON elements: %d", elements);
 	BSONInputStream* bis;
+
 	for (int x = 0; x < elements; x++) {
 		std::auto_ptr<string> key(_inputStream->readString());
 
 		int type = _inputStream->readLong();
 		void* data = NULL;
 		BSONObj* inner;
+		bool include = false;
+		if (select_all || (columns.find(*key.get()) != columns.end())) {
+			include = true;
+		}
 		switch (type) {
 			case BSON_TYPE: {
-									 inner = readBSON();
+									 char* sub = "*";
+									 if (!select_all) {
+										 sub = subselect(select, key->c_str());
+									 }
+									 inner = readBSON(sub);
 #ifdef DEBUG
 									 if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, (BSONObj)", key->c_str());
 #endif
-									 obj->add(*key.get(), *inner);
+									 if (include) {
+										 obj->add(*key.get(), *inner);
+									 }
 									 delete inner;
 									 break;
 								 }
 			case INT_TYPE: {
 									int i = _inputStream->readInt();
-									obj->add(*key.get(), i);
+									if (include) {
+										obj->add(*key.get(), i);
+									}
 #ifdef DEBUG
 									if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %d", key->c_str(), i);
 #endif
@@ -74,7 +93,9 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 #ifdef DEBUG
 									 if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %d", key->c_str(), l);
 #endif
-									 obj->add(*key.get(), l);
+									 if (include) {
+										 obj->add(*key.get(), l);
+									 }
 									 break;
 								 }
 			case DOUBLE_TYPE: {
@@ -82,7 +103,9 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 #ifdef DEBUG
 										if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %d", key->c_str(), d);
 #endif
-										obj->add(*key.get(), d);
+										if (include) {
+											obj->add(*key.get(), d);
+										}
 										break;
 									}
 			case PTRCHAR_TYPE: {
@@ -90,7 +113,9 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 #ifdef DEBUG
 										 if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %s", key->c_str(), data);
 #endif
-										 obj->add(*key.get(), (char*)data);
+										 if (include) {
+											 obj->add(*key.get(), (char*)data);
+										 }
 										 free((char*)data);
 										 break;
 									 }
@@ -99,17 +124,25 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 #ifdef DEBUG
 										if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %s", key->c_str(), ((std::string*)data)->c_str());
 #endif
-										obj->add(*key.get(), *(std::string*)data);
+										if (include) {
+											obj->add(*key.get(), *(std::string*)data);
+										}
 										delete (std::string*)data;
 										break;
 									}
 			case BSONARRAY_TYPE:
 									{
-										BSONArrayObj* array = readBSONInnerArray();
+										char* sub = "*";
+										if (!select_all) {
+											sub = subselect(select, key->c_str());
+										}
+										BSONArrayObj* array = readBSONInnerArray(sub);
 #ifdef DEBUG
 										if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, (BSONArray)", key->c_str());
 #endif
-										obj->add(*key.get(), *array);
+										if (include) {
+											obj->add(*key.get(), *array);
+										}
 										delete array;
 										break;
 									}
@@ -120,6 +153,10 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 }
 
 BSONArrayObj* BSONInputStream::readBSONInnerArray() const {
+	return readBSONInnerArray("*");
+}
+
+BSONArrayObj* BSONInputStream::readBSONInnerArray(const char* select) const {
 #ifdef DEBUG
 	if (_log->isDebug()) _log->debug(3, "BSONInputStream::readBSONInnerArray");
 #endif
@@ -130,7 +167,7 @@ BSONArrayObj* BSONInputStream::readBSONInnerArray() const {
 	BSONArrayObj* result = new BSONArrayObj();
 
 	for (int x= 0; x < elements; x++) {
-		BSONObj* obj = readBSON();
+		BSONObj* obj = readBSON(select);
 #ifdef DEBUG
 		if (_log->isDebug()) _log->debug(3, "obj: %s", obj->toChar());
 #endif
@@ -142,6 +179,10 @@ BSONArrayObj* BSONInputStream::readBSONInnerArray() const {
 }
 
 std::vector<BSONObj*>* BSONInputStream::readBSONArray() const {
+	return readBSONArray("*");
+}
+
+std::vector<BSONObj*>* BSONInputStream::readBSONArray(const char* select) const {
 #ifdef DEBUG
 	if (_log->isDebug()) _log->debug(3, "BSONInputStream::readBSONArray");
 #endif
@@ -152,7 +193,7 @@ std::vector<BSONObj*>* BSONInputStream::readBSONArray() const {
 	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
 
 	for (int x= 0; x < elements; x++) {
-		BSONObj* obj = readBSON();
+		BSONObj* obj = readBSON(select);
 #ifdef DEBUG
 		if (_log->isDebug()) _log->debug(3, "obj: %s", obj->toChar());
 #endif
@@ -162,32 +203,50 @@ std::vector<BSONObj*>* BSONInputStream::readBSONArray() const {
 	return result;
 }
 
-std::vector bsoninputstream::splitSelect(const char* select) const {
+std::set<std::string> BSONInputStream::splitSelect(const char* select) const {
 	std::vector<std::string> elements = split(std::string(select), ",");
 
-	return elements;
+	std::set<std::string> result;
+	for (std::vector<std::string>::const_iterator i = elements.begin(); i != elements.end(); i++) {
+		std::string s = *i;
+		char* cs = trim(const_cast<char*>(s.c_str()), s.length());
+		if (startsWith(cs, "$")) {
+			s = std::string(std::string(cs), 2, strlen(cs) - 3);
+		} else {
+			s = std::string(cs);
+		}
+		int dotPos = s.find('.');
+		if (dotPos != string::npos) {
+			s = s.substr(0, dotPos);
+		}
+		result.insert(s);
+	}
+
+	return result;
 }
 
-char* bsoninputstream::subselect(const char* select, const char* name) const {
-	std::vector<std::string> elements = splitSelect(select);
+char* BSONInputStream::subselect(const char* select, const char* name) const {
+	std::set<std::string> elements = splitSelect(select);
 	MemoryStream ms(2048);
 
-	char* startXpath = format("%s.", name);
-	int lenStartXpath = strlen(startXpath);
+	std::string startXpath = format("%s.", name);
+	int lenStartXpath = startXpath.length();
 	bool first = true;
-	for (std::vector<std::string>::const_iterator i = elements.begin(); i != elements.end(); i++) {
-		std::string element = *i;
+	for (std::set<std::string>::const_iterator i = elements.begin(); i != elements.end(); i++) {
+		std::string selement = *i;
+		char* element = const_cast<char*>(selement.c_str());
+		element = trim(element, strlen(element));
 		if (startsWith(element, "$")) {
 			// Remvoes the $" " from the element
-			element = strcpy(element.c_str(), 2, element.length() - 3);
-			if (startsWith(element.c_str(), startXpath)) {
-				 char* suffix = strcpy(element, lenStartXpath, strlen(element) - lenStartXpath);
-				 ms.writeChars(suffix);
-				 if (!first) {
-					 ms.writeChars(", ");
-				 }
-				 first = false;
-				 free(suffix);
+			element = strcpy(element, 2, strlen(element) - 3);
+			if (startsWith(element, startXpath.c_str())) {
+				char* suffix = strcpy(element, lenStartXpath, strlen(element) - lenStartXpath);
+				ms.writeChars(suffix, strlen(suffix));
+				if (!first) {
+					ms.writeChars(", ", 2);
+				}
+				first = false;
+				free(suffix);
 			}
 		}
 	}

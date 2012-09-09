@@ -156,19 +156,56 @@ class TestFileSystemSuite: public Test::Suite
 		}
 
 		void testBSONSelect() {
-			std::auto_ptr<BSONObj> objTest(BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, rel1: [{innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'}, {innertext: 'inner text'} ] }"));
+			std::auto_ptr<BSONObj> objTest(BSONParser::parse("{age: 1, name: 'John', salary: 3500.25, simplerel: {test: 'inner value', test2: 'inner value2', test3: 3, test4: 3.5}, rel1: [{innertext: 'inner text', test2: 'text2'}, {innertext: 'inner text', test2: 'text333'}, {innertext: 'inner text', test2: 'text4'}, {innertext: 'inner text'} ] }"));
 			MemoryStream ms;
 			BSONOutputStream bos(&ms);
 			bos.writeBSON(*objTest.get());
 
 			ms.seek(0);
+
+			BSONInputStream bis(&ms);
+			BSONObj* result = bis.readBSON("*");
+
+			TEST_ASSERT(*result == *objTest.get());
+
+			delete result;
+
+			ms.seek(0);
 			BSONObj expected;
 			expected.add("age", 1);
 
-			BSONInputStream bis(&ms);
-			BSONObj* result = bis.readBSON("$\"age\"");
+			result = bis.readBSON("$\"age\"");
 
 			TEST_ASSERT(*result == expected);
+
+			delete result;
+
+			ms.seek(0);
+			expected = BSONObj();
+			expected.add("age", 1);
+			expected.add("name", "John");
+
+			result = bis.readBSON("$\"age\", $\"name\"" );
+
+			TEST_ASSERT(*result == expected);
+
+			ms.seek(0);
+			std::auto_ptr<BSONObj> test(BSONParser::parse("{ age: 1, simplerel: { test2: 'inner value2'}}"));
+
+			result = bis.readBSON("$\"age\", $\"simplerel.test2\"" );
+
+			TEST_ASSERT(*result == *test.get());
+
+			delete result;
+			
+			ms.seek(0);
+			std::auto_ptr<BSONObj> testrel(BSONParser::parse("{age: 1, rel1: [{test2: 'text2'}, {test2: 'text333'}, {test2: 'text4'}, {} ] }"));
+
+			result = bis.readBSON("$\"age\", $\"re1.test2\"" );
+
+			TEST_ASSERT(*result == *testrel.get());
+
+			delete result;
 		}
 
 		void testInnerArrays() {
