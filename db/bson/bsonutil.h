@@ -18,6 +18,9 @@
 #ifndef BSONUTIL_INCLUDE_H
 #define BSONUTIL_INCLUDE_H
 
+#include <string>
+#include <set>
+
 std::set<std::string> bson_splitSelect(const char* select);
 char* bson_subselect(const char* select, const char* elment);
 

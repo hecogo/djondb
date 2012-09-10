@@ -17,7 +17,8 @@
 // *********************************************************************************************************************
 
 #include <iostream>
-#include "../bson.h"
+#include "bson.h"
+#include "bsonutil.h"
 #include <string>
 #include <string.h>
 #include <cpptest.h>
@@ -43,6 +44,7 @@ class TestBSONSuite : public Test::Suite
 			TEST_ADD(TestBSONSuite::testComparison);
 			TEST_ADD(TestBSONSuite::testAutocasting);
 			TEST_ADD(TestBSONSuite::testXPath);
+			TEST_ADD(TestBSONSuite::testBSONUtil);
 		}
 
 	private:
@@ -453,6 +455,41 @@ class TestBSONSuite : public Test::Suite
 			delete obj1;
 		}
 
+		void testBSONUtil() {
+			cout << "\ntestBSONUtil" << endl;
+
+			char* selectsimple = "$\"test\"";
+			std::set<std::string> result = bson_splitSelect("$\"test\"");
+			TEST_ASSERT(result.size() == 1);
+			TEST_ASSERT(result.find("test") != result.end());
+
+			selectsimple = "$\"test\", $\"test2\"";
+			result = bson_splitSelect("$\"test\"");
+			TEST_ASSERT(result.size() == 1);
+			TEST_ASSERT(result.find("test") != result.end());
+			result = bson_splitSelect("$\"test2\"");
+			TEST_ASSERT(result.size() == 1);
+			TEST_ASSERT(result.find("test2") != result.end());
+			
+			selectsimple = "$\"test\", $\"test2.inner1\"";
+			result = bson_splitSelect("$\"test\"");
+			TEST_ASSERT(result.size() == 1);
+			TEST_ASSERT(result.find("test") != result.end());
+			result = bson_splitSelect("$\"test\", $\"test2\"");
+			TEST_ASSERT(result.size() == 2);
+			TEST_ASSERT(result.find("test") != result.end());
+			TEST_ASSERT(result.find("test2") != result.end());
+
+			selectsimple = "$\"test2.inner\"";
+			char* subresult = bson_subselect(selectsimple, "test2");
+			char* expected = "$\"inner\"";
+			TEST_ASSERT(strcmp(subresult, expected) == 0);
+			
+			selectsimple = "$\"test1\", $\"test2.inner\", $\"test1.testinner\", $\"test2.inner2\", $\"test2.inner2.testii\"";
+			subresult = bson_subselect(selectsimple, "test2");
+			expected = "$\"inner\", $\"inner2\", $\"inner2.testii\"";
+			TEST_ASSERT(strcmp(subresult, expected) == 0);
+		}
 };
 
 enum OutputType

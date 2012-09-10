@@ -17,6 +17,11 @@
  */
 
 #include "bsonutil.h"
+#include "util.h"
+#include <string.h>
+#include <vector>
+#include <stdlib.h>
+
 
 std::set<std::string> bson_splitSelect(const char* select) {
 	std::vector<std::string> elements = split(std::string(select), ",");
@@ -41,13 +46,15 @@ std::set<std::string> bson_splitSelect(const char* select) {
 }
 
 char* bson_subselect(const char* select, const char* name) {
-	std::set<std::string> elements = splitSelect(select);
-	MemoryStream ms(2048);
+	std::vector<std::string> elements = split(std::string(select), ", ");
+	char* result = (char*)malloc(strlen(select) + 1);
+	memset(result, 0, strlen(select) + 1);
+	int pos = 0;
 
 	std::string startXpath = format("%s.", name);
 	int lenStartXpath = startXpath.length();
 	bool first = true;
-	for (std::set<std::string>::const_iterator i = elements.begin(); i != elements.end(); i++) {
+	for (std::vector<std::string>::const_iterator i = elements.begin(); i != elements.end(); i++) {
 		std::string selement = *i;
 		char* element = const_cast<char*>(selement.c_str());
 		element = trim(element, strlen(element));
@@ -55,14 +62,21 @@ char* bson_subselect(const char* select, const char* name) {
 			// Remvoes the $" " from the element
 			element = strcpy(element, 2, strlen(element) - 3);
 			if (startsWith(element, startXpath.c_str())) {
-				char* suffix = strcpy(element, lenStartXpath, strlen(element) - lenStartXpath);
-				ms.writeChars(suffix, strlen(suffix));
 				if (!first) {
-					ms.writeChars(", ", 2);
+					memcpy(result + pos, ", ", 2);
+					pos += 2;
 				}
+				char* suffix = strcpy(element, lenStartXpath, strlen(element) - lenStartXpath);
+				memcpy(result + pos, "$\"", 2);
+				pos+=2;
+				memcpy(result + pos, suffix, strlen(suffix));
+				pos += strlen(suffix);
+				memcpy(result + pos, "\"", 1);
+				pos++;
 				first = false;
 				free(suffix);
 			}
 		}
 	}
+	return result;
 }

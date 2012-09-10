@@ -11,14 +11,13 @@ AM_CPPFLAGS += $(all_includes)
 lib_LTLIBRARIES = libdjon-bson.la
 libdjon_bson_la_LDFLAGS = -static
 libdjon_bson_la_SOURCES = bsonobj.cpp \
-			  bsonobj.h \
 			  bsonarrayobj.cpp \
 			  bsonutil.cpp \
 			  bsoncontent.cpp \
 			  bsonparser.cpp 
 
 library_includedir=$(includedir)/djondb
-library_include_HEADERS = bson.h bsonobj.h bsonparser.h bsondefs.h bsoncontent.h bsonarrayobj.h
+library_include_HEADERS = bson.h bsonobj.h bsonutil.h bsonparser.h bsondefs.h bsoncontent.h bsonarrayobj.h
 
 TESTS = test-bson
 bin_PROGRAMS = test-bson test-performance
@@ -28,6 +27,7 @@ if !MAC
      test_bson_LDADD += -lrt -luuid
 else
 endif
+
 test_bson_SOURCES = tests/main.cpp
 
 test_performance_SOURCES = tests/testperformance.cpp
