@@ -29,17 +29,14 @@ class DBController
 		  bool dropNamespace(char* db, char* ns);
         void update(char* db, char* ns, BSONObj* bson);
         void deleteRecord(char* db, char* ns, const std::string& documentId, const std::string& revision);
-        std::vector<BSONObj*>* find(char* db, char* ns, const BSONObj& filter);
         std::vector<BSONObj*>* find(char* db, char* ns, const char* filter) throw (ParseException);
-        BSONObj* findFirst(char* db, char* ns, BSONObj* filter);
-        BSONObj* findFirst(char* db, char* ns, const char* filter) throw (ParseException);
+        BSONObj* findFirst(char* db, char* ns, const char* select, const char* filter) throw (ParseException);
         BSONObj* readBSON(StreamType* stream);
 		  std::vector<std::string>* dbs() const;
 		  std::vector<std::string>* namespaces(const char* db) const;
 
     private:
-		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, const BSONObj& filter);
-		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, FilterParser* parser) throw (ParseException);
+		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, const char* select, FilterParser* parser) throw (ParseException);
 		  Logger* _logger;
 		  bool _initialized;
 		  std::string _dataDir;

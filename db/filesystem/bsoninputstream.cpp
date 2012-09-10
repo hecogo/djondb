@@ -19,6 +19,7 @@
 #include "bsoninputstream.h"
 #include "inputstream.h"
 #include "bson.h"
+#include "bsonutil.h"
 #include "util.h"
 #include "memorystream.h"
 
@@ -45,7 +46,7 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 	bool select_all = (strcmp("*", select) == 0);
 	std::set<std::string> columns;
 	if (!select_all) {
-		columns = splitSelect(select);
+		columns = bson_splitSelect(select);
 	}
 	BSONObj* obj = new BSONObj();
 	int elements = _inputStream->readLong();
@@ -66,7 +67,7 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 			case BSON_TYPE: {
 									 char* sub = "*";
 									 if (!select_all) {
-										 sub = subselect(select, key->c_str());
+										 sub = bson_subselect(select, key->c_str());
 									 }
 									 inner = readBSON(sub);
 #ifdef DEBUG
@@ -134,7 +135,7 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 									{
 										char* sub = "*";
 										if (!select_all) {
-											sub = subselect(select, key->c_str());
+											sub = bson_subselect(select, key->c_str());
 										}
 										BSONArrayObj* array = readBSONInnerArray(sub);
 #ifdef DEBUG
@@ -203,51 +204,3 @@ std::vector<BSONObj*>* BSONInputStream::readBSONArray(const char* select) const 
 	return result;
 }
 
-std::set<std::string> BSONInputStream::splitSelect(const char* select) const {
-	std::vector<std::string> elements = split(std::string(select), ",");
-
-	std::set<std::string> result;
-	for (std::vector<std::string>::const_iterator i = elements.begin(); i != elements.end(); i++) {
-		std::string s = *i;
-		char* cs = trim(const_cast<char*>(s.c_str()), s.length());
-		if (startsWith(cs, "$")) {
-			s = std::string(std::string(cs), 2, strlen(cs) - 3);
-		} else {
-			s = std::string(cs);
-		}
-		int dotPos = s.find('.');
-		if (dotPos != string::npos) {
-			s = s.substr(0, dotPos);
-		}
-		result.insert(s);
-	}
-
-	return result;
-}
-
-char* BSONInputStream::subselect(const char* select, const char* name) const {
-	std::set<std::string> elements = splitSelect(select);
-	MemoryStream ms(2048);
-
-	std::string startXpath = format("%s.", name);
-	int lenStartXpath = startXpath.length();
-	bool first = true;
-	for (std::set<std::string>::const_iterator i = elements.begin(); i != elements.end(); i++) {
-		std::string selement = *i;
-		char* element = const_cast<char*>(selement.c_str());
-		element = trim(element, strlen(element));
-		if (startsWith(element, "$")) {
-			// Remvoes the $" " from the element
-			element = strcpy(element, 2, strlen(element) - 3);
-			if (startsWith(element, startXpath.c_str())) {
-				char* suffix = strcpy(element, lenStartXpath, strlen(element) - lenStartXpath);
-				ms.writeChars(suffix, strlen(suffix));
-				if (!first) {
-					ms.writeChars(", ", 2);
-				}
-				first = false;
-				free(suffix);
-			}
-		}
-	}
-}

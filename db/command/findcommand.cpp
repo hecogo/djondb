@@ -33,6 +33,7 @@ FindCommand::FindCommand()
 
 FindCommand::~FindCommand()
 {
+	if (_select != NULL) delete _select;
 	if (_filter != NULL) delete _filter;
 	if (_namespace != NULL) delete _namespace;
 	if (_db != NULL) delete _db;
@@ -46,9 +47,9 @@ FindCommand::~FindCommand()
 	}
 }
 
-	FindCommand::FindCommand(const FindCommand& other)
-:Command(FIND)
+FindCommand::FindCommand(const FindCommand& other) :Command(FIND)
 {
+	this->_select = new std::string(*other._select);
 	this->_filter = new std::string(*other._filter);
 	this->_namespace = new std::string(*other._namespace);
 	this->_db = new std::string(*other._db);
@@ -67,7 +68,7 @@ void FindCommand::execute() {
 	Logger* log = getLogger(NULL);
 	if (log->isDebug()) log->debug("executing find command on %s", nameSpace()->c_str());
 
-	_findresult = dbController()->find(const_cast<char*>(DB()->c_str()), const_cast<char*>(nameSpace()->c_str()), filter()->c_str());
+	_findresult = dbController()->find(const_cast<char*>(DB()->c_str()), const_cast<char*>(nameSpace()->c_str()), select()->c_str(), filter()->c_str());
 
 	delete log;
 }
@@ -114,6 +115,14 @@ void FindCommand::setNameSpace(const std::string& ns) {
 
 std::string* FindCommand::nameSpace() const {
 	return _namespace;
+}
+
+void FindCommand::setSelect(const std::string& select) {
+	_select = new std::string(select);
+}
+
+std::string* FindCommand::select() const {
+	return _select;
 }
 
 void FindCommand::setFilter(const std::string& filter) {

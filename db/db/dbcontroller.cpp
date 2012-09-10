@@ -322,126 +322,8 @@ void DBController::insertIndex(char* db, char* ns, BSONObj* bson, long filePos) 
 	out->writeLong(filePos);
 }
 
-std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const BSONObj& filter) {
-	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan db: %s, ns: %s, bsonFilter: %s", db, ns, filter.toChar());
-	std::string filedir = _dataDir + db;
-	filedir = filedir + FILESEPARATOR;
-
-	std::stringstream ss;
-	ss << filedir << ns << ".dat";
-
-	std::string filename = ss.str();
-
-	FileInputStream* fis = new FileInputStream(filename.c_str(), "rb");
-	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
-
-	BSONInputStream* bis = new BSONInputStream(fis);
-	std::map<t_keytype, BSONContent* >::const_iterator testValIter = filter.begin();
-	if (testValIter != filter.end()) {
-		BSONContent* testVal = testValIter->second;
-		t_keytype keyname = testValIter->first;
-
-		// the first filter will be done over the file
-		while (!fis->eof()) {
-			BSONObj* readed = bis->readBSON();
-			if (readed->has(keyname)) {
-				BSONContent* content = readed->getContent(keyname);
-				if (*content == *testVal) {
-					if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), readed->toChar());
-					result->push_back(readed);
-				}
-			}
-		}
-
-		// now filter the results with the other keys
-		testValIter++;
-		for ( ;testValIter != filter.end(); testValIter++) {
-			std::vector<BSONObj*>* rsTmp = new std::vector<BSONObj*>();
-			testVal = testValIter->second;
-			keyname = testValIter->first;
-			for (std::vector<BSONObj*>::iterator i = result->begin(); i != result->end(); i++) {
-				BSONObj* obj = *i;
-				if (obj->has(keyname)) {
-					BSONContent* content = obj->getContent(keyname);
-					if (*content == *testVal) {
-						if (_logger->isDebug()) _logger->debug(2, "found a match with key: %s, obj: %s", keyname.c_str(), obj->toChar());
-						rsTmp->push_back(obj);
-					}
-				}
-			}
-			result = rsTmp;
-		}
-	} else { // All the records will be included, the filter is empty
-		if (_logger->isDebug()) _logger->debug(2, "the filter is empty, all the records will be included from namespace: %s", ns);
-		while (!fis->eof()) {
-			BSONObj* readed = bis->readBSON();
-			result->push_back(readed);
-		}
-
-	}
-
-	return result;
-}
-
-std::vector<BSONObj*>* DBController::find(char* db, char* ns, const BSONObj& filter)  {
-	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, bsonFilter: %s", db, ns, filter.toChar());
-
-	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
-	if (filter.has("_id")) {
-
-		IndexAlgorithm* impl = IndexFactory::indexFactory.index(db, ns, "_id");
-
-		BSONObj indexBSON;
-		std::string id = filter.getString("_id");
-		indexBSON.add("_id", id);
-		Index* index = impl->find(indexBSON);
-
-		if (index != NULL) {
-			StreamType* out = StreamManager::getStreamManager()->open(db, ns, DATA_FTYPE);
-			out->flush();
-			//    out->close();
-
-			std::string filedir = _dataDir + db;
-			filedir = filedir + FILESEPARATOR;
-
-			std::stringstream ss;
-			ss << filedir << ns << ".dat";
-
-			std::string file = ss.str();
-
-			StreamType* input = new StreamType(file, "rb");
-			input->seek(index->posData);
-
-			BSONObj* obj = readBSON(input);
-			if (_logger->isDebug()) _logger->debug(2, "found a match using _id: %s", obj->toChar());
-			result->push_back(obj);
-			input->close();
-		}
-	} else {
-		result = findFullScan(db, ns, filter);
-	}
-
-	return result;
-}
-
-BSONObj* DBController::findFirst(char* db, char* ns, BSONObj* filter) {
-	if (_logger->isDebug()) _logger->debug(2, "DBController::findFirst db: %s, ns: %s, bsonFilter: %s", db, ns, filter->toChar());
-	std::string id = filter->getString("_id");
-	if (CacheManager::objectCache()->containsKey(id)) {
-		return (*CacheManager::objectCache())[id];
-	}
-	std::auto_ptr<std::vector<BSONObj*> > temp(find(db, ns, *filter));
-	if (temp->size() == 1) {
-		BSONObj* element = *temp->begin();
-		CacheManager::objectCache()->add(id, new BSONObj(*element));
-		return element;
-	} else {
-		return NULL;
-	}
-}
-
-std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter) throw(ParseException) {
-	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, filter: %s", db, ns, filter);
+std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* select, const char* filter) throw(ParseException) {
+	if (_logger->isDebug()) _logger->debug(2, "DBController::find db: %s, ns: %s, select: %s, filter: %s", db, ns, select, filter);
 
 	std::vector<BSONObj*>* result;
 
@@ -471,7 +353,7 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter
 			long posData = index->posData;
 			fis->seek(posData);
 
-			BSONObj* obj = bis->readBSON();
+			BSONObj* obj = bis->readBSON(select);
 
 			result->push_back(obj);
 		}
@@ -479,14 +361,14 @@ std::vector<BSONObj*>* DBController::find(char* db, char* ns, const char* filter
 		delete fis;
 
 	} else {
-		result = findFullScan(db, ns, parser);
+		result = findFullScan(db, ns, select, parser);
 	}
 
 	return result;
 }
 
-BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) throw(ParseException) {
-	if (_logger->isDebug()) _logger->debug(2, "DBController::findFirst db: %s, ns: %s, filter: %s", db, ns, filter);
+BSONObj* DBController::findFirst(char* db, char* ns, const char* select, const char* filter) throw(ParseException) {
+	if (_logger->isDebug()) _logger->debug(2, "DBController::findFirst db: %s, ns: %s, select: %s, filter: %s", db, ns, select, filter);
 	std::string filedir = _dataDir + db;
 	filedir = filedir + FILESEPARATOR;
 
@@ -502,6 +384,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* filter) throw(P
 
 	FilterParser* parser = FilterParser::parse(filter);
 
+	aqui voy
 	BSONObj* bsonResult = NULL;
 	while (!fis->eof()) {
 		BSONObj* obj = bis->readBSON();

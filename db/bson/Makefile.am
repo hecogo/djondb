@@ -13,12 +13,9 @@ libdjon_bson_la_LDFLAGS = -static
 libdjon_bson_la_SOURCES = bsonobj.cpp \
 			  bsonobj.h \
 			  bsonarrayobj.cpp \
-			  bsonarrayobj.h \
-			  bsoncontent.h \
+			  bsonutil.cpp \
 			  bsoncontent.cpp \
-			  bson.h \
-			  bsonparser.cpp \
-			  bsonparser.h
+			  bsonparser.cpp 
 
 library_includedir=$(includedir)/djondb
 library_include_HEADERS = bson.h bsonobj.h bsonparser.h bsondefs.h bsoncontent.h bsonarrayobj.h

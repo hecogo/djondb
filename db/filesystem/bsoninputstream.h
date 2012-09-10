@@ -26,9 +26,6 @@ class BSONInputStream
 		  BSONArrayObj* readBSONInnerArray(const char* select) const;
 
     protected:
-	 private:
-		  std::set<std::string> splitSelect(const char* select) const;
-		  char* subselect(const char* select, const char* elment) const;
     private:
         InputStream* _inputStream;
 		  Logger* _log;
