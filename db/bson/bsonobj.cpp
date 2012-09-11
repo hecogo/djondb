@@ -18,6 +18,7 @@
 
 #include "bsonobj.h"
 #include "util.h"
+#include "bsonutil.h"
 
 #include "bsonparser.h"
 
@@ -27,6 +28,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <set>
 
 using namespace std;
 
@@ -407,6 +409,62 @@ bool BSONObj::operator !=(const BSONObj& obj) const {
 		}
 	}
 	return false;
+}
+
+BSONObj* BSONObj::select(const char* sel) const {
+	std::set<std::string> columns = bson_splitSelect(sel);
+	bool include_all = (strcmp(sel, "*") == 0);
+
+	BSONObj* result = new BSONObj();
+
+	for (std::map<t_keytype, BSONContent* >::const_iterator i = this->_elements.begin(); i != this->_elements.end(); i++) {
+		t_keytype key = i->first;
+		if (include_all || (columns.find(key) != columns.end())) {
+			BSONContent* origContent = i->second;
+
+			switch (origContent->type()) {
+				case BSON_TYPE:  
+					{
+						BSONObj inner = (BSONObj)*origContent;
+						char* subselect = bson_subselect(sel, key.c_str());
+						BSONObj* innerSubSelect = inner.select(subselect);
+						result->add(key, *innerSubSelect);
+						delete innerSubSelect;
+						break;
+					}
+				case BSONARRAY_TYPE: 
+					{
+						break;
+					}
+				case INT_TYPE: 
+					{
+						int val = *origContent;
+						result->add(key, val);
+						break;
+					}
+				case LONG_TYPE:
+					{
+						long val = *origContent;
+						result->add(key, val);
+						break;
+					}
+				case DOUBLE_TYPE:
+					{
+						double val = *origContent;
+						result->add(key, val);
+						break;
+					}
+				case PTRCHAR_TYPE:
+				case STRING_TYPE:
+					{
+						std::string val = *origContent;
+						result->add(key, val);
+						break;
+					}
+			}
+		}
+	}
+	return result;
 }
 
 void BSONObj::fillContent(t_keytype kkey, BSONTYPE ttype, void* vval) {

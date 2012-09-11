@@ -41,6 +41,8 @@ class BSONObj
 
 		  BSONContent getXpath(const std::string& xpath) const;
 
+		  BSONObj* select(const char* sel) const;
+
         BSONTYPE type(t_keytype) const;
 
         char* toChar() const;

@@ -45,6 +45,7 @@ class TestBSONSuite : public Test::Suite
 			TEST_ADD(TestBSONSuite::testAutocasting);
 			TEST_ADD(TestBSONSuite::testXPath);
 			TEST_ADD(TestBSONSuite::testBSONUtil);
+			TEST_ADD(TestBSONSuite::testBSONSelect);
 		}
 
 	private:
@@ -489,6 +490,24 @@ class TestBSONSuite : public Test::Suite
 			subresult = bson_subselect(selectsimple, "test2");
 			expected = "$\"inner\", $\"inner2\", $\"inner2.testii\"";
 			TEST_ASSERT(strcmp(subresult, expected) == 0);
+		}
+
+		void testBSONSelect() {
+			cout << "\ntestBSONSelect()" << endl;
+
+			char* selectsimple;
+			BSONObj* obj;
+			BSONObj* expected;
+			BSONObj* result;
+
+			obj = BSONParser::parse("{ name: 'John', age: 35, one: { data: 1 }, children: [ { name: 'Joshua', age: 15}, { name: 'Mary', age: 30}] }");
+			selectsimple = "$\"name\", $\"one.data\"";
+			result = obj->select(const_cast<const char*>(selectsimple));
+			expected = BSONParser::parse("{ name: 'John', one: { data: 1 }}");
+			TEST_ASSERT(*result == *expected);
+			delete obj;
+			delete expected;
+			delete result;
 		}
 };
 
