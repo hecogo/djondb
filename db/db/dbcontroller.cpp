@@ -210,8 +210,6 @@ BSONObj* DBController::insert(char* db, char* ns, BSONObj* obj) {
 	std::string id;
 	if (obj->type("_id") == STRING_TYPE) {
 		id = obj->getString("_id");
-	} else if (obj->type("_id") == PTRCHAR_TYPE) {
-		id = std::string(obj->getChars("_id"));
 	}
 	assert(id.length() > 0);
 	//    long crcStructure = checkStructure(obj);
@@ -384,7 +382,6 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* select, const c
 
 	FilterParser* parser = FilterParser::parse(filter);
 
-	aqui voy
 	BSONObj* bsonResult = NULL;
 	while (!fis->eof()) {
 		BSONObj* obj = bis->readBSON();
@@ -393,7 +390,8 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* select, const c
 		if (result->type() == ExpressionResult::RT_BOOLEAN) {
 			bool* bres = (bool*)result->value();
 			if (*bres) {
-				bsonResult = obj;
+				bsonResult = obj->select(select);
+				delete obj;
 				break;
 			}
 		}
@@ -408,7 +406,7 @@ BSONObj* DBController::findFirst(char* db, char* ns, const char* select, const c
 	return bsonResult;
 }
 
-std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, FilterParser* parser) throw(ParseException) {
+std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const char* select, FilterParser* parser) throw(ParseException) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::findFullScan with parser db: %s, ns: %s", db, ns);
 	std::string filedir = _dataDir + db;
 	filedir = filedir + FILESEPARATOR;
@@ -433,10 +431,10 @@ std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, FilterPars
 			match = *bres;
 		}
 		if (match) {
-			result->push_back(obj);
+			result->push_back(obj->select(select));
 		} else {
-			delete obj;
 		}
+		delete obj;
 		delete expresult;
 	}
 

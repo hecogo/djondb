@@ -29,6 +29,10 @@ FindCommand::FindCommand()
 {
 	//ctor
 	_findresult = NULL;
+	_select = NULL;
+	_filter = NULL;
+	_namespace = NULL;
+	_db = NULL;
 }
 
 FindCommand::~FindCommand()
@@ -87,6 +91,7 @@ void FindCommand::writeCommand(OutputStream* out) const {
 	out->writeString(*_db);
 	out->writeString(*_namespace);
 	out->writeString(*_filter);
+	out->writeString(*_select);
 }
 
 void FindCommand::readResult(InputStream* is) {

@@ -44,7 +44,8 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
 		  if (log->isDebug()) log->debug("BSONOutputStream::writeBSON name: %s", key.c_str());
         _outputStream->writeString(key);
         BSONContent* cont = i->second;
-        _outputStream->writeLong(cont->type());
+		  // If the type is PTRCHAR_TYPE change it to string_type, to remove this type in future
+        _outputStream->writeLong(cont->type() != PTRCHAR_TYPE? cont->type(): STRING_TYPE);
         char* text;
 		  BSONObj* inner;
         switch (cont->type()) {
@@ -63,7 +64,7 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
                 break;
             case PTRCHAR_TYPE:
                 text = (char*)cont->_element;
-                _outputStream->writeChars(text, strlen(text));
+                _outputStream->writeString(std::string(text));
                 break;
 				case STRING_TYPE:
 					 {

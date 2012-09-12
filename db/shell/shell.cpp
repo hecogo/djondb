@@ -353,7 +353,7 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 	} else {
 		printf("connect('hostname', [port])\n\tEstablish a connection with a server.\n");
 		printf("dropNamespace('db', 'namespace');\n\tDrops a namespace from the db.\n");
-		printf("find('db', 'namespace'[, 'filter']);\n\tExecutes a find using the provided filter.\n");
+		printf("find('db', 'namespace'[, 'select'][, 'filter']);\n\tExecutes a find using the provided filter.\n");
 		printf("help();\n\tThis help\n");
 		printf("insert('db', 'namespace', { json...object});\n\tInserts a new document.\n");
 		printf("load('file');\n\tLoads and executes a script.\n");
@@ -371,7 +371,7 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 
 v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	if (args.Length() < 2) {
-		return v8::ThrowException(v8::String::New("usage: db.find(db, namespace, filter)\ndb.find(db, namespace)"));
+		return v8::ThrowException(v8::String::New("usage: db.find(db, namespace[, select][, filter])\ndb.find(db, namespace)"));
 	}
 
 	if (__djonConnection == NULL) {
@@ -382,9 +382,14 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	std::string db = ToCString(strDB);
 	v8::String::Utf8Value str(args[1]);
 	std::string ns = ToCString(str);
+	std::string select = "*";
 	std::string filter = "";
-	if (args.Length() == 3) {
-		v8::String::Utf8Value strFilter(args[2]);
+	if (args.Length() > 2) {
+		v8::String::Utf8Value strSelect(args[2]);
+		select = ToCString(strSelect);
+	}
+	if (args.Length() > 3) {
+		v8::String::Utf8Value strFilter(args[3]);
 		filter = ToCString(strFilter);
 	}
 	/* 
@@ -396,7 +401,7 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 		}
 		*/
 
-	std::vector<BSONObj*>* result = __djonConnection->find(db, ns, filter);
+	std::vector<BSONObj*>* result = __djonConnection->find(db, ns, select, filter);
 
 	std::stringstream ss;
 	ss << "[";

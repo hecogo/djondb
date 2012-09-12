@@ -70,13 +70,6 @@ void BSONObj::add(t_keytype key, long val) {
 	fillContent(key, LONG_TYPE, internalValue);
 }
 
-void BSONObj::add(t_keytype key, char* val) {
-	char* internalValue = (char*)malloc(strlen(val) + 1);
-	memset(internalValue, 0, strlen(val) + 1);
-	strcpy(internalValue, val);
-	fillContent(key, PTRCHAR_TYPE, internalValue);
-}
-
 void BSONObj::add(t_keytype key, std::string val) {
 	std::string* internalValue = new std::string(val);
 	fillContent(key, STRING_TYPE, internalValue);
@@ -138,10 +131,6 @@ char* BSONObj::toChar() const {
 			case DOUBLE_TYPE:
 					sprintf(result + pos, "%f", *((double*)content->_element));
 					break;
-			case PTRCHAR_TYPE:
-					chr = (char*)content->_element;
-					sprintf(result + pos, "\"%s\"", chr);
-					break;
 			case STRING_TYPE:
 					cstr = ((std::string*)content->_element)->c_str();
 					sprintf(result + pos, "\"%s\"", cstr);
@@ -193,30 +182,13 @@ long* BSONObj::getLong(t_keytype key) const {
 	}
 }
 
-char* BSONObj::getChars(t_keytype key) const {
-	BSONContent* content = getContent(key);
-	if (content != NULL) {
-		if (content->type() == PTRCHAR_TYPE) {
-			return (char*)content->_element;
-		} if (content->type() == STRING_TYPE) {
-			return const_cast<char*>(((std::string*)content->_element)->c_str());
-		} else {
-			return NULL;
-		}
-	} else {
-		return NULL;
-	}
-}
-
 std::string BSONObj::getString(t_keytype key) const {
 	BSONContent* content = getContent(key);
 	if (!content) {
 		return std::string();
 	}
 	std::string result;
-	if (content->type() == PTRCHAR_TYPE) {
-		result = std::string((char*)content->_element);
-	} else if (content->type() == STRING_TYPE) {
+	if (content->type() == STRING_TYPE) {
 		result = *(std::string*)content->_element;
 	} else {
 		assert(false);
@@ -426,14 +398,28 @@ BSONObj* BSONObj::select(const char* sel) const {
 				case BSON_TYPE:  
 					{
 						BSONObj inner = (BSONObj)*origContent;
-						char* subselect = bson_subselect(sel, key.c_str());
-						BSONObj* innerSubSelect = inner.select(subselect);
-						result->add(key, *innerSubSelect);
-						delete innerSubSelect;
+						
+					   if (!include_all) {
+							char* subselect = bson_subselect(sel, key.c_str());
+							BSONObj* innerSubSelect = inner.select(subselect);
+							result->add(key, *innerSubSelect);
+							delete innerSubSelect;
+						} else {
+							result->add(key, inner);
+						}
 						break;
 					}
 				case BSONARRAY_TYPE: 
 					{
+						BSONArrayObj innerArray = (BSONArrayObj)*origContent;
+					   if (!include_all) {
+							char* subselect = bson_subselect(sel, key.c_str());
+							BSONArrayObj* innerSubArray = innerArray.select(subselect);
+							result->add(key, *innerSubArray);
+							delete innerSubArray;
+						} else {
+							result->add(key, innerArray);
+						}
 						break;
 					}
 				case INT_TYPE: 
@@ -454,7 +440,6 @@ BSONObj* BSONObj::select(const char* sel) const {
 						result->add(key, val);
 						break;
 					}
-				case PTRCHAR_TYPE:
 				case STRING_TYPE:
 					{
 						std::string val = *origContent;

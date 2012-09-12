@@ -122,10 +122,13 @@ FindCommand* parseFind(InputStream* is)  {
     command->setNameSpace(*ns);
     std::string* filter = is->readString();
     command->setFilter(*filter);
+	 std::string* select = is->readString();
+	 command->setSelect(*select);
 
     delete db;
     delete ns;
     delete filter;
+	 delete select;
     return command;
 }
 

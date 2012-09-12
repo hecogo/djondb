@@ -65,7 +65,6 @@ ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
 				break;
 			}
 		case STRING_TYPE:
-		case PTRCHAR_TYPE:
 			{
 				type = ExpressionResult::RT_STRINGDB;
 				std::string s = (std::string)content;

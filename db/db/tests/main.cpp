@@ -51,7 +51,7 @@
 
 using namespace std;
 
-DBController controller;
+DBController* controller;
 
 class TestDBSuite: public Test::Suite
 {
@@ -115,7 +115,7 @@ class TestDBSuite: public Test::Suite
 	private:
 		void testInsert(BSONObj* o)
 		{
-			BSONObj* res = controller.insert("dbtest", "sp1.customer", o);
+			BSONObj* res = controller->insert("dbtest", "sp1.customer", o);
 			delete res;
 		}
 
@@ -190,11 +190,11 @@ class TestDBSuite: public Test::Suite
 			cout << "\ntestDbs" << endl;
 			BSONObj* obj = BSONParser::parse("{ 'a': 'a'}");
 
-			controller.insert("db1", "ns1", obj);
-			controller.insert("db2", "ns1", obj);
-			controller.insert("db3", "ns1", obj);
+			controller->insert("db1", "ns1", obj);
+			controller->insert("db2", "ns1", obj);
+			controller->insert("db3", "ns1", obj);
 
-			std::vector<std::string>* dbs = controller.dbs();
+			std::vector<std::string>* dbs = controller->dbs();
 			TEST_ASSERT(dbs->size() >= 3);
 
 			delete dbs;
@@ -204,11 +204,11 @@ class TestDBSuite: public Test::Suite
 			cout << "\ntestNamespaces" << endl;
 			BSONObj* obj = BSONParser::parse("{ 'a': 'a'}");
 
-			controller.insert("testnamespacesdb", "ns1", obj);
-			controller.insert("testnamespacesdb", "ns2", obj);
-			controller.insert("testnamespacesdb", "ns3", obj);
+			controller->insert("testnamespacesdb", "ns1", obj);
+			controller->insert("testnamespacesdb", "ns2", obj);
+			controller->insert("testnamespacesdb", "ns3", obj);
 
-			std::vector<std::string>* ns = controller.namespaces("testnamespacesdb");
+			std::vector<std::string>* ns = controller->namespaces("testnamespacesdb");
 			TEST_ASSERT(ns->size() == 3);
 			TEST_ASSERT((*ns)[0].compare("ns1") == 0);
 			TEST_ASSERT((*ns)[1].compare("ns2") == 0);
@@ -373,7 +373,7 @@ class TestDBSuite: public Test::Suite
 			obj.add("_id", *id);
 			obj.add("name", "cross");
 			delete id;
-			BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
+			BSONObj* res = controller->insert("dbtest", "sp1.customer", &obj);
 			if (res != NULL)
 			{
 				delete res;
@@ -388,7 +388,7 @@ class TestDBSuite: public Test::Suite
 			obj.add("_id", id->c_str());
 			obj.add("name", "cross");
 			delete id;
-			BSONObj* res = controller.insert("dbtest", "sp1.customer", &obj);
+			BSONObj* res = controller->insert("dbtest", "sp1.customer", &obj);
 			if (res != NULL)
 			{
 				delete res;
@@ -398,7 +398,7 @@ class TestDBSuite: public Test::Suite
 		void testInsertComplexBSON() {
 			cout << "\ntestInsertComplexBSON" << endl;
 
-			controller.dropNamespace("dbtest", "sp1.customercomplex");
+			controller->dropNamespace("dbtest", "sp1.customercomplex");
 			BSONObj obj;
 			obj.add("int", 1);
 			obj.add("char", "test");
@@ -408,9 +408,9 @@ class TestDBSuite: public Test::Suite
 			inner.add("char", "testInner");
 			obj.add("inner", inner);
 
-			controller.insert("dbtest", "sp1.customercomplex", &obj);
+			controller->insert("dbtest", "sp1.customercomplex", &obj);
 
-			std::vector<BSONObj*>* array = controller.find("dbtest", "sp1.customercomplex", "$'int' == 1");
+			std::vector<BSONObj*>* array = controller->find("dbtest", "sp1.customercomplex", "*", "$'int' == 1");
 			TEST_ASSERT(array->size() == 1);
 			if (array->size() == 1) {
 				BSONObj* res = *array->begin();
@@ -420,7 +420,9 @@ class TestDBSuite: public Test::Suite
 				BSONObj* innerRes = res->getBSON("inner");
 				TEST_ASSERT(innerRes != NULL);
 				TEST_ASSERT(innerRes->has("int"));
-				TEST_ASSERT(*innerRes->getInt("int") == 200000);
+				if (innerRes->has("int")) {
+					TEST_ASSERT(*innerRes->getInt("int") == 200000);
+				}
 				delete res;
 			}
 			delete array;
@@ -512,9 +514,9 @@ class TestDBSuite: public Test::Suite
 			{
 				string* id = *i;
 
-				BSONObj obj;
-				obj.add("_id", *id);
-				BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
+				std::string filter = format("$\"_id\" == \"%s\"", id->c_str());
+
+				BSONObj* res = controller->findFirst("dbtest", "sp1.customer", "*", filter.c_str());
 				TEST_ASSERT(res != NULL);
 				if (res == NULL) {
 					TEST_FAIL("res is null");
@@ -542,15 +544,15 @@ class TestDBSuite: public Test::Suite
 		}
 
 		void testFindPartial() {
-			controller.dropNamespace("testdb", "partial");
+			controller->dropNamespace("testdb", "partial");
 
 			std::string record("{ 'name': 'John', 'lastName': 'Smith', 'address': { 'phone': '555-12345', 'type': 'home'} }");
 
 			BSONObj* obj = BSONParser::parse(record.c_str());
 
-			controller.insert("testdb", "partial", obj);
+			controller->insert("testdb", "partial", obj);
 
-			std::vector<BSONObj*>* result = controller.find("testdb", "partial", "$\"name\", $\"lastName\"", "");
+			std::vector<BSONObj*>* result = controller->find("testdb", "partial", "*", "$\"name\", $\"lastName\"");
 
 			TEST_ASSERT(result != NULL);
 			if (result != NULL) {
@@ -578,7 +580,7 @@ class TestDBSuite: public Test::Suite
 
 			std::string filter("a x n"); // bad constants
 			try {
-				controller.find("dbtest", "sp1.customer", filter.c_str());
+				controller->find("dbtest", "sp1.customer", "*", filter.c_str());
 				TEST_FAIL("An error should occur");
 			} catch (ParseException& e) {
 				cout << "\nException --> " << e.what() << endl;
@@ -590,37 +592,37 @@ class TestDBSuite: public Test::Suite
 			cout << "\ntestFindsByFilter" << endl;
 			// Insert some data
 			//
-			controller.dropNamespace("dbtest", "find.filter");
-			controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
-			controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Pepe', lastName:'Crossley'}"));
-			controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Smith'}"));
-			controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Clark'}"));
-			controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
-			controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
-			controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
-			controller.insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Last'}"));
+			controller->dropNamespace("dbtest", "find.filter");
+			controller->insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+			controller->insert("dbtest", "find.filter", BSONParser::parse("{name: 'Pepe', lastName:'Crossley'}"));
+			controller->insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Smith'}"));
+			controller->insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Clark'}"));
+			controller->insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+			controller->insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+			controller->insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Crossley'}"));
+			controller->insert("dbtest", "find.filter", BSONParser::parse("{name: 'Juan', lastName:'Last'}"));
 
 			BSONObj* filter = BSONParser::parse("{lastName: 'Crossley'}");
 
 			// Starting find by filter
-			std::vector<BSONObj*>* found = controller.find("dbtest", "find.filter",*filter);
+			std::vector<BSONObj*>* found = controller->find("dbtest", "find.filter", "*", "$\"lastName\" == \"Crossley\"");
 			TEST_ASSERT(found->size() == 5); 
 			delete found;
 			delete filter;
 
-			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{}"));
+			found = controller->find("dbtest", "find.filter", "*", "");
 			TEST_ASSERT(found->size() == 8); 
 			delete found;
 
-			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan'}"));
+			found = controller->find("dbtest", "find.filter", "*", "$\"name\": \"Juan\"");
 			TEST_ASSERT(found->size() == 7); 
 			delete found;
 
-			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Smith'}"));
+			found = controller->find("dbtest", "find.filter", "*", "$'name' == 'Juan' and $'lastName' == 'Smith'");
 			TEST_ASSERT(found->size() == 1); 
 			delete found;
 
-			found = controller.find("dbtest", "find.filter", *BSONParser::parse("{name: 'Juan', lastName: 'Last'}"));
+			found = controller->find("dbtest", "find.filter", "*", "$'name' == 'Juan' and $'lastName' == 'Last'");
 			TEST_ASSERT(found->size() == 1); 
 			delete found;
 		}
@@ -630,26 +632,26 @@ class TestDBSuite: public Test::Suite
 			cout << "\ntestFindsByTextFilter" << endl;
 			// Insert some data
 			//
-			controller.dropNamespace("dbtest", "find.filter2");
-			controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Crossley', age: 38}"));
-			controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Pepe', lastName:'Crossley', age: 15}"));
-			controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Smith', age: 45}"));
-			controller.insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Clark', age: 38}"));
+			controller->dropNamespace("dbtest", "find.filter2");
+			controller->insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Crossley', age: 38}"));
+			controller->insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Pepe', lastName:'Crossley', age: 15}"));
+			controller->insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Smith', age: 45}"));
+			controller->insert("dbtest", "find.filter2", BSONParser::parse("{name: 'Juan', lastName:'Clark', age: 38}"));
 
 			std::string filter = "$'age' == 45";
-			std::vector<BSONObj*>* found = controller.find("dbtest", "find.filter2",filter.c_str());
+			std::vector<BSONObj*>* found = controller->find("dbtest", "find.filter2","*", filter.c_str());
 			TEST_ASSERT(found->size() == 1); 
 			std::string name = found->at(0)->getString("lastName");
 			TEST_ASSERT(name.compare("Smith") == 0);
 
 			filter = "";
 			delete found;
-			found = controller.find("dbtest", "find.filter2",filter.c_str());
+			found = controller->find("dbtest", "find.filter2","*", filter.c_str());
 			TEST_ASSERT(found->size() == 4); 
 
 			filter = "$'age' == 38";
 			delete found;
-			found = controller.find("dbtest", "find.filter2",filter.c_str());
+			found = controller->find("dbtest", "find.filter2","*", filter.c_str());
 			TEST_ASSERT(found->size() == 2); 
 			name = found->at(0)->getString("lastName");
 			TEST_ASSERT(name.compare("Crossley") == 0);
@@ -677,9 +679,8 @@ class TestDBSuite: public Test::Suite
 			{
 				string* id = *i;
 
-				BSONObj obj;
-				obj.add("_id", *id);
-				BSONObj* res = controller.findFirst("dbtest", "sp1.customer", &obj);
+				std::string filter = format("$\"_id\" == \"%s\"", id->c_str());
+				BSONObj* res = controller->findFirst("dbtest", "sp1.customer", "*", filter.c_str());
 				if (res == NULL)
 				{
 					TEST_FAIL("Looking for a previous id does not returned any match");
@@ -818,14 +819,12 @@ class TestDBSuite: public Test::Suite
 			BSONObj obj;
 			obj.add("name", "Test");
 
-			BSONObj* res = controller.insert("dbtest", "ns.drop", &obj);
+			BSONObj* res = controller->insert("dbtest", "ns.drop", &obj);
 
-			bool result = controller.dropNamespace("dbtest", "ns.drop");
+			bool result = controller->dropNamespace("dbtest", "ns.drop");
 			TEST_ASSERT(result);
 
-			BSONObj filter;
-
-			std::vector<BSONObj*>* finds = controller.find("dbtest", "ns.drop", filter);
+			std::vector<BSONObj*>* finds = controller->find("dbtest", "ns.drop", "*", "");
 
 			TEST_ASSERT(finds->size() == 0);
 
@@ -902,7 +901,8 @@ int main(int argc, char* argv[])
 		// Demonstrates the ability to use multiple test suites
 		//
 		Test::Suite ts;
-		controller.initialize();
+		controller = new DBController();
+		controller->initialize();
 		ts.add(auto_ptr<Test::Suite>(new TestDBSuite));
 		//        ts.add(auto_ptr<Test::Suite>(new CompareTestSuite));
 		//        ts.add(auto_ptr<Test::Suite>(new ThrowTestSuite));
@@ -915,7 +915,7 @@ int main(int argc, char* argv[])
 		Test::HtmlOutput* const html = dynamic_cast<Test::HtmlOutput*>(output.get());
 		if (html)
 			html->generate(cout, true, "MyTest");
-		controller.shutdown();
+		controller->shutdown();
 	}
 	catch (...)
 	{

@@ -209,12 +209,12 @@ std::vector<std::string>* Connection::namespaces(const std::string& db) const {
 	return result;
 }
 
-BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& id) {
-	if (_logger->isDebug()) _logger->debug("executing findByKey db: %s, ns: %s id: %s", db.c_str(), ns.c_str(), id.c_str());
+BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& select, const std::string& id) {
+	if (_logger->isDebug()) _logger->debug("executing findByKey db: %s, ns: %s, select: %s, id: %s", db.c_str(), ns.c_str(), select.c_str(), id.c_str());
 
 	std::string filter = "$'_id' == '" + id + "'";
 
-	std::vector<BSONObj*>* result = find(db, ns, filter);
+	std::vector<BSONObj*>* result = find(db, ns, select, filter);
 
 	BSONObj* res = NULL;
 	if (result->size() == 1) {
@@ -232,11 +232,12 @@ BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, con
 	return bsonresult;
 }
 
-std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& filter) {
-	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, filter: %s", db.c_str(), ns.c_str(), filter.c_str());
+std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& select, const std::string& filter) {
+	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, select: %s, filter: %s", db.c_str(), ns.c_str(), select.c_str(), filter.c_str());
 
 	FindCommand cmd;
 	cmd.setFilter(filter);
+	cmd.setSelect(select);
 	cmd.setDB(db);
 	cmd.setNameSpace(ns);
 	_commandWriter->writeCommand(&cmd);

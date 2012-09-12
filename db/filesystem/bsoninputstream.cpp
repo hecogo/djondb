@@ -110,6 +110,7 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 										break;
 									}
 			case PTRCHAR_TYPE: {
+										 // Included only for backward compatibility
 										 data = _inputStream->readChars();
 #ifdef DEBUG
 										 if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %s", key->c_str(), data);

@@ -37,9 +37,6 @@ BSONContent::~BSONContent() {
 		case STRING_TYPE:
 			delete ((string*)_element);
 			break;
-		case PTRCHAR_TYPE:
-			free (_element);
-			break;
 		case INT_TYPE:
 			delete ((int*)_element);
 			break;
@@ -77,12 +74,6 @@ BSONContent::BSONContent(const BSONContent& orig) {
 	switch (this->_type) {
 		case STRING_TYPE:
 			this->_element = new std::string(*(std::string*)orig._element);
-			break;
-		case PTRCHAR_TYPE:
-			len = strlen((char*)orig._element);
-			this->_element = malloc(len+1);
-			memset(this->_element, 0, len + 1);
-			memcpy(this->_element, orig._element, len);
 			break;
 		case INT_TYPE:
 			i = *((int*)orig._element);
@@ -132,13 +123,6 @@ bool BSONContent::operator ==(const BSONContent& content) {
 			switch (this->_type) {
 				case STRING_TYPE:
 					result = ((std::string*)cont1)->compare(*(std::string*)cont2) == 0;
-					break;
-				case PTRCHAR_TYPE: 
-					{
-						char* c1 = (char*)cont1;
-						char* c2 = (char*)cont2;
-						result = strcmp(c1, c2) == 0;
-					}
 					break;
 				case INT_TYPE: 
 					{
@@ -192,13 +176,6 @@ bool BSONContent::operator !=(const BSONContent& content) {
 			switch (this->_type) {
 				case STRING_TYPE:
 					result = ((std::string*)cont1)->compare(*(std::string*)cont2) != 0;
-					break;
-				case PTRCHAR_TYPE: 
-					{
-						char* c1 = (char*)cont1;
-						char* c2 = (char*)cont2;
-						result = strcmp(c1, c2) != 0;
-					}
 					break;
 				case INT_TYPE: 
 					{
@@ -271,14 +248,9 @@ BSONContent::operator double() {
  */
 
 BSONContent::operator std::string() {
-	assert((_type == STRING_TYPE) || (_type == PTRCHAR_TYPE));
-	if (_type == STRING_TYPE) {
-		std::string* content = (std::string*)_element;
-		return *content; 
-	} else if (_type == PTRCHAR_TYPE) {
-		std::string result((char*)_element);
-		return result;
-	}
+	assert(_type == STRING_TYPE);
+	std::string* content = (std::string*)_element;
+	return *content; 
 }
 
 BSONContent::operator BSONObj() {

@@ -21,7 +21,6 @@ class BSONObj
         void add(t_keytype, int);
         void add(t_keytype, double);
         void add(t_keytype, long);
-        void add(t_keytype, char*);
         void add(t_keytype, std::string);
         void add(t_keytype, const BSONObj&);
         void add(t_keytype, const BSONArrayObj&);
@@ -31,7 +30,6 @@ class BSONObj
         int* getInt(t_keytype) const;
         double* getDouble(t_keytype) const;
         long* getLong(t_keytype) const;
-        char* getChars(t_keytype) const;
         std::string getString(t_keytype) const;
         BSONObj* getBSON(t_keytype) const;
         BSONArrayObj* getBSONArray(t_keytype) const;

@@ -86,3 +86,18 @@ BSONArrayObj::iterator BSONArrayObj::end() {
 	return _elements.end();
 }
 
+BSONArrayObj* BSONArrayObj::select(const char* select) const {
+	bool include_all = (strcmp(select, "*") == 0);
+	BSONArrayObj* result = new BSONArrayObj();
+	for (std::vector<BSONObj*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
+		BSONObj* element = *i;
+		if (include_all) {
+			result->add(*element);
+		} else {
+			BSONObj* sub = element->select(select);
+			result->add(*sub);
+			delete sub;
+		}
+	}
+	return result;
+}

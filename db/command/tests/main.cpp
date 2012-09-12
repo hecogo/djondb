@@ -166,6 +166,7 @@ class TestCommandSuite: public Test::Suite {
 			FindCommand cmd;
 			cmd.setDB("testdb");
 			cmd.setNameSpace("test.namespace.db");
+			cmd.setSelect("*");
 			cmd.setFilter("$'a.b.c' == 1");
 
 			commandWriter->writeCommand(&cmd);
@@ -178,6 +179,7 @@ class TestCommandSuite: public Test::Suite {
 			CommandReader* reader = new CommandReader(fis);
 			FindCommand* rdCmd = (FindCommand*) reader->readCommand();
 			TEST_ASSERT(rdCmd != NULL);
+			TEST_ASSERT(rdCmd->select()->compare("*") == 0);
 			TEST_ASSERT(rdCmd->nameSpace()->compare("test.namespace.db") == 0);
 			TEST_ASSERT(rdCmd->DB()->compare("testdb") == 0);
 			TEST_ASSERT(rdCmd->filter()->compare("$'a.b.c' == 1") == 0);
