@@ -19,5 +19,5 @@ mv usr ../debian/
 cd ..
 sh debian.sh
 
-scp djondb.deb crossleyjuan@d-jon.com:html/downloads/djondb.deb
+# scp djondb.deb crossleyjuan@d-jon.com:html/downloads/djondb.deb
 
