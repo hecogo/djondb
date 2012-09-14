@@ -219,6 +219,19 @@ v8::Persistent<v8::Context> CreateShellContext() {
 
 */
 
+v8::Handle<v8::Value> parseJSON(v8::Handle<v8::Value> object)
+{
+	v8::HandleScope scope;
+
+	v8::Handle<v8::Context> context = v8::Context::GetCurrent();
+	v8::Handle<v8::Object> global = context->Global();
+
+	v8::Handle<v8::Object> JSON = global->Get(v8::String::New("JSON"))->ToObject();
+	v8::Handle<v8::Function> JSON_parse = v8::Handle<v8::Function>::Cast(JSON->Get(v8::String::New("parse")));
+
+	return scope.Close(JSON_parse->Call(JSON, 1, &object));
+}
+
 v8::Handle<v8::Value> toJson(v8::Handle<v8::Value> object)
 {
 	v8::HandleScope scope;
@@ -371,7 +384,7 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 
 v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	if (args.Length() < 2) {
-		return v8::ThrowException(v8::String::New("usage: db.find(db, namespace[, select][, filter])\ndb.find(db, namespace)"));
+		return v8::ThrowException(v8::String::New("usage: db.find(db, namespace)\ndb.find(db, namespace, filter)\ndb.find(db, namespace, select, filter)"));
 	}
 
 	if (__djonConnection == NULL) {
@@ -384,11 +397,13 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	std::string ns = ToCString(str);
 	std::string select = "*";
 	std::string filter = "";
-	if (args.Length() > 2) {
+	if (args.Length() == 3) {
+		v8::String::Utf8Value strFilter(args[2]);
+		filter = ToCString(strFilter);
+	}
+	if (args.Length() == 4) {
 		v8::String::Utf8Value strSelect(args[2]);
 		select = ToCString(strSelect);
-	}
-	if (args.Length() > 3) {
 		v8::String::Utf8Value strFilter(args[3]);
 		filter = ToCString(strFilter);
 	}
@@ -419,8 +434,17 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	std::string sresult = ss.str();
 
 	delete result;
+	return parseJSON(v8::String::New(sresult.c_str()));
+/* 
+	v8::Handle<v8::Context> context = v8::Context::GetCurrent();
+	v8::Handle<v8::Object> global = context->Global();
 
-	return v8::String::New(sresult.c_str());
+	v8::Handle<v8::Object> objresult = global->Get(v8::String::New(sresult.c_str()))->ToObject();
+
+
+	return objresult;
+	//return v8::String::New(sresult.c_str());
+*/
 }
 
 v8::Handle<v8::Value> fuuid(const v8::Arguments& args) {

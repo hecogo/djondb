@@ -313,7 +313,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ASSERT(result->size() > 0);
 			filter = "$'name' == 'Test'";
 			delete result;
-			result = conn->find("db", "test.filter2", "*", filter);			
+			result = conn->find("db", "test.filter2", filter);			
 			TEST_ASSERT(result->size() > 0);
 
 			BSONObj* objR = *result->begin();
@@ -327,13 +327,13 @@ class TestDriverBaseSuite: public Test::Suite {
 			result = conn->find("db", "test.filter2", "*", "$'name' == 'Test'");
 			TEST_ASSERT(result->size() == 1);
 
-			result = conn->find("db", "test.filter2", "*", "$'inner.x' == 1");
+			result = conn->find("db", "test.filter2", "$'inner.x' == 1");
 			TEST_ASSERT(result->size() == 1);
 
 			result = conn->find("db", "test.filter2", "*", "$'inner.x' > 0");
 			TEST_ASSERT(result->size() == 1);
 
-			result = conn->find("db", "test.filter2", "*", "$'inner.x' > 1");
+			result = conn->find("db", "test.filter2", "$'inner.x' > 1");
 			TEST_ASSERT(result->size() == 0);
 
 			delete objR;

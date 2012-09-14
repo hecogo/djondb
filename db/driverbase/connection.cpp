@@ -209,6 +209,10 @@ std::vector<std::string>* Connection::namespaces(const std::string& db) const {
 	return result;
 }
 
+BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& id) {
+	return findByKey(db, ns, "*", id);
+}
+
 BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& select, const std::string& id) {
 	if (_logger->isDebug()) _logger->debug("executing findByKey db: %s, ns: %s, select: %s, id: %s", db.c_str(), ns.c_str(), select.c_str(), id.c_str());
 
@@ -230,6 +234,10 @@ BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, con
 
 	delete result;
 	return bsonresult;
+}
+
+std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& filter) {
+	return find(db, ns, "*", filter);
 }
 
 std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& select, const std::string& filter) {
