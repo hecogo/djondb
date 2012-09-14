@@ -54,7 +54,7 @@ class BPlusIndex: public IndexAlgorithm
 	 protected:
 	 private:
 		  Bucket* _head;
-		  PriorityCache<INDEXPOINTERTYPE, Index*>* _priorityCache;
+//		  PriorityCache<INDEXPOINTERTYPE, Index*>* _priorityCache;
 
 	 private:
 		  bool insertElement(const Index& elem);

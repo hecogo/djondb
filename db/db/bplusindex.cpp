@@ -38,7 +38,8 @@ BPlusIndex::BPlusIndex(std::set<std::string> keys)
 	: IndexAlgorithm(keys)
 {
     _head = new Bucket();
-	 _priorityCache = new PriorityCache<INDEXPOINTERTYPE, Index*>(1000, compareIndex);
+	 //_priorityCache = new PriorityCache<INDEXPOINTERTYPE, Index*>(1000, compareIndex);
+	 //_priorityCache = new PriorityCache<INDEXPOINTERTYPE, Index*>(1000);
     initializeBucket(_head);
 }
 
@@ -107,10 +108,12 @@ Index* BPlusIndex::find(const BSONObj& elem)
 	
 	Index* result = NULL;
 	INDEXPOINTERTYPE key = elem.toChar();
+	/* 
 	PriorityCache<INDEXPOINTERTYPE, Index*>::iterator it = _priorityCache->get(key);
 	if (it != _priorityCache->end()) {
 		result = it->second;
 	}
+	*/
 	if (log->isDebug()) {
 		if (result != NULL) {
 			log->debug(3, "BPlusIndex::find %s found in priority cache");
@@ -428,7 +431,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 		delete index->key;
 		delete index;
 	} else {
-		_priorityCache->add(key, index);
+		//_priorityCache->add(key, index);
 	}
 
 	return result;
