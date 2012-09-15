@@ -23,5 +23,5 @@ rm djondb_mac/Info*
 rm djondb_mac/*.png
 tar cvfz dist/djondb_0.1.tar.gz  djondb_mac/*
 
-scp dist/djondb_0.1.tar.gz crossleyjuan@d-jon.com:html/downloads/djondb_0.1.tar.gz
+# scp dist/djondb_0.1.tar.gz crossleyjuan@d-jon.com:html/downloads/djondb_0.1.tar.gz
  
