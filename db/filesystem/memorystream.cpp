@@ -80,7 +80,7 @@ void MemoryStream::nextBuffer() {
 	_currentBuffer = _buffer[_currentIndex];
 }
 
-void MemoryStream::write(const void *ptr, size_t count) {
+void MemoryStream::write(const char *ptr, size_t count) {
 	if ((_bufferSize - (_currentBufferPos + (int)count)) > 0) {
 		memcpy(_currentBuffer + _currentBufferPos, ptr, count);
 		_currentBufferPos += count;
@@ -96,7 +96,7 @@ void MemoryStream::write(const void *ptr, size_t count) {
 	}
 }
 
-size_t MemoryStream::read( void* ptr, size_t count) {
+size_t MemoryStream::read( char* ptr, size_t count) {
 	if (count > (_length - _currentBufferPos)) {
 		count = _length - _currentBufferPos;
 	}
@@ -120,7 +120,7 @@ size_t MemoryStream::read( void* ptr, size_t count) {
 /* Write 1 byte in the output */
 void MemoryStream::writeChar (unsigned char v)
 {
-	write(&v, 1);
+	write((char*)&v, 1);
 }
 
 /* Write 2 bytes in the output (little endian order) */
@@ -149,13 +149,13 @@ void MemoryStream::writeLong (long v)
 /* Write a 4 byte float in the output */
 void MemoryStream::writeFloatIEEE (float v)
 {
-	write(&v, sizeof(v));
+	write((char*)&v, sizeof(v));
 }
 
 /* Write a 8 byte double in the output */
 void MemoryStream::writeDoubleIEEE (double v)
 {
-	write(&v, sizeof(v));
+	write((char*)&v, sizeof(v));
 }
 
 void MemoryStream::writeChars(const char *text, int len) {
@@ -191,7 +191,7 @@ void MemoryStream::flush() {
 
 unsigned char MemoryStream::readChar() {
 	unsigned char v = 0;
-	read(&v,  1);
+	read((char*)&v,  1);
 	return v;
 }
 
@@ -218,14 +218,14 @@ long MemoryStream::readLong () {
 /* Reads a 4 byte float in the input */
 float MemoryStream::readFloatIEEE () {
 	float f;
-	read(&f, sizeof(f));
+	read((char*)&f, sizeof(f));
 	return f;
 }
 
 /* Reads a 8 byte double in the input */
 double MemoryStream::readDoubleIEEE () {
 	double d;
-	read(&d, sizeof(d));
+	read((char*)&d, sizeof(d));
 	return d;
 }
 

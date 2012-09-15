@@ -11,7 +11,7 @@ cd obj
 make
 make DESTDIR=`pwd` install
 rm usr/bin/test*
-rm -rf Users/User/workspace/djondb/db/libs/usr
+rm -rf /Users/User/workspace/djondb/db/libs/usr
 mv usr ../libs/
 
 cd ../mac

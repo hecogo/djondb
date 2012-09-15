@@ -61,8 +61,8 @@ class MemoryStream: public InputStream, public OutputStream
 		  char* toChars();
 
 	 private:
-		  void write(const void * ptr, size_t count);
-		  size_t read(void * ptr, size_t count);
+		  void write(const char * ptr, size_t count);
+		  size_t read(char * ptr, size_t count);
 		  void allocate(const size_t size);
 		  void nextBuffer();
 

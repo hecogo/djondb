@@ -142,8 +142,7 @@ class TestFileSystemSuite: public Test::Suite
 
 			TEST_ASSERT(obj->getString("string").compare("test") == 0);
 
-			TEST_ASSERT(obj->getChars("char*") != NULL);
-			TEST_ASSERT(strcmp((char*) obj->getChars("char*"), "char*") == 0);
+			TEST_ASSERT(obj->getString("char*").compare("char*") == 0);
 
 			TEST_ASSERT(obj->getLong("long") != NULL);
 			TEST_ASSERT(*obj->getLong("long") == 1L);
@@ -224,16 +223,14 @@ class TestFileSystemSuite: public Test::Suite
 			BSONObj* obj = bsonIn->readBSON();
 			TEST_ASSERT(obj->getInt("age") != NULL);
 			TEST_ASSERT(*obj->getInt("age") == 1);
-			TEST_ASSERT(obj->getChars("name") != NULL);
-			TEST_ASSERT(strcmp(obj->getChars("name"), "John") == 0);
+			TEST_ASSERT(obj->getString("name").compare("John") == 0);
 
 			TEST_ASSERT(obj->getDouble("salary") != NULL);
 			TEST_ASSERT(*obj->getDouble("salary") == 3500.25);
 
 			TEST_ASSERT(obj->getBSONArray("rel1") != NULL);
 			TEST_ASSERT(obj->getBSONArray("rel1")->length() == 4);
-			TEST_ASSERT(obj->getBSONArray("rel1")->get(0)->getChars("innertext") != NULL);
-			TEST_ASSERT(strcmp(obj->getBSONArray("rel1")->get(0)->getChars("innertext"), "inner text") == 0);
+			TEST_ASSERT(obj->getBSONArray("rel1")->get(0)->getString("innertext").compare("inner text") == 0);
 
 			delete obj;
 
@@ -277,8 +274,7 @@ class TestFileSystemSuite: public Test::Suite
 
 			TEST_ASSERT(obj->getString("string").compare("test") == 0);
 
-			TEST_ASSERT(obj->getChars("char*") != NULL);
-			TEST_ASSERT(strcmp((char*) obj->getChars("char*"), "char*") == 0);
+			TEST_ASSERT(obj->getString("char*").compare("char*") == 0);
 
 			TEST_ASSERT(obj->getLong("long") != NULL);
 			TEST_ASSERT(*obj->getLong("long") == 1L);
@@ -294,8 +290,7 @@ class TestFileSystemSuite: public Test::Suite
 
 			TEST_ASSERT(innerTest->getString("string").compare("test") == 0);
 
-			TEST_ASSERT(innerTest->getChars("char*") != NULL);
-			TEST_ASSERT(strcmp((char*) innerTest->getChars("char*"), "char*") == 0);
+			TEST_ASSERT(innerTest->getString("char*").compare("char*") == 0);
 
 			TEST_ASSERT(innerTest->getLong("long") != NULL);
 			TEST_ASSERT(*innerTest->getLong("long") == 1L);
@@ -341,8 +336,7 @@ class TestFileSystemSuite: public Test::Suite
 
 				TEST_ASSERT(obj->getString("string").compare("test") == 0);
 
-				TEST_ASSERT(obj->getChars("char*") != NULL);
-				TEST_ASSERT(strcmp((char*) obj->getChars("char*"), "char*") == 0);
+				TEST_ASSERT(obj->getString("char*").compare("char*") == 0);
 
 				TEST_ASSERT(obj->getLong("long") != NULL);
 				TEST_ASSERT(*obj->getLong("long") == 1L);

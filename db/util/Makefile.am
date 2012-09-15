@@ -5,7 +5,10 @@ include $(top_srcdir)/common.mk
 
 lib_LTLIBRARIES = libdjon-util.la
 libdjon_util_la_LDFLAGS = -static
-libdjon_util_la_LIBADD = -lX11 -lXss -lrt -luuid 
+libdjon_util_la_LIBADD = -lX11 -lXss 
+if !MAC
+   libdjon_util_la_LIBADD += -lrt -luuid
+endif
 libdjon_util_la_SOURCES = util.cpp \
 			  fileutil.cpp \
 			  version.cpp \
@@ -36,7 +39,12 @@ library_include_HEADERS=util.h datetime.h errorhandle.h dtime.h fileutil.h logge
 
 TESTS = test-util
 check_PROGRAMS = test-util
-test_util_LDADD = libdjon-util.la -lX11 -lXss -lrt -luuid -lcpptest
+test_util_LDADD = libdjon-util.la -lX11 -lXss -lcpptest
+if !MAC
+     test_util_LDADD += -lrt -luuid
+else
+     test_util_LDFLAGS = -framework CoreFoundation -framework IOKit
+endif
 test_util_SOURCES = tests/main.cpp
 
 

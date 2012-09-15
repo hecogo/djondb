@@ -26,6 +26,7 @@ test_bson_LDADD = libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lX
 if !MAC
      test_bson_LDADD += -lrt -luuid
 else
+     test_bson_LDFLAGS = -framework CoreFoundation -framework IOKit
 endif
 
 test_bson_SOURCES = tests/main.cpp
@@ -34,4 +35,6 @@ test_performance_SOURCES = tests/testperformance.cpp
 test_performance_LDADD = libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lX11 -lXss
 if !MAC
      test_performance_LDADD += -lrt -luuid
+else
+     test_performance_LDFLAGS = -framework CoreFoundation -framework IOKit
 endif
