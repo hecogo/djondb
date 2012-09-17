@@ -159,11 +159,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\bsondefs.h"
+				>
+			</File>
+			<File
 				RelativePath=".\bsonobj.h"
 				>
 			</File>
 			<File
 				RelativePath=".\bsonparser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\bsonutil.h"
 				>
 			</File>
 			<File
@@ -196,6 +204,10 @@
 			</File>
 			<File
 				RelativePath=".\bsonparser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\bsonutil.cpp"
 				>
 			</File>
 		</Filter>
