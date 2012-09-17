@@ -44,5 +44,6 @@ endif
 if MAC
 test_performance_LDFLAGS = -framework CoreFoundation -framework IOKit
 endif
+
 library_includedir=$(includedir)/djondb
 library_include_HEADERS = djondb_client.h connectionmanager.h connection.h

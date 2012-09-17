@@ -6,9 +6,9 @@ if DEBUG
    AM_CPPFLAGS = -g3 -O0
    AM_CXXFLAGS = -g3 -O0
 else
-   AM_CFLAGS = -O2
-   AM_CPPFLAGS = -O2
-   AM_CXXFLAGS = -O2
+   AM_CFLAGS = -O2 -m32
+   AM_CPPFLAGS = -O2 -m32
+   AM_CXXFLAGS = -O2 -m32
 endif
 
 #include aminclude.am

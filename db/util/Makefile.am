@@ -47,7 +47,6 @@ else
 endif
 test_util_SOURCES = tests/main.cpp
 
-
 djon_util_libincludedir = $(libdir)/djon-util-1.0/include
 # nodist_djon_util_libinclude_HEADERS = config.h
 
