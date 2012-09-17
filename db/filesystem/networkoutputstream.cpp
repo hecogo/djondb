@@ -75,9 +75,9 @@ void NetworkOutputStream::writeChar (unsigned char v)
 }
 
 /* Write 2 bytes in the output (little endian order) */
-void NetworkOutputStream::writeInt (int v)
+void NetworkOutputStream::writeShortInt (short int v)
 {
-	if (_logger->isDebug()) _logger->debug(3, "NetworkOutputStream::writeInt, int: %d", v);
+	if (_logger->isDebug()) _logger->debug(3, "NetworkOutputStream::writeShortInt, short: %d", v);
 	unsigned char c = (v & 255);
 	unsigned char c2= ((v >> 8) & 255);
 	writeChar (c);
@@ -86,11 +86,20 @@ void NetworkOutputStream::writeInt (int v)
 }
 
 /* Write 4 bytes in the output (little endian order) */
+void NetworkOutputStream::writeInt (int v)
+{
+	if (_logger->isDebug()) _logger->debug(3, "NetworkOutputStream::writeInt, int: %d", v);
+	writeShortInt ((v) & 0xffff);
+	writeShortInt ((v >> 16) & 0xffff);
+	if (_logger->isDebug()) _logger->debug(3, "~NetworkOutputStream::writeInt");
+}
+
+/* Write 4 bytes in the output (little endian order) */
 void NetworkOutputStream::writeLong (long v)
 {
 	if (_logger->isDebug()) _logger->debug(3, "NetworkOutputStream::writeLong, long: %d", v);
-	writeInt ((v) & 0xffff);
-	writeInt ((v >> 16) & 0xffff);
+	writeShortInt ((v) & 0xffff);
+	writeShortInt ((v >> 16) & 0xffff);
 	if (_logger->isDebug()) _logger->debug(3, "~NetworkOutputStream::writeLong");
 }
 
@@ -131,6 +140,7 @@ void NetworkOutputStream::writeChars(const char *text, int len) {
 			int sent = 0;
 			while (sent < size) {
 				sent += send(_socket, &buffer[sent], size - sent, __sendFlags_networkoutput);
+				assert(sent > 0);
 				//            sent += write(_socket, &buffer[sent], size - sent);
 			}
 		}

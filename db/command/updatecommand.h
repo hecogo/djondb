@@ -14,7 +14,9 @@ class UpdateCommand: public Command {
 
         virtual void execute();
         virtual void* result();
+        virtual void writeCommand(OutputStream* out) const;
         virtual void writeResult(OutputStream* out) const;
+        virtual void readResult(InputStream* is);
 
         void setDB(const std::string& db);
         const std::string* DB() const;

@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "cachemanager.h"
+#include "prioritycache.h"
 #include <assert.h>
 #include <cpptest.h>
 
@@ -30,6 +31,7 @@ public:
     TestCacheSuite()
     {
         TEST_ADD(TestCacheSuite::testCache);
+        TEST_ADD(TestCacheSuite::testPriorityCache);
     }
 
 private:
@@ -85,6 +87,45 @@ private:
 		  TEST_ASSERT(CacheManager::objectCache()->size() == 6);
 	 }
 
+
+	 void testPriorityCache() {
+		 PriorityCache<int, char*> cache(3);
+
+		 cache.add(1, "a");
+		 cache.add(2, "b");
+		 cache.add(3, "c");
+
+		 PriorityCache<int, char*>::iterator i = cache[1];
+		 TEST_ASSERT(i != cache.end());
+		 if (i != cache.end()) {
+			 TEST_ASSERT(strcmp(i->second, "a") == 0);
+		 }
+
+		 // Test remove
+		 cache.erase(1);
+		 PriorityCache<int, char*>::iterator i2 = cache[1];
+		 TEST_ASSERT(i2 == cache.end());
+
+		 // Test replace
+		 cache.add(2, "x");
+		 PriorityCache<int, char*>::iterator i3 = cache[2];
+		 TEST_ASSERT(i3 != cache.end());
+		 if (i3 != cache.end()) {
+			 TEST_ASSERT(strcmp(i3->second, "x") == 0);
+		 }
+
+		 // test top
+		 cache.add(4, "d");
+		 cache[3]; // pops ups the 3 priority
+		 cache.add(5, "e");
+		 i = cache[4];
+		 TEST_ASSERT(i != cache.end());
+		 if (i != cache.end()) {
+			 TEST_ASSERT(strcmp(i->second, "d") == 0);
+		 }
+		 i = cache[2];
+		 TEST_ASSERT(i == cache.end());
+	 }
 };
 
 

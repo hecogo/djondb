@@ -32,6 +32,10 @@ FileOutputStream::~FileOutputStream() {
     free(_pFile);
 }
 
+bool FileOutputStream::isOpen() const {
+	return (_pFile != NULL);
+}
+
 /* Write 1 byte in the output */
 void FileOutputStream::writeChar (unsigned char v)
 {
@@ -39,7 +43,7 @@ void FileOutputStream::writeChar (unsigned char v)
 }
 
 /* Write 2 bytes in the output (little endian order) */
-void FileOutputStream::writeInt (int v)
+void FileOutputStream::writeShortInt (short int v)
 {
     unsigned char c = (v & 255);
     unsigned char c2= ((v >> 8) & 255);
@@ -48,10 +52,17 @@ void FileOutputStream::writeInt (int v)
 }
 
 /* Write 4 bytes in the output (little endian order) */
+void FileOutputStream::writeInt (int v)
+{
+    writeShortInt ((v) & 0xffff);
+    writeShortInt ((v >> 16) & 0xffff);
+}
+
+/* Write 4 bytes in the output (little endian order) */
 void FileOutputStream::writeLong (long v)
 {
-    writeInt ((v) & 0xffff);
-    writeInt ((v >> 16) & 0xffff);
+    writeShortInt ((v) & 0xffff);
+    writeShortInt ((v >> 16) & 0xffff);
 }
 
 /* Write a 4 byte float in the output */

@@ -22,6 +22,8 @@
 #include "updatecommand.h"
 #include "findcommand.h"
 #include "shutdowncommand.h"
+#include "shownamespacescommand.h"
+#include "showdbscommand.h"
 #include "bsoninputstream.h"
 #include "util.h"
 
@@ -39,16 +41,22 @@ CommandReader::~CommandReader()
 }
 
 InsertCommand* parseInsert(InputStream* is)  {
+	 Logger* log = getLogger(NULL);
     InsertCommand* command = new InsertCommand();
     std::string* db = is->readString();
     command->setDB(*db);
     std::string* ns = is->readString();
     command->setNameSpace(*ns);
+
+	 /*
+	 std::string* s = is->readString();
+	 BSONObj* obj = BSONParser::parse(*s);
+	 delete s;
+	 */
     std::auto_ptr<BSONInputStream> bsonis(new BSONInputStream(is));
     BSONObj* obj = bsonis->readBSON();
     command->setBSON(*obj);
-
-	 Logger* log = getLogger(NULL);
+	 
 	 delete log;
 
     delete ns;
@@ -66,6 +74,21 @@ DropnamespaceCommand* parseDropnamespace(InputStream* is)  {
 
     delete db;
     delete ns;
+    return command;
+}
+
+ShowdbsCommand* parseShowdbsCommand(InputStream* is)  {
+    ShowdbsCommand* command = new ShowdbsCommand();
+
+    return command;
+}
+
+ShownamespacesCommand* parseShownamespacesCommand(InputStream* is)  {
+    ShownamespacesCommand* command = new ShownamespacesCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
+
+    delete db;
     return command;
 }
 
@@ -99,10 +122,13 @@ FindCommand* parseFind(InputStream* is)  {
     command->setNameSpace(*ns);
     std::string* filter = is->readString();
     command->setFilter(*filter);
+	 std::string* select = is->readString();
+	 command->setSelect(*select);
 
     delete db;
     delete ns;
     delete filter;
+	 delete select;
     return command;
 }
 
@@ -141,6 +167,12 @@ Command* CommandReader::readCommand() {
             break;
         case CLOSECONNECTION: // Insert
             cmd = new CloseCommand();
+            break;
+        case SHOWDBS: // Showdbs
+				cmd = parseShowdbsCommand(_stream);
+            break;
+        case SHOWNAMESPACES: // Shownamepsaces
+				cmd = parseShownamespacesCommand(_stream);
             break;
         default:
             cout << "unknown command type " << type << endl;

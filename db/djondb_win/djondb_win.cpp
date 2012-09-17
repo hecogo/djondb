@@ -10,6 +10,8 @@ bool __stopRunning;
 int _tmain(int argc, _TCHAR* argv[])
 {
 	__stopRunning = false;
+	Logger* log = getLogger(NULL);
+	log->info("djondbd version %s is starting up.", VERSION);
 	service_startup();
 
 	while(true) {
@@ -18,6 +20,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		Thread::sleep(30000);
 	}
+	delete log;
 	return 0;
 }
 

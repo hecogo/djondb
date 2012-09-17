@@ -16,6 +16,8 @@ class FileOutputStream: public OutputStream
     public:
         virtual void writeChar (unsigned char v);
         /* Write 2 bytes in the output (little endian order) */
+        virtual void writeShortInt (short int v);
+        /* Write 4 bytes in the output (little endian order) */
         virtual void writeInt (int v);
         /* Write 4 bytes in the output (little endian order) */
         virtual void writeLong (long v);
@@ -36,6 +38,8 @@ class FileOutputStream: public OutputStream
 
         virtual void flush();
         virtual const char* fileName() const;
+
+		  bool isOpen() const;
 
     private:
         char* _fileName;

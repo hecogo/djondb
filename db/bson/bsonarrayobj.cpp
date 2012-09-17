@@ -63,17 +63,44 @@ BSONObj* BSONArrayObj::get(int index) const {
 char* BSONArrayObj::toChar() const {
 	std::stringstream ss;
 	ss << "[";
+	bool first = true;
 	for (std::vector<BSONObj*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
-		BSONObj* element = *i;
-		ss << element->toChar();
-		if (i != _elements.end()) {
+		if (!first) {
 			ss << ", ";
 		}
+		first = false;
+		BSONObj* element = *i;
+		ss << element->toChar();
 	}
+	ss << "]";
 	std::string sres = ss.str();
 	char* result = (char*)malloc(sres.length() + 1);
 	memset(result, 0, sres.length() + 1);
 	strcpy(result, sres.c_str());
 
+	return result;
+}
+
+BSONArrayObj::iterator BSONArrayObj::begin() {
+	return _elements.begin();
+}
+
+BSONArrayObj::iterator BSONArrayObj::end() {
+	return _elements.end();
+}
+
+BSONArrayObj* BSONArrayObj::select(const char* select) const {
+	bool include_all = (strcmp(select, "*") == 0);
+	BSONArrayObj* result = new BSONArrayObj();
+	for (std::vector<BSONObj*>::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
+		BSONObj* element = *i;
+		if (include_all) {
+			result->add(*element);
+		} else {
+			BSONObj* sub = element->select(select);
+			result->add(*sub);
+			delete sub;
+		}
+	}
 	return result;
 }

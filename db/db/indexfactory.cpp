@@ -20,10 +20,26 @@
 
 #include "bson.h"
 #include "bplusindex.h"
+#include <stdio.h>
 #include <sstream>
 #include <string>
 
 IndexFactory IndexFactory::indexFactory;
+
+std::string indexkey(const char* ns, const std::set<std::string>& keys) {
+	char buffer[3000];
+	memset(buffer, 0, 3000);
+	sprintf(buffer, "ns:%s", ns);
+	int pos = strlen(ns);
+	for (std::set<std::string>::const_iterator it = keys.begin(); it != keys.end(); it++) {
+		std::string s = *it;
+		sprintf(buffer + pos, "%s:", s.c_str());
+		pos += s.length();
+	}
+
+	std::string skey = std::string(buffer);
+	return skey;
+}
 
 IndexFactory::IndexFactory()
 {
@@ -32,59 +48,117 @@ IndexFactory::IndexFactory()
 
 IndexFactory::~IndexFactory()
 {
-	for (map<std::string, map<std::string, IndexAlgorithm*>* >::iterator iDb = _indexes.begin(); iDb != _indexes.end(); iDb++) {
-		map<std::string, IndexAlgorithm*>* indexes = iDb->second;
-		for (map<std::string, IndexAlgorithm*>::iterator i = indexes->begin(); i != indexes->end(); i++) {
-			IndexAlgorithm* alg = i->second;
-			delete alg;
+	for (listByDbType::iterator idbs = _indexes.begin(); idbs != _indexes.end(); idbs++) {
+		listByNSTypePtr ins = idbs->second;
+		for (listByNSType::iterator i = ins->begin(); i != ins->end(); i++) {
+			listAlgorithmsTypePtr indexes = i->second;
+			for (listAlgorithmsType::iterator iindex = indexes->begin(); iindex != indexes->end(); iindex++) {
+				IndexAlgorithm* alg = *iindex;
+				delete alg;
+			}
+			indexes->clear();
+			delete indexes;
 		}
-		delete indexes;
+		ins->clear();
+		delete ins;
 	}
+	_indexes.clear();
 }
 
-bool IndexFactory::containsIndex(const char* db, const char* ns, BSONObj key) {
-	map<std::string, map<std::string, IndexAlgorithm*>* >::iterator itIndexes = _indexes.find(std::string(db));
+bool IndexFactory::containsIndex(const char* db, const char* ns, const std::string& key) {
+	std::set<std::string> keys;
+	keys.insert(key);
+	return containsIndex(db, ns, keys);
+}
+
+IndexAlgorithm* IndexFactory::findIndex(const listAlgorithmsTypePtr& algs, const std::set<std::string>& keys) {
+	IndexAlgorithm* result = NULL;
+
+	for (listAlgorithmsType::const_iterator i = algs->begin(); i != algs->end(); i++) {
+		IndexAlgorithm* impl = *i;
+		std::set<std::string> implKeys = impl->keys();
+
+		std::set<std::string>::const_iterator iKeys = keys.begin();
+		std::set<std::string>::const_iterator implItKeys = implKeys.begin();
+
+		bool found = true;
+		while (true) {
+			if ((iKeys != keys.end()) && (implItKeys != implKeys.end())) {
+				std::string key1 = *iKeys;
+				std::string key2 = *implItKeys;
+
+				if (key1.compare(key2) != 0) {
+					found = false;
+					break;
+				}
+				iKeys++;
+				implItKeys++;
+				// get to the end of both sides and all the keys are equal
+				if ((iKeys == keys.end()) && (implItKeys == implKeys.end())) {
+					break;
+				}
+			} else {
+				found = false;
+				break;
+			}
+		}
+		// If all the keys match the implementation keys then this is an exact index
+		if (found) {
+			result = impl;
+			break;
+		}
+	}
+	return result;
+}
+
+bool IndexFactory::containsIndex(const char* db, const char* ns, const std::set<std::string>& keys) {
+	bool result = false;
+	listByDbType::const_iterator itIndexes = _indexes.find(std::string(db));
 	if (itIndexes != _indexes.end()) {	
-		std::map<std::string, IndexAlgorithm*>* indexes = itIndexes->second;
-		std::stringstream ss;
-		ss << "ns:" << ns << ":";
-		for (std::map<t_keytype, BSONContent* >::const_iterator i = key.begin(); i != key.end(); i++) {
-			ss << i->first << ";";
+		listByNSTypePtr byns = itIndexes->second;
+		listByNSType::const_iterator itIndexesNS = byns->find(std::string(ns));
+		if (itIndexesNS != byns->end()) {
+			listAlgorithmsTypePtr algorithms = itIndexesNS->second;
+
+			IndexAlgorithm* impl = findIndex(algorithms, keys);
+			if (impl != NULL) {
+				result = true;
+			}
 		}
-		std::string skey = ss.str();
-		map<std::string, IndexAlgorithm*>::iterator iIndex = indexes->find(skey);
-		if (iIndex == indexes->end()) {
-			return false;
-		} else {
-			return true;
-		}
-	} else {
-		return false;
 	}
+	return result;
 }
 
-IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, BSONObj key) {
-	map<std::string, map<std::string, IndexAlgorithm*>* >::iterator itIndexes = _indexes.find(db);
-	std::map<std::string, IndexAlgorithm*>* indexes;
-	if (itIndexes == _indexes.end()) {
-		indexes = new std::map<std::string, IndexAlgorithm*>();
-		_indexes.insert(pair<std::string, map<std::string, IndexAlgorithm*>* >(std::string(db), indexes));
+IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, const std::string& key) {
+	std::set<std::string> skeys;
+	skeys.insert(key);
+	return index(db, ns, skeys);
+}
+
+IndexAlgorithm* IndexFactory::index(const char* db, const char* ns, const std::set<std::string>& keys) {
+	listByDbType::iterator itIndexesByDB = _indexes.find(db);
+	listByNSTypePtr indexesByNs;
+	if (itIndexesByDB == _indexes.end()) {
+		indexesByNs = new listByNSType();
+		_indexes.insert(pair<std::string, listByNSTypePtr >(std::string(db), indexesByNs));
 	} else {
-		indexes = itIndexes->second;
+		indexesByNs = itIndexesByDB->second;
 	}
-	std::stringstream ss;
-	ss << "ns:" << ns << ":";
-	for (std::map<t_keytype, BSONContent* >::const_iterator i = key.begin(); i != key.end(); i++) {
-		ss << i->first << ";";
-	}
-	std::string skey = ss.str();
-	map<std::string, IndexAlgorithm*>::iterator iIndex = indexes->find(skey);
-	IndexAlgorithm* indexImpl;
-	if (iIndex == indexes->end()) {
-		indexImpl = new BPlusIndex();
-		indexes->insert(pair<std::string, IndexAlgorithm*>(skey, indexImpl));
+
+	listByNSType::iterator itNs = indexesByNs->find(std::string(ns));
+
+	listAlgorithmsTypePtr algorithms;
+	if (itNs == indexesByNs->end()) {
+		algorithms = new listAlgorithmsType();
+		indexesByNs->insert(pair<std::string, listAlgorithmsTypePtr >(std::string(ns), algorithms));
 	} else {
-		indexImpl = iIndex->second;
+		algorithms = itNs->second;
+	}
+
+	IndexAlgorithm* indexImpl = findIndex(algorithms, keys);
+	if (indexImpl == NULL) {
+		indexImpl = new BPlusIndex(keys);
+		algorithms->push_back(indexImpl);
 	}
 
 	return indexImpl;

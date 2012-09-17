@@ -2,7 +2,7 @@
 #define BSONOBJ_H
 
 #include "bsoncontent.h"
-#include "defs.h"
+#include "bsondefs.h"
 #include <map>
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -10,14 +10,6 @@
 #include "bsonarrayobj.h"
 
 using namespace std;
-
-#define BSONCONTENT_FILL(kkey, ttype, vval) \
-    BSONContent* content = new BSONContent(); \
-    content->setType(ttype); \
-    content->_element = vval; \
-    _elements.insert(pair<t_keytype, BSONContent* >(kkey, content));
-
-
 
 class BSONObj
 {
@@ -29,7 +21,6 @@ class BSONObj
         void add(t_keytype, int);
         void add(t_keytype, double);
         void add(t_keytype, long);
-        void add(t_keytype, char*);
         void add(t_keytype, std::string);
         void add(t_keytype, const BSONObj&);
         void add(t_keytype, const BSONArrayObj&);
@@ -39,7 +30,6 @@ class BSONObj
         int* getInt(t_keytype) const;
         double* getDouble(t_keytype) const;
         long* getLong(t_keytype) const;
-        char* getChars(t_keytype) const;
         std::string getString(t_keytype) const;
         BSONObj* getBSON(t_keytype) const;
         BSONArrayObj* getBSONArray(t_keytype) const;
@@ -49,17 +39,27 @@ class BSONObj
 
 		  BSONContent getXpath(const std::string& xpath) const;
 
+		  BSONObj* select(const char* sel) const;
+
         BSONTYPE type(t_keytype) const;
 
         char* toChar() const;
 
-        std::map<t_keytype, BSONContent* >::const_iterator begin() const;
-        std::map<t_keytype, BSONContent* >::const_iterator end() const;
+		  typedef std::map<t_keytype, BSONContent* >::iterator iterator;
+		  typedef std::map<t_keytype, BSONContent* >::const_iterator const_iterator;
+
+        const_iterator begin() const;
+        const_iterator end() const;
         int length() const;
 
+		  bool operator ==(const BSONObj& obj) const;
+		  bool operator !=(const BSONObj& obj) const;
+
     protected:
-    private:
-        std::map<t_keytype, BSONContent* > _elements;
+	 private:
+		  void fillContent(t_keytype kkey, BSONTYPE ttype, void* vval);
+	 private:
+		  std::map<t_keytype, BSONContent* > _elements;
 };
 
 #endif // BSONOBJ_H

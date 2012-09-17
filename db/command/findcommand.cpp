@@ -19,6 +19,7 @@
 #include "findcommand.h"
 
 #include "bsonoutputstream.h"
+#include "bsoninputstream.h"
 #include "dbcontroller.h"
 #include "outputstream.h"
 #include "util.h"
@@ -27,30 +28,43 @@ FindCommand::FindCommand()
 : Command(FIND)
 {
 	//ctor
+	_findresult = NULL;
+	_select = NULL;
+	_filter = NULL;
+	_namespace = NULL;
+	_db = NULL;
 }
 
 FindCommand::~FindCommand()
 {
+	if (_select != NULL) delete _select;
 	if (_filter != NULL) delete _filter;
 	if (_namespace != NULL) delete _namespace;
 	if (_db != NULL) delete _db;
 
-	for (std::vector<BSONObj*>::const_iterator i = _result.begin(); i != _result.end(); i++) {
-		delete *i;
+	if (_findresult != NULL) {
+		for (std::vector<BSONObj*>::const_iterator i = _findresult->begin(); i != _findresult->end(); i++) {
+			BSONObj* obj = *i;
+			delete obj;
+		}
+		delete _findresult;
 	}
-	
 }
 
-FindCommand::FindCommand(const FindCommand& other)
-:Command(FIND)
+FindCommand::FindCommand(const FindCommand& other) :Command(FIND)
 {
+	this->_select = new std::string(*other._select);
 	this->_filter = new std::string(*other._filter);
 	this->_namespace = new std::string(*other._namespace);
 	this->_db = new std::string(*other._db);
 
-	for (std::vector<BSONObj*>::const_iterator i = other._result.begin(); i != other._result.end(); i++) {
-		BSONObj* obj = new BSONObj(**i);
-		this->_result.push_back(obj);
+	if (other._findresult != NULL) {
+		this->_findresult = new std::vector<BSONObj*>();
+
+		for (std::vector<BSONObj*>::const_iterator i = other._findresult->begin(); i != other._findresult->end(); i++) {
+			BSONObj* obj = new BSONObj(**i);
+			this->_findresult->push_back(obj);
+		}
 	}
 }
 
@@ -58,20 +72,44 @@ void FindCommand::execute() {
 	Logger* log = getLogger(NULL);
 	if (log->isDebug()) log->debug("executing find command on %s", nameSpace()->c_str());
 
-	_result = dbController()->find(const_cast<char*>(DB()->c_str()), const_cast<char*>(nameSpace()->c_str()), filter()->c_str());
-	
+	_findresult = dbController()->find(const_cast<char*>(DB()->c_str()), const_cast<char*>(nameSpace()->c_str()), select()->c_str(), filter()->c_str());
+
 	delete log;
 }
 
 void* FindCommand::result() {
-	return &_result;
+	std::vector<BSONObj*>* result = new std::vector<BSONObj*>();
+
+	for (std::vector<BSONObj*>::const_iterator i = _findresult->begin(); i != _findresult->end(); i++) {
+		BSONObj* obj = new BSONObj(**i);
+		result->push_back(obj);
+	}
+	return result;
+}
+
+void FindCommand::writeCommand(OutputStream* out) const {
+	out->writeString(*_db);
+	out->writeString(*_namespace);
+	out->writeString(*_filter);
+	out->writeString(*_select);
+}
+
+void FindCommand::readResult(InputStream* is) {
+	Logger* log = getLogger(NULL);
+	if (log->isDebug()) log->debug("writing result of find command on %s", nameSpace()->c_str());
+
+	BSONInputStream* bsonin = new BSONInputStream(is);
+	std::vector<BSONObj*>* result = bsonin->readBSONArray();
+	_findresult = result;
+
+	delete bsonin;
 }
 
 void FindCommand::writeResult(OutputStream* out) const {
 	Logger* log = getLogger(NULL);
 	if (log->isDebug()) log->debug("writing result of find command on %s", nameSpace()->c_str());
 	BSONOutputStream* bsonout = new BSONOutputStream(out);
-	bsonout->writeBSONArray(_result);
+	bsonout->writeBSONArray(*_findresult);
 	delete bsonout;
 	delete log;
 }
@@ -84,6 +122,14 @@ std::string* FindCommand::nameSpace() const {
 	return _namespace;
 }
 
+void FindCommand::setSelect(const std::string& select) {
+	_select = new std::string(select);
+}
+
+std::string* FindCommand::select() const {
+	return _select;
+}
+
 void FindCommand::setFilter(const std::string& filter) {
 	_filter = new std::string(filter);
 }
@@ -93,10 +139,10 @@ std::string* FindCommand::filter() const {
 }
 
 void FindCommand::setDB(const std::string& db) {
-    _db = new std::string(db);
+	_db = new std::string(db);
 }
 
 const std::string* FindCommand::DB() const {
-    return _db;
+	return _db;
 }
 

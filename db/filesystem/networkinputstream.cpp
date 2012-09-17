@@ -63,7 +63,6 @@ NetworkInputStream::NetworkInputStream(const NetworkInputStream& orig) {
 
 NetworkInputStream::~NetworkInputStream() {
 	free (_buffer);
-	assert(_bufferPos == _bufferSize);
 	//    closeStream();
 	delete _logger;
 }
@@ -79,8 +78,8 @@ unsigned char NetworkInputStream::readChar() {
 }
 
 /* Reads 2 bytes in the input (little endian order) */
-int NetworkInputStream::readInt () {
-	if (_logger->isDebug()) _logger->debug(3, "NetworkInputStream::readInt");
+short int NetworkInputStream::readShortInt () {
+	if (_logger->isDebug()) _logger->debug(3, "NetworkInputStream::readShortInt");
 	unsigned char c1 = readChar();
 	unsigned char c2 = readChar();
 	int v = c1 | c2 << 8;
@@ -91,9 +90,19 @@ int NetworkInputStream::readInt () {
 }
 
 /* Reads 4 bytes in the input (little endian order) */
+int NetworkInputStream::readInt () {
+	if (_logger->isDebug()) _logger->debug(3, "NetworkInputStream::readInt");
+	long v = readShortInt() | readShortInt() << 16;
+
+	if (_logger->isDebug()) _logger->debug(3, "int: %d", v);
+	if (_logger->isDebug()) _logger->debug(3, "~NetworkInputStream::readLong");
+	return v;
+}
+
+/* Reads 4 bytes in the input (little endian order) */
 long NetworkInputStream::readLong () {
 	if (_logger->isDebug()) _logger->debug(3, "NetworkInputStream::readLong");
-	long v = readInt() | readInt() << 16;
+	long v = readShortInt() | readShortInt() << 16;
 
 	if (_logger->isDebug()) _logger->debug(3, "long: %d", v);
 	if (_logger->isDebug()) _logger->debug(3, "~NetworkInputStream::readLong");
@@ -141,10 +150,10 @@ std::string* NetworkInputStream::readString() {
 }
 
 char* NetworkInputStream::readChars(int length) {
-	char* res = (char*)malloc(length+1);
+	char* res = (char*)malloc((length+1) * sizeof(char));
 	memset(res, 0, length+1);
-	readData(res, length);
-	assert(strlen(res) == length);
+	int readed = readData(res, length);
+	assert(readed <= length);
 	return res;
 }
 
@@ -169,7 +178,7 @@ bool NetworkInputStream::isClosed() {
 
 int NetworkInputStream::checkStatus() {
 	if (_open) {
-		int res = waitAvailable(10);
+		int res = waitAvailable(2000);
 		if (res < 0) {
 			closeStream();
 		}
@@ -196,7 +205,11 @@ int NetworkInputStream::readData(void* data, int len) {
 	// wait until a data is available to be readed
 	int readed = 0;
 	while (readed < len) {
+#ifdef DEBUG
+		if (waitAvailable(60) < 0) {
+#else 
 		if (waitAvailable(10) < 0) {
+#endif
 			assert(false);
 			return -1;
 		}
@@ -276,7 +289,6 @@ int NetworkInputStream::fillBuffer(int timeout) {
 		if (readed == 0) {
 			// Nothing readed
 			error = true;
-			log->error(std::string("fillBuffer: nothing to be readed"));
 		}
 		_bufferPos = 0;
 		_bufferSize = readed;

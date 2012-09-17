@@ -37,9 +37,6 @@ BSONContent::~BSONContent() {
 		case STRING_TYPE:
 			delete ((string*)_element);
 			break;
-		case PTRCHAR_TYPE:
-			free (_element);
-			break;
 		case INT_TYPE:
 			delete ((int*)_element);
 			break;
@@ -77,12 +74,6 @@ BSONContent::BSONContent(const BSONContent& orig) {
 	switch (this->_type) {
 		case STRING_TYPE:
 			this->_element = new std::string(*(std::string*)orig._element);
-			break;
-		case PTRCHAR_TYPE:
-			len = strlen((char*)orig._element);
-			this->_element = malloc(len+1);
-			memset(this->_element, 0, len + 1);
-			memcpy(this->_element, orig._element, len);
 			break;
 		case INT_TYPE:
 			i = *((int*)orig._element);
@@ -133,13 +124,6 @@ bool BSONContent::operator ==(const BSONContent& content) {
 				case STRING_TYPE:
 					result = ((std::string*)cont1)->compare(*(std::string*)cont2) == 0;
 					break;
-				case PTRCHAR_TYPE: 
-					{
-						char* c1 = (char*)cont1;
-						char* c2 = (char*)cont2;
-						result = strcmp(c1, c2) == 0;
-					}
-					break;
 				case INT_TYPE: 
 					{
 						int i1 = *(int*)cont1;
@@ -162,6 +146,65 @@ bool BSONContent::operator ==(const BSONContent& content) {
 					}
 					break;
 				case BSON_TYPE:
+					{
+						BSONObj* obj1 = (BSONObj*)cont1;
+						BSONObj* obj2 = (BSONObj*)cont2;
+						result = (*obj1 == *obj2);
+					}
+				case BSONARRAY_TYPE:
+					result = false;
+					break;
+				default:
+					break;
+			}
+			return result;
+		}	
+	}
+}
+
+bool BSONContent::operator !=(const BSONContent& content) {
+	if (this->_type != content._type) {
+		return true;
+	} else {
+		void* cont1 = this->_element;
+		void* cont2 = content._element;
+		// if the pointers are equal it's pointless to compare the contents
+		if (cont1 == cont2) {
+			return false;
+		} else {
+			bool result;
+			switch (this->_type) {
+				case STRING_TYPE:
+					result = ((std::string*)cont1)->compare(*(std::string*)cont2) != 0;
+					break;
+				case INT_TYPE: 
+					{
+						int i1 = *(int*)cont1;
+						int i2 = *(int*)cont2;
+						result = (i1 != i2);
+					}
+					break;
+				case LONG_TYPE:
+					{
+						long l1 = *(long*)cont1;
+						long l2 = *(long*)cont2;
+						result = (l1 != l2);
+					}
+					break;
+				case DOUBLE_TYPE:
+					{
+						long l1 = *(long*)cont1;
+						long l2 = *(long*)cont2;
+						result = (l1 != l2);
+					}
+					break;
+				case BSON_TYPE:
+					{
+						BSONObj* obj1 = (BSONObj*)cont1;
+						BSONObj* obj2 = (BSONObj*)cont2;
+
+						result = (*obj1 != *obj2);
+					}
 				case BSONARRAY_TYPE:
 					return false;
 					break;
@@ -194,25 +237,20 @@ BSONContent::operator double() {
 /*
  * To make the user of this library easier the char* will not be implemented, use std::string instead
  * otherwise the user should handle the free of the char*
-BSONContent::operator char*() {
-	assert(_type == PTRCHAR_TYPE);
-	char* content = (char*)_element;
-	char* result = (char*)malloc(strlen(content + 1));
-	memset(result, 0, strlen(content + 1));
-	memcpy(result, content, strlen(content));
-	return result; 
-}
-*/
+ BSONContent::operator char*() {
+ assert(_type == PTRCHAR_TYPE);
+ char* content = (char*)_element;
+ char* result = (char*)malloc(strlen(content + 1));
+ memset(result, 0, strlen(content + 1));
+ memcpy(result, content, strlen(content));
+ return result; 
+ }
+ */
 
 BSONContent::operator std::string() {
-	assert((_type == STRING_TYPE) || (_type == PTRCHAR_TYPE));
-	if (_type == STRING_TYPE) {
-		std::string* content = (std::string*)_element;
-		return *content; 
-	} else if (_type == PTRCHAR_TYPE) {
-		std::string result((char*)_element);
-		return result;
-	}
+	assert(_type == STRING_TYPE);
+	std::string* content = (std::string*)_element;
+	return *content; 
 }
 
 BSONContent::operator BSONObj() {

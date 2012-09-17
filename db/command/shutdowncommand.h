@@ -20,6 +20,8 @@ class ShutdownCommand : public Command
         virtual void execute();
         virtual void* result();
 
+        virtual void writeCommand(OutputStream* out) const;
+        virtual void readResult(InputStream* is);
         virtual void writeResult(OutputStream* out) const;
 
 };

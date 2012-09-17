@@ -4,39 +4,48 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 include $(top_srcdir)/common.mk
 
 lib_LTLIBRARIES = libdjon-util.la
-
+libdjon_util_la_LDFLAGS = -static
+libdjon_util_la_LIBADD = -lX11 -lXss 
+if !MAC
+   libdjon_util_la_LIBADD += -lrt -luuid
+endif
 libdjon_util_la_SOURCES = util.cpp \
-                                                   util/fileutil.cpp \
-                                                   util/version.cpp \
-                                                   util/threads.cpp \
-                                                   util/dtime.cpp \
-                                                   util/stringfunctions.cpp \
-                                                   util/errorHandle.cpp \
-                                                   util/logger.cpp \
-                                                   util/DateTime.cpp \
-                                                   util.h \
-                                                   config.h \
-                                                   util/DateTime.h \
-                                                   util/errorHandle.h \
-                                                   util/dtime.h \
-                                                   util/fileutil.h \
-                                                   util/logger.h \
-                                                   util/version.h \
-                                                   util/stringfunctions.h \
-                                                   util/threads.h \
-                                                   util/settings.h \
-                                                   util/settings.cpp \
-                                                   defs.h
+			  fileutil.cpp \
+			  version.cpp \
+			  threads.cpp \
+			  dtime.cpp \
+			  stringfunctions.cpp \
+			  errorhandle.cpp \
+			  logger.cpp \
+			  datetime.cpp \
+			  util.h \
+			  config.h \
+			  datetime.h \
+			  errorhandle.h \
+			  dtime.h \
+			  fileutil.h \
+			  logger.h \
+			  version.h \
+			  stringfunctions.h \
+			  threads.h \
+			  settings.h \
+			  settings.cpp \
+			  defs.h \
+			  circular_queue.h 
 
-library_includedir=$(includedir)/djon-util-1.0/djon-util
-library_include_HEADERS = util.h
+library_includedir=$(includedir)/djondb
+library_include_HEADERS=util.h datetime.h errorhandle.h dtime.h fileutil.h logger.h version.h stringfunctions.h threads.h settings.h defs.h circular_queue.h errors.h
 
 
 TESTS = test-util
 check_PROGRAMS = test-util
-test_util_LDADD = libdjon-util.la -lX11 -lXss -lrt -luuid -lcpptest
+test_util_LDADD = libdjon-util.la -lX11 -lXss -lcpptest
+if !MAC
+     test_util_LDADD += -lrt -luuid
+else
+     test_util_LDFLAGS = -framework CoreFoundation -framework IOKit
+endif
 test_util_SOURCES = tests/main.cpp
-
 
 djon_util_libincludedir = $(libdir)/djon-util-1.0/include
 # nodist_djon_util_libinclude_HEADERS = config.h

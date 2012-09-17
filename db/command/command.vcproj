@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="command"
 	ProjectGUID="{E42648EC-412D-49B3-BE88-A2E54909C8CD}"
+	RootNamespace="command"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -17,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(SolutionDir)\libs"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -39,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../db;../filesystem;../cache;../bson;../util;C:\development\boost_1_49_0\;..\windows\includes"
+				AdditionalIncludeDirectories="../db;../filesystem;../cache;../bson;../util;C:\development\boost;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -79,8 +80,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(SolutionDir)\libs"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -100,6 +101,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="../db;../filesystem;../cache;../bson;../util;C:\development\boost;..\windows\includes"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -161,11 +163,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dropnamespacecommand.h"
+				>
+			</File>
+			<File
 				RelativePath=".\findcommand.h"
 				>
 			</File>
 			<File
 				RelativePath=".\insertcommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\showdbscommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\shownamespacescommand.h"
+				>
+			</File>
+			<File
+				RelativePath=".\shutdowncommand.h"
 				>
 			</File>
 			<File
@@ -201,11 +219,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dropnamespacecommand.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\findcommand.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\insertcommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\showdbscommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\shownamespacescommand.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\shutdowncommand.cpp"
 				>
 			</File>
 			<File

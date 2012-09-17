@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="djondb_win"
 	ProjectGUID="{6CE5F68C-E601-4021-9E44-5A0575BC87D2}"
 	RootNamespace="djondb_win"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pthreadVC2.lib Rpcrt4.lib Ws2_32.lib"
+				AdditionalDependencies="util.lib pthreadVC2.lib Rpcrt4.lib Ws2_32.lib antlr3c.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../windows/lib"
+				AdditionalLibraryDirectories="../windows/libs;../windows/libs/x86;../third_party/libs"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -117,6 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="../util;../service;../windows/includes"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -135,7 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="util.lib pthreadVC2.lib Rpcrt4.lib Ws2_32.lib antlr3c.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="../windows/libs;../windows/libs/x86;../third_party/libs"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

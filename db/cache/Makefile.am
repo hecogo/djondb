@@ -10,6 +10,7 @@ AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-cache.la
 
+libdjon_cache_la_LDFLAGS = -static
 libdjon_cache_la_SOURCES = cachemanager.cpp \
                                                     structure.cpp \
                                                     structure.h \
@@ -21,7 +22,7 @@ library_include_HEADERS = cache.h
 
 TESTS = test-cache
 check_PROGRAMS = test-cache
-test_cache_LDADD = libdjon-cache.la -lX11 -lXss -lrt -luuid -lcpptest -ldjon-bson -ldjon-util
+test_cache_LDADD = libdjon-cache.la  -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest
 test_cache_SOURCES = tests/main.cpp
 
 djon_cache_libincludedir = $(libdir)/djon-cache-1.0/include

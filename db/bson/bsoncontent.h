@@ -1,7 +1,7 @@
 #ifndef BSONCONTENT_H_INCLUDED
 #define BSONCONTENT_H_INCLUDED
 
-#include "defs.h"
+#include "bsondefs.h"
 #include <string>
 
 class BSONArrayObj;
@@ -24,6 +24,7 @@ class BSONContent {
 		  }
 
 		  bool operator ==(const BSONContent& content);
+		  bool operator !=(const BSONContent& content);
 		  operator int();
 		  operator long();
 		  operator double();

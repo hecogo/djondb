@@ -3,6 +3,8 @@
 
 #include <map>
 #include <string>
+#include <set>
+#include <vector>
 
 class IndexAlgorithm;
 
@@ -10,21 +12,31 @@ using namespace std;
 
 class BSONObj;
 
+typedef std::vector<IndexAlgorithm*> listAlgorithmsType;
+typedef listAlgorithmsType* listAlgorithmsTypePtr;
+typedef map<std::string, listAlgorithmsTypePtr> listByNSType;
+typedef listByNSType* listByNSTypePtr;
+typedef map<std::string, listByNSTypePtr> listByDbType;
+
 class IndexFactory
 {
     public:
         virtual ~IndexFactory();
 
         static IndexFactory indexFactory;
-        IndexAlgorithm* index(const char* db, const char* ns, BSONObj key);
-		  bool containsIndex(const char* db, const char* ns, BSONObj key);
+        IndexAlgorithm* index(const char* db, const char* ns, const std::set<std::string>& keys);
+        IndexAlgorithm* index(const char* db, const char* ns, const std::string& key);
+		  bool containsIndex(const char* db, const char* ns, const std::string& key);
+		  bool containsIndex(const char* db, const char* ns, const std::set<std::string>& keys);
     protected:
     private:
         IndexFactory();
 
+		  IndexAlgorithm* findIndex(const listAlgorithmsTypePtr& algorithms, const std::set<std::string>& keys);
+
     private:
 
-        map<std::string, map<std::string, IndexAlgorithm*>* > _indexes;
+        listByDbType _indexes;
 };
 
 #endif // INDEXFACTORY_H

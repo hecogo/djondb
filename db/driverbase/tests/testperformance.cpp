@@ -18,6 +18,8 @@
 
 #include <iostream>
 #include "djondb_client.h"
+#include <unistd.h>
+#include <stdio.h>
 
 using namespace std; 
 using namespace djondb;
@@ -28,8 +30,8 @@ class TestPerfomance {
 		TestPerfomance() {
 		}
 
-		void testPerfomance() {
-			Connection* conn = ConnectionManager::getConnection("localhost");
+		void testPerfomance(int port, int top = 10000000) {
+			Connection* conn = ConnectionManager::getConnection("localhost", port);
 
 			if (!conn->open()) {
 				cout << "Not connected" << endl;
@@ -40,8 +42,11 @@ class TestPerfomance {
 			//
 			Logger* log = getLogger(NULL);
 			log->startTimeRecord();
-			int tests[] = { 10, 100, 1000, 10000, 1000000, 10000000};
-			for (int i = 0; i < 4; i++) {
+			int tests[] = { 10, 100, 1000, 10000, 100000, 1000000, 10000000};
+			for (int i = 0; i < 7; i++) {
+				if (tests[i] > top) {
+					break;
+				}
 				cout << "Testing performance over: " << tests[i] << " inserts" << endl;
 				for (int x = 0; x < tests[i]; x++) {
 					std::string* uid = uuid();
@@ -62,6 +67,7 @@ class TestPerfomance {
 
 				DTime time = log->recordedTime();
 
+				cout << "Total secs: " << time.totalSecs() << endl;
 				if (time.totalSecs() > 0) {
 					cout << "Performance over: " << tests[i] << " inserts:" << (tests[i] / time.totalSecs()) << endl;
 				} else {
@@ -81,8 +87,34 @@ class TestPerfomance {
 };
 
 int main(int argc, char** arg) {
+	int c;
+	int port = 1243;
+	int top = -1;
+	while ((c = getopt(argc, arg, "p:t:")) != -1) {
+		switch (c) {
+			case 'p': {
+							 char* cport = optarg;
+							 port = atoi(cport);
+							 break;
+						 }
+			case 't': {
+							 char* ctop = optarg;
+							 top = atoi(ctop);
+							 break;
+						 }
+			case '?': {
+							 printf("Usage: -p PORT t TOP\n");
+							 exit(0);
+							 break;
+						 }
+		}
+	}
 	TestPerfomance p;
-	p.testPerfomance();
+	if (top  <= 0) {
+		p.testPerfomance(port);
+	} else {
+		p.testPerfomance(port, top);
+	}
 
 	exit(0);
 }

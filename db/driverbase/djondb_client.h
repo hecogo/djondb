@@ -6,4 +6,5 @@
 #include "connection.h"
 #include "connectionmanager.h"
 
+
 #endif // DJONDB_CLIENT_H_INCLUDED

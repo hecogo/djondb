@@ -33,12 +33,12 @@
 #include <boost/shared_ptr.hpp>
 #include <memory>
 #ifndef WINDOWS
-	#include <sys/types.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <fcntl.h>
 #else
-	#include <winsock.h>
+#include <winsock.h>
 #endif
 //#include <sys/wait.h>
 
@@ -47,11 +47,10 @@
 
 // Windows does not have this definition
 #ifdef WINDOWS
-	#define socklen_t int
+#define socklen_t int
 #endif
 
-#define SERVER_PORT 1243
-
+int __networkservice_port = SERVER_PORT;
 
 // Just declared to be used later
 void *startSocketListener(void* arg);
@@ -72,67 +71,71 @@ std::map<int, NetworkOutputStream*> __mapOutput;
 
 
 NetworkService::NetworkService() {
-    log = getLogger(NULL);
-    m_thread = NULL;
-	 _running = false;
+	log = getLogger(NULL);
+	m_thread = NULL;
+	_running = false;
 }
 
 NetworkService::~NetworkService() {
-    delete(log);
+	delete(log);
 }
 
 void NetworkService::start() { //throw (NetworkException*) {
-    if (running()) {
-        throw new NetworkException(new string("The network service is already active. Try stopping it first"));
-    }
-    if (log->isInfo()) log->info("Starting network service");
+	if (running()) {
+		throw new NetworkException(new string("The network service is already active. Try stopping it first"));
+	}
+	std::string serverPort = getSetting("SERVER_PORT");
+	if (serverPort.length() > 0) {
+		__networkservice_port = atoi(serverPort.c_str());
+	}
+	if (log->isInfo()) log->info("Starting network service. port: %d", __networkservice_port);
 
-    __dbController = new DBController();
-    __dbController->initialize();
-    m_thread = new Thread(&startSocketListener);
-    m_thread->start(this);
+	__dbController = new DBController();
+	__dbController->initialize();
+	m_thread = new Thread(&startSocketListener);
+	m_thread->start(this);
 
 }
 
 void NetworkService::stop() { //throw (NetworkException*) {
-    log->info("Shutting down the network service");
-    if (!_running) {
-        throw new NetworkException(new string("The network service is not running. Try starting it first"));
-    }
-    setRunning(false);
-    if (processing > 0) {
-        cout << "Stop requested but still working" << endl;
-    }
-	 int i = 0;
-	 while (processing > 0) {
-		 Thread::sleep(1000);
-		 i++;
-		 // if the time exceeded then shutdown anyway
-		 if (i > 10) {
-			 break;
-		 }
-	 }
-	 __dbController->shutdown();
+	if (log->isInfo()) log->info("Shutting down the network service");
+	if (!_running) {
+		throw new NetworkException(new string("The network service is not running. Try starting it first"));
+	}
+	if (processing > 0) {
+		cout << "Stop requested but still working" << endl;
+	}
+	int i = 0;
+	while (processing > 0) {
+		Thread::sleep(1000);
+		i++;
+		// if the time exceeded then shutdown anyway
+		if (i > 10) {
+			break;
+		}
+	}
+	__dbController->shutdown();
+	setRunning(false);
 #ifndef WINDOWS
-	 int res = close(sock);
+	int res = close(sock);
 #else
-	 int res = closesocket(sock);
+	int res = closesocket(sock);
 #endif
-	 if (res != 0) {
-		 log->error("The close method returned: " + toString(res));
-	 }
+	if (res != 0) {
+		log->error("The close method returned: " + toString(res));
+	}
 
-	 m_thread->join();
+	m_thread->join();
 
-	 if (m_thread) delete(m_thread);
+	if (m_thread) delete(m_thread);
 }
 
 bool NetworkService::running() const {
-    return _running;
+	return _running;
 }
 
 void NetworkService::setRunning(bool running) {
-    _running = running;
+	_running = running;
 }
 
 void *startSocketListener(void* arg) {
@@ -168,9 +171,8 @@ void *startSocketListener(void* arg) {
 	FD_ZERO(&read_fds);
 
 	sockaddr_in addr;
-	int port = SERVER_PORT;
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(port); // the port should be converted to network byte order
+	addr.sin_port = htons(__networkservice_port); // the port should be converted to network byte order
 	addr.sin_addr.s_addr = INADDR_ANY; // Server address, any to take the current ip address of the host
 	int reuse = 1;
 	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, (char *) & reuse, sizeof (reuse)) < 0) {
@@ -181,7 +183,7 @@ void *startSocketListener(void* arg) {
 		log->error(std::string("Error binding"));
 	}
 	listen(sock, 5);
-	log->info("Accepting new connections");
+	if (log->isInfo()) log->info("Accepting new connections");
 	service->setRunning(true);
 
 	// Sets the nonblocking option for this socket
@@ -231,7 +233,7 @@ void *startSocketListener(void* arg) {
 						if (newsocket > fdmax) {    // keep track of the max
 							fdmax = newsocket;
 						}
-						log->info("Accepted socket %d", newsocket);
+						if (log->isDebug()) log->debug(1, "Accepted socket %d", newsocket);
 
 					}
 				} else {
@@ -277,8 +279,6 @@ void *startSocketListener(void* arg) {
 			}
 		}
 	}
-
-	log->info("Thread stopped");
 
 #ifdef WINDOWS
 	WSACleanup();

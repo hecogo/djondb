@@ -26,4 +26,8 @@ install-sh
 .deps
 .libs
 *.orig
-
+Debug
+*.user
+*.ncb
+*.suo
+*.obj

@@ -22,58 +22,58 @@
 // charge yourself if you want), bare in mind that you will be required to provide a copy of the license terms that ensures
 // this program will be open sourced and all its derivated work will be too.
 // =====================================================================================
-
+#include "simpleexpression.h"
 
 #include "filterparser.h"
+#include "expressionresult.h"
 #include "bson.h"
 
-SimpleExpression::SimpleExpression(const std::string& expression)
+SimpleExpression::SimpleExpression(const char* expression)
 	:BaseExpression(ET_SIMPLE)
 {
-	_expression = expression;
+	_expression = strcpy(const_cast<char*>(expression), 2, strlen(expression) - 3);
 }
 
 SimpleExpression::SimpleExpression(const SimpleExpression& orig)
 	:BaseExpression(ET_SIMPLE)
 {
-	_expression = orig._expression;
+	_expression = strcpy(orig._expression, strlen(orig._expression));
 }
 
 SimpleExpression::~SimpleExpression() {
+	if (_expression != NULL) free(_expression);
 }
 
 ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
-	std::string expression = _expression.substr(2, _expression.length() - 3);
-	BSONContent content = bson.getXpath(expression);
+	BSONContent content = bson.getXpath(_expression);
 
-	RESULT_TYPE type;
+	ExpressionResult::RESULT_TYPE type;
 	ExpressionResult* result = NULL;
 	switch (content.type()) {
 		case INT_TYPE:
 			{
-				type = RT_INT;
+				type = ExpressionResult::RT_INT;
 				int i = (int)content;
 				result = new ExpressionResult(type, &i);
 				break;
 			}
 		case DOUBLE_TYPE:
 			{
-				type = RT_DOUBLE;
+				type = ExpressionResult::RT_DOUBLE;
 				double d = (double)content;
 				result = new ExpressionResult(type, &d);
 				break;
 			}
 		case STRING_TYPE:
-		case PTRCHAR_TYPE:
 			{
-				type = RT_STRING;
+				type = ExpressionResult::RT_STRINGDB;
 				std::string s = (std::string)content;
 				result = new ExpressionResult(type, &s);
 				break;
 			}
 		case NULL_TYPE:
 			{
-				type = RT_NULL;
+				type = ExpressionResult::RT_NULL;
 				result = new ExpressionResult(type, NULL);
 				break;
 			}
@@ -84,4 +84,8 @@ ExpressionResult* SimpleExpression::eval(const BSONObj& bson) {
 BaseExpression* SimpleExpression::copyExpression() {
 	SimpleExpression* result = new SimpleExpression(this->_expression);
 	return result;
+}
+
+const char* SimpleExpression::expression() const {
+	return const_cast<const char*>(_expression);
 }

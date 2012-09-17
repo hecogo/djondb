@@ -20,18 +20,28 @@
 
 #include "bson.h"
 #include "util.h"
+#include "prioritycache.h"
+#include "filterparser.h"
+#include "expressionresult.h"
 #include <string.h>
+#include <iostream>
+#include <sstream>
 #include <boost/crc.hpp>
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
-BPlusIndex::BPlusIndex()
-{
-
-    _head = new Bucket();
-    initializeBucket(_head);
+bool compareIndex(INDEXPOINTERTYPE ix1, INDEXPOINTERTYPE ix2) {
+	return COMPAREKEYS(ix1, ix2);
 }
 
+BPlusIndex::BPlusIndex(std::set<std::string> keys)
+	: IndexAlgorithm(keys)
+{
+    _head = new Bucket();
+	 //_priorityCache = new PriorityCache<INDEXPOINTERTYPE, Index*>(1000, compareIndex);
+	 //_priorityCache = new PriorityCache<INDEXPOINTERTYPE, Index*>(1000);
+    initializeBucket(_head);
+}
 
 
 void cascadeDelete(Bucket* bucket) {
@@ -74,9 +84,10 @@ BPlusIndex::~BPlusIndex()
     }
 }
 
-void BPlusIndex::add(const BSONObj& elem, long filePos, long indexPos)
+void BPlusIndex::add(const BSONObj& elem, const std::string documentId, long filePos, long indexPos)
 {
     Index index;
+	 index.documentId = documentId;
     index.key = new BSONObj(elem);
     index.posData = filePos;
 	 index.indexPos = indexPos;
@@ -93,17 +104,35 @@ Index* BPlusIndex::find(const BSONObj& elem)
 //    crc32.process_bytes(key, strlen(key));
 //    long value = crc32.checksum();
 
-	Index index;
-	index.key = new BSONObj(elem);
-	BucketElement* element = findBucketElement(_head, index, false);
+	Logger* log = getLogger(NULL);
+	
 	Index* result = NULL;
-	if (element != NULL) {
-		result = element->index;
+	INDEXPOINTERTYPE key = elem.toChar();
+	/* 
+	PriorityCache<INDEXPOINTERTYPE, Index*>::iterator it = _priorityCache->get(key);
+	if (it != _priorityCache->end()) {
+		result = it->second;
 	}
-	if (index.key) {
-		delete index.key;
-		index.key = NULL;
+	*/
+	if (log->isDebug()) {
+		if (result != NULL) {
+			log->debug(3, "BPlusIndex::find %s found in priority cache");
+		}
 	}
+	if (result == NULL) {
+		Index index;
+		index.key = new BSONObj(elem);
+		BucketElement* element = findBucketElement(_head, index, false);
+		if (element != NULL) {
+			result = element->index;
+		}
+		if (index.key) {
+			delete index.key;
+			index.key = NULL;
+		}
+	}
+	free(key);
+	delete log;
 	return result;
 }
 
@@ -128,15 +157,49 @@ void BPlusIndex::initializeBucket(Bucket* const bucket)
 	bucket->parentBucket = NULL;
 }
 
+void debugInfo(Bucket* bucket) {
+	Logger* log = getLogger(NULL);
+
+	log->debug(0, "bucket root: %s", bucket->root->key);
+	BucketElement* c = bucket->root;
+	std::stringstream ss;
+	while (c != NULL) {
+		ss << c->key << ", ";
+		c = c->next;
+	}
+	log->debug(0, "elements: %s", ss.str().c_str());
+
+	if (bucket->left != NULL) {
+		log->debug(0, "printing left of: %s", bucket->root->key);
+		debugInfo(bucket->left);
+	}	
+	if (bucket->right != NULL) {
+		log->debug(0, "printing right of: %s", bucket->root->key);
+		debugInfo(bucket->right);
+	}
+
+	delete log;
+
+}
+
+void BPlusIndex::debug() {
+	debugInfo(_head);
+}
+
 void BPlusIndex::checkBucket(Bucket* const bucket)
 {
-	if (bucket->size == BUCKET_MAX_ELEMENTS) {
+	while (bucket->size > BUCKET_MAX_ELEMENTS) {
 		std::auto_ptr<Logger> log(getLogger(NULL));
 		// The bucked will be split
-		Bucket* leftBucket = new Bucket();
-		leftBucket->parentBucket = bucket;
-		initializeBucket(leftBucket);
-		bucket->left = leftBucket;
+		Bucket* leftBucket;
+		if (bucket->left != NULL) {
+			leftBucket = bucket->left;
+		} else {
+			leftBucket = new Bucket();
+			leftBucket->parentBucket = bucket;
+			initializeBucket(leftBucket);
+			bucket->left = leftBucket;
+		};	 
 
 		BucketElement* leftElement = bucket->root;
 		BucketElement* rightElement = bucket->tail;
@@ -156,10 +219,15 @@ void BPlusIndex::checkBucket(Bucket* const bucket)
 		rightElement->previous = NULL;
 
 		// Creates buckets
-		Bucket* rightBucket = new Bucket();
-		rightBucket->parentBucket = bucket;
-		initializeBucket(rightBucket);
-		bucket->right = rightBucket;
+		Bucket* rightBucket;
+		if (bucket->right != NULL) {
+			rightBucket = bucket->right;
+		} else {
+			rightBucket = new Bucket();
+			rightBucket->parentBucket = bucket;
+			initializeBucket(rightBucket);
+			bucket->right = rightBucket;
+		}
 
 		insertBucketElement(leftBucket, leftElement);
 		insertBucketElement(rightBucket, rightElement);
@@ -179,6 +247,7 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 	log->debug("inserting element. key: %s", element->key);
 	log->debug("current bucket. min: %s, max: %s, size: %d", bucket->minKey, bucket->maxKey, bucket->size);
 #endif
+
 	INDEXPOINTERTYPE key = element->key;
 	BucketElement* currentElement = bucket->root;
 	if (currentElement == NULL) {
@@ -214,17 +283,25 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 			{
 				if (currentElement == bucket->root)
 				{
-					element->next = currentElement;
-					currentElement->previous = element;
-					bucket->root = element;
-					bucket->minKey = element->key;
+					// if the element is lesser than the root, then check the left child and insert it there
+					if (bucket->left != NULL) {
+						insertBucketElement(bucket->left, element);
+					} else  {
+						element->next = currentElement;
+						currentElement->previous = element;
+						bucket->root = element;
+						bucket->minKey = element->key;
+						bucket->size++;
+					}
 				}
 				else
 				{
+					element->next = currentElement;
+					element->previous = currentElement->previous;
 					currentElement->previous->next = element;
 					currentElement->previous = element;
+					bucket->size++;
 				}
-				bucket->size++;
 				break;
 			}
 			else
@@ -232,14 +309,19 @@ void BPlusIndex::insertBucketElement(Bucket* bucket, BucketElement* element)
 				// the value is greater and should be added to the next
 				if (currentElement == bucket->tail)
 				{
-					currentElement->next = element;
-					element->previous = currentElement;
-					bucket->maxKey = element->key;
-					bucket->tail = element;
-					bucket->size++;
+					if (bucket->right != NULL) {
+						insertBucketElement(bucket->right, element);
+					} else {
+						currentElement->next = element;
+						element->previous = currentElement;
+						bucket->maxKey = element->key;
+						bucket->tail = element;
+						bucket->size++;
+					}
 					break;
 				} else {
 					// Moves to the next node
+					assert(currentElement->next != NULL);
 					currentElement = currentElement->next;
 				}
 			}
@@ -263,6 +345,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 {
 	Index* index = new Index();
 	index->key = new BSONObj(*idx.key);
+	index->documentId = idx.documentId;
 	index->indexPos = idx.indexPos;
 	index->posData = idx.posData;
 
@@ -271,6 +354,7 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 	INDEXPOINTERTYPE key = bkey->toChar();
 	BucketElement* result = NULL;
 	bool created = false;
+
 	if (currentBucket->size == 0)
 	{
 		if (!create) {
@@ -315,6 +399,21 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 					continue;
 				}
 			}
+			BucketElement* element = currentBucket->root;
+			while (element != NULL) {
+				comp = strcmp(key, element->key);
+				if (comp == 0) {
+					result = element;
+					break;
+				} else if (comp > 0) {
+					element = element->next;
+				} else {
+					break;
+				}
+			}
+			if (result) {
+				break;
+			}
 			if (create) {
 				BucketElement* element = new BucketElement();
 				initializeBucketElement(element);
@@ -323,17 +422,16 @@ BucketElement* BPlusIndex::findBucketElement(Bucket* start, const Index& idx, bo
 				insertBucketElement(currentBucket, element);
 				result = element;
 				created = true;
-				break;
-			} else {
-				result = NULL;
-				break;
 			}
+			break;
 		}
 	}
 	if (!created) {
 		free(key);
 		delete index->key;
 		delete index;
+	} else {
+		//_priorityCache->add(key, index);
 	}
 
 	return result;
@@ -344,4 +442,47 @@ bool BPlusIndex::insertElement(const Index& elem)
 	BucketElement* res = findBucketElement(_head, elem, true);
 
 	return (res != NULL);
+}
+
+std::list<Index*> BPlusIndex::findElements(FilterParser* parser, Bucket* bucket) {
+	BucketElement* element = bucket->root;
+
+	std::list<Index*> result;
+
+	while (element != NULL) {
+		Index* index = element->index;
+		BSONObj* obj = index->key;
+		ExpressionResult* eresult = parser->eval(*obj);
+		if (eresult->type() == ExpressionResult::RT_BOOLEAN) {
+			bool* bres = (bool*)eresult->value();
+			if (*bres) {
+				result.push_back(index);
+			}
+		}
+		delete eresult;
+		element = element->next;
+	}
+	return result;
+}
+
+std::list<Index*> BPlusIndex::find(FilterParser* parser, Bucket* bucket) {
+	std::list<Index*> result;
+
+	std::list<Index*> i = findElements(parser, bucket);
+	result.insert(result.end(), i.begin(), i.end());
+
+	if (bucket->left != NULL) {
+		i = find(parser, bucket->left);
+		result.insert(result.end(), i.begin(), i.end());
+	}
+	if (bucket->right != NULL) {
+		i = find(parser, bucket->right);
+		result.insert(result.end(), i.begin(), i.end());
+	}
+
+	return result;
+}
+
+std::list<Index*> BPlusIndex::find(FilterParser* parser) {
+	return find(parser, _head);
 }

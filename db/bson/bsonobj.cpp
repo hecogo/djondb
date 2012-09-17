@@ -18,6 +18,7 @@
 
 #include "bsonobj.h"
 #include "util.h"
+#include "bsonutil.h"
 
 #include "bsonparser.h"
 
@@ -26,9 +27,12 @@
 #include <string>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <set>
 
 using namespace std;
 
+#define MAX_BSONOBJ_BUFFER 8000
 BSONObj::BSONObj()
 {
 }
@@ -44,96 +48,108 @@ BSONObj::~BSONObj()
 
 /*
 	void BSONObj::add(t_keytype key, void* val) {
-	BSONCONTENT_FILL(key, PTR, val);
+	fillContent(key, PTR, val);
 	}
 	*/
 
 void BSONObj::add(t_keytype key, int val) {
 	int* internalValue = new int();
 	*internalValue = val;
-	BSONCONTENT_FILL(key, INT_TYPE, internalValue);
+	fillContent(key, INT_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, double val) {
 	double* internalValue = new double();
 	*internalValue = val;
-	BSONCONTENT_FILL(key, DOUBLE_TYPE, internalValue);
+	fillContent(key, DOUBLE_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, long val) {
 	long* internalValue = new long();
 	*internalValue = val;
-	BSONCONTENT_FILL(key, LONG_TYPE, internalValue);
-}
-
-void BSONObj::add(t_keytype key, char* val) {
-	char* internalValue = (char*)malloc(strlen(val) + 1);
-	memset(internalValue, 0, strlen(val) + 1);
-	strcpy(internalValue, val);
-	BSONCONTENT_FILL(key, PTRCHAR_TYPE, internalValue);
+	fillContent(key, LONG_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, std::string val) {
 	std::string* internalValue = new std::string(val);
-	BSONCONTENT_FILL(key, STRING_TYPE, internalValue);
+	fillContent(key, STRING_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, const BSONObj& val) {
 	BSONObj* internalValue = new BSONObj(val);
-	BSONCONTENT_FILL(key, BSON_TYPE, internalValue);
+	fillContent(key, BSON_TYPE, internalValue);
 }
 
 void BSONObj::add(t_keytype key, const BSONArrayObj& val) {
 	BSONArrayObj* internalValue = new BSONArrayObj(val);
-	BSONCONTENT_FILL(key, BSONARRAY_TYPE, internalValue);
+	fillContent(key, BSONARRAY_TYPE, internalValue);
 }
 
 
 char* BSONObj::toChar() const {
-	std::stringstream ss;
-	ss << "{ ";
+	Logger* log = getLogger(NULL);
+	
+	char* result = (char*)malloc(MAX_BSONOBJ_BUFFER);
+	memset(result, 0, MAX_BSONOBJ_BUFFER);
+
+	int pos = 0;
+	result[0] = '{';
+	pos += 1;
+
 	bool first = true;
-	BSONArrayObj* array;
+	
 	for (std::map<t_keytype, BSONContent* >::const_iterator i = _elements.begin(); i != _elements.end(); i++) {
 		if (!first) {
-			ss << ",";
+			result[pos] = ',';
+			pos++;
 		}
 		first = false;
 		BSONContent* content = i->second;
 		t_keytype key = i->first;
-		ss << "\"" << key << "\" :";
+		sprintf(result + pos, " \"%s\" : ", key.c_str());
+		pos += key.length() + 6;
+		//ss << "\"" << key << "\" :";
+		char* chr;
+		const char* cstr;
 		switch (content->type())  {
 			case BSON_TYPE:
-				ss << ((BSONObj*)content->_element)->toChar();
-				break;
+					chr = ((BSONObj*)content->_element)->toChar();
+					sprintf(result + pos, "%s", chr);
+					free(chr);
+					break;
 			case BSONARRAY_TYPE:
-				ss << ((BSONArrayObj*)content->_element)->toChar();
-				break;
-			case INT_TYPE:
-				ss << *((int*)content->_element);
-				break;
+					chr = ((BSONArrayObj*)content->_element)->toChar();
+					sprintf(result + pos, "%s", chr);
+					free(chr);
+					break;
+			case INT_TYPE: 
+					sprintf(result + pos, "%d", *((int*)content->_element));
+					break;
 			case LONG_TYPE:
-				ss << *((long*)content->_element);
-				break;
+					sprintf(result + pos, "%ld", *((long*)content->_element));
+					break;
 			case DOUBLE_TYPE:
-				ss << *((double*)content->_element);
-				break;
-			case PTRCHAR_TYPE:
-				ss << "\"" << (char*)content->_element << "\"";
-				break;
+					sprintf(result + pos, "%f", *((double*)content->_element));
+					break;
 			case STRING_TYPE:
-				ss << "\"" << ((std::string*)content->_element)->c_str() << "\"";
-				break;
+					cstr = ((std::string*)content->_element)->c_str();
+					sprintf(result + pos, "\"%s\"", cstr);
+					break;
 		}
+		pos = strlen(result);
+		assert(pos < MAX_BSONOBJ_BUFFER);
 	}
-	ss << "} ";
-	std::string s = ss.str();
-	const char* temp = s.c_str();
-	int len = s.length();
-	char* res = (char*)malloc(len +1);
-	memset(res, 0, len + 1);
-	memcpy(res, temp, len);
-	return res;
+	result[pos] = '}';
+	result[pos+1] = 0;
+	pos++;
+
+	int len = strlen(result);
+
+	char* cresult = strcpy(result);
+
+	delete log;
+	free(result);
+	return cresult;
 }
 
 int* BSONObj::getInt(t_keytype key) const {
@@ -166,30 +182,13 @@ long* BSONObj::getLong(t_keytype key) const {
 	}
 }
 
-char* BSONObj::getChars(t_keytype key) const {
-	BSONContent* content = getContent(key);
-	if (content != NULL) {
-		if (content->type() == PTRCHAR_TYPE) {
-			return (char*)content->_element;
-		} if (content->type() == STRING_TYPE) {
-			return const_cast<char*>(((std::string*)content->_element)->c_str());
-		} else {
-			return NULL;
-		}
-	} else {
-		return NULL;
-	}
-}
-
 std::string BSONObj::getString(t_keytype key) const {
 	BSONContent* content = getContent(key);
 	if (!content) {
 		return std::string();
 	}
 	std::string result;
-	if (content->type() == PTRCHAR_TYPE) {
-		result = std::string((char*)content->_element);
-	} else if (content->type() == STRING_TYPE) {
+	if (content->type() == STRING_TYPE) {
 		result = *(std::string*)content->_element;
 	} else {
 		assert(false);
@@ -239,11 +238,11 @@ BSONContent* BSONObj::getContent(t_keytype key, BSONTYPE ttype) const {
 	return content;
 }
 
-std::map<t_keytype, BSONContent* >::const_iterator BSONObj::begin() const {
+BSONObj::const_iterator BSONObj::begin() const {
 	return _elements.begin();
 }
 
-std::map<t_keytype, BSONContent* >::const_iterator BSONObj::end() const {
+BSONObj::const_iterator BSONObj::end() const {
 	return _elements.end();
 }
 
@@ -329,4 +328,140 @@ BSONContent BSONObj::getXpath(const std::string& xpath) const {
 	}
 
 	return BSONContent();
+}
+
+bool BSONObj::operator ==(const BSONObj& obj) const {
+	if (this->has("_id") && obj.has("_id")) {
+		BSONContent* idThis = this->getContent("_id");
+		BSONContent* idOther = obj.getContent("_id");
+
+		return (*idThis == *idOther);
+	}
+	// Element count
+	if (this->length() != obj.length()) {
+		return false;
+	}
+	for (BSONObj::const_iterator it = this->begin(); it != this->end(); it++) {
+		t_keytype key = it->first;
+		BSONContent* content = it->second;
+
+		BSONContent* other = obj.getContent(key);
+		if (other == NULL) {
+			return false;
+		}
+		if (*content != *other) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool BSONObj::operator !=(const BSONObj& obj) const {
+	if (this->has("_id") && obj.has("_id")) {
+		BSONContent* idThis = this->getContent("_id");
+		BSONContent* idOther = obj.getContent("_id");
+
+		return (*idThis != *idOther);
+	}
+
+	// Element count
+	if (this->length() != obj.length()) {
+		return true;
+	}
+	for (BSONObj::const_iterator it = this->begin(); it != this->end(); it++) {
+		t_keytype key = it->first;
+		BSONContent* content = it->second;
+
+		BSONContent* other = obj.getContent(key);
+		if (other == NULL) {
+			return true;
+		}
+		if (*content != *other) {
+			return true;
+		}
+	}
+	return false;
+}
+
+BSONObj* BSONObj::select(const char* sel) const {
+	std::set<std::string> columns = bson_splitSelect(sel);
+	bool include_all = (strcmp(sel, "*") == 0);
+
+	BSONObj* result = new BSONObj();
+
+	for (std::map<t_keytype, BSONContent* >::const_iterator i = this->_elements.begin(); i != this->_elements.end(); i++) {
+		t_keytype key = i->first;
+		if (include_all || (columns.find(key) != columns.end())) {
+			BSONContent* origContent = i->second;
+
+			switch (origContent->type()) {
+				case BSON_TYPE:  
+					{
+						BSONObj inner = (BSONObj)*origContent;
+						
+					   if (!include_all) {
+							char* subselect = bson_subselect(sel, key.c_str());
+							BSONObj* innerSubSelect = inner.select(subselect);
+							result->add(key, *innerSubSelect);
+							delete innerSubSelect;
+						} else {
+							result->add(key, inner);
+						}
+						break;
+					}
+				case BSONARRAY_TYPE: 
+					{
+						BSONArrayObj innerArray = (BSONArrayObj)*origContent;
+					   if (!include_all) {
+							char* subselect = bson_subselect(sel, key.c_str());
+							BSONArrayObj* innerSubArray = innerArray.select(subselect);
+							result->add(key, *innerSubArray);
+							delete innerSubArray;
+						} else {
+							result->add(key, innerArray);
+						}
+						break;
+					}
+				case INT_TYPE: 
+					{
+						int val = *origContent;
+						result->add(key, val);
+						break;
+					}
+				case LONG_TYPE:
+					{
+						long val = *origContent;
+						result->add(key, val);
+						break;
+					}
+				case DOUBLE_TYPE:
+					{
+						double val = *origContent;
+						result->add(key, val);
+						break;
+					}
+				case STRING_TYPE:
+					{
+						std::string val = *origContent;
+						result->add(key, val);
+						break;
+					}
+			}
+		}
+	}
+	return result;
+}
+
+void BSONObj::fillContent(t_keytype kkey, BSONTYPE ttype, void* vval) {
+	std::map<t_keytype, BSONContent* >::iterator i = _elements.find(kkey);
+	if (i != _elements.end()) {
+		// Removes the previous element
+		BSONContent* current = i->second;
+		delete current;
+		_elements.erase(i);
+	}
+	BSONContent* content = new BSONContent(); 
+	content->setType(ttype); 
+	content->_element = vval; 
+	_elements.insert(pair<t_keytype, BSONContent* >(kkey, content));
 }

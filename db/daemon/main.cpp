@@ -41,6 +41,7 @@
 #include <errno.h>
 #include <string.h>
 #include <signal.h>
+#include "util.h"
 #ifdef _WIN32
 	#define WINDOWS
 #else
@@ -71,11 +72,12 @@ bool __stopRunning;
  **************************************************************************/
 void PrintUsage(int argc, char *argv[]) {
 	if (argc >=1) {
-		printf("Usage: %s -h -nn", argv[0]);
-		printf("  Options:n");
-		printf("      -ntDon't fork off as a daemon.n");
-		printf("      -htShow this help screen.n");
-		printf("n");
+		printf("Usage: %s -h -n -p PORT\n", argv[0]);
+		printf("  Options:\n");
+		printf("      -n\tDon't fork off as a daemon.\n");
+		printf("      -h\tShow this help screen.\n");
+		printf("      -p port\tChange the default port (1243).");
+		printf("\n");
 	}
 }
 
@@ -117,7 +119,7 @@ void signal_handler(int sig) {
 			break;
 
 		default:
-			syslog(LOG_WARNING, "Unhandled signal (%d) %s", strsignal(sig));
+			syslog(LOG_WARNING, "Unhandled signal %s", strsignal(sig));
 			break;
 	}
 }
@@ -137,6 +139,8 @@ returns integer which is passed back to the parent process
  **************************************************************************/
 int main(int argc, char *argv[]) {
 
+	Logger* log = getLogger(NULL);
+
 	__stopRunning = false;
 #if defined(DEBUG)
 	int daemonize = 0;
@@ -153,7 +157,7 @@ int main(int argc, char *argv[]) {
 	signal(SIGQUIT, signal_handler);
 
 	int c;
-	while( (c = getopt(argc, argv, "nh|help")) != -1) {
+	while( (c = getopt(argc, argv, "nhp:|help")) != -1) {
 		switch(c){
 			case 'h':
 				PrintUsage(argc, argv);
@@ -162,14 +166,26 @@ int main(int argc, char *argv[]) {
 			case 'n':
 				daemonize = 0;
 				break;
+			case 'p': {
+							 char* port = optarg;
+							 setSetting("SERVER_PORT", port);
+							 break;
+						 }
+			case '?':
+						 if (optopt == 'c') {
+							 PrintUsage(argc, argv);
+							 exit(0);
+							 break;
+						 }
+
 			default:
-				PrintUsage(argc, argv);
-				exit(0);
-				break;
+						 PrintUsage(argc, argv);
+						 exit(0);
+						 break;
 		}
 	}
 
-	syslog(LOG_INFO, "%s daemon starting up", DAEMON_NAME);
+	log->info("djondbd version %s is starting up.", VERSION);
 
 	// Setup syslog logging - see SETLOGMASK(3)
 #if defined(DEBUG)
@@ -184,6 +200,7 @@ int main(int argc, char *argv[]) {
 	pid_t pid, sid;
 
 	if (daemonize) {
+		setDaemon(true);
 		syslog(LOG_INFO, "starting the daemonizing process");
 
 		/* Fork off the parent process */
@@ -218,6 +235,7 @@ int main(int argc, char *argv[]) {
 		close(STDOUT_FILENO);
 		close(STDERR_FILENO);
 	}
+	setDaemon(false);
 
 	service_startup();
 
@@ -226,11 +244,13 @@ int main(int argc, char *argv[]) {
 			break;
 		}
 		sleep(1);
-		
+
 		if (!service_running()) {
 			syslog(LOG_INFO, "service down");
 			exit(0);
 			break;
 		}
 	}
+
+	delete log;
 }

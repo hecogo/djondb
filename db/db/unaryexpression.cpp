@@ -24,6 +24,7 @@
 // =====================================================================================
 
 #include "filterparser.h"
+#include "unaryexpression.h"
 
 UnaryExpression::UnaryExpression(FILTER_OPERATORS oper)
 	:BaseExpression(ET_UNARY)

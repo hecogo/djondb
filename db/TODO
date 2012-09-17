@@ -1,0 +1,5 @@
+- Document the port paramter feature
+- Implement the field selector to be able to retrieve only the required fields
+- Create a BSON header in order to save the delete flag, doc revision.
+- Create a hashtable index
+- the shell history should be saved into "HOME/.djondb" directory

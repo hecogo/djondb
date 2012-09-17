@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="db"
 	ProjectGUID="{ACF2227F-242F-4FB7-B433-58CED3D02A8F}"
+	RootNamespace="db"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -17,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(SolutionDir)\libs"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -39,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost_1_49_0\;..\windows\includes"
+				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost;..\third_party\includes;..\windows\includes"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -79,8 +80,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
-			IntermediateDirectory="Release"
+			OutputDirectory="$(SolutionDir)\libs"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -100,6 +101,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="../filesystem;../cache;../bson;../util;C:\development\boost;..\third_party\includes;..\windows\includes"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -145,11 +147,43 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\baseexpression.h"
+				>
+			</File>
+			<File
+				RelativePath=".\binaryexpression.h"
+				>
+			</File>
+			<File
 				RelativePath=".\bplusindex.h"
 				>
 			</File>
 			<File
+				RelativePath=".\constantexpression.h"
+				>
+			</File>
+			<File
 				RelativePath=".\dbcontroller.h"
+				>
+			</File>
+			<File
+				RelativePath=".\expressionresult.h"
+				>
+			</File>
+			<File
+				RelativePath=".\filter_expressionLexer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\filter_expressionParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\filterdefs.h"
+				>
+			</File>
+			<File
+				RelativePath=".\filterparser.h"
 				>
 			</File>
 			<File
@@ -162,6 +196,18 @@
 			</File>
 			<File
 				RelativePath=".\indexmanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\simpleexpression.h"
+				>
+			</File>
+			<File
+				RelativePath=".\streammanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\unaryexpression.h"
 				>
 			</File>
 		</Filter>
@@ -177,11 +223,39 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\binaryexpression.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\bplusindex.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\constantexpression.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\dbcontroller.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\expressionresult.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\filter_expressionLexer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\filter_expressionParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\filterdefs.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\filterparser.cpp"
 				>
 			</File>
 			<File
@@ -192,7 +266,23 @@
 				RelativePath=".\indexmanager.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\simpleexpression.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\streammanager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\unaryexpression.cpp"
+				>
+			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\..\..\filtergrammar\filter.tokens"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

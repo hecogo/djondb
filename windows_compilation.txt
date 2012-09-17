@@ -1,0 +1,1 @@
+third_party/python_26/python build/gyp_v8 -Dcomponent=shared_library

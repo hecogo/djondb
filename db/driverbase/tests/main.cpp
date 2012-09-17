@@ -61,15 +61,42 @@ class TestDriverBaseSuite: public Test::Suite {
 			_port = 1243;
 			TEST_ADD(TestDriverBaseSuite::testFinds);
 			TEST_ADD(TestDriverBaseSuite::testInsert);
+			TEST_ADD(TestDriverBaseSuite::testInsertComplex);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
+			TEST_ADD(TestDriverBaseSuite::testDbsNamespaces);
 
 			TEST_ADD(TestDriverBaseSuite::testDropNamespace);
 			//TEST_ADD(TestDriverBaseSuite::testTransactions);
 		}
 
+		void testDbsNamespaces() {
+			Connection* conn = ConnectionManager::getConnection("localhost");
+
+			if (!conn->open()) {
+				cout << "\nCannot connect to localhost" << endl;
+				exit(0);
+			}
+
+		   std::string bson = "{ name: 'Test'}";
+			conn->insert("db1", "ns1", bson);
+			conn->insert("db2", "ns1", bson);
+			conn->insert("db3", "ns1", bson);
+			
+			std::vector<std::string>* dbs = conn->dbs();
+
+			TEST_ASSERT(dbs->size() >= 3);
+
+			delete dbs;
+		}
+
 		void testDropNamespace() {
 			Connection* conn = ConnectionManager::getConnection("localhost");
+
+			if (!conn->open()) {
+				cout << "\nCannot connect to localhost" << endl;
+				exit(0);
+			}
 
 			conn->insert("db", "testdrop.namespace", "{ name: 'Test' }");
 
@@ -77,9 +104,73 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			TEST_ASSERT(result);
 
-			std::vector<BSONObj*> testresult = conn->find("db", "testdrop.namespace", std::string(""));
+			std::vector<BSONObj*>* testresult = conn->find("db", "testdrop.namespace", "*", std::string(""));
 
-			TEST_ASSERT(testresult.size() == 0);
+			TEST_ASSERT(testresult->size() == 0);
+			delete testresult;
+		}
+
+		void testInsertComplex() {
+			cout << "\nTesting complex" << endl;
+			Connection* conn = ConnectionManager::getConnection("localhost");
+
+			if (!conn->open()) {
+				cout << "\nCould not connect to " << _host << endl;
+				exit(0);
+			}
+
+			conn->dropNamespace("test", "ns");
+
+			BSONObj obj;
+			std::string* id = uuid();
+			obj.add("_id", *id);
+			obj.add("name", "John");
+			BSONObj inner;
+			inner.add("innername", "Test");
+			obj.add("inner", inner);
+
+			conn->insert("test", "ns", obj);
+
+			std::vector<BSONObj*>* res = conn->find("test", "ns", "*", "$'_id' == '" + *id + "'");
+			TEST_ASSERT(res->size() == 1);
+			BSONObj* bres = *res->begin();
+			TEST_ASSERT(bres->has("inner"));
+			BSONObj* innerres = bres->getBSON("inner");
+			TEST_ASSERT(innerres != NULL);
+			TEST_ASSERT(innerres->has("innername"));
+			TEST_ASSERT(((std::string)"Test").compare(innerres->getString("innername")) == 0);
+
+			// testing arrays
+			cout << "testInsertComplex: Testing arrays" << endl;
+			std::string* id2 = uuid();
+			conn->insert("test", "ns", "{ '_id': '" + *id2 + "', 'array': [ { 'x': 'test', 'y': 3},  { 'x': 'test2', 'y': 4}]  }");
+
+			std::vector<BSONObj*>* res2 = conn->find("test", "ns", "*", "$'_id' == '" + *id2 + "'");
+			TEST_ASSERT(res2->size() == 1);
+			BSONObj* o2 = *res2->begin();
+			TEST_ASSERT(o2 != NULL);
+
+			TEST_ASSERT(o2->has("array"));
+
+
+			delete res;
+			delete res2;
+
+			// testing a customer
+			conn->dropNamespace("db", "testcustomer");
+			BSONObj* customer = BSONParser::parse("{ 'name': 'Martin', 'lastName': 'Scor', 'finantial': { 'salary': 150000, 'rent': 10000} }");
+			conn->insert("db", "testcustomer", *customer);
+			delete customer;
+
+			res2 = conn->find("db", "testcustomer", "*", "$'name' == 'Martin'");
+			TEST_ASSERT(res2->size() == 1);
+			if (res2->size() == 1) {
+				BSONObj* objCustomer = *res2->begin();
+				int d = objCustomer->getXpath("finantial.salary");
+				TEST_ASSERT(d == 150000);
+				delete objCustomer;
+			}
+			delete res2;
 		}
 
 		void testInsert() {
@@ -178,7 +269,7 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			log->debug("Data inserted");
 
-			BSONObj* objResult = conn->findByKey("db", "driver.test", *guid);
+			BSONObj* objResult = conn->findByKey("db", "driver.test", "*", *guid);
 
 			TEST_ASSERT(objResult != NULL);
 			TEST_ASSERT(objResult->has("int"));
@@ -186,7 +277,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ASSERT(objResult->has("long"));
 			TEST_ASSERT(*objResult->getLong("long") == 10);
 			TEST_ASSERT(objResult->has("char"));
-			TEST_ASSERT(strcmp(objResult->getChars("char"), "testing") == 0);
+			TEST_ASSERT(objResult->getString("char").compare("testing") == 0);
 
 			__running = false;
 
@@ -218,33 +309,35 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			cout << "\nTestbyfilter" << endl;
 			std::string filter = "";
-			std::vector<BSONObj*> result = conn->find("db", "test.filter2", filter);			
-			TEST_ASSERT(result.size() > 0);
+			std::vector<BSONObj*>* result = conn->find("db", "test.filter2", "*", filter);			
+			TEST_ASSERT(result->size() > 0);
 			filter = "$'name' == 'Test'";
+			delete result;
 			result = conn->find("db", "test.filter2", filter);			
-			TEST_ASSERT(result.size() > 0);
+			TEST_ASSERT(result->size() > 0);
 
-			BSONObj* objR = *result.begin();
+			BSONObj* objR = *result->begin();
 			TEST_ASSERT(objR != NULL);
 			TEST_ASSERT(objR->has("name"));
-			TEST_ASSERT(strcmp(objR->getChars("name"), "Test") == 0);
+			TEST_ASSERT(objR->getString("name").compare("Test") == 0);
 
 			char* temp = objR->toChar();
 			cout << "\nobj: " << temp << endl;
 
-			result = conn->find("db", "test.filter2", "$'name' == 'Test'");
-			TEST_ASSERT(result.size() == 1);
+			result = conn->find("db", "test.filter2", "*", "$'name' == 'Test'");
+			TEST_ASSERT(result->size() == 1);
 
 			result = conn->find("db", "test.filter2", "$'inner.x' == 1");
-			TEST_ASSERT(result.size() == 1);
+			TEST_ASSERT(result->size() == 1);
 
-			result = conn->find("db", "test.filter2", "$'inner.x' > 0");
-			TEST_ASSERT(result.size() == 1);
+			result = conn->find("db", "test.filter2", "*", "$'inner.x' > 0");
+			TEST_ASSERT(result->size() == 1);
 
 			result = conn->find("db", "test.filter2", "$'inner.x' > 1");
-			TEST_ASSERT(result.size() == 0);
+			TEST_ASSERT(result->size() == 0);
 
 			delete objR;
+			delete result;
 
 		}
 
@@ -300,7 +393,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			for (std::vector<std::string>::iterator i = idsUpdated.begin(); i != idsUpdated.end(); i++) {
 				std::string guid = *i;
 
-				std::auto_ptr<BSONObj> resObj(conn->findByKey("db", "driverbase.test", guid));
+				std::auto_ptr<BSONObj> resObj(conn->findByKey("db", "driverbase.test", "*", guid));
 
 				TEST_ASSERT(resObj.get() != NULL);
 				TEST_ASSERT(resObj->has("_id"));
@@ -309,7 +402,7 @@ class TestDriverBaseSuite: public Test::Suite {
 				char* temp = (char*)malloc(100);
 				memset(temp, 0, 100);
 				memset(temp, 'b', 99);
-				TEST_ASSERT(strcmp(resObj->getChars("content"), temp) == 0);
+				TEST_ASSERT(resObj->getString("content").compare(temp) == 0);
 				free(temp);
 			}
 			DTime rec = log->recordedTime();

@@ -10,30 +10,24 @@ AM_CPPFLAGS += $(all_includes)
 
 lib_LTLIBRARIES = libdjon-filesystem.la
 
+libdjon_filesystem_la_LDFLAGS = -static
 libdjon_filesystem_la_SOURCES = bsoninputstream.cpp \
-                                                         bsonoutputstream.cpp \
-                                                         fileinputoutputstream.cpp \
-                                                         fileinputstream.cpp \
-                                                         fileoutputstream.cpp \
-                                                         networkinputstream.cpp \
-                                                         networkoutputstream.cpp \
-                                                         bsoninputstream.h \
-                                                         bsonoutputstream.h \
-                                                         defs.h \
-                                                         fileinputoutputstream.h \
-                                                         fileinputstream.h \
-                                                         fileoutputstream.h \
-                                                         inputstream.h \
-                                                         networkinputstream.h \
-                                                         networkoutputstream.h \
-                                                         outputstream.h
-
-library_includedir=$(includedir)/djon-filesystem-1.0/djon-filesystem
-#library_include_HEADERS = bson.h
+										  bsonoutputstream.cpp \
+										  fileinputoutputstream.cpp \
+										  fileinputstream.cpp \
+										  fileoutputstream.cpp \
+										  networkinputstream.cpp \
+										  networkoutputstream.cpp \
+										  memorystream.cpp 
 
 TESTS = test-filesystem
 check_PROGRAMS = test-filesystem
-test_filesystem_LDADD = libdjon-filesystem.la -ldjon-bson -ldjon-util -lpthread -lX11 -lXss -lrt -luuid -lcpptest
+test_filesystem_LDADD = libdjon-filesystem.la $(top_builddir)/bson/libdjon-bson.la $(top_builddir)/util/libdjon-util.la -lpthread -lX11 -lXss -lcpptest
+if !MAC
+   test_filesystem_LDADD += -lrt -luuid 
+else
+   test_filesystem_LDFLAGS = -framework CoreFoundation -framework IOKit
+endif
 test_filesystem_SOURCES = tests/main.cpp
 
 

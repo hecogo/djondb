@@ -26,15 +26,30 @@
 #include "findcommand.h"
 #include "updatecommand.h"
 #include "shutdowncommand.h"
+#include "shownamespacescommand.h"
+#include "showdbscommand.h"
 #include "bsoninputstream.h"
 #include "connectionmanager.h"
 #include "util.h"
+#include "bson.h"
 
 using namespace djondb;
 
 Connection::Connection(std::string host)
 {
 	_host = host;
+	_port = SERVER_PORT;
+	_inputStream = NULL;
+	_outputStream = NULL;
+	_commandWriter = NULL;
+	_open = false;
+	_logger = getLogger(NULL);
+}
+
+Connection::Connection(std::string host, int port)
+{
+	_host = host;
+	_port = port;
 	_inputStream = NULL;
 	_outputStream = NULL;
 	_commandWriter = NULL;
@@ -44,6 +59,7 @@ Connection::Connection(std::string host)
 
 Connection::Connection(const Connection& orig) {
 	this->_host = orig._host;
+	this->_port = orig._port;
 	this->_inputStream = orig._inputStream;
 	this->_open =  orig._open;
 	this->_outputStream = orig._outputStream;
@@ -60,7 +76,7 @@ Connection::~Connection()
 bool Connection::open() {
 	if (_logger->isDebug()) _logger->debug("Openning connection");
 	_outputStream = new NetworkOutputStream();
-	int socket = _outputStream->open(_host.c_str(), 1243);
+	int socket = _outputStream->open(_host.c_str(), _port);
 	if (socket > 0) {
 		_inputStream = new NetworkInputStream(socket);
 		_open = true;
@@ -125,19 +141,22 @@ bool Connection::insert(const std::string& db, const std::string& ns, const BSON
 		obj.add("_id", *id);
 		delete id;
 	}
+	if (!obj.has("_revision")) {
+		std::string* rev = uuid();
+		obj.add("_revision", *rev);
+		delete rev;
+	}
 	cmd.setBSON(obj);
 	cmd.setNameSpace(ns);
 	_commandWriter->writeCommand(&cmd);
 
-	// When the bson didnt contain an id the server will return a bson with it
-	// At this moment this will never occur, but I will leave this code for later
-	// use
-	if (!obj.has("_id")) {
-		if (_logger->isDebug()) _logger->debug(2, "Server answered with a new id, dropping it");
-		BSONInputStream tmpIS(_inputStream);
-		tmpIS.readBSON(); 
-		// drop it
-		// temporal solution, later I will need to do something with the return
+	cmd.readResult(_inputStream);
+
+	int hasResults = false; //_inputStream->readInt();
+
+	if (hasResults) {
+		// When the bson didnt contain an id the server will return a bson with it
+		// At this moment this will never occur, but I will leave this code for later
 	}
 	return true;
 }
@@ -158,41 +177,81 @@ bool Connection::update(const std::string& db, const std::string& ns, const BSON
 	cmd.setNameSpace(ns);
 
 	_commandWriter->writeCommand(&cmd);
+	cmd.readResult(_inputStream);
 
 	return true;
 }
 
+std::vector<std::string>* Connection::dbs() const {
+	if (_logger->isDebug()) _logger->debug(2, "dbs command.");
+
+	ShowdbsCommand cmd;
+	_commandWriter->writeCommand(&cmd);
+
+	cmd.readResult(_inputStream);
+
+	std::vector<std::string>* result = (std::vector<std::string>*)cmd.result();
+
+	return result;
+}
+
+std::vector<std::string>* Connection::namespaces(const std::string& db) const {
+	if (_logger->isDebug()) _logger->debug(2, "namespaces command. db: %s", db.c_str());
+
+	ShownamespacesCommand cmd;
+	cmd.setDB(db);
+	_commandWriter->writeCommand(&cmd);
+
+	cmd.readResult(_inputStream);
+
+	std::vector<std::string>* result = (std::vector<std::string>*)cmd.result();
+
+	return result;
+}
+
 BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& id) {
-	if (_logger->isDebug()) _logger->debug("executing findByKey db: %s, ns: %s id: %s", db.c_str(), ns.c_str(), id.c_str());
+	return findByKey(db, ns, "*", id);
+}
+
+BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& select, const std::string& id) {
+	if (_logger->isDebug()) _logger->debug("executing findByKey db: %s, ns: %s, select: %s, id: %s", db.c_str(), ns.c_str(), select.c_str(), id.c_str());
 
 	std::string filter = "$'_id' == '" + id + "'";
 
-	std::vector<BSONObj*> result = find(db, ns, filter);
+	std::vector<BSONObj*>* result = find(db, ns, select, filter);
 
 	BSONObj* res = NULL;
-	if (result.size() == 1) {
+	if (result->size() == 1) {
 		if (_logger->isDebug()) _logger->debug(2, "findByKey found 1 result");
-		res = *result.begin();
+		res = *result->begin();
 	} else {
-		if (result.size() > 1) {
+		if (result->size() > 1) {
 			throw "The result contains more than 1 result";
 		}
 	}
-	return res;
+	// creates a copy of the result before deleting the temporal objects
+	BSONObj* bsonresult = new BSONObj(*res);
+
+	delete result;
+	return bsonresult;
 }
 
-std::vector<BSONObj*> Connection::find(const std::string& db, const std::string& ns, const std::string& filter) {
-	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, filter: %s", db.c_str(), ns.c_str(), filter.c_str());
+std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& filter) {
+	return find(db, ns, "*", filter);
+}
+
+std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& select, const std::string& filter) {
+	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, select: %s, filter: %s", db.c_str(), ns.c_str(), select.c_str(), filter.c_str());
 
 	FindCommand cmd;
 	cmd.setFilter(filter);
+	cmd.setSelect(select);
 	cmd.setDB(db);
 	cmd.setNameSpace(ns);
 	_commandWriter->writeCommand(&cmd);
-
-	BSONInputStream is(_inputStream);
-
-	std::vector<BSONObj*> result = is.readBSONArray();
+	
+	cmd.readResult(_inputStream);
+	std::vector<BSONObj*>* result = (std::vector<BSONObj*>*)cmd.result();
 
 	return result;
 }
@@ -213,4 +272,7 @@ bool Connection::dropNamespace(const std::string& db, const std::string& ns) {
 	cmd.setNameSpace(ns);
 
 	_commandWriter->writeCommand(&cmd);
+	cmd.readResult(_inputStream);
+
+	return true;
 }

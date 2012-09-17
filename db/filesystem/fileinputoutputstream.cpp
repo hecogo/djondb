@@ -18,22 +18,26 @@
 
 #include "fileinputoutputstream.h"
 
+#include "util.h"
 #include <string.h>
 #include <boost/crc.hpp>
 #include <stdlib.h>
+#include <errno.h>
 #include <sstream>
 
 FileInputOutputStream::FileInputOutputStream(const std::string& fileName, const char* flags) {
+	Logger* log = getLogger(NULL);
     _pFile = fopen(fileName.c_str(), flags);
 
     // Position the cursor at the end of the file
 	 if (_pFile == NULL) {
-		 perror("Error");
-		 cout << "here we go" << endl;
+		 log->error("Error opening the file: %s. Error: %s", fileName.c_str(), strerror(errno));
+		 exit(1);
 	 }
     fseek(_pFile, 0, SEEK_END);
     _fileName = fileName;
     _open = true;
+	 delete log;
 }
 
 FileInputOutputStream::~FileInputOutputStream() {
@@ -47,7 +51,7 @@ void FileInputOutputStream::writeChar (unsigned char v)
 }
 
 /* Write 2 bytes in the output (little endian order) */
-void FileInputOutputStream::writeInt (int v)
+void FileInputOutputStream::writeShortInt (short int v)
 {
     unsigned char c = (v & 255);
     unsigned char c2= ((v >> 8) & 255);
@@ -56,10 +60,17 @@ void FileInputOutputStream::writeInt (int v)
 }
 
 /* Write 4 bytes in the output (little endian order) */
+void FileInputOutputStream::writeInt (int v)
+{
+    writeShortInt ((v) & 0xffff);
+    writeShortInt ((v >> 16) & 0xffff);
+}
+
+/* Write 4 bytes in the output (little endian order) */
 void FileInputOutputStream::writeLong (long v)
 {
-    writeInt ((v) & 0xffff);
-    writeInt ((v >> 16) & 0xffff);
+    writeShortInt ((v) & 0xffff);
+    writeShortInt ((v >> 16) & 0xffff);
 }
 
 /* Write a 4 byte float in the output */
@@ -118,14 +129,21 @@ unsigned char FileInputOutputStream::readChar() {
 }
 
 /* Reads 2 bytes in the input (little endian order) */
-int FileInputOutputStream::readInt () {
+short int FileInputOutputStream::readShortInt () {
     int v = readChar() | readChar() << 8;
     return v;
 }
 
 /* Reads 4 bytes in the input (little endian order) */
+int FileInputOutputStream::readInt () {
+    int v = readShortInt() | readShortInt() << 16;
+
+    return v;
+}
+
+/* Reads 4 bytes in the input (little endian order) */
 long FileInputOutputStream::readLong () {
-    long v = readInt() | readInt() << 16;
+    long v = readShortInt() | readShortInt() << 16;
 
     return v;
 }

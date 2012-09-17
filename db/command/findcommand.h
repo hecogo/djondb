@@ -20,22 +20,27 @@ class FindCommand : public Command
         virtual void execute();
         virtual void* result();
 
+        virtual void writeCommand(OutputStream* out) const;
         virtual void writeResult(OutputStream* out) const;
+        virtual void readResult(InputStream* is);
 
         void setDB(const std::string& db);
         const std::string* DB() const;
         void setNameSpace(const std::string& ns);
         std::string* nameSpace() const;
+        void setSelect(const std::string& select);
+		  std::string* select() const;
         void setFilter(const std::string& filter);
 		  std::string* filter() const;
     protected:
     private:
     private:
+		  std::string* _select;
         std::string* _namespace;
         std::string* _db;
 		  std::string* _filter;
 
-		  std::vector<BSONObj*> _result;
+		  std::vector<BSONObj*>* _findresult;
 };
 
 #endif // FINDCOMMAND_H
