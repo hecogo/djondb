@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
+				AdditionalIncludeDirectories="..\third_party\includes;..\util;..\db;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\third_party\includes;..\util;C:\development\boost;..\bson;..\driverbase"
+				AdditionalIncludeDirectories="..\third_party\includes;..\util;..\db;C:\development\boost;..\bson;..\driverbase"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"

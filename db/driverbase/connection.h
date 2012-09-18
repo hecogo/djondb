@@ -5,6 +5,7 @@
 #include <vector>
 #include "bson.h"
 #include "util.h"
+#include "filterparser.h"
 
 #ifdef WINDOWS
    #define LibraryExport   __declspec( dllexport )
@@ -43,8 +44,8 @@ namespace djondb {
             bool insert(const std::string& db, const std::string& ns, const BSONObj& obj);
             BSONObj* findByKey(const std::string& db, const std::string& ns, const std::string& select, const std::string& id);
             BSONObj* findByKey(const std::string& db, const std::string& ns, const std::string& id);
-				std::vector<BSONObj*>* find(const std::string& db, const std::string& ns, const std::string& select, const std::string& filter);
-				std::vector<BSONObj*>* find(const std::string& db, const std::string& ns, const std::string& filter);
+				std::vector<BSONObj*>* find(const std::string& db, const std::string& ns, const std::string& select, const std::string& filter) throw(ParseException);
+				std::vector<BSONObj*>* find(const std::string& db, const std::string& ns, const std::string& filter) throw(ParseException);
             bool update(const std::string& db, const std::string& ns, const std::string& json);
             bool update(const std::string& db, const std::string& ns, const BSONObj& bson);
 

@@ -236,13 +236,20 @@ BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, con
 	return bsonresult;
 }
 
-std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& filter) {
+std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& filter) throw(ParseException) {
 	return find(db, ns, "*", filter);
 }
 
-std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& select, const std::string& filter) {
+std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& select, const std::string& filter) throw(ParseException) {
 	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, select: %s, filter: %s", db.c_str(), ns.c_str(), select.c_str(), filter.c_str());
 
+	try {
+		FilterParser* parser = FilterParser::parse(filter);
+		delete parser;
+	} catch (ParseException e) {
+		_logger->error("An error ocurred parsing the filter %s", filter.c_str());
+		throw e;
+	}
 	FindCommand cmd;
 	cmd.setFilter(filter);
 	cmd.setSelect(select);
