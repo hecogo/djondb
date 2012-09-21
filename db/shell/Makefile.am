@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-all_includes = -I$(srcdir)/../driverbase -I$(srcdir)/../util -I$(srcdir)/../bson
+all_includes = -I$(srcdir)/../driverbase -I$(srcdir)/../db -I$(srcdir)/../util -I$(srcdir)/../bson
 #-I$(srcdir)/../util -I$(srcdir)/../util 
 
 
