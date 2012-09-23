@@ -232,7 +232,7 @@ v8::Handle<v8::Value> parseJSON(v8::Handle<v8::Value> object)
 	return scope.Close(JSON_parse->Call(JSON, 1, &object));
 }
 
-v8::Handle<v8::Value> toJson(v8::Handle<v8::Value> object)
+v8::Handle<v8::Value> toJson(v8::Handle<v8::Value> object, bool beautify = false)
 {
 	v8::HandleScope scope;
 
@@ -242,7 +242,15 @@ v8::Handle<v8::Value> toJson(v8::Handle<v8::Value> object)
 	v8::Handle<v8::Object> JSON = global->Get(v8::String::New("JSON"))->ToObject();
 	v8::Handle<v8::Function> JSON_stringify = v8::Handle<v8::Function>::Cast(JSON->Get(v8::String::New("stringify")));
 
-	return scope.Close(JSON_stringify->Call(JSON, 1, &object));
+	if (!beautify) {
+		return scope.Close(JSON_stringify->Call(JSON, 1, &object));
+	} else {
+		v8::Handle<v8::Value> args[3];
+		args[0] = object;
+		args[1] = v8::Null();
+		args[2] = v8::Integer::New(4);
+		return scope.Close(JSON_stringify->Call(JSON, 3, args));
+	}
 }
 
 v8::Handle<v8::Value> insert(const v8::Arguments& args) {
@@ -365,19 +373,19 @@ v8::Handle<v8::Value> help(const v8::Arguments& args) {
 		std::string cmd = ToCString(str);
 	} else {
 		printf("connect('hostname', [port])\n\tEstablish a connection with a server.\n");
-		printf("dropNamespace('db', 'namespace');\n\tDrops a namespace from the db.\n");
-		printf("find('db', 'namespace'[, 'select'][, 'filter']);\n\tExecutes a find using the provided filter.\n");
-		printf("help();\n\tThis help\n");
-		printf("insert('db', 'namespace', { json...object});\n\tInserts a new document.\n");
-		printf("load('file');\n\tLoads and executes a script.\n");
-		printf("print(data);\n\tPrint console messages.\n");
-		printf("quit();\n\tBye bye fellow.\n");
-		printf("read('file');\n\tReads the contents of a file.\n");
-		printf("showDbs();\n\tReturns a list of the available databases.\n");
-		printf("showNamespaces('db');\n\tReturns the namespaces in that database.\n");
-		printf("shutdown();\n\tRemotely shutdowns the server (Are you sure?).\n");
+			printf("dropNamespace('db', 'namespace');\n\tDrops a namespace from the db.\n");
+			printf("find('db', 'namespace'[, 'select'][, 'filter']);\n\tExecutes a find using the provided filter.\n");
+			printf("help();\n\tThis help\n");
+			printf("insert('db', 'namespace', { json...object});\n\tInserts a new document.\n");
+			printf("load('file');\n\tLoads and executes a script.\n");
+			printf("print(data);\n\tPrint console messages.\n");
+			printf("quit();\n\tBye bye fellow.\n");
+			printf("read('file');\n\tReads the contents of a file.\n");
+			printf("showDbs();\n\tReturns a list of the available databases.\n");
+			printf("showNamespaces('db');\n\tReturns the namespaces in that database.\n");
+			printf("shutdown();\n\tRemotely shutdowns the server (Are you sure?).\n");
 		printf("uuid();\n\tGenerates a new UUID (Universal Unique Identifier).\n");
-		printf("version();\n\tReturns the current shell version.\n");
+			printf("version();\n\tReturns the current shell version.\n");
 	}
 	return v8::Undefined();
 }
@@ -439,16 +447,16 @@ v8::Handle<v8::Value> find(const v8::Arguments& args) {
 	} catch (ParseException e) {
 		return v8::ThrowException(v8::String::New("the filter expression contains an error\n"));
 	}
-/* 
-	v8::Handle<v8::Context> context = v8::Context::GetCurrent();
-	v8::Handle<v8::Object> global = context->Global();
+	/* 
+		v8::Handle<v8::Context> context = v8::Context::GetCurrent();
+		v8::Handle<v8::Object> global = context->Global();
 
-	v8::Handle<v8::Object> objresult = global->Get(v8::String::New(sresult.c_str()))->ToObject();
+		v8::Handle<v8::Object> objresult = global->Get(v8::String::New(sresult.c_str()))->ToObject();
 
 
-	return objresult;
+		return objresult;
 	//return v8::String::New(sresult.c_str());
-*/
+	*/
 }
 
 v8::Handle<v8::Value> fuuid(const v8::Arguments& args) {
@@ -495,6 +503,22 @@ v8::Handle<v8::Value> connect(const v8::Arguments& args) {
 // The callback that is invoked by v8 whenever the JavaScript 'print'
 // function is called.  Prints its arguments on stdout separated by
 // spaces and ending with a newline.
+void internalPrint(const v8::Handle<v8::Value> arg) {
+	v8::HandleScope handle_scope;
+	std::string cstr;
+	if (arg->IsObject()) {
+		v8::String::Utf8Value str(toJson(arg->ToObject(), true));
+		cstr = ToCString(str);
+	} else {
+		v8::String::Utf8Value str(arg);
+		cstr = ToCString(str);
+	}
+	printf("%s", cstr.c_str());
+}
+
+// The callback that is invoked by v8 whenever the JavaScript 'print'
+// function is called.  Prints its arguments on stdout separated by
+// spaces and ending with a newline.
 v8::Handle<v8::Value> Print(const v8::Arguments& args) {
 	bool first = true;
 	for (int i = 0; i < args.Length(); i++) {
@@ -504,9 +528,7 @@ v8::Handle<v8::Value> Print(const v8::Arguments& args) {
 		} else {
 			printf(" ");
 		}
-		v8::String::Utf8Value str(args[i]);
-		std::string cstr = ToCString(str);
-		printf("%s", cstr.c_str());
+		internalPrint(args[i]);
 	}
 	printf("\n");
 	fflush(stdout);
@@ -774,9 +796,16 @@ bool ExecuteString(v8::Handle<v8::String> source,
 			if (print_result && !result->IsUndefined()) {
 				// If all went well and the result wasn't undefined then print
 				// the returned value.
-				v8::String::Utf8Value str(result);
-				std::string cstr = ToCString(str);
-				printf("%s\n", cstr.c_str());
+				if (result->IsObject()) {
+					v8::Handle<v8::Value> val = toJson(result);
+					v8::String::Utf8Value sval(val);
+					std::string temp = ToCString(sval);
+					printf("%s\n", temp.c_str());
+				} else {
+					v8::String::Utf8Value str(result);
+					std::string cstr = ToCString(str);
+					printf("%s\n", cstr.c_str());
+				}
 			}
 			return true;
 		}
