@@ -1,0 +1,10 @@
+
+    Version 0.120120923
+    ===========================================================================
+
+    * Shell improvements: New json beautify and print implementation.
+    * The driver now validates the filter if it's wrong creates an exception to
+      be shown in the shell
+    * bsonutil added to the visual studio project, and a simpletest.js was 
+      created to do a simple automated test from console
+
