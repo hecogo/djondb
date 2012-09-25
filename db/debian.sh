@@ -20,3 +20,5 @@ strip --strip-unneeded debian/usr/lib/*.so*
 fakeroot dpkg-deb --build debian djondb.deb
 lintian djondb.deb
 
+debfile="djondb_`uname`_`uname -i`.deb"
+mv djondb.deb $debfile
