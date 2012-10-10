@@ -59,6 +59,9 @@ void BSONOutputStream::writeBSON(const BSONObj& bson) {
             case LONG_TYPE:
                 _outputStream->writeLong(*((long*)cont->_element));
                 break;
+            case LONG64_TYPE:
+                _outputStream->writeLong64(*((long long*)cont->_element));
+                break;
             case DOUBLE_TYPE:
                 _outputStream->writeDoubleIEEE(*((double*)cont->_element));
                 break;

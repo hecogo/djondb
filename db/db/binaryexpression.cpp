@@ -70,6 +70,12 @@ ExpressionResult* evalEqual(const BSONObj& bson, BaseExpression* left, BaseExpre
 			case ExpressionResult::RT_INT:
 				result = (*(int*)valLeft->value() == *(int*)valRight->value());
 				break;
+			case ExpressionResult::RT_LONG:
+				result = (*(long*)valLeft->value() == *(long*)valRight->value());
+				break;
+			case ExpressionResult::RT_LONG64:
+				result = (*(long long*)valLeft->value() == *(long long*)valRight->value());
+				break;
 			case ExpressionResult::RT_DOUBLE:
 				result = (*(double*)valLeft->value() == *(double*)valRight->value());
 				break;
@@ -114,6 +120,12 @@ ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& op
 		switch (valLeft->type()) {
 			case ExpressionResult::RT_INT:
 				resultGreather = (*(int*)valLeft->value() > *(int*)valRight->value());
+				break;
+			case ExpressionResult::RT_LONG:
+				resultGreather = (*(long*)valLeft->value() > *(long*)valRight->value());
+				break;
+			case ExpressionResult::RT_LONG64:
+				resultGreather = (*(long long*)valLeft->value() > *(long long*)valRight->value());
 				break;
 			case ExpressionResult::RT_DOUBLE:
 				resultGreather = (*(double*)valLeft->value() > *(double*)valRight->value());
