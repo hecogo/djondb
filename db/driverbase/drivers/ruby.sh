@@ -1,5 +1,6 @@
 #!/bin/sh
 
+sh update.sh
 rm -rf ruby
 mkdir ruby
 

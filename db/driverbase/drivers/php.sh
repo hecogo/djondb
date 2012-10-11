@@ -1,5 +1,7 @@
 #!/bin/sh
 
+sh update.sh
+
 rm -rf php
 mkdir php
 
