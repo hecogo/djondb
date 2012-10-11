@@ -43,80 +43,80 @@ public class BSONObj {
     this(djonwrapperJNI.new_BSONObj__SWIG_1(BSONObj.getCPtr(orig), orig), true);
   }
 
-  public void add(SWIGTYPE_p_t_keytype arg0, int arg1) {
-    djonwrapperJNI.BSONObj_add__SWIG_0(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0), arg1);
+  public void add(String arg0, int arg1) {
+    djonwrapperJNI.BSONObj_add__SWIG_0(swigCPtr, this, arg0, arg1);
   }
 
-  public void add(SWIGTYPE_p_t_keytype arg0, double arg1) {
-    djonwrapperJNI.BSONObj_add__SWIG_1(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0), arg1);
+  public void add(String arg0, double arg1) {
+    djonwrapperJNI.BSONObj_add__SWIG_1(swigCPtr, this, arg0, arg1);
   }
 
-  public void add(SWIGTYPE_p_t_keytype arg0, long arg1) {
-    djonwrapperJNI.BSONObj_add__SWIG_3(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0), arg1);
+  public void add(String arg0, long arg1) {
+    djonwrapperJNI.BSONObj_add__SWIG_3(swigCPtr, this, arg0, arg1);
   }
 
-  public void add(SWIGTYPE_p_t_keytype arg0, String arg1) {
-    djonwrapperJNI.BSONObj_add__SWIG_4(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0), arg1);
+  public void add(String arg0, String arg1) {
+    djonwrapperJNI.BSONObj_add__SWIG_4(swigCPtr, this, arg0, arg1);
   }
 
-  public void add(SWIGTYPE_p_t_keytype arg0, BSONObj arg1) {
-    djonwrapperJNI.BSONObj_add__SWIG_5(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0), BSONObj.getCPtr(arg1), arg1);
+  public void add(String arg0, BSONObj arg1) {
+    djonwrapperJNI.BSONObj_add__SWIG_5(swigCPtr, this, arg0, BSONObj.getCPtr(arg1), arg1);
   }
 
-  public void add(SWIGTYPE_p_t_keytype arg0, BSONArrayObj arg1) {
-    djonwrapperJNI.BSONObj_add__SWIG_6(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0), BSONArrayObj.getCPtr(arg1), arg1);
+  public void add(String arg0, BSONArrayObj arg1) {
+    djonwrapperJNI.BSONObj_add__SWIG_6(swigCPtr, this, arg0, BSONArrayObj.getCPtr(arg1), arg1);
   }
 
-  public boolean has(SWIGTYPE_p_t_keytype arg0) {
-    return djonwrapperJNI.BSONObj_has(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public boolean has(String arg0) {
+    return djonwrapperJNI.BSONObj_has(swigCPtr, this, arg0);
   }
 
-  public SWIGTYPE_p_int getInt(SWIGTYPE_p_t_keytype arg0) {
-    long cPtr = djonwrapperJNI.BSONObj_getInt(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public SWIGTYPE_p_int getInt(String arg0) {
+    long cPtr = djonwrapperJNI.BSONObj_getInt(swigCPtr, this, arg0);
     return (cPtr == 0) ? null : new SWIGTYPE_p_int(cPtr, false);
   }
 
-  public SWIGTYPE_p_double getDouble(SWIGTYPE_p_t_keytype arg0) {
-    long cPtr = djonwrapperJNI.BSONObj_getDouble(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public SWIGTYPE_p_double getDouble(String arg0) {
+    long cPtr = djonwrapperJNI.BSONObj_getDouble(swigCPtr, this, arg0);
     return (cPtr == 0) ? null : new SWIGTYPE_p_double(cPtr, false);
   }
 
-  public SWIGTYPE_p_long getLong(SWIGTYPE_p_t_keytype arg0) {
-    long cPtr = djonwrapperJNI.BSONObj_getLong(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public SWIGTYPE_p_long getLong(String arg0) {
+    long cPtr = djonwrapperJNI.BSONObj_getLong(swigCPtr, this, arg0);
     return (cPtr == 0) ? null : new SWIGTYPE_p_long(cPtr, false);
   }
 
-  public SWIGTYPE_p_long_long getLong64(SWIGTYPE_p_t_keytype arg0) {
-    long cPtr = djonwrapperJNI.BSONObj_getLong64(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public SWIGTYPE_p_long_long getLong64(String arg0) {
+    long cPtr = djonwrapperJNI.BSONObj_getLong64(swigCPtr, this, arg0);
     return (cPtr == 0) ? null : new SWIGTYPE_p_long_long(cPtr, false);
   }
 
-  public String getString(SWIGTYPE_p_t_keytype arg0) {
-    return djonwrapperJNI.BSONObj_getString(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public String getString(String arg0) {
+    return djonwrapperJNI.BSONObj_getString(swigCPtr, this, arg0);
   }
 
-  public BSONObj getBSON(SWIGTYPE_p_t_keytype arg0) {
-    long cPtr = djonwrapperJNI.BSONObj_getBSON(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public BSONObj getBSON(String arg0) {
+    long cPtr = djonwrapperJNI.BSONObj_getBSON(swigCPtr, this, arg0);
     return (cPtr == 0) ? null : new BSONObj(cPtr, false);
   }
 
-  public BSONArrayObj getBSONArray(SWIGTYPE_p_t_keytype arg0) {
-    long cPtr = djonwrapperJNI.BSONObj_getBSONArray(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public BSONArrayObj getBSONArray(String arg0) {
+    long cPtr = djonwrapperJNI.BSONObj_getBSONArray(swigCPtr, this, arg0);
     return (cPtr == 0) ? null : new BSONArrayObj(cPtr, false);
   }
 
-  public SWIGTYPE_p_void get(SWIGTYPE_p_t_keytype arg0) {
-    long cPtr = djonwrapperJNI.BSONObj_get(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public SWIGTYPE_p_void get(String arg0) {
+    long cPtr = djonwrapperJNI.BSONObj_get(swigCPtr, this, arg0);
     return (cPtr == 0) ? null : new SWIGTYPE_p_void(cPtr, false);
   }
 
-  public SWIGTYPE_p_BSONContent getContent(SWIGTYPE_p_t_keytype arg0) {
-    long cPtr = djonwrapperJNI.BSONObj_getContent__SWIG_0(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0));
+  public SWIGTYPE_p_BSONContent getContent(String arg0) {
+    long cPtr = djonwrapperJNI.BSONObj_getContent__SWIG_0(swigCPtr, this, arg0);
     return (cPtr == 0) ? null : new SWIGTYPE_p_BSONContent(cPtr, false);
   }
 
-  public SWIGTYPE_p_BSONContent getContent(SWIGTYPE_p_t_keytype arg0, SWIGTYPE_p_BSONTYPE arg1) {
-    long cPtr = djonwrapperJNI.BSONObj_getContent__SWIG_1(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0), SWIGTYPE_p_BSONTYPE.getCPtr(arg1));
+  public SWIGTYPE_p_BSONContent getContent(String arg0, SWIGTYPE_p_BSONTYPE arg1) {
+    long cPtr = djonwrapperJNI.BSONObj_getContent__SWIG_1(swigCPtr, this, arg0, SWIGTYPE_p_BSONTYPE.getCPtr(arg1));
     return (cPtr == 0) ? null : new SWIGTYPE_p_BSONContent(cPtr, false);
   }
 
@@ -129,20 +129,20 @@ public class BSONObj {
     return (cPtr == 0) ? null : new BSONObj(cPtr, false);
   }
 
-  public SWIGTYPE_p_BSONTYPE type(SWIGTYPE_p_t_keytype arg0) {
-    return new SWIGTYPE_p_BSONTYPE(djonwrapperJNI.BSONObj_type(swigCPtr, this, SWIGTYPE_p_t_keytype.getCPtr(arg0)), true);
+  public SWIGTYPE_p_BSONTYPE type(String arg0) {
+    return new SWIGTYPE_p_BSONTYPE(djonwrapperJNI.BSONObj_type(swigCPtr, this, arg0), true);
   }
 
   public String toChar() {
     return djonwrapperJNI.BSONObj_toChar(swigCPtr, this);
   }
 
-  public SWIGTYPE_p_std__mapT_t_keytype_BSONContent_p_t__const_iterator begin() {
-    return new SWIGTYPE_p_std__mapT_t_keytype_BSONContent_p_t__const_iterator(djonwrapperJNI.BSONObj_begin(swigCPtr, this), true);
+  public SWIGTYPE_p_std__mapT_std__string_BSONContent_p_t__const_iterator begin() {
+    return new SWIGTYPE_p_std__mapT_std__string_BSONContent_p_t__const_iterator(djonwrapperJNI.BSONObj_begin(swigCPtr, this), true);
   }
 
-  public SWIGTYPE_p_std__mapT_t_keytype_BSONContent_p_t__const_iterator end() {
-    return new SWIGTYPE_p_std__mapT_t_keytype_BSONContent_p_t__const_iterator(djonwrapperJNI.BSONObj_end(swigCPtr, this), true);
+  public SWIGTYPE_p_std__mapT_std__string_BSONContent_p_t__const_iterator end() {
+    return new SWIGTYPE_p_std__mapT_std__string_BSONContent_p_t__const_iterator(djonwrapperJNI.BSONObj_end(swigCPtr, this), true);
   }
 
   public int length() {
