@@ -63,13 +63,13 @@
 	_value = new ExpressionResult(ExpressionResult::RT_LONG, _longValue);
 }
 
-	ConstantExpression::ConstantExpression(long long expression)
+	ConstantExpression::ConstantExpression(__LONG64 expression)
 :BaseExpression(ET_CONSTANT)
 {
 	_expression = NULL;
 	_intValue = NULL;
 	_longValue = NULL;
-	_long64Value = new long long();
+	_long64Value = new __LONG64();
 	*_long64Value = expression;
 	_doubleValue = NULL;
 	_value = new ExpressionResult(ExpressionResult::RT_LONG64, _long64Value);

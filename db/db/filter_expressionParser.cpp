@@ -1433,7 +1433,11 @@ constant_expr(pfilter_expressionParser ctx)
             	        {
 
             	            		 // tries the maximum allowed value, then downsize it to the correct type
-            	            	    long long d = atoll((char*)(NUMBER8->getText(NUMBER8))->chars);
+#ifdef WINDOWS
+									__LONG64 d = _atoi64((char*)(NUMBER8->getText(NUMBER8))->chars);
+#else
+            	            	    __LONG64 d = atoll((char*)(NUMBER8->getText(NUMBER8))->chars);
+#endif
             	            	    if (d < INT_MAX) {
             	            	          
             	            val= new ConstantExpression((int)d);
@@ -1442,8 +1446,8 @@ constant_expr(pfilter_expressionParser ctx)
             	            	          val= new ConstantExpression((long)d);
 
             	            	    } else {
-            	            	         if (abs((long long)d) == d) {
-            	            	                val= new ConstantExpression((long long)d);
+            	            	         if (abs((__LONG64)d) == d) {
+            	            	                val= new ConstantExpression((__LONG64)d);
 
             	            	         } else {
             	            	               val= new ConstantExpression(d);

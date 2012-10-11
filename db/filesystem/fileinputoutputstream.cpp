@@ -70,9 +70,9 @@ void FileInputOutputStream::writeLong (long v)
 }
 
 /* Write 8 bytes in the output (little endian order) */
-void FileInputOutputStream::writeLong64 (long long v)
+void FileInputOutputStream::writeLong64 (__LONG64 v)
 {
-	writeData<long long>(v);
+	writeData<__LONG64>(v);
 }
 
 
@@ -153,8 +153,8 @@ long FileInputOutputStream::readLong () {
 }
 
 /* Reads 8 bytes in the input (little endian order) */
-long long FileInputOutputStream::readLong64 () {
-	long long result = readData<long long>();
+__LONG64 FileInputOutputStream::readLong64 () {
+	__LONG64 result = readData<__LONG64>();
 	return result;
 }
 

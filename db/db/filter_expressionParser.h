@@ -107,6 +107,7 @@ has the callable functions (rules) shown below,
 
 //#include <stdlib.h>
    #include "filterparser.h"
+	#include "util.h"
    #include "filterdefs.h"
    #include "constantexpression.h"
    #include "unaryexpression.h"
@@ -115,7 +116,9 @@ has the callable functions (rules) shown below,
    #include <stdlib.h>
    #include <limits.h>
    #include <stdio.h>
+#ifndef WINDOWS
    #include <strings.h>
+#endif
    #include <string>
    #include <iostream>
    #include <set>

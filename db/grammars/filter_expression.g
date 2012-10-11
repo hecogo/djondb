@@ -7,6 +7,7 @@ options {
 @parser::includes {
 //#include <stdlib.h>
    #include "filterparser.h"
+   #include "util.h"
    #include "filterdefs.h"
    #include "constantexpression.h"
    #include "unaryexpression.h"
@@ -147,7 +148,11 @@ constant_expr returns [BaseExpression* val]
 	: (NUMBER
 	{
 		 // tries the maximum allowed value, then downsize it to the correct type
-	    long long d = atoll((char*)$NUMBER.text->chars);
+#ifdef WINDOWS
+		__LONG64 d = _atoi64((char*)(NUMBER8->getText(NUMBER8))->chars);
+#else
+      __LONG64 d = atoll((char*)(NUMBER8->getText(NUMBER8))->chars);
+#endif
 	    if (d < INT_MAX) {
 	          $val = new ConstantExpression((int)d);
 	    } else if (d < LONG_MAX)  {

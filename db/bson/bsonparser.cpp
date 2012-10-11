@@ -142,7 +142,11 @@ BSONObj* BSONParser::parseBSON(const char* c, int& pos) {
 												break;
 											}
 					case LONG64_TYPE: {
-												long long lVal = atoll((char*)value);
+#ifdef WINDOWS
+												__LONG64 lVal = _atoi64((char*)value);
+#else
+												__LONG64 lVal = atoll((char*)value);
+#endif
 												if (lVal <= INT_MAX) {
 													res->add(name, (int)lVal);
 												} else if (lVal <= LONG_MAX) {

@@ -64,8 +64,8 @@ void BSONObj::add(std::string key, double val) {
 	fillContent(key, DOUBLE_TYPE, internalValue);
 }
 
-void BSONObj::add(std::string key, long long val) {
-	long long* internalValue = new long long();
+void BSONObj::add(std::string key, __LONG64 val) {
+	__LONG64* internalValue = new __LONG64();
 	*internalValue = val;
 	fillContent(key, LONG64_TYPE, internalValue);
 }
@@ -135,7 +135,7 @@ char* BSONObj::toChar() const {
 					sprintf(result + pos, "%ld", *((long*)content->_element));
 					break;
 			case LONG64_TYPE:
-					sprintf(result + pos, "%lld", *((long long*)content->_element));
+					sprintf(result + pos, "%lld", *((__LONG64*)content->_element));
 					break;
 			case DOUBLE_TYPE:
 					sprintf(result + pos, "%f", *((double*)content->_element));
@@ -181,10 +181,10 @@ double* BSONObj::getDouble(std::string key) const {
 	}
 }
 
-long long* BSONObj::getLong64(std::string key) const {
+__LONG64* BSONObj::getLong64(std::string key) const {
 	BSONContent* content = getContent(key);
 	if ((content != NULL) && (content->type() == LONG64_TYPE)) {
-		long long* res = (long long*)content->_element;
+		__LONG64* res = (__LONG64*)content->_element;
 		return res;
 	} else {
 		return NULL;
@@ -455,7 +455,7 @@ BSONObj* BSONObj::select(const char* sel) const {
 					}
 				case LONG64_TYPE:
 					{
-						long long val = *origContent;
+						__LONG64 val = *origContent;
 						result->add(key, val);
 						break;
 					}

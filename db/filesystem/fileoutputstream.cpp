@@ -63,9 +63,9 @@ void FileOutputStream::writeLong (long v)
 }
 
 /* Write 8 bytes in the output (little endian order) */
-void FileOutputStream::writeLong64 (long long v)
+void FileOutputStream::writeLong64 (__LONG64 v)
 {
-	writeData<long long>(v);
+	writeData<__LONG64>(v);
 }
 
 /* Write a 4 byte float in the output */

@@ -27,6 +27,12 @@
 #define _32BITS
 #endif
 
+#ifdef LINUX
+#define __LONG64 long long
+#else
+#define __LONG64 __int64
+#endif
+
 // #define TESTING
 
 #endif // DEFS_H_INCLUDED

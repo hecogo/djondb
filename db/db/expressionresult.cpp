@@ -39,8 +39,8 @@ void* copyValue(ExpressionResult::RESULT_TYPE type, void* value) {
 			}
 		case ExpressionResult::RT_LONG64:
 			{
-				long long* l = new long long();
-				*l = *(long long*)value;
+				__LONG64* l = new __LONG64();
+				*l = *(__LONG64*)value;
 				result = l;
 				break;
 			}
@@ -101,7 +101,7 @@ ExpressionResult::~ExpressionResult() {
 				delete ((long*)_value);
 				break;
 			case ExpressionResult::RT_LONG64:
-				delete ((long long*)_value);
+				delete ((__LONG64*)_value);
 				break;
 			case ExpressionResult::RT_DOUBLE:
 				delete ((double*)_value);
