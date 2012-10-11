@@ -13,6 +13,7 @@ options {
    #include "simpleexpression.h"
    #include "binaryexpression.h"
    #include <stdlib.h>
+   #include <limits.h>
    #include <stdio.h>
    #include <strings.h>
    #include <string>
@@ -143,10 +144,21 @@ xpath_expr returns [BaseExpression* val]
 	};
 
 constant_expr returns [BaseExpression* val]
-	: (INT
+	: (NUMBER
 	{
-	    int i = atoi((char*)$INT.text->chars);
-	    $val = new ConstantExpression(i);
+		 // tries the maximum allowed value, then downsize it to the correct type
+	    long long d = atoll((char*)$NUMBER.text->chars);
+	    if (d < INT_MAX) {
+	          $val = new ConstantExpression((int)d);
+	    } else if (d < LONG_MAX)  {
+	          $val = new ConstantExpression((long)d);
+	    } else {
+	         if (abs((long long)d) == d) {
+	                $val = new ConstantExpression((long long)d);
+	         } else {
+	               $val = new ConstantExpression(d);
+                                   }
+	 }
 	} | STRING{
 	    char* ptext = (char*)$STRING.text->chars;
 	    char* text = (char*)malloc(strlen(ptext) - 1);
@@ -166,12 +178,12 @@ OPER	:	('==' | '>' | '>=' | '<' | '<=' );
 OR	:	'or';
 AND	:	'and';
 
-INT :	'0'..'9'+;
+NUMBER :	'0'..'9'+;
 
 FLOAT
-    :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
-    |   '.' ('0'..'9')+ EXPONENT?
-    |   ('0'..'9')+ EXPONENT
+    :   NUMBER '.' (NUMBER)* EXPONENT?
+    |   '.' (NUMBER)+ EXPONENT?
+    |   (NUMBER)+ EXPONENT
     ;
 
 COMMENT

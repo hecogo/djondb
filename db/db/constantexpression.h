@@ -33,6 +33,8 @@ class ConstantExpression: public BaseExpression {
 	public:
 		ConstantExpression(const char* expression);
 		ConstantExpression(int expression);
+		ConstantExpression(long expression);
+		ConstantExpression(long long expression);
 		ConstantExpression(double expression);
 		ConstantExpression(const ConstantExpression& orig);
 		virtual ~ConstantExpression();
@@ -42,6 +44,8 @@ class ConstantExpression: public BaseExpression {
 	private:
 		std::string* _expression;
 		int* _intValue;
+		long* _longValue;
+		long long* _long64Value;
 		double* _doubleValue;
 		ExpressionResult* _value;
 
