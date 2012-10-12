@@ -51,8 +51,8 @@ public class BSONObj {
     djonwrapperJNI.BSONObj_add__SWIG_1(swigCPtr, this, arg0, arg1);
   }
 
-  public void add(String arg0, long arg1) {
-    djonwrapperJNI.BSONObj_add__SWIG_3(swigCPtr, this, arg0, arg1);
+  public void add(String arg0, SWIGTYPE_p___LONG64 arg1) {
+    djonwrapperJNI.BSONObj_add__SWIG_3(swigCPtr, this, arg0, SWIGTYPE_p___LONG64.getCPtr(arg1));
   }
 
   public void add(String arg0, String arg1) {
@@ -86,9 +86,9 @@ public class BSONObj {
     return (cPtr == 0) ? null : new SWIGTYPE_p_long(cPtr, false);
   }
 
-  public SWIGTYPE_p_long_long getLong64(String arg0) {
+  public SWIGTYPE_p___LONG64 getLong64(String arg0) {
     long cPtr = djonwrapperJNI.BSONObj_getLong64(swigCPtr, this, arg0);
-    return (cPtr == 0) ? null : new SWIGTYPE_p_long_long(cPtr, false);
+    return (cPtr == 0) ? null : new SWIGTYPE_p___LONG64(cPtr, false);
   }
 
   public String getString(String arg0) {

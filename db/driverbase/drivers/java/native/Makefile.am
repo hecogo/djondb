@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = subdir-objects
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
-all_includes = -I$(srcdir)/../util -I$(srcdir)/../bson -I$(srcdir)/../driverbase -I/usr/lib/jvm/java-6-openjdk/include
+all_includes = -I$(srcdir)/../.. -I/usr/lib/jvm/java-6-openjdk/include
 
 include $(top_srcdir)/common.mk
 

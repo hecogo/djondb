@@ -58,12 +58,14 @@ AC_LANG_PUSH([C++])
 CPPFLAGS_save="$CPPFLAGS"
 USR_INCLUDE="-I/usr/include -I/usr/include/djondb"
 CPPFLAGS="$CPPFLAGS $USR_INCLUDE"
+CXXFLAGS="$CPPFLAGS $USR_INCLUDE"
+CFLAGS="$CPPFLAGS $USR_INCLUDE"
 
-AC_CHECK_HEADERS([djondb_client.h],[have_djondb=yes])
+#AC_CHECK_HEADERS([/usr/include/djondb/djondb_client.h],[have_djondb=yes])
 #AC_CHECK_HEADERS([test.h],[have_djondb=yes])
-AS_IF([test X$have_djondb != Xyes ], 
-		AC_MSG_ERROR([The djondb_client.h was not found please specify the directory where djondb include directory is ]))
-AC_LANG_POP
+#AS_IF([test X$have_djondb != Xyes ], 
+#		AC_MSG_ERROR([The djondb_client.h was not found please specify the directory where djondb include directory is ]))
+#AC_LANG_POP
 ############################################################
 
 AC_CONFIG_FILES([Makefile])

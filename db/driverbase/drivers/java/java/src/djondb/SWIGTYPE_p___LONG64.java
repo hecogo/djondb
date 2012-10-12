@@ -8,18 +8,18 @@
 
 package djondb;
 
-public class SWIGTYPE_p_std__mapT_t_keytype_BSONContent_p_t__const_iterator {
+public class SWIGTYPE_p___LONG64 {
   private long swigCPtr;
 
-  protected SWIGTYPE_p_std__mapT_t_keytype_BSONContent_p_t__const_iterator(long cPtr, boolean futureUse) {
+  protected SWIGTYPE_p___LONG64(long cPtr, boolean futureUse) {
     swigCPtr = cPtr;
   }
 
-  protected SWIGTYPE_p_std__mapT_t_keytype_BSONContent_p_t__const_iterator() {
+  protected SWIGTYPE_p___LONG64() {
     swigCPtr = 0;
   }
 
-  protected static long getCPtr(SWIGTYPE_p_std__mapT_t_keytype_BSONContent_p_t__const_iterator obj) {
+  protected static long getCPtr(SWIGTYPE_p___LONG64 obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 }
