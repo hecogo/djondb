@@ -16,6 +16,6 @@ phpize
 make
 
 
-#zipfile="djondb_phpext_`uname`_`uname -m`.zip"
+zipfile="djondb_phpext_`uname`_`uname -m`.zip"
 
-#zip $zipfile libdjonphpdriver.so djonwrapper.php
+zip $zipfile test.php modules/djonPhpExt.so djonwrapper.php

@@ -1,20 +1,9 @@
 <?php
-include("driverwrapper.php");
-#include("driverwrapper.php");
-/*
-// session_start(); // start up your PHP session! 
 
-if (!extension_loaded('djonPhpExt')) {
-	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-		dl('djonPhpExt.dll');
-	} else {
-		dl('djonPhpExt.so');
-	}
-}
- */
-$c = new Connection();
+include("djonwrapper.php");
 
-$c->connect("localhost");
+$c = ConnectionManager::getConnection("localhost");
+$c->open();
 
 $guid = uniqid();
 $json = "{ _id: '$guid', name: 'Juan', lastName: 'Cross'}";
@@ -25,10 +14,8 @@ echo '<p>Inserted</p>';
 echo '<p>Finding</p>';
 $res = $c->find('phpdb', 'a', '$"name" == "Juan"');
 
-echo $res;
-
-$res = $c->find('phpdb', 'a', '$"name"', '');
-
-echo $res;
+for ($x = 0; $x < $res->size(); $x++) {
+	echo $res->get($x)->toChar();
+}
 
 ?>
