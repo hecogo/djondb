@@ -26,6 +26,7 @@
 #include "binaryexpression.h"
 
 #include "expressionresult.h"
+#include "util.h"
 #include <string>
 #include <string.h>
 #include <memory>
@@ -74,7 +75,7 @@ ExpressionResult* evalEqual(const BSONObj& bson, BaseExpression* left, BaseExpre
 				result = (*(long*)valLeft->value() == *(long*)valRight->value());
 				break;
 			case ExpressionResult::RT_LONG64:
-				result = (*(long long*)valLeft->value() == *(long long*)valRight->value());
+				result = (*(__LONG64*)valLeft->value() == *(__LONG64*)valRight->value());
 				break;
 			case ExpressionResult::RT_DOUBLE:
 				result = (*(double*)valLeft->value() == *(double*)valRight->value());
@@ -125,7 +126,7 @@ ExpressionResult* evalComparison(const BSONObj& bson, const FILTER_OPERATORS& op
 				resultGreather = (*(long*)valLeft->value() > *(long*)valRight->value());
 				break;
 			case ExpressionResult::RT_LONG64:
-				resultGreather = (*(long long*)valLeft->value() > *(long long*)valRight->value());
+				resultGreather = (*(__LONG64*)valLeft->value() > *(__LONG64*)valRight->value());
 				break;
 			case ExpressionResult::RT_DOUBLE:
 				resultGreather = (*(double*)valLeft->value() > *(double*)valRight->value());

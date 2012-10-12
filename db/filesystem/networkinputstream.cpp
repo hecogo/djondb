@@ -106,8 +106,8 @@ long NetworkInputStream::readLong () {
 }
 
 /* Reads 4 bytes in the input (little endian order) */
-long long NetworkInputStream::readLong64 () {
-	return readData<long long>();
+__LONG64 NetworkInputStream::readLong64 () {
+	return readData<__LONG64>();
 }
 
 /* Reads a 4 byte float in the input */

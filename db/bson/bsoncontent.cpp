@@ -44,7 +44,7 @@ BSONContent::~BSONContent() {
 			delete ((long*)_element);
 			break;
 		case LONG64_TYPE:
-			delete ((long long*)_element);
+			delete ((__LONG64*)_element);
 			break;
 		case DOUBLE_TYPE:
 			delete ((double*)_element);
@@ -92,8 +92,8 @@ BSONContent::BSONContent(const BSONContent& orig) {
 			break;
 		case LONG64_TYPE:
 			{
-				long long ll = *((long long*)orig._element);
-				long long* longlong = new long long();
+				__LONG64 ll = *((__LONG64*)orig._element);
+				__LONG64* longlong = new __LONG64();
 				*longlong = ll;
 				this->_element = longlong;
 				break;
@@ -151,8 +151,8 @@ bool BSONContent::operator ==(const BSONContent& content) {
 					break;
 				case LONG64_TYPE:
 					{
-						long long l1 = *(long long*)cont1;
-						long long l2 = *(long long*)cont2;
+						__LONG64 l1 = *(__LONG64*)cont1;
+						__LONG64 l2 = *(__LONG64*)cont2;
 						result = (l1 == l2);
 					}
 					break;
@@ -211,8 +211,8 @@ bool BSONContent::operator !=(const BSONContent& content) {
 					break;
 				case LONG64_TYPE:
 					{
-						long long l1 = *(long long*)cont1;
-						long long l2 = *(long long*)cont2;
+						__LONG64 l1 = *(__LONG64*)cont1;
+						__LONG64 l2 = *(__LONG64*)cont2;
 						result = (l1 != l2);
 					}
 					break;
@@ -254,9 +254,9 @@ BSONContent::operator long() {
 
 }
 
-BSONContent::operator long long() {
+BSONContent::operator __LONG64() {
 	assert(_type == LONG64_TYPE);
-	long long* content = (long long*)_element;
+	__LONG64* content = (__LONG64*)_element;
 	return *content; 
 
 }

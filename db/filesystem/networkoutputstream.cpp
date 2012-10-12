@@ -96,16 +96,16 @@ void NetworkOutputStream::writeInt (int v)
 void NetworkOutputStream::writeLong (long v)
 {
 #ifdef _64BITS
-	writeLong64((long long)v);
+	writeLong64((__LONG64)v);
 #else
 	writeInt((int)v);
 #endif
 }
 
 /* Write 8 bytes in the output (little endian order) */
-void NetworkOutputStream::writeLong64 (long long v)
+void NetworkOutputStream::writeLong64 (__LONG64 v)
 {
-	writeData<long long>(v);
+	writeData<__LONG64>(v);
 }
 
 /* Write a 4 byte float in the output */

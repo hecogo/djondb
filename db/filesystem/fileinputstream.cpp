@@ -62,8 +62,8 @@ long FileInputStream::readLong () {
 }
 
 /* Reads 4 bytes in the input (little endian order) */
-long long FileInputStream::readLong64 () {
-	long long result = readData<long long>();
+__LONG64 FileInputStream::readLong64 () {
+	__LONG64 result = readData<__LONG64>();
 	return result;
 }
 

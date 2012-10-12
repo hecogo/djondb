@@ -100,7 +100,7 @@ BSONObj* BSONInputStream::readBSON(const char* select) const {
 									 break;
 								 }
 			case LONG64_TYPE: {
-									 long long l = _inputStream->readLong64();
+									 __LONG64 l = _inputStream->readLong64();
 #ifdef DEBUG
 									 if (log->isDebug()) log->debug("BSONInputStream::readBSON key: %s, value: %lld", key->c_str(), l);
 #endif

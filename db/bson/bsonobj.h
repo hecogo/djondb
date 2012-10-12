@@ -21,7 +21,7 @@ class BSONObj
         void add(std::string, int);
         void add(std::string, double);
         void add(std::string, long int);
-        void add(std::string, long long);
+        void add(std::string, __LONG64);
         void add(std::string, std::string);
         void add(std::string, const BSONObj&);
         void add(std::string, const BSONArrayObj&);
@@ -31,7 +31,7 @@ class BSONObj
         int* getInt(std::string) const;
         double* getDouble(std::string) const;
         long int* getLong(std::string) const;
-        long long* getLong64(std::string) const;
+        __LONG64* getLong64(std::string) const;
         std::string getString(std::string) const;
         BSONObj* getBSON(std::string) const;
         BSONArrayObj* getBSONArray(std::string) const;

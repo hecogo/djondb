@@ -22,7 +22,7 @@ class FileInputOutputStream: public InputStream, public OutputStream
         /* Reads 4 bytes in the input (little endian order) */
         virtual long readLong ();
         /* Reads 8 bytes in the input (little endian order) */
-        virtual long long readLong64 ();
+        virtual __LONG64 readLong64 ();
         /* Reads a 4 byte float in the input */
         virtual float readFloatIEEE ();
         /* Reads a 8 byte double in the input */
@@ -42,7 +42,7 @@ class FileInputOutputStream: public InputStream, public OutputStream
         /* Write 4 bytes in the output (little endian order) */
         virtual void writeLong (long v);
         /* Write 8 bytes in the output (little endian order) */
-        virtual void writeLong64 (long long v);
+        virtual void writeLong64 (__LONG64 v);
         /* Write a 4 byte float in the output */
         virtual void writeFloatIEEE (float v);
         /* Write a 8 byte double in the output */
