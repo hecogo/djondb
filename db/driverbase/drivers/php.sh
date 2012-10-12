@@ -7,11 +7,15 @@ mkdir php
 
 swig2.0 -c++ -php -outdir php -o php/djonphpdriver.cpp driver.i
 
+cp config.m4 php
 cd php
 
-g++ -I/usr/include/php5 -I/usr/include/php5/main -I/usr/include/php5/TSRM -I/usr/include/php5/Zend -I/usr/include/php5/ext -I`pwd`/../ -I/usr/include/php5/ext/date/lib -fpic -c djonphpdriver.cpp -o djonphpdriver.o
-g++ -shared djonphpdriver.o -o djonphpdriver.so
+phpize
 
-zipfile="djondb_phpext_`uname`_`uname -m`.zip"
+./configure --enable-djonPhpExt
+make
 
-zip $zipfile djonphpdriver.so djonwrapper.php
+
+#zipfile="djondb_phpext_`uname`_`uname -m`.zip"
+
+#zip $zipfile libdjonphpdriver.so djonwrapper.php
