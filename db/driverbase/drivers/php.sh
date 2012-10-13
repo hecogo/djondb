@@ -5,17 +5,17 @@ sh update.sh
 rm -rf php
 mkdir php
 
-swig2.0 -c++ -php -outdir php -o php/djonphpdriver.cpp driver.i
+swig -c++ -php -outdir php -o php/djonphpdriver.cpp driver.i
 
 cp config.m4 php
 cd php
 
 phpize
 
-./configure --enable-djonPhpExt
+./configure --enable-djonwrapper
 make
 
 
 zipfile="djondb_phpext_`uname`_`uname -m`.zip"
 
-zip $zipfile test.php modules/djonPhpExt.so djonwrapper.php
+zip $zipfile test.php modules/djonwrapper.so djonwrapper.php

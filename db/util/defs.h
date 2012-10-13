@@ -27,7 +27,7 @@
 #define _32BITS
 #endif
 
-#ifdef LINUX
+#ifndef WINDOWS
 #define __LONG64 long long
 #else
 #define __LONG64 __int64
