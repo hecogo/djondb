@@ -15,8 +15,9 @@ public class Loader {
         InputStream resourceAsStream = Loader.class.getResourceAsStream("/libdjon-javadriver.so");
         String libraryExtension = ".so";
         if (resourceAsStream == null) {
-            resourceAsStream = Loader.class.getResourceAsStream("/djon-javadriver.dll");
+            resourceAsStream = Loader.class.getResourceAsStream("/djonjavadriver.dll");
             libraryExtension = ".dll";
+			System.out.println("Resource as Stream dll: " + resourceAsStream);
         }
         if (resourceAsStream != null) {
             FileOutputStream fos = null;

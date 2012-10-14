@@ -1446,7 +1446,7 @@ constant_expr(pfilter_expressionParser ctx)
             	            	          val= new ConstantExpression((long)d);
 
             	            	    } else {
-            	            	         if (abs((__LONG64)d) == d) {
+            	            	         if (abs((long)d) == d) {
             	            	                val= new ConstantExpression((__LONG64)d);
 
             	            	         } else {

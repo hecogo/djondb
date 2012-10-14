@@ -222,7 +222,7 @@ static void SWIGUNUSED SWIG_JavaThrowException(JNIEnv *jenv, SWIG_JavaExceptionC
 
 
 #include "bsonarrayobj.h"
-#include "djondb/bson.h"
+#include "bson.h"
 #include "bsonobj.h"
 #include "bsonparser.h"
 #include "filterdefs.h"

@@ -5,7 +5,7 @@ include $(top_srcdir)/common.mk
 
 lib_LTLIBRARIES = libdjon-util.la
 libdjon_util_la_LDFLAGS = -static
-libdjon_util_la_LIBADD = -lX11 -lXss 
+libdjon_util_la_LIBADD = -lX11 -lXss -lsupc++
 if !MAC
    libdjon_util_la_LIBADD += -lrt -luuid
 endif
