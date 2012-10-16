@@ -1,5 +1,6 @@
 cp ../../bson/bsonarrayobj.h .
 cp ../../bson/bsondefs.h .
+cp ../../bson/bsoncontent.h .
 cp ../../bson/bson.h .
 cp ../../bson/bsonobj.h .
 cp ../../bson/bsonparser.h .
