@@ -1,12 +1,15 @@
 #ifndef DEFS_H_INCLUDED
 #define DEFS_H_INCLUDED
 
+#define LINUX
+/* 
 #if (defined _WIN32 | _WIN64)
 #define WINDOWS
 #endif
 #ifdef __linux
 #define LINUX
 #endif
+*/
 
 #ifndef WINDOWS
 #include "config.h"
