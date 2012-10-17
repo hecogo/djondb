@@ -39,7 +39,7 @@ libdjon_db_la_SOURCES = bplusindex.cpp \
 
 TESTS = test-db
 check_PROGRAMS = test-db
-test_db_LDADD = libdjon-db.la -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lX11 -lXss -lrt -luuid -lcpptest -lantlr3c
+test_db_LDADD = libdjon-db.la -ldjon-filesystem -ldjon-cache -ldjon-bson -ldjon-util -lrt -luuid -lcpptest -lantlr3c
 test_db_SOURCES = tests/main.cpp
 
 library_includedir = $(includedir)/djondb

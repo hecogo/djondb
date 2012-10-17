@@ -1157,7 +1157,7 @@ extern "C" {
 
 
 #include "bsonarrayobj.h"
-#include "djondb/bson.h"
+#include "bson.h"
 #include "bsonobj.h"
 #include "bsonparser.h"
 #include "filterdefs.h"
@@ -1381,7 +1381,7 @@ ZEND_NAMED_FUNCTION(_wrap_new_BSONObjVectorPtr__SWIG_1) {
   }
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[0]);
   arg1 = (std::vector< BSONObj * >::size_type) Z_LVAL_PP(args[0]);
   /*@SWIG@*/;
@@ -1488,7 +1488,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONObjVectorPtr_reserve) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (std::vector< BSONObj * >::size_type) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
@@ -1634,7 +1634,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONObjVectorPtr_get) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (int) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
@@ -1677,7 +1677,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONObjVectorPtr_set) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (int) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
@@ -1753,7 +1753,7 @@ ZEND_NAMED_FUNCTION(_wrap_new_StringVector__SWIG_1) {
   }
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[0]);
   arg1 = (std::vector< std::string >::size_type) Z_LVAL_PP(args[0]);
   /*@SWIG@*/;
@@ -1860,7 +1860,7 @@ ZEND_NAMED_FUNCTION(_wrap_StringVector_reserve) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (std::vector< std::string >::size_type) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
@@ -2006,7 +2006,7 @@ ZEND_NAMED_FUNCTION(_wrap_StringVector_get) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (int) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
@@ -2049,7 +2049,7 @@ ZEND_NAMED_FUNCTION(_wrap_StringVector_set) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (int) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
@@ -2257,7 +2257,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONArrayObj_get) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (int) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
@@ -2320,7 +2320,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONArrayObj_select) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
   if ((*args[1])->type==IS_NULL) {
     arg2 = (char *) 0;
   } else {
@@ -2503,7 +2503,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONObj_add__SWIG_0) {
   (&arg2)->assign(Z_STRVAL_PP(args[1]), Z_STRLEN_PP(args[1]));
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[2]);
   arg3 = (int) Z_LVAL_PP(args[2]);
   /*@SWIG@*/;
@@ -2538,7 +2538,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONObj_add__SWIG_1) {
   (&arg2)->assign(Z_STRVAL_PP(args[1]), Z_STRLEN_PP(args[1]));
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,52,CONVERT_FLOAT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,52,CONVERT_FLOAT_IN@*/
   convert_to_double_ex(args[2]);
   arg3 = (double) Z_DVAL_PP(args[2]);
   /*@SWIG@*/;
@@ -2573,7 +2573,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONObj_add__SWIG_2) {
   (&arg2)->assign(Z_STRVAL_PP(args[1]), Z_STRLEN_PP(args[1]));
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[2]);
   arg3 = (long) Z_LVAL_PP(args[2]);
   /*@SWIG@*/;
@@ -3314,7 +3314,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONObj_select) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
   if ((*args[1])->type==IS_NULL) {
     arg2 = (char *) 0;
   } else {
@@ -3577,7 +3577,7 @@ ZEND_NAMED_FUNCTION(_wrap_parseFilterOperator) {
   }
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
   if ((*args[0])->type==IS_NULL) {
     arg1 = (char *) 0;
   } else {
@@ -3608,13 +3608,13 @@ ZEND_NAMED_FUNCTION(_wrap_new_ParseException__SWIG_0) {
   }
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[0]);
   arg1 = (int) Z_LVAL_PP(args[0]);
   /*@SWIG@*/;
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
   if ((*args[1])->type==IS_NULL) {
     arg2 = (char *) 0;
   } else {
@@ -3777,7 +3777,7 @@ ZEND_NAMED_FUNCTION(_wrap_bson_splitSelect) {
   }
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
   if ((*args[0])->type==IS_NULL) {
     arg1 = (char *) 0;
   } else {
@@ -3809,7 +3809,7 @@ ZEND_NAMED_FUNCTION(_wrap_bson_subselect) {
   }
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
   if ((*args[0])->type==IS_NULL) {
     arg1 = (char *) 0;
   } else {
@@ -3819,7 +3819,7 @@ ZEND_NAMED_FUNCTION(_wrap_bson_subselect) {
   /*@SWIG@*/;
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,62,CONVERT_STRING_IN@*/
   if ((*args[1])->type==IS_NULL) {
     arg2 = (char *) 0;
   } else {
@@ -3882,7 +3882,7 @@ ZEND_NAMED_FUNCTION(_wrap_new_Connection__SWIG_1) {
   (&arg1)->assign(Z_STRVAL_PP(args[0]), Z_STRLEN_PP(args[0]));
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (int) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
@@ -4979,7 +4979,7 @@ ZEND_NAMED_FUNCTION(_wrap_ConnectionReference__references_set) {
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (int) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
@@ -5132,7 +5132,7 @@ ZEND_NAMED_FUNCTION(_wrap_ConnectionManager_getConnection__SWIG_1) {
   (&arg1)->assign(Z_STRVAL_PP(args[0]), Z_STRLEN_PP(args[0]));
   
   
-  /*@SWIG:/usr/local/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
+  /*@SWIG:/usr/share/swig/2.0.8/php/utils.i,7,CONVERT_INT_IN@*/
   convert_to_long_ex(args[1]);
   arg2 = (int) Z_LVAL_PP(args[1]);
   /*@SWIG@*/;
