@@ -44,22 +44,22 @@ public class ConnectionReference : IDisposable {
   public Connection _connection {
     set {
       djonwrapperPINVOKE.ConnectionReference__connection_set(swigCPtr, Connection.getCPtr(value));
-    }
+    } 
     get {
       IntPtr cPtr = djonwrapperPINVOKE.ConnectionReference__connection_get(swigCPtr);
       Connection ret = (cPtr == IntPtr.Zero) ? null : new Connection(cPtr, false);
       return ret;
-    }
+    } 
   }
 
   public int _references {
     set {
       djonwrapperPINVOKE.ConnectionReference__references_set(swigCPtr, value);
-    }
+    } 
     get {
       int ret = djonwrapperPINVOKE.ConnectionReference__references_get(swigCPtr);
       return ret;
-    }
+    } 
   }
 
   public ConnectionReference() : this(djonwrapperPINVOKE.new_ConnectionReference(), true) {

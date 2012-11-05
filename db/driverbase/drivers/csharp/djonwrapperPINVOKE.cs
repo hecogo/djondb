@@ -38,14 +38,14 @@ class djonwrapperPINVOKE {
     public static extern void SWIGRegisterExceptionCallbacks_djonwrapper(
                                 ExceptionDelegate applicationDelegate,
                                 ExceptionDelegate arithmeticDelegate,
-                                ExceptionDelegate divideByZeroDelegate,
-                                ExceptionDelegate indexOutOfRangeDelegate,
+                                ExceptionDelegate divideByZeroDelegate, 
+                                ExceptionDelegate indexOutOfRangeDelegate, 
                                 ExceptionDelegate invalidCastDelegate,
                                 ExceptionDelegate invalidOperationDelegate,
                                 ExceptionDelegate ioDelegate,
                                 ExceptionDelegate nullReferenceDelegate,
-                                ExceptionDelegate outOfMemoryDelegate,
-                                ExceptionDelegate overflowDelegate,
+                                ExceptionDelegate outOfMemoryDelegate, 
+                                ExceptionDelegate overflowDelegate, 
                                 ExceptionDelegate systemExceptionDelegate);
 
     [DllImport("djonwrapper", EntryPoint="SWIGRegisterExceptionArgumentCallbacks_djonwrapper")]
@@ -137,7 +137,7 @@ class djonwrapperPINVOKE {
           if (pendingException != null)
             pending = true;
         return pending;
-      }
+      } 
     }
 
     public static void Set(Exception e) {
