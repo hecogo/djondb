@@ -3,8 +3,8 @@
 
 #include "bson.h"
 #include "util.h"
-#include "connection.h"
-#include "connectionmanager.h"
+#include "djondbconnection.h"
+#include "djondbconnectionmanager.h"
 
 
 #endif // DJONDB_CLIENT_H_INCLUDED

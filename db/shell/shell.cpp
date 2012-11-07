@@ -72,7 +72,7 @@
 
 using namespace djondb;
 
-Connection* __djonConnection;
+DjondbConnection* __djonConnection;
 
 CircularQueue<std::string> _commands(10);
 
@@ -521,7 +521,7 @@ v8::Handle<v8::Value> connect(const v8::Arguments& args) {
 	if (args.Length() == 2) {
 		port = args[1]->Int32Value();	
 	}
-	__djonConnection = ConnectionManager::getConnection(server, port);
+	__djonConnection = DjondbConnectionManager::getConnection(server, port);
 	if (__djonConnection->open()) {
 		printf("Connected to %s\n", server.c_str());
 	} else {

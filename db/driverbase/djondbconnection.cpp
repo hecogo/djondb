@@ -16,7 +16,7 @@
 // this program will be open sourced and all its derivated work will be too.
 // *********************************************************************************************************************
 
-#include "connection.h"
+#include "djondbconnection.h"
 
 #include "networkinputstream.h"
 #include "networkoutputstream.h"
@@ -29,13 +29,13 @@
 #include "shownamespacescommand.h"
 #include "showdbscommand.h"
 #include "bsoninputstream.h"
-#include "connectionmanager.h"
+#include "djondbconnectionmanager.h"
 #include "util.h"
 #include "bson.h"
 
 using namespace djondb;
 
-Connection::Connection(std::string host)
+DjondbConnection::DjondbConnection(std::string host)
 {
 	_host = host;
 	_port = SERVER_PORT;
@@ -46,7 +46,7 @@ Connection::Connection(std::string host)
 	_logger = getLogger(NULL);
 }
 
-Connection::Connection(std::string host, int port)
+DjondbConnection::DjondbConnection(std::string host, int port)
 {
 	_host = host;
 	_port = port;
@@ -57,7 +57,7 @@ Connection::Connection(std::string host, int port)
 	_logger = getLogger(NULL);
 }
 
-Connection::Connection(const Connection& orig) {
+DjondbConnection::DjondbConnection(const DjondbConnection& orig) {
 	this->_host = orig._host;
 	this->_port = orig._port;
 	this->_inputStream = orig._inputStream;
@@ -67,13 +67,13 @@ Connection::Connection(const Connection& orig) {
 	_logger = getLogger(NULL);
 }
 
-Connection::~Connection()
+DjondbConnection::~DjondbConnection()
 {
 	internalClose();
 	delete _logger;
 }
 
-bool Connection::open() {
+bool DjondbConnection::open() {
 	if (_logger->isDebug()) _logger->debug("Openning connection");
 	_outputStream = new NetworkOutputStream();
 	int socket = _outputStream->open(_host.c_str(), _port);
@@ -81,7 +81,7 @@ bool Connection::open() {
 		_inputStream = new NetworkInputStream(socket);
 		_open = true;
 		_commandWriter = new CommandWriter(_outputStream);
-		if (_logger->isDebug()) _logger->debug("Connection opened");
+		if (_logger->isDebug()) _logger->debug("DjondbConnection opened");
 		return true;
 	} else {
 		delete _outputStream;
@@ -89,13 +89,13 @@ bool Connection::open() {
 	}
 }
 
-void Connection::close() { 
+void DjondbConnection::close() { 
 	if (_logger->isDebug()) _logger->debug("Closing connection");
-	ConnectionManager::releaseConnection(this);
+	DjondbConnectionManager::releaseConnection(this);
 	_open = false;
 }
 
-void Connection::internalClose() {
+void DjondbConnection::internalClose() {
 	if (_open) {
 		_inputStream->closeStream();
 		_outputStream->closeStream();
@@ -115,7 +115,7 @@ void Connection::internalClose() {
 	}
 }
 
-bool Connection::insert(const std::string& db, const std::string& ns, const std::string& json) {
+bool DjondbConnection::insert(const std::string& db, const std::string& ns, const std::string& json) {
 	if (_logger->isDebug()) _logger->debug(2, "Insert command. db: %s, ns: %s, json: %s", db.c_str(), ns.c_str(), json.c_str());
 	BSONObj* obj = BSONParser::parse(json);
 	bool result = insert(db, ns, *obj);
@@ -123,7 +123,7 @@ bool Connection::insert(const std::string& db, const std::string& ns, const std:
 	return result;
 }
 
-bool Connection::shutdown() const {
+bool DjondbConnection::shutdown() const {
 	if (_logger->isDebug()) _logger->debug(2, "Shutdown command");
 	ShutdownCommand cmd;
 
@@ -131,7 +131,7 @@ bool Connection::shutdown() const {
 	return true;
 }
 
-bool Connection::insert(const std::string& db, const std::string& ns, const BSONObj& bson) {
+bool DjondbConnection::insert(const std::string& db, const std::string& ns, const BSONObj& bson) {
 	if (_logger->isDebug()) _logger->debug(2, "Insert command. db: %s, ns: %s, bson: %s", db.c_str(), ns.c_str(), bson.toChar());
 	BSONObj obj(bson);
 	InsertCommand cmd;
@@ -161,7 +161,7 @@ bool Connection::insert(const std::string& db, const std::string& ns, const BSON
 	return true;
 }
 
-bool Connection::update(const std::string& db, const std::string& ns, const std::string& json) {
+bool DjondbConnection::update(const std::string& db, const std::string& ns, const std::string& json) {
 	if (_logger->isDebug()) _logger->debug(2, "Update command. db: %s, ns: %s, json: %s", db.c_str(), ns.c_str(), json.c_str());
 	BSONObj* obj = BSONParser::parse(json);
 	bool result = update(db, ns, *obj);
@@ -169,7 +169,7 @@ bool Connection::update(const std::string& db, const std::string& ns, const std:
 	return result;
 }
 
-bool Connection::update(const std::string& db, const std::string& ns, const BSONObj& obj) {
+bool DjondbConnection::update(const std::string& db, const std::string& ns, const BSONObj& obj) {
 	if (_logger->isDebug()) _logger->debug(2, "Update command. db: %s, ns: %s, bson: %s", db.c_str(), ns.c_str(), obj.toChar());
 	UpdateCommand cmd;
 	cmd.setBSON(obj);
@@ -182,7 +182,7 @@ bool Connection::update(const std::string& db, const std::string& ns, const BSON
 	return true;
 }
 
-std::vector<std::string>* Connection::dbs() const {
+std::vector<std::string>* DjondbConnection::dbs() const {
 	if (_logger->isDebug()) _logger->debug(2, "dbs command.");
 
 	ShowdbsCommand cmd;
@@ -195,7 +195,7 @@ std::vector<std::string>* Connection::dbs() const {
 	return result;
 }
 
-std::vector<std::string>* Connection::namespaces(const std::string& db) const {
+std::vector<std::string>* DjondbConnection::namespaces(const std::string& db) const {
 	if (_logger->isDebug()) _logger->debug(2, "namespaces command. db: %s", db.c_str());
 
 	ShownamespacesCommand cmd;
@@ -209,11 +209,11 @@ std::vector<std::string>* Connection::namespaces(const std::string& db) const {
 	return result;
 }
 
-BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& id) {
+BSONObj* DjondbConnection::findByKey(const std::string& db, const std::string& ns, const std::string& id) {
 	return findByKey(db, ns, "*", id);
 }
 
-BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, const std::string& select, const std::string& id) {
+BSONObj* DjondbConnection::findByKey(const std::string& db, const std::string& ns, const std::string& select, const std::string& id) {
 	if (_logger->isDebug()) _logger->debug("executing findByKey db: %s, ns: %s, select: %s, id: %s", db.c_str(), ns.c_str(), select.c_str(), id.c_str());
 
 	std::string filter = "$'_id' == '" + id + "'";
@@ -236,11 +236,11 @@ BSONObj* Connection::findByKey(const std::string& db, const std::string& ns, con
 	return bsonresult;
 }
 
-std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& filter) throw(ParseException) {
+std::vector<BSONObj*>* DjondbConnection::find(const std::string& db, const std::string& ns, const std::string& filter) throw(ParseException) {
 	return find(db, ns, "*", filter);
 }
 
-std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string& ns, const std::string& select, const std::string& filter) throw(ParseException) {
+std::vector<BSONObj*>* DjondbConnection::find(const std::string& db, const std::string& ns, const std::string& select, const std::string& filter) throw(ParseException) {
 	if (_logger->isDebug()) _logger->debug("executing find db: %s, ns: %s, select: %s, filter: %s", db.c_str(), ns.c_str(), select.c_str(), filter.c_str());
 
 	try {
@@ -263,16 +263,16 @@ std::vector<BSONObj*>* Connection::find(const std::string& db, const std::string
 	return result;
 }
 
-bool Connection::isOpen() const {
+bool DjondbConnection::isOpen() const {
 	return _open;
 }
 
-std::string Connection::host() const {
+std::string DjondbConnection::host() const {
 	return _host;
 }
 
 
-bool Connection::dropNamespace(const std::string& db, const std::string& ns) {
+bool DjondbConnection::dropNamespace(const std::string& db, const std::string& ns) {
 	DropnamespaceCommand cmd;
 
 	cmd.setDB(db);

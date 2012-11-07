@@ -8,16 +8,16 @@
 
 package djondb;
 
-public class Connection {
+public class DjondbConnection {
   private long swigCPtr;
   protected boolean swigCMemOwn;
 
-  public Connection(long cPtr, boolean cMemoryOwn) {
+  public DjondbConnection(long cPtr, boolean cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = cPtr;
   }
 
-  public static long getCPtr(Connection obj) {
+  public static long getCPtr(DjondbConnection obj) {
     return (obj == null) ? 0 : obj.swigCPtr;
   }
 
@@ -29,96 +29,96 @@ public class Connection {
     if (swigCPtr != 0) {
       if (swigCMemOwn) {
         swigCMemOwn = false;
-        djonwrapperJNI.delete_Connection(swigCPtr);
+        djonwrapperJNI.delete_DjondbConnection(swigCPtr);
       }
       swigCPtr = 0;
     }
   }
 
-  public Connection(String host) {
-    this(djonwrapperJNI.new_Connection__SWIG_0(host), true);
+  public DjondbConnection(String host) {
+    this(djonwrapperJNI.new_DjondbConnection__SWIG_0(host), true);
   }
 
-  public Connection(String host, int port) {
-    this(djonwrapperJNI.new_Connection__SWIG_1(host, port), true);
+  public DjondbConnection(String host, int port) {
+    this(djonwrapperJNI.new_DjondbConnection__SWIG_1(host, port), true);
   }
 
-  public Connection(Connection orig) {
-    this(djonwrapperJNI.new_Connection__SWIG_2(Connection.getCPtr(orig), orig), true);
+  public DjondbConnection(DjondbConnection orig) {
+    this(djonwrapperJNI.new_DjondbConnection__SWIG_2(DjondbConnection.getCPtr(orig), orig), true);
   }
 
   public boolean open() {
-    return djonwrapperJNI.Connection_open(swigCPtr, this);
+    return djonwrapperJNI.DjondbConnection_open(swigCPtr, this);
   }
 
   public void close() {
-    djonwrapperJNI.Connection_close(swigCPtr, this);
+    djonwrapperJNI.DjondbConnection_close(swigCPtr, this);
   }
 
   public void internalClose() {
-    djonwrapperJNI.Connection_internalClose(swigCPtr, this);
+    djonwrapperJNI.DjondbConnection_internalClose(swigCPtr, this);
   }
 
   public boolean isOpen() {
-    return djonwrapperJNI.Connection_isOpen(swigCPtr, this);
+    return djonwrapperJNI.DjondbConnection_isOpen(swigCPtr, this);
   }
 
   public boolean shutdown() {
-    return djonwrapperJNI.Connection_shutdown(swigCPtr, this);
+    return djonwrapperJNI.DjondbConnection_shutdown(swigCPtr, this);
   }
 
   public boolean insert(String db, String ns, String json) {
-    return djonwrapperJNI.Connection_insert__SWIG_0(swigCPtr, this, db, ns, json);
+    return djonwrapperJNI.DjondbConnection_insert__SWIG_0(swigCPtr, this, db, ns, json);
   }
 
   public boolean insert(String db, String ns, BSONObj obj) {
-    return djonwrapperJNI.Connection_insert__SWIG_1(swigCPtr, this, db, ns, BSONObj.getCPtr(obj), obj);
+    return djonwrapperJNI.DjondbConnection_insert__SWIG_1(swigCPtr, this, db, ns, BSONObj.getCPtr(obj), obj);
   }
 
   public BSONObj findByKey(String db, String ns, String select, String id) {
-    long cPtr = djonwrapperJNI.Connection_findByKey__SWIG_0(swigCPtr, this, db, ns, select, id);
+    long cPtr = djonwrapperJNI.DjondbConnection_findByKey__SWIG_0(swigCPtr, this, db, ns, select, id);
     return (cPtr == 0) ? null : new BSONObj(cPtr, false);
   }
 
   public BSONObj findByKey(String db, String ns, String id) {
-    long cPtr = djonwrapperJNI.Connection_findByKey__SWIG_1(swigCPtr, this, db, ns, id);
+    long cPtr = djonwrapperJNI.DjondbConnection_findByKey__SWIG_1(swigCPtr, this, db, ns, id);
     return (cPtr == 0) ? null : new BSONObj(cPtr, false);
   }
 
   public BSONObjVectorPtr find(String db, String ns, String select, String filter) {
-    long cPtr = djonwrapperJNI.Connection_find__SWIG_0(swigCPtr, this, db, ns, select, filter);
+    long cPtr = djonwrapperJNI.DjondbConnection_find__SWIG_0(swigCPtr, this, db, ns, select, filter);
     return (cPtr == 0) ? null : new BSONObjVectorPtr(cPtr, false);
   }
 
   public BSONObjVectorPtr find(String db, String ns, String filter) {
-    long cPtr = djonwrapperJNI.Connection_find__SWIG_1(swigCPtr, this, db, ns, filter);
+    long cPtr = djonwrapperJNI.DjondbConnection_find__SWIG_1(swigCPtr, this, db, ns, filter);
     return (cPtr == 0) ? null : new BSONObjVectorPtr(cPtr, false);
   }
 
   public boolean update(String db, String ns, String json) {
-    return djonwrapperJNI.Connection_update__SWIG_0(swigCPtr, this, db, ns, json);
+    return djonwrapperJNI.DjondbConnection_update__SWIG_0(swigCPtr, this, db, ns, json);
   }
 
   public boolean update(String db, String ns, BSONObj bson) {
-    return djonwrapperJNI.Connection_update__SWIG_1(swigCPtr, this, db, ns, BSONObj.getCPtr(bson), bson);
+    return djonwrapperJNI.DjondbConnection_update__SWIG_1(swigCPtr, this, db, ns, BSONObj.getCPtr(bson), bson);
   }
 
   public boolean dropNamespace(String db, String ns) {
-    return djonwrapperJNI.Connection_dropNamespace(swigCPtr, this, db, ns);
+    return djonwrapperJNI.DjondbConnection_dropNamespace(swigCPtr, this, db, ns);
   }
 
   public StringVector dbs() {
-    long cPtr = djonwrapperJNI.Connection_dbs(swigCPtr, this);
+    long cPtr = djonwrapperJNI.DjondbConnection_dbs(swigCPtr, this);
     return (cPtr == 0) ? null : new StringVector(cPtr, false);
   }
 
   public StringVector namespaces(String db) {
-    long cPtr = djonwrapperJNI.Connection_namespaces(swigCPtr, this, db);
+    long cPtr = djonwrapperJNI.DjondbConnection_namespaces(swigCPtr, this, db);
     return (cPtr == 0) ? null : new StringVector(cPtr, false);
   }
 
   public String host() {
-    return djonwrapperJNI.Connection_host(swigCPtr, this);
+    return djonwrapperJNI.DjondbConnection_host(swigCPtr, this);
   }
 
 }

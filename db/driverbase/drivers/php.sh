@@ -6,8 +6,7 @@ rm -rf php
 mkdir php
 
 OS=`uname -s`
-if [ OS eq 'Darwin' ];
-then
+if test "$OS" = "Darwin"; then
 cp ../../obj/usr/lib/libdjon-client.0.dylib ../../obj/usr/lib/libdjon-client.dylib php/
 else
 cp ../../obj/usr/lib/libdjon-client.la php/

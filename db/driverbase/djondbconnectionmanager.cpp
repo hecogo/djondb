@@ -16,9 +16,9 @@
 // this program will be open sourced and all its derivated work will be too.
 // *********************************************************************************************************************
 
-#include "connectionmanager.h"
+#include "djondbconnectionmanager.h"
 
-#include "connection.h"
+#include "djondbconnection.h"
 #include <sstream>
 
 #ifdef WINDOWS
@@ -26,21 +26,21 @@
 #endif
 using namespace djondb;
 
-std::map<std::string, ConnectionReference> ConnectionManager::_connections;
-bool ConnectionManager::__initialized = false;
+std::map<std::string, ConnectionReference> DjondbConnectionManager::_connections;
+bool DjondbConnectionManager::__initialized = false;
 
-ConnectionManager::ConnectionManager()
+DjondbConnectionManager::DjondbConnectionManager()
 {
 }
 
-ConnectionManager::~ConnectionManager()
+DjondbConnectionManager::~DjondbConnectionManager()
 {
 #ifdef WINDOWS
 	WSACleanup();
 #endif
 }
 
-Connection* ConnectionManager::getConnection(std::string host, int port) {
+DjondbConnection* DjondbConnectionManager::getConnection(std::string host, int port) {
 #ifdef WINDOWS
 	if (!__initialized) {
 		WORD wVersionRequested;
@@ -73,7 +73,7 @@ Connection* ConnectionManager::getConnection(std::string host, int port) {
         };
     }
 
-    Connection* conn = new Connection(host, port);
+    DjondbConnection* conn = new DjondbConnection(host, port);
     ConnectionReference ref;
     ref._references = 1;
     ref._connection = conn;
@@ -81,11 +81,11 @@ Connection* ConnectionManager::getConnection(std::string host, int port) {
     return conn;
 }
 
-Connection* ConnectionManager::getConnection(std::string host) {
+DjondbConnection* DjondbConnectionManager::getConnection(std::string host) {
 	return getConnection(host, SERVER_PORT);
 }
 
-void ConnectionManager::releaseConnection(Connection* conn) {
+void DjondbConnectionManager::releaseConnection(DjondbConnection* conn) {
     std::map<std::string, ConnectionReference>::iterator i = _connections.find(conn->host());
     if (i != _connections.end()) {
         ConnectionReference reference = i->second;

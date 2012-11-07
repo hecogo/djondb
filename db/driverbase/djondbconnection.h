@@ -1,5 +1,5 @@
-#ifndef CONNECTION_H
-#define CONNECTION_H
+#ifndef DJONDB_CONNECTION_H
+#define DJONDB_CONNECTION_H
 
 #include <string>
 #include <vector>
@@ -22,16 +22,16 @@ class Transaction;
 
 namespace djondb {
 
-    class LibraryExport Connection
+    class LibraryExport DjondbConnection
     {
         public:
             /** Default constructor */
-            Connection(std::string host);
-            Connection(std::string host, int port);
-            Connection(const Connection& orig);
+            DjondbConnection(std::string host);
+            DjondbConnection(std::string host, int port);
+            DjondbConnection(const DjondbConnection& orig);
 
             /** Default destructor */
-            virtual ~Connection();
+            virtual ~DjondbConnection();
 
             bool open();
             void close();
@@ -69,4 +69,4 @@ namespace djondb {
 
 }
 
-#endif // CONNECTION_H
+#endif // DJONDB_CONNECTION_H

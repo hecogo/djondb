@@ -31,7 +31,7 @@ class TestPerfomance {
 		}
 
 		void testPerfomance(int port, int top = 10000000) {
-			Connection* conn = ConnectionManager::getConnection("localhost", port);
+			DjondbConnection* conn = DjondbConnectionManager::getConnection("localhost", port);
 
 			if (!conn->open()) {
 				cout << "Not connected" << endl;

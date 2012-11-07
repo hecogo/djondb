@@ -72,7 +72,7 @@ class TestDriverBaseSuite: public Test::Suite {
 		}
 
 		void testDbsNamespaces() {
-			Connection* conn = ConnectionManager::getConnection("localhost");
+			DjondbConnection* conn = DjondbConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
 				cout << "\nCannot connect to localhost" << endl;
@@ -92,7 +92,7 @@ class TestDriverBaseSuite: public Test::Suite {
 		}
 
 		void testDropNamespace() {
-			Connection* conn = ConnectionManager::getConnection("localhost");
+			DjondbConnection* conn = DjondbConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
 				cout << "\nCannot connect to localhost" << endl;
@@ -113,7 +113,7 @@ class TestDriverBaseSuite: public Test::Suite {
 
 		void testInsertComplex() {
 			cout << "\nTesting complex" << endl;
-			Connection* conn = ConnectionManager::getConnection("localhost");
+			DjondbConnection* conn = DjondbConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
 				cout << "\nCould not connect to " << _host << endl;
@@ -184,7 +184,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			log->startTimeRecord();
 			__running = true;
 
-			Connection* conn = ConnectionManager::getConnection(std::string(_host));
+			DjondbConnection* conn = DjondbConnectionManager::getConnection(std::string(_host));
 
 			if (!conn->open()) {
 				cout << "\nCould not connect to " << _host << endl;
@@ -252,7 +252,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			cout << "\nStarting testFinds" << endl;
 
 			__running = true;
-			Connection* conn = ConnectionManager::getConnection("localhost");
+			DjondbConnection* conn = DjondbConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
 				cout << "\nCannot connect to localhost" << endl;
@@ -295,7 +295,7 @@ class TestDriverBaseSuite: public Test::Suite {
 
 			//delete id;
 
-			Connection* conn = ConnectionManager::getConnection("localhost");
+			DjondbConnection* conn = DjondbConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
 				cout << "\nCannot connect to localhost" << endl;
@@ -354,7 +354,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			log->startTimeRecord();
 			__running = true;
 
-			Connection* conn = ConnectionManager::getConnection("localhost");
+			DjondbConnection* conn = DjondbConnectionManager::getConnection("localhost");
 
 			if (!conn->open()) {
 				cout << "\nCannot connect to localhost" << endl;
