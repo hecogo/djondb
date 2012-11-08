@@ -41,13 +41,13 @@ public class ConnectionReference : IDisposable {
     }
   }
 
-  public Connection _connection {
+  public DjondbConnection _connection {
     set {
-      djonwrapperPINVOKE.ConnectionReference__connection_set(swigCPtr, Connection.getCPtr(value));
+      djonwrapperPINVOKE.ConnectionReference__connection_set(swigCPtr, DjondbConnection.getCPtr(value));
     } 
     get {
       IntPtr cPtr = djonwrapperPINVOKE.ConnectionReference__connection_get(swigCPtr);
-      Connection ret = (cPtr == IntPtr.Zero) ? null : new Connection(cPtr, false);
+      DjondbConnection ret = (cPtr == IntPtr.Zero) ? null : new DjondbConnection(cPtr, false);
       return ret;
     } 
   }

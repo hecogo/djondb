@@ -11,20 +11,20 @@ namespace djondb {
 using System;
 using System.Runtime.InteropServices;
 
-public class ConnectionManager : IDisposable {
+public class DjondbConnectionManager : IDisposable {
   private HandleRef swigCPtr;
   protected bool swigCMemOwn;
 
-  internal ConnectionManager(IntPtr cPtr, bool cMemoryOwn) {
+  internal DjondbConnectionManager(IntPtr cPtr, bool cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = new HandleRef(this, cPtr);
   }
 
-  internal static HandleRef getCPtr(ConnectionManager obj) {
+  internal static HandleRef getCPtr(DjondbConnectionManager obj) {
     return (obj == null) ? new HandleRef(null, IntPtr.Zero) : obj.swigCPtr;
   }
 
-  ~ConnectionManager() {
+  ~DjondbConnectionManager() {
     Dispose();
   }
 
@@ -33,7 +33,7 @@ public class ConnectionManager : IDisposable {
       if (swigCPtr.Handle != IntPtr.Zero) {
         if (swigCMemOwn) {
           swigCMemOwn = false;
-          djonwrapperPINVOKE.delete_ConnectionManager(swigCPtr);
+          djonwrapperPINVOKE.delete_DjondbConnectionManager(swigCPtr);
         }
         swigCPtr = new HandleRef(null, IntPtr.Zero);
       }
@@ -41,25 +41,25 @@ public class ConnectionManager : IDisposable {
     }
   }
 
-  public ConnectionManager() : this(djonwrapperPINVOKE.new_ConnectionManager(), true) {
+  public DjondbConnectionManager() : this(djonwrapperPINVOKE.new_DjondbConnectionManager(), true) {
   }
 
-  public static Connection getConnection(string host) {
-    IntPtr cPtr = djonwrapperPINVOKE.ConnectionManager_getConnection__SWIG_0(host);
-    Connection ret = (cPtr == IntPtr.Zero) ? null : new Connection(cPtr, false);
+  public static DjondbConnection getConnection(string host) {
+    IntPtr cPtr = djonwrapperPINVOKE.DjondbConnectionManager_getConnection__SWIG_0(host);
+    DjondbConnection ret = (cPtr == IntPtr.Zero) ? null : new DjondbConnection(cPtr, false);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
-  public static Connection getConnection(string host, int port) {
-    IntPtr cPtr = djonwrapperPINVOKE.ConnectionManager_getConnection__SWIG_1(host, port);
-    Connection ret = (cPtr == IntPtr.Zero) ? null : new Connection(cPtr, false);
+  public static DjondbConnection getConnection(string host, int port) {
+    IntPtr cPtr = djonwrapperPINVOKE.DjondbConnectionManager_getConnection__SWIG_1(host, port);
+    DjondbConnection ret = (cPtr == IntPtr.Zero) ? null : new DjondbConnection(cPtr, false);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
-  public static void releaseConnection(Connection conn) {
-    djonwrapperPINVOKE.ConnectionManager_releaseConnection(Connection.getCPtr(conn));
+  public static void releaseConnection(DjondbConnection conn) {
+    djonwrapperPINVOKE.DjondbConnectionManager_releaseConnection(DjondbConnection.getCPtr(conn));
   }
 
 }

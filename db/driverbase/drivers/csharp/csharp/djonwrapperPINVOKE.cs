@@ -495,68 +495,68 @@ class djonwrapperPINVOKE {
   [DllImport("djonwrapper", EntryPoint="CSharp_SERVER_PORT_get")]
   public static extern int SERVER_PORT_get();
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_new_Connection__SWIG_0")]
-  public static extern IntPtr new_Connection__SWIG_0(string jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_new_DjondbConnection__SWIG_0")]
+  public static extern IntPtr new_DjondbConnection__SWIG_0(string jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_new_Connection__SWIG_1")]
-  public static extern IntPtr new_Connection__SWIG_1(string jarg1, int jarg2);
+  [DllImport("djonwrapper", EntryPoint="CSharp_new_DjondbConnection__SWIG_1")]
+  public static extern IntPtr new_DjondbConnection__SWIG_1(string jarg1, int jarg2);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_new_Connection__SWIG_2")]
-  public static extern IntPtr new_Connection__SWIG_2(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_new_DjondbConnection__SWIG_2")]
+  public static extern IntPtr new_DjondbConnection__SWIG_2(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_delete_Connection")]
-  public static extern void delete_Connection(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_delete_DjondbConnection")]
+  public static extern void delete_DjondbConnection(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_open")]
-  public static extern bool Connection_open(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_open")]
+  public static extern bool DjondbConnection_open(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_close")]
-  public static extern void Connection_close(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_close")]
+  public static extern void DjondbConnection_close(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_internalClose")]
-  public static extern void Connection_internalClose(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_internalClose")]
+  public static extern void DjondbConnection_internalClose(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_isOpen")]
-  public static extern bool Connection_isOpen(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_isOpen")]
+  public static extern bool DjondbConnection_isOpen(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_shutdown")]
-  public static extern bool Connection_shutdown(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_shutdown")]
+  public static extern bool DjondbConnection_shutdown(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_insert__SWIG_0")]
-  public static extern bool Connection_insert__SWIG_0(HandleRef jarg1, string jarg2, string jarg3, string jarg4);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_insert__SWIG_0")]
+  public static extern bool DjondbConnection_insert__SWIG_0(HandleRef jarg1, string jarg2, string jarg3, string jarg4);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_insert__SWIG_1")]
-  public static extern bool Connection_insert__SWIG_1(HandleRef jarg1, string jarg2, string jarg3, HandleRef jarg4);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_insert__SWIG_1")]
+  public static extern bool DjondbConnection_insert__SWIG_1(HandleRef jarg1, string jarg2, string jarg3, HandleRef jarg4);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_findByKey__SWIG_0")]
-  public static extern IntPtr Connection_findByKey__SWIG_0(HandleRef jarg1, string jarg2, string jarg3, string jarg4, string jarg5);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_findByKey__SWIG_0")]
+  public static extern IntPtr DjondbConnection_findByKey__SWIG_0(HandleRef jarg1, string jarg2, string jarg3, string jarg4, string jarg5);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_findByKey__SWIG_1")]
-  public static extern IntPtr Connection_findByKey__SWIG_1(HandleRef jarg1, string jarg2, string jarg3, string jarg4);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_findByKey__SWIG_1")]
+  public static extern IntPtr DjondbConnection_findByKey__SWIG_1(HandleRef jarg1, string jarg2, string jarg3, string jarg4);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_find__SWIG_0")]
-  public static extern IntPtr Connection_find__SWIG_0(HandleRef jarg1, string jarg2, string jarg3, string jarg4, string jarg5);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_find__SWIG_0")]
+  public static extern IntPtr DjondbConnection_find__SWIG_0(HandleRef jarg1, string jarg2, string jarg3, string jarg4, string jarg5);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_find__SWIG_1")]
-  public static extern IntPtr Connection_find__SWIG_1(HandleRef jarg1, string jarg2, string jarg3, string jarg4);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_find__SWIG_1")]
+  public static extern IntPtr DjondbConnection_find__SWIG_1(HandleRef jarg1, string jarg2, string jarg3, string jarg4);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_update__SWIG_0")]
-  public static extern bool Connection_update__SWIG_0(HandleRef jarg1, string jarg2, string jarg3, string jarg4);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_update__SWIG_0")]
+  public static extern bool DjondbConnection_update__SWIG_0(HandleRef jarg1, string jarg2, string jarg3, string jarg4);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_update__SWIG_1")]
-  public static extern bool Connection_update__SWIG_1(HandleRef jarg1, string jarg2, string jarg3, HandleRef jarg4);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_update__SWIG_1")]
+  public static extern bool DjondbConnection_update__SWIG_1(HandleRef jarg1, string jarg2, string jarg3, HandleRef jarg4);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_dropNamespace")]
-  public static extern bool Connection_dropNamespace(HandleRef jarg1, string jarg2, string jarg3);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_dropNamespace")]
+  public static extern bool DjondbConnection_dropNamespace(HandleRef jarg1, string jarg2, string jarg3);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_dbs")]
-  public static extern IntPtr Connection_dbs(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_dbs")]
+  public static extern IntPtr DjondbConnection_dbs(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_namespaces")]
-  public static extern IntPtr Connection_namespaces(HandleRef jarg1, string jarg2);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_namespaces")]
+  public static extern IntPtr DjondbConnection_namespaces(HandleRef jarg1, string jarg2);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_Connection_host")]
-  public static extern string Connection_host(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnection_host")]
+  public static extern string DjondbConnection_host(HandleRef jarg1);
 
   [DllImport("djonwrapper", EntryPoint="CSharp_ConnectionReference__connection_set")]
   public static extern void ConnectionReference__connection_set(HandleRef jarg1, HandleRef jarg2);
@@ -576,20 +576,20 @@ class djonwrapperPINVOKE {
   [DllImport("djonwrapper", EntryPoint="CSharp_delete_ConnectionReference")]
   public static extern void delete_ConnectionReference(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_new_ConnectionManager")]
-  public static extern IntPtr new_ConnectionManager();
+  [DllImport("djonwrapper", EntryPoint="CSharp_new_DjondbConnectionManager")]
+  public static extern IntPtr new_DjondbConnectionManager();
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_delete_ConnectionManager")]
-  public static extern void delete_ConnectionManager(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_delete_DjondbConnectionManager")]
+  public static extern void delete_DjondbConnectionManager(HandleRef jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_ConnectionManager_getConnection__SWIG_0")]
-  public static extern IntPtr ConnectionManager_getConnection__SWIG_0(string jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnectionManager_getConnection__SWIG_0")]
+  public static extern IntPtr DjondbConnectionManager_getConnection__SWIG_0(string jarg1);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_ConnectionManager_getConnection__SWIG_1")]
-  public static extern IntPtr ConnectionManager_getConnection__SWIG_1(string jarg1, int jarg2);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnectionManager_getConnection__SWIG_1")]
+  public static extern IntPtr DjondbConnectionManager_getConnection__SWIG_1(string jarg1, int jarg2);
 
-  [DllImport("djonwrapper", EntryPoint="CSharp_ConnectionManager_releaseConnection")]
-  public static extern void ConnectionManager_releaseConnection(HandleRef jarg1);
+  [DllImport("djonwrapper", EntryPoint="CSharp_DjondbConnectionManager_releaseConnection")]
+  public static extern void DjondbConnectionManager_releaseConnection(HandleRef jarg1);
 }
 
 }

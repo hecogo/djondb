@@ -11,20 +11,20 @@ namespace djondb {
 using System;
 using System.Runtime.InteropServices;
 
-public class Connection : IDisposable {
+public class DjondbConnection : IDisposable {
   private HandleRef swigCPtr;
   protected bool swigCMemOwn;
 
-  internal Connection(IntPtr cPtr, bool cMemoryOwn) {
+  internal DjondbConnection(IntPtr cPtr, bool cMemoryOwn) {
     swigCMemOwn = cMemoryOwn;
     swigCPtr = new HandleRef(this, cPtr);
   }
 
-  internal static HandleRef getCPtr(Connection obj) {
+  internal static HandleRef getCPtr(DjondbConnection obj) {
     return (obj == null) ? new HandleRef(null, IntPtr.Zero) : obj.swigCPtr;
   }
 
-  ~Connection() {
+  ~DjondbConnection() {
     Dispose();
   }
 
@@ -33,7 +33,7 @@ public class Connection : IDisposable {
       if (swigCPtr.Handle != IntPtr.Zero) {
         if (swigCMemOwn) {
           swigCMemOwn = false;
-          djonwrapperPINVOKE.delete_Connection(swigCPtr);
+          djonwrapperPINVOKE.delete_DjondbConnection(swigCPtr);
         }
         swigCPtr = new HandleRef(null, IntPtr.Zero);
       }
@@ -41,114 +41,114 @@ public class Connection : IDisposable {
     }
   }
 
-  public Connection(string host) : this(djonwrapperPINVOKE.new_Connection__SWIG_0(host), true) {
+  public DjondbConnection(string host) : this(djonwrapperPINVOKE.new_DjondbConnection__SWIG_0(host), true) {
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
   }
 
-  public Connection(string host, int port) : this(djonwrapperPINVOKE.new_Connection__SWIG_1(host, port), true) {
+  public DjondbConnection(string host, int port) : this(djonwrapperPINVOKE.new_DjondbConnection__SWIG_1(host, port), true) {
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
   }
 
-  public Connection(Connection orig) : this(djonwrapperPINVOKE.new_Connection__SWIG_2(Connection.getCPtr(orig)), true) {
+  public DjondbConnection(DjondbConnection orig) : this(djonwrapperPINVOKE.new_DjondbConnection__SWIG_2(DjondbConnection.getCPtr(orig)), true) {
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
   }
 
   public bool open() {
-    bool ret = djonwrapperPINVOKE.Connection_open(swigCPtr);
+    bool ret = djonwrapperPINVOKE.DjondbConnection_open(swigCPtr);
     return ret;
   }
 
   public void close() {
-    djonwrapperPINVOKE.Connection_close(swigCPtr);
+    djonwrapperPINVOKE.DjondbConnection_close(swigCPtr);
   }
 
   public void internalClose() {
-    djonwrapperPINVOKE.Connection_internalClose(swigCPtr);
+    djonwrapperPINVOKE.DjondbConnection_internalClose(swigCPtr);
   }
 
   public bool isOpen() {
-    bool ret = djonwrapperPINVOKE.Connection_isOpen(swigCPtr);
+    bool ret = djonwrapperPINVOKE.DjondbConnection_isOpen(swigCPtr);
     return ret;
   }
 
   public bool shutdown() {
-    bool ret = djonwrapperPINVOKE.Connection_shutdown(swigCPtr);
+    bool ret = djonwrapperPINVOKE.DjondbConnection_shutdown(swigCPtr);
     return ret;
   }
 
   public bool insert(string db, string ns, string json) {
-    bool ret = djonwrapperPINVOKE.Connection_insert__SWIG_0(swigCPtr, db, ns, json);
+    bool ret = djonwrapperPINVOKE.DjondbConnection_insert__SWIG_0(swigCPtr, db, ns, json);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public bool insert(string db, string ns, BSONObj obj) {
-    bool ret = djonwrapperPINVOKE.Connection_insert__SWIG_1(swigCPtr, db, ns, BSONObj.getCPtr(obj));
+    bool ret = djonwrapperPINVOKE.DjondbConnection_insert__SWIG_1(swigCPtr, db, ns, BSONObj.getCPtr(obj));
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public BSONObj findByKey(string db, string ns, string select, string id) {
-    IntPtr cPtr = djonwrapperPINVOKE.Connection_findByKey__SWIG_0(swigCPtr, db, ns, select, id);
+    IntPtr cPtr = djonwrapperPINVOKE.DjondbConnection_findByKey__SWIG_0(swigCPtr, db, ns, select, id);
     BSONObj ret = (cPtr == IntPtr.Zero) ? null : new BSONObj(cPtr, false);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public BSONObj findByKey(string db, string ns, string id) {
-    IntPtr cPtr = djonwrapperPINVOKE.Connection_findByKey__SWIG_1(swigCPtr, db, ns, id);
+    IntPtr cPtr = djonwrapperPINVOKE.DjondbConnection_findByKey__SWIG_1(swigCPtr, db, ns, id);
     BSONObj ret = (cPtr == IntPtr.Zero) ? null : new BSONObj(cPtr, false);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public BSONObjVectorPtr find(string db, string ns, string select, string filter) {
-    IntPtr cPtr = djonwrapperPINVOKE.Connection_find__SWIG_0(swigCPtr, db, ns, select, filter);
+    IntPtr cPtr = djonwrapperPINVOKE.DjondbConnection_find__SWIG_0(swigCPtr, db, ns, select, filter);
     BSONObjVectorPtr ret = (cPtr == IntPtr.Zero) ? null : new BSONObjVectorPtr(cPtr, false);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public BSONObjVectorPtr find(string db, string ns, string filter) {
-    IntPtr cPtr = djonwrapperPINVOKE.Connection_find__SWIG_1(swigCPtr, db, ns, filter);
+    IntPtr cPtr = djonwrapperPINVOKE.DjondbConnection_find__SWIG_1(swigCPtr, db, ns, filter);
     BSONObjVectorPtr ret = (cPtr == IntPtr.Zero) ? null : new BSONObjVectorPtr(cPtr, false);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public bool update(string db, string ns, string json) {
-    bool ret = djonwrapperPINVOKE.Connection_update__SWIG_0(swigCPtr, db, ns, json);
+    bool ret = djonwrapperPINVOKE.DjondbConnection_update__SWIG_0(swigCPtr, db, ns, json);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public bool update(string db, string ns, BSONObj bson) {
-    bool ret = djonwrapperPINVOKE.Connection_update__SWIG_1(swigCPtr, db, ns, BSONObj.getCPtr(bson));
+    bool ret = djonwrapperPINVOKE.DjondbConnection_update__SWIG_1(swigCPtr, db, ns, BSONObj.getCPtr(bson));
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public bool dropNamespace(string db, string ns) {
-    bool ret = djonwrapperPINVOKE.Connection_dropNamespace(swigCPtr, db, ns);
+    bool ret = djonwrapperPINVOKE.DjondbConnection_dropNamespace(swigCPtr, db, ns);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public StringVector dbs() {
-    IntPtr cPtr = djonwrapperPINVOKE.Connection_dbs(swigCPtr);
+    IntPtr cPtr = djonwrapperPINVOKE.DjondbConnection_dbs(swigCPtr);
     StringVector ret = (cPtr == IntPtr.Zero) ? null : new StringVector(cPtr, false);
     return ret;
   }
 
   public StringVector namespaces(string db) {
-    IntPtr cPtr = djonwrapperPINVOKE.Connection_namespaces(swigCPtr, db);
+    IntPtr cPtr = djonwrapperPINVOKE.DjondbConnection_namespaces(swigCPtr, db);
     StringVector ret = (cPtr == IntPtr.Zero) ? null : new StringVector(cPtr, false);
     if (djonwrapperPINVOKE.SWIGPendingException.Pending) throw djonwrapperPINVOKE.SWIGPendingException.Retrieve();
     return ret;
   }
 
   public string host() {
-    string ret = djonwrapperPINVOKE.Connection_host(swigCPtr);
+    string ret = djonwrapperPINVOKE.DjondbConnection_host(swigCPtr);
     return ret;
   }
 

@@ -297,8 +297,8 @@ SWIGEXPORT void SWIGSTDCALL SWIGRegisterStringCallback_djonwrapper(SWIG_CSharpSt
 #include "bsonparser.h"
 #include "filterdefs.h"
 #include "bsonutil.h"
-#include "connection.h"
-#include "connectionmanager.h"
+#include "djondbconnection.h"
+#include "djondbconnectionmanager.h"
 #include "djondb_client.h"
 
 SWIGINTERN std::vector< BSONObj * > *new_std_vector_Sl_BSONObj_Sm__Sg___SWIG_2(int capacity){
@@ -2237,27 +2237,27 @@ SWIGEXPORT int SWIGSTDCALL CSharp_SERVER_PORT_get() {
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_new_Connection__SWIG_0(char * jarg1) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_new_DjondbConnection__SWIG_0(char * jarg1) {
   void * jresult ;
   std::string arg1 ;
-  djondb::Connection *result = 0 ;
+  djondb::DjondbConnection *result = 0 ;
   
   if (!jarg1) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
   }
   (&arg1)->assign(jarg1); 
-  result = (djondb::Connection *)new djondb::Connection(arg1);
+  result = (djondb::DjondbConnection *)new djondb::DjondbConnection(arg1);
   jresult = (void *)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_new_Connection__SWIG_1(char * jarg1, int jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_new_DjondbConnection__SWIG_1(char * jarg1, int jarg2) {
   void * jresult ;
   std::string arg1 ;
   int arg2 ;
-  djondb::Connection *result = 0 ;
+  djondb::DjondbConnection *result = 0 ;
   
   if (!jarg1) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
@@ -2265,97 +2265,97 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_new_Connection__SWIG_1(char * jarg1, int ja
   }
   (&arg1)->assign(jarg1); 
   arg2 = (int)jarg2; 
-  result = (djondb::Connection *)new djondb::Connection(arg1,arg2);
+  result = (djondb::DjondbConnection *)new djondb::DjondbConnection(arg1,arg2);
   jresult = (void *)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_new_Connection__SWIG_2(void * jarg1) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_new_DjondbConnection__SWIG_2(void * jarg1) {
   void * jresult ;
-  djondb::Connection *arg1 = 0 ;
-  djondb::Connection *result = 0 ;
+  djondb::DjondbConnection *arg1 = 0 ;
+  djondb::DjondbConnection *result = 0 ;
   
-  arg1 = (djondb::Connection *)jarg1;
+  arg1 = (djondb::DjondbConnection *)jarg1;
   if (!arg1) {
-    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "djondb::Connection const & type is null", 0);
+    SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "djondb::DjondbConnection const & type is null", 0);
     return 0;
   } 
-  result = (djondb::Connection *)new djondb::Connection((djondb::Connection const &)*arg1);
+  result = (djondb::DjondbConnection *)new djondb::DjondbConnection((djondb::DjondbConnection const &)*arg1);
   jresult = (void *)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_delete_Connection(void * jarg1) {
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+SWIGEXPORT void SWIGSTDCALL CSharp_delete_DjondbConnection(void * jarg1) {
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   delete arg1;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_open(void * jarg1) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_DjondbConnection_open(void * jarg1) {
   unsigned int jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   bool result;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   result = (bool)(arg1)->open();
   jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_Connection_close(void * jarg1) {
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+SWIGEXPORT void SWIGSTDCALL CSharp_DjondbConnection_close(void * jarg1) {
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   (arg1)->close();
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_Connection_internalClose(void * jarg1) {
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+SWIGEXPORT void SWIGSTDCALL CSharp_DjondbConnection_internalClose(void * jarg1) {
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   (arg1)->internalClose();
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_isOpen(void * jarg1) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_DjondbConnection_isOpen(void * jarg1) {
   unsigned int jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   bool result;
   
-  arg1 = (djondb::Connection *)jarg1; 
-  result = (bool)((djondb::Connection const *)arg1)->isOpen();
+  arg1 = (djondb::DjondbConnection *)jarg1; 
+  result = (bool)((djondb::DjondbConnection const *)arg1)->isOpen();
   jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_shutdown(void * jarg1) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_DjondbConnection_shutdown(void * jarg1) {
   unsigned int jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   bool result;
   
-  arg1 = (djondb::Connection *)jarg1; 
-  result = (bool)((djondb::Connection const *)arg1)->shutdown();
+  arg1 = (djondb::DjondbConnection *)jarg1; 
+  result = (bool)((djondb::DjondbConnection const *)arg1)->shutdown();
   jresult = result; 
   return jresult;
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_insert__SWIG_0(void * jarg1, char * jarg2, char * jarg3, char * jarg4) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_DjondbConnection_insert__SWIG_0(void * jarg1, char * jarg2, char * jarg3, char * jarg4) {
   unsigned int jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::string *arg3 = 0 ;
   std::string *arg4 = 0 ;
   bool result;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
@@ -2380,15 +2380,15 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_insert__SWIG_0(void * jarg
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_insert__SWIG_1(void * jarg1, char * jarg2, char * jarg3, void * jarg4) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_DjondbConnection_insert__SWIG_1(void * jarg1, char * jarg2, char * jarg3, void * jarg4) {
   unsigned int jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::string *arg3 = 0 ;
   BSONObj *arg4 = 0 ;
   bool result;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
@@ -2412,16 +2412,16 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_insert__SWIG_1(void * jarg
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_findByKey__SWIG_0(void * jarg1, char * jarg2, char * jarg3, char * jarg4, char * jarg5) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnection_findByKey__SWIG_0(void * jarg1, char * jarg2, char * jarg3, char * jarg4, char * jarg5) {
   void * jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::string *arg3 = 0 ;
   std::string *arg4 = 0 ;
   std::string *arg5 = 0 ;
   BSONObj *result = 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
@@ -2452,15 +2452,15 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_findByKey__SWIG_0(void * jarg1, 
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_findByKey__SWIG_1(void * jarg1, char * jarg2, char * jarg3, char * jarg4) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnection_findByKey__SWIG_1(void * jarg1, char * jarg2, char * jarg3, char * jarg4) {
   void * jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::string *arg3 = 0 ;
   std::string *arg4 = 0 ;
   BSONObj *result = 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
@@ -2485,16 +2485,16 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_findByKey__SWIG_1(void * jarg1, 
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_find__SWIG_0(void * jarg1, char * jarg2, char * jarg3, char * jarg4, char * jarg5) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnection_find__SWIG_0(void * jarg1, char * jarg2, char * jarg3, char * jarg4, char * jarg5) {
   void * jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::string *arg3 = 0 ;
   std::string *arg4 = 0 ;
   std::string *arg5 = 0 ;
   std::vector< BSONObj * > *result = 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
@@ -2533,15 +2533,15 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_find__SWIG_0(void * jarg1, char 
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_find__SWIG_1(void * jarg1, char * jarg2, char * jarg3, char * jarg4) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnection_find__SWIG_1(void * jarg1, char * jarg2, char * jarg3, char * jarg4) {
   void * jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::string *arg3 = 0 ;
   std::string *arg4 = 0 ;
   std::vector< BSONObj * > *result = 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
@@ -2574,15 +2574,15 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_find__SWIG_1(void * jarg1, char 
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_update__SWIG_0(void * jarg1, char * jarg2, char * jarg3, char * jarg4) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_DjondbConnection_update__SWIG_0(void * jarg1, char * jarg2, char * jarg3, char * jarg4) {
   unsigned int jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::string *arg3 = 0 ;
   std::string *arg4 = 0 ;
   bool result;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
@@ -2607,15 +2607,15 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_update__SWIG_0(void * jarg
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_update__SWIG_1(void * jarg1, char * jarg2, char * jarg3, void * jarg4) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_DjondbConnection_update__SWIG_1(void * jarg1, char * jarg2, char * jarg3, void * jarg4) {
   unsigned int jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::string *arg3 = 0 ;
   BSONObj *arg4 = 0 ;
   bool result;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
@@ -2639,14 +2639,14 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_update__SWIG_1(void * jarg
 }
 
 
-SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_dropNamespace(void * jarg1, char * jarg2, char * jarg3) {
+SWIGEXPORT unsigned int SWIGSTDCALL CSharp_DjondbConnection_dropNamespace(void * jarg1, char * jarg2, char * jarg3) {
   unsigned int jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::string *arg3 = 0 ;
   bool result;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
@@ -2665,44 +2665,44 @@ SWIGEXPORT unsigned int SWIGSTDCALL CSharp_Connection_dropNamespace(void * jarg1
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_dbs(void * jarg1) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnection_dbs(void * jarg1) {
   void * jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::vector< std::string > *result = 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
-  result = (std::vector< std::string > *)((djondb::Connection const *)arg1)->dbs();
+  arg1 = (djondb::DjondbConnection *)jarg1; 
+  result = (std::vector< std::string > *)((djondb::DjondbConnection const *)arg1)->dbs();
   jresult = (void *)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_Connection_namespaces(void * jarg1, char * jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnection_namespaces(void * jarg1, char * jarg2) {
   void * jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string *arg2 = 0 ;
   std::vector< std::string > *result = 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
+  arg1 = (djondb::DjondbConnection *)jarg1; 
   if (!jarg2) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
   }
   std::string arg2_str(jarg2);
   arg2 = &arg2_str; 
-  result = (std::vector< std::string > *)((djondb::Connection const *)arg1)->namespaces((std::string const &)*arg2);
+  result = (std::vector< std::string > *)((djondb::DjondbConnection const *)arg1)->namespaces((std::string const &)*arg2);
   jresult = (void *)result; 
   return jresult;
 }
 
 
-SWIGEXPORT char * SWIGSTDCALL CSharp_Connection_host(void * jarg1) {
+SWIGEXPORT char * SWIGSTDCALL CSharp_DjondbConnection_host(void * jarg1) {
   char * jresult ;
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   std::string result;
   
-  arg1 = (djondb::Connection *)jarg1; 
-  result = ((djondb::Connection const *)arg1)->host();
+  arg1 = (djondb::DjondbConnection *)jarg1; 
+  result = ((djondb::DjondbConnection const *)arg1)->host();
   jresult = SWIG_csharp_string_callback((&result)->c_str()); 
   return jresult;
 }
@@ -2710,10 +2710,10 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_Connection_host(void * jarg1) {
 
 SWIGEXPORT void SWIGSTDCALL CSharp_ConnectionReference__connection_set(void * jarg1, void * jarg2) {
   djondb::ConnectionReference *arg1 = (djondb::ConnectionReference *) 0 ;
-  djondb::Connection *arg2 = (djondb::Connection *) 0 ;
+  djondb::DjondbConnection *arg2 = (djondb::DjondbConnection *) 0 ;
   
   arg1 = (djondb::ConnectionReference *)jarg1; 
-  arg2 = (djondb::Connection *)jarg2; 
+  arg2 = (djondb::DjondbConnection *)jarg2; 
   if (arg1) (arg1)->_connection = arg2;
 }
 
@@ -2721,10 +2721,10 @@ SWIGEXPORT void SWIGSTDCALL CSharp_ConnectionReference__connection_set(void * ja
 SWIGEXPORT void * SWIGSTDCALL CSharp_ConnectionReference__connection_get(void * jarg1) {
   void * jresult ;
   djondb::ConnectionReference *arg1 = (djondb::ConnectionReference *) 0 ;
-  djondb::Connection *result = 0 ;
+  djondb::DjondbConnection *result = 0 ;
   
   arg1 = (djondb::ConnectionReference *)jarg1; 
-  result = (djondb::Connection *) ((arg1)->_connection);
+  result = (djondb::DjondbConnection *) ((arg1)->_connection);
   jresult = (void *)result; 
   return jresult;
 }
@@ -2770,45 +2770,45 @@ SWIGEXPORT void SWIGSTDCALL CSharp_delete_ConnectionReference(void * jarg1) {
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_new_ConnectionManager() {
+SWIGEXPORT void * SWIGSTDCALL CSharp_new_DjondbConnectionManager() {
   void * jresult ;
-  djondb::ConnectionManager *result = 0 ;
+  djondb::DjondbConnectionManager *result = 0 ;
   
-  result = (djondb::ConnectionManager *)new djondb::ConnectionManager();
+  result = (djondb::DjondbConnectionManager *)new djondb::DjondbConnectionManager();
   jresult = (void *)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_delete_ConnectionManager(void * jarg1) {
-  djondb::ConnectionManager *arg1 = (djondb::ConnectionManager *) 0 ;
+SWIGEXPORT void SWIGSTDCALL CSharp_delete_DjondbConnectionManager(void * jarg1) {
+  djondb::DjondbConnectionManager *arg1 = (djondb::DjondbConnectionManager *) 0 ;
   
-  arg1 = (djondb::ConnectionManager *)jarg1; 
+  arg1 = (djondb::DjondbConnectionManager *)jarg1; 
   delete arg1;
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_ConnectionManager_getConnection__SWIG_0(char * jarg1) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnectionManager_getConnection__SWIG_0(char * jarg1) {
   void * jresult ;
   std::string arg1 ;
-  djondb::Connection *result = 0 ;
+  djondb::DjondbConnection *result = 0 ;
   
   if (!jarg1) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
     return 0;
   }
   (&arg1)->assign(jarg1); 
-  result = (djondb::Connection *)djondb::ConnectionManager::getConnection(arg1);
+  result = (djondb::DjondbConnection *)djondb::DjondbConnectionManager::getConnection(arg1);
   jresult = (void *)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void * SWIGSTDCALL CSharp_ConnectionManager_getConnection__SWIG_1(char * jarg1, int jarg2) {
+SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnectionManager_getConnection__SWIG_1(char * jarg1, int jarg2) {
   void * jresult ;
   std::string arg1 ;
   int arg2 ;
-  djondb::Connection *result = 0 ;
+  djondb::DjondbConnection *result = 0 ;
   
   if (!jarg1) {
     SWIG_CSharpSetPendingExceptionArgument(SWIG_CSharpArgumentNullException, "null string", 0);
@@ -2816,17 +2816,17 @@ SWIGEXPORT void * SWIGSTDCALL CSharp_ConnectionManager_getConnection__SWIG_1(cha
   }
   (&arg1)->assign(jarg1); 
   arg2 = (int)jarg2; 
-  result = (djondb::Connection *)djondb::ConnectionManager::getConnection(arg1,arg2);
+  result = (djondb::DjondbConnection *)djondb::DjondbConnectionManager::getConnection(arg1,arg2);
   jresult = (void *)result; 
   return jresult;
 }
 
 
-SWIGEXPORT void SWIGSTDCALL CSharp_ConnectionManager_releaseConnection(void * jarg1) {
-  djondb::Connection *arg1 = (djondb::Connection *) 0 ;
+SWIGEXPORT void SWIGSTDCALL CSharp_DjondbConnectionManager_releaseConnection(void * jarg1) {
+  djondb::DjondbConnection *arg1 = (djondb::DjondbConnection *) 0 ;
   
-  arg1 = (djondb::Connection *)jarg1; 
-  djondb::ConnectionManager::releaseConnection(arg1);
+  arg1 = (djondb::DjondbConnection *)jarg1; 
+  djondb::DjondbConnectionManager::releaseConnection(arg1);
 }
 
 
