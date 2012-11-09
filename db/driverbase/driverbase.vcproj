@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="driverbase"
 	ProjectGUID="{8D4F581B-05E3-41D3-8EF3-DF77FE97E40B}"
 	Keyword="Win32Proj"
@@ -299,15 +299,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\connection.h"
-				>
-			</File>
-			<File
-				RelativePath=".\connectionmanager.h"
-				>
-			</File>
-			<File
 				RelativePath=".\djondb_client.h"
+				>
+			</File>
+			<File
+				RelativePath=".\djondbconnection.h"
+				>
+			</File>
+			<File
+				RelativePath=".\djondbconnectionmanager.h"
 				>
 			</File>
 		</Filter>
@@ -323,11 +323,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\connection.cpp"
+				RelativePath=".\djondbconnection.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\connectionmanager.cpp"
+				RelativePath=".\djondbconnectionmanager.cpp"
 				>
 			</File>
 		</Filter>
