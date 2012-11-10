@@ -31,11 +31,6 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "{app}\"; Permissions: everyone-modify
 
 [Files]
-
-[Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-
-[Files]
 Source: "C:\workspace\personal\djondb\db\windows\Release\csharpdriver.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\workspace\personal\djondb\db\windows\Release\djonwrapper.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\workspace\personal\djondb\db\windows\Release\msvcm90.dll"; DestDir: "{app}"; Flags: ignoreversion

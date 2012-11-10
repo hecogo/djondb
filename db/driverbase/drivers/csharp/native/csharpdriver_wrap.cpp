@@ -2790,7 +2790,7 @@ SWIGEXPORT void SWIGSTDCALL CSharp_delete_DjondbConnectionManager(void * jarg1) 
 
 SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnectionManager_getConnection__SWIG_0(char * jarg1) {
   void * jresult ;
-  cout << "1\n\n\n" << endl;
+  
   std::string arg1 ;
   djondb::DjondbConnection *result = 0 ;
   
