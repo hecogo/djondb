@@ -1855,10 +1855,10 @@ static swig_module_info swig_module = {swig_types, 32, 0, 0, 0, 0};
 
 /* -------- TYPES TABLE (END) -------- */
 
-#define SWIG_init    Init_djonwrapper
-#define SWIG_name    "Djonwrapper"
+#define SWIG_init    Init_djondb
+#define SWIG_name    "Djondb"
 
-static VALUE mDjonwrapper;
+static VALUE mDjondb;
 
 #define SWIG_RUBY_THREAD_BEGIN_BLOCK
 #define SWIG_RUBY_THREAD_END_BLOCK
@@ -4838,7 +4838,7 @@ swig_class SwigClassGC_VALUE;
 
 
 /*
-  Document-method: Djonwrapper::GC_VALUE.inspect
+  Document-method: Djondb::GC_VALUE.inspect
 
   call-seq:
     inspect -> VALUE
@@ -4866,7 +4866,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::GC_VALUE.to_s
+  Document-method: Djondb::GC_VALUE.to_s
 
   call-seq:
     to_s -> VALUE
@@ -4935,7 +4935,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::ConstIterator.dup
+  Document-method: Djondb::ConstIterator.dup
 
   call-seq:
     dup -> ConstIterator
@@ -4968,7 +4968,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::ConstIterator.inspect
+  Document-method: Djondb::ConstIterator.inspect
 
   call-seq:
     inspect -> VALUE
@@ -5001,7 +5001,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::ConstIterator.to_s
+  Document-method: Djondb::ConstIterator.to_s
 
   call-seq:
     to_s -> VALUE
@@ -5256,7 +5256,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::ConstIterator.==
+  Document-method: Djondb::ConstIterator.==
 
   call-seq:
     ==(x) -> bool
@@ -5300,7 +5300,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::ConstIterator.+
+  Document-method: Djondb::ConstIterator.+
 
   call-seq:
     +(n) -> ConstIterator
@@ -5351,7 +5351,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::ConstIterator.-
+  Document-method: Djondb::ConstIterator.-
 
   call-seq:
     -(n) -> ConstIterator
@@ -5518,7 +5518,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::Iterator.dup
+  Document-method: Djondb::Iterator.dup
 
   call-seq:
     dup -> Iterator
@@ -5773,7 +5773,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::Iterator.inspect
+  Document-method: Djondb::Iterator.inspect
 
   call-seq:
     inspect -> VALUE
@@ -5806,7 +5806,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::Iterator.to_s
+  Document-method: Djondb::Iterator.to_s
 
   call-seq:
     to_s -> VALUE
@@ -5839,7 +5839,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::Iterator.==
+  Document-method: Djondb::Iterator.==
 
   call-seq:
     ==(x) -> bool
@@ -5883,7 +5883,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::Iterator.+
+  Document-method: Djondb::Iterator.+
 
   call-seq:
     +(n) -> Iterator
@@ -5934,7 +5934,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::Iterator.-
+  Document-method: Djondb::Iterator.-
 
   call-seq:
     -(n) -> Iterator
@@ -6078,7 +6078,7 @@ swig_class SwigClassBSONObjVectorPtr;
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.dup
+  Document-method: Djondb::BSONObjVectorPtr.dup
 
   call-seq:
     dup -> BSONObjVectorPtr
@@ -6111,7 +6111,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.inspect
+  Document-method: Djondb::BSONObjVectorPtr.inspect
 
   call-seq:
     inspect -> VALUE
@@ -6144,7 +6144,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.to_a
+  Document-method: Djondb::BSONObjVectorPtr.to_a
 
   call-seq:
     to_a -> VALUE
@@ -6177,7 +6177,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.to_s
+  Document-method: Djondb::BSONObjVectorPtr.to_s
 
   call-seq:
     to_s -> VALUE
@@ -6210,7 +6210,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.slice
+  Document-method: Djondb::BSONObjVectorPtr.slice
 
   call-seq:
     slice(i, j) -> VALUE
@@ -6259,7 +6259,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.each
+  Document-method: Djondb::BSONObjVectorPtr.each
 
   call-seq:
     each -> BSONObjVectorPtr
@@ -6292,7 +6292,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.select
+  Document-method: Djondb::BSONObjVectorPtr.select
 
   call-seq:
     select -> BSONObjVectorPtr
@@ -6325,7 +6325,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.reject!
+  Document-method: Djondb::BSONObjVectorPtr.reject!
 
   call-seq:
     reject! -> BSONObjVectorPtr
@@ -6358,7 +6358,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.delete_at
+  Document-method: Djondb::BSONObjVectorPtr.delete_at
 
   call-seq:
     delete_at(i) -> VALUE
@@ -6433,7 +6433,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.pop
+  Document-method: Djondb::BSONObjVectorPtr.pop
 
   call-seq:
     pop -> VALUE
@@ -6466,7 +6466,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.push
+  Document-method: Djondb::BSONObjVectorPtr.push
 
   call-seq:
     push(e) -> value_type
@@ -6509,7 +6509,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.reject
+  Document-method: Djondb::BSONObjVectorPtr.reject
 
   call-seq:
     reject -> BSONObjVectorPtr
@@ -6542,7 +6542,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.at
+  Document-method: Djondb::BSONObjVectorPtr.at
 
   call-seq:
     at(i) -> VALUE
@@ -6583,7 +6583,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.[]
+  Document-method: Djondb::BSONObjVectorPtr.[]
 
   call-seq:
     [](i, j) -> VALUE
@@ -6759,7 +6759,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.[]=
+  Document-method: Djondb::BSONObjVectorPtr.[]=
 
   call-seq:
     []=(i, x) -> VALUE
@@ -6936,7 +6936,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.shift
+  Document-method: Djondb::BSONObjVectorPtr.shift
 
   call-seq:
     shift -> VALUE
@@ -6969,7 +6969,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.insert
+  Document-method: Djondb::BSONObjVectorPtr.insert
 
   call-seq:
     insert(pos, argc, ?) -> BSONObjVectorPtr
@@ -7019,7 +7019,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.unshift
+  Document-method: Djondb::BSONObjVectorPtr.unshift
 
   call-seq:
     unshift(argc, ?) -> BSONObjVectorPtr
@@ -7104,7 +7104,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.empty?
+  Document-method: Djondb::BSONObjVectorPtr.empty?
 
   call-seq:
     empty? -> bool
@@ -7137,7 +7137,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.size
+  Document-method: Djondb::BSONObjVectorPtr.size
 
   call-seq:
     size -> size_type
@@ -7170,7 +7170,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.clear
+  Document-method: Djondb::BSONObjVectorPtr.clear
 
   call-seq:
     clear
@@ -7256,7 +7256,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.begin
+  Document-method: Djondb::BSONObjVectorPtr.begin
 
   call-seq:
     begin -> iterator
@@ -7291,7 +7291,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.end
+  Document-method: Djondb::BSONObjVectorPtr.end
 
   call-seq:
     end -> iterator
@@ -7326,7 +7326,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.rbegin
+  Document-method: Djondb::BSONObjVectorPtr.rbegin
 
   call-seq:
     rbegin -> reverse_iterator
@@ -7361,7 +7361,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.rend
+  Document-method: Djondb::BSONObjVectorPtr.rend
 
   call-seq:
     rend -> reverse_iterator
@@ -7419,7 +7419,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.resize
+  Document-method: Djondb::BSONObjVectorPtr.resize
 
   call-seq:
     resize(new_size)
@@ -7458,7 +7458,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.erase
+  Document-method: Djondb::BSONObjVectorPtr.erase
 
   call-seq:
     erase(pos) -> iterator
@@ -7723,7 +7723,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.front
+  Document-method: Djondb::BSONObjVectorPtr.front
 
   call-seq:
     front -> value_type
@@ -7756,7 +7756,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.back
+  Document-method: Djondb::BSONObjVectorPtr.back
 
   call-seq:
     back -> value_type
@@ -7789,7 +7789,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.assign
+  Document-method: Djondb::BSONObjVectorPtr.assign
 
   call-seq:
     assign(n, x)
@@ -7835,7 +7835,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.resize
+  Document-method: Djondb::BSONObjVectorPtr.resize
 
   call-seq:
     resize(new_size)
@@ -7936,7 +7936,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.insert
+  Document-method: Djondb::BSONObjVectorPtr.insert
 
   call-seq:
     insert(pos, argc, ?) -> BSONObjVectorPtr
@@ -8135,7 +8135,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.reserve
+  Document-method: Djondb::BSONObjVectorPtr.reserve
 
   call-seq:
     reserve(n)
@@ -8173,7 +8173,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObjVectorPtr.capacity
+  Document-method: Djondb::BSONObjVectorPtr.capacity
 
   call-seq:
     capacity -> size_type
@@ -8213,7 +8213,7 @@ swig_class SwigClassStringVector;
 
 
 /*
-  Document-method: Djonwrapper::StringVector.dup
+  Document-method: Djondb::StringVector.dup
 
   call-seq:
     dup -> StringVector
@@ -8246,7 +8246,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.inspect
+  Document-method: Djondb::StringVector.inspect
 
   call-seq:
     inspect -> VALUE
@@ -8279,7 +8279,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.to_a
+  Document-method: Djondb::StringVector.to_a
 
   call-seq:
     to_a -> VALUE
@@ -8312,7 +8312,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.to_s
+  Document-method: Djondb::StringVector.to_s
 
   call-seq:
     to_s -> VALUE
@@ -8345,7 +8345,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.slice
+  Document-method: Djondb::StringVector.slice
 
   call-seq:
     slice(i, j) -> VALUE
@@ -8394,7 +8394,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.each
+  Document-method: Djondb::StringVector.each
 
   call-seq:
     each -> StringVector
@@ -8427,7 +8427,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.select
+  Document-method: Djondb::StringVector.select
 
   call-seq:
     select -> StringVector
@@ -8460,7 +8460,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.reject!
+  Document-method: Djondb::StringVector.reject!
 
   call-seq:
     reject! -> StringVector
@@ -8493,7 +8493,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.delete_at
+  Document-method: Djondb::StringVector.delete_at
 
   call-seq:
     delete_at(i) -> VALUE
@@ -8573,7 +8573,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.pop
+  Document-method: Djondb::StringVector.pop
 
   call-seq:
     pop -> VALUE
@@ -8606,7 +8606,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.push
+  Document-method: Djondb::StringVector.push
 
   call-seq:
     push(e) -> value_type
@@ -8654,7 +8654,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.reject
+  Document-method: Djondb::StringVector.reject
 
   call-seq:
     reject -> StringVector
@@ -8687,7 +8687,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.at
+  Document-method: Djondb::StringVector.at
 
   call-seq:
     at(i) -> VALUE
@@ -8728,7 +8728,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.[]
+  Document-method: Djondb::StringVector.[]
 
   call-seq:
     [](i, j) -> VALUE
@@ -8904,7 +8904,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.[]=
+  Document-method: Djondb::StringVector.[]=
 
   call-seq:
     []=(i, x) -> VALUE
@@ -9085,7 +9085,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.shift
+  Document-method: Djondb::StringVector.shift
 
   call-seq:
     shift -> VALUE
@@ -9118,7 +9118,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.insert
+  Document-method: Djondb::StringVector.insert
 
   call-seq:
     insert(pos, argc, ?) -> StringVector
@@ -9168,7 +9168,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.unshift
+  Document-method: Djondb::StringVector.unshift
 
   call-seq:
     unshift(argc, ?) -> StringVector
@@ -9253,7 +9253,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.empty?
+  Document-method: Djondb::StringVector.empty?
 
   call-seq:
     empty? -> bool
@@ -9286,7 +9286,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.size
+  Document-method: Djondb::StringVector.size
 
   call-seq:
     size -> size_type
@@ -9319,7 +9319,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.clear
+  Document-method: Djondb::StringVector.clear
 
   call-seq:
     clear
@@ -9405,7 +9405,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.begin
+  Document-method: Djondb::StringVector.begin
 
   call-seq:
     begin -> iterator
@@ -9440,7 +9440,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.end
+  Document-method: Djondb::StringVector.end
 
   call-seq:
     end -> iterator
@@ -9475,7 +9475,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.rbegin
+  Document-method: Djondb::StringVector.rbegin
 
   call-seq:
     rbegin -> reverse_iterator
@@ -9510,7 +9510,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.rend
+  Document-method: Djondb::StringVector.rend
 
   call-seq:
     rend -> reverse_iterator
@@ -9568,7 +9568,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.resize
+  Document-method: Djondb::StringVector.resize
 
   call-seq:
     resize(new_size)
@@ -9607,7 +9607,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.erase
+  Document-method: Djondb::StringVector.erase
 
   call-seq:
     erase(pos) -> iterator
@@ -9878,7 +9878,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.front
+  Document-method: Djondb::StringVector.front
 
   call-seq:
     front -> value_type
@@ -9911,7 +9911,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.back
+  Document-method: Djondb::StringVector.back
 
   call-seq:
     back -> value_type
@@ -9944,7 +9944,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.assign
+  Document-method: Djondb::StringVector.assign
 
   call-seq:
     assign(n, x)
@@ -9997,7 +9997,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.resize
+  Document-method: Djondb::StringVector.resize
 
   call-seq:
     resize(new_size)
@@ -10104,7 +10104,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.insert
+  Document-method: Djondb::StringVector.insert
 
   call-seq:
     insert(pos, argc, ?) -> StringVector
@@ -10315,7 +10315,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.reserve
+  Document-method: Djondb::StringVector.reserve
 
   call-seq:
     reserve(n)
@@ -10353,7 +10353,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.capacity
+  Document-method: Djondb::StringVector.capacity
 
   call-seq:
     capacity -> size_type
@@ -10410,7 +10410,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::StringVector.__delete__
+  Document-method: Djondb::StringVector.__delete__
 
   call-seq:
     __delete__(val) -> VALUE
@@ -10560,7 +10560,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONArrayObj.length
+  Document-method: Djondb::BSONArrayObj.length
 
   call-seq:
     length -> int
@@ -10681,7 +10681,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONArrayObj.select
+  Document-method: Djondb::BSONArrayObj.select
 
   call-seq:
     select(select) -> BSONArrayObj
@@ -10725,7 +10725,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONArrayObj.begin
+  Document-method: Djondb::BSONArrayObj.begin
 
   call-seq:
     begin -> iterator
@@ -10760,7 +10760,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONArrayObj.end
+  Document-method: Djondb::BSONArrayObj.end
 
   call-seq:
     end -> iterator
@@ -11860,7 +11860,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObj.select
+  Document-method: Djondb::BSONObj.select
 
   call-seq:
     select(sel) -> BSONObj
@@ -11962,7 +11962,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObj.begin
+  Document-method: Djondb::BSONObj.begin
 
   call-seq:
     begin -> const_iterator
@@ -11995,7 +11995,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObj.end
+  Document-method: Djondb::BSONObj.end
 
   call-seq:
     end -> const_iterator
@@ -12028,7 +12028,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObj.length
+  Document-method: Djondb::BSONObj.length
 
   call-seq:
     length -> int
@@ -12061,7 +12061,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::BSONObj.==
+  Document-method: Djondb::BSONObj.==
 
   call-seq:
     ==(obj) -> bool
@@ -12747,7 +12747,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::DjondbConnection.insert
+  Document-method: Djondb::DjondbConnection.insert
 
   call-seq:
     insert(db, ns, json) -> bool
@@ -13175,7 +13175,7 @@ fail:
 
 
 /*
-  Document-method: Djonwrapper::DjondbConnection.find
+  Document-method: Djondb::DjondbConnection.find
 
   call-seq:
     find(db, ns, select, filter) -> BSONObjVectorPtr
@@ -14452,11 +14452,11 @@ SWIG_PropagateClientData(void) {
 #ifdef __cplusplus
 extern "C"
 #endif
-SWIGEXPORT void Init_djonwrapper(void) {
+SWIGEXPORT void Init_djondb(void) {
   size_t i;
   
   SWIG_InitRuntime();
-  mDjonwrapper = rb_define_module("Djonwrapper");
+  mDjondb = rb_define_module("Djondb");
   
   SWIG_InitializeModule(0);
   for (i = 0; i < swig_module.size; i++) {
@@ -14465,7 +14465,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   
   SWIG_RubyInitializeTrackings();
   
-  SwigClassGC_VALUE.klass = rb_define_class_under(mDjonwrapper, "GC_VALUE", rb_cObject);
+  SwigClassGC_VALUE.klass = rb_define_class_under(mDjondb, "GC_VALUE", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_swig__GC_VALUE, (void *) &SwigClassGC_VALUE);
   rb_undef_alloc_func(SwigClassGC_VALUE.klass);
   rb_define_method(SwigClassGC_VALUE.klass, "inspect", VALUEFUNC(_wrap_GC_VALUE_inspect), -1);
@@ -14476,7 +14476,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   swig::GC_VALUE::initialize();
   
   
-  SwigClassConstIterator.klass = rb_define_class_under(mDjonwrapper, "ConstIterator", rb_cObject);
+  SwigClassConstIterator.klass = rb_define_class_under(mDjondb, "ConstIterator", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_swig__ConstIterator, (void *) &SwigClassConstIterator);
   rb_undef_alloc_func(SwigClassConstIterator.klass);
   rb_define_method(SwigClassConstIterator.klass, "value", VALUEFUNC(_wrap_ConstIterator_value), -1);
@@ -14492,7 +14492,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassConstIterator.destroy = (void (*)(void *)) free_swig_ConstIterator;
   SwigClassConstIterator.trackObjects = 0;
   
-  SwigClassIterator.klass = rb_define_class_under(mDjonwrapper, "Iterator", ((swig_class *) SWIGTYPE_p_swig__ConstIterator->clientdata)->klass);
+  SwigClassIterator.klass = rb_define_class_under(mDjondb, "Iterator", ((swig_class *) SWIGTYPE_p_swig__ConstIterator->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_swig__Iterator, (void *) &SwigClassIterator);
   rb_undef_alloc_func(SwigClassIterator.klass);
   rb_define_method(SwigClassIterator.klass, "value=", VALUEFUNC(_wrap_Iterator_valuee___), -1);
@@ -14508,7 +14508,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassIterator.destroy = (void (*)(void *)) free_swig_Iterator;
   SwigClassIterator.trackObjects = 0;
   
-  SwigClassBSONObjVectorPtr.klass = rb_define_class_under(mDjonwrapper, "BSONObjVectorPtr", rb_cObject);
+  SwigClassBSONObjVectorPtr.klass = rb_define_class_under(mDjondb, "BSONObjVectorPtr", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_std__vectorT_BSONObj_p_std__allocatorT_BSONObj_p_t_t, (void *) &SwigClassBSONObjVectorPtr);
   rb_define_alloc_func(SwigClassBSONObjVectorPtr.klass, _wrap_BSONObjVectorPtr_allocate);
   rb_define_method(SwigClassBSONObjVectorPtr.klass, "initialize", VALUEFUNC(_wrap_new_BSONObjVectorPtr), -1);
@@ -14553,7 +14553,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassBSONObjVectorPtr.destroy = (void (*)(void *)) free_std_vector_Sl_BSONObj_Sm__Sg_;
   SwigClassBSONObjVectorPtr.trackObjects = 0;
   
-  SwigClassStringVector.klass = rb_define_class_under(mDjonwrapper, "StringVector", rb_cObject);
+  SwigClassStringVector.klass = rb_define_class_under(mDjondb, "StringVector", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_std__vectorT_std__string_std__allocatorT_std__string_t_t, (void *) &SwigClassStringVector);
   rb_include_module(SwigClassStringVector.klass, rb_eval_string("Enumerable"));
   rb_define_alloc_func(SwigClassStringVector.klass, _wrap_StringVector_allocate);
@@ -14601,7 +14601,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassStringVector.destroy = (void (*)(void *)) free_std_vector_Sl_std_string_Sg_;
   SwigClassStringVector.trackObjects = 0;
   
-  SwigClassBSONArrayObj.klass = rb_define_class_under(mDjonwrapper, "BSONArrayObj", rb_cObject);
+  SwigClassBSONArrayObj.klass = rb_define_class_under(mDjondb, "BSONArrayObj", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_BSONArrayObj, (void *) &SwigClassBSONArrayObj);
   rb_define_alloc_func(SwigClassBSONArrayObj.klass, _wrap_BSONArrayObj_allocate);
   rb_define_method(SwigClassBSONArrayObj.klass, "initialize", VALUEFUNC(_wrap_new_BSONArrayObj), -1);
@@ -14616,7 +14616,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassBSONArrayObj.destroy = (void (*)(void *)) free_BSONArrayObj;
   SwigClassBSONArrayObj.trackObjects = 0;
   
-  SwigClassBSONObj.klass = rb_define_class_under(mDjonwrapper, "BSONObj", rb_cObject);
+  SwigClassBSONObj.klass = rb_define_class_under(mDjondb, "BSONObj", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_BSONObj, (void *) &SwigClassBSONObj);
   rb_define_alloc_func(SwigClassBSONObj.klass, _wrap_BSONObj_allocate);
   rb_define_method(SwigClassBSONObj.klass, "initialize", VALUEFUNC(_wrap_new_BSONObj), -1);
@@ -14643,7 +14643,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassBSONObj.destroy = (void (*)(void *)) free_BSONObj;
   SwigClassBSONObj.trackObjects = 0;
   
-  SwigClassBSONParser.klass = rb_define_class_under(mDjonwrapper, "BSONParser", rb_cObject);
+  SwigClassBSONParser.klass = rb_define_class_under(mDjondb, "BSONParser", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_BSONParser, (void *) &SwigClassBSONParser);
   rb_define_alloc_func(SwigClassBSONParser.klass, _wrap_BSONParser_allocate);
   rb_define_method(SwigClassBSONParser.klass, "initialize", VALUEFUNC(_wrap_new_BSONParser), -1);
@@ -14652,26 +14652,26 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassBSONParser.mark = 0;
   SwigClassBSONParser.destroy = (void (*)(void *)) free_BSONParser;
   SwigClassBSONParser.trackObjects = 0;
-  rb_define_const(mDjonwrapper, "FO_NONE", SWIG_From_int(static_cast< int >(FO_NONE)));
-  rb_define_const(mDjonwrapper, "FO_TOKEN", SWIG_From_int(static_cast< int >(FO_TOKEN)));
-  rb_define_const(mDjonwrapper, "FO_AND", SWIG_From_int(static_cast< int >(FO_AND)));
-  rb_define_const(mDjonwrapper, "FO_OR", SWIG_From_int(static_cast< int >(FO_OR)));
-  rb_define_const(mDjonwrapper, "FO_EQUALS", SWIG_From_int(static_cast< int >(FO_EQUALS)));
-  rb_define_const(mDjonwrapper, "FO_NOT_EQUALS", SWIG_From_int(static_cast< int >(FO_NOT_EQUALS)));
-  rb_define_const(mDjonwrapper, "FO_PARENTESIS_OPEN", SWIG_From_int(static_cast< int >(FO_PARENTESIS_OPEN)));
-  rb_define_const(mDjonwrapper, "FO_PARENTESIS_CLOSE", SWIG_From_int(static_cast< int >(FO_PARENTESIS_CLOSE)));
-  rb_define_const(mDjonwrapper, "FO_NOT", SWIG_From_int(static_cast< int >(FO_NOT)));
-  rb_define_const(mDjonwrapper, "FO_LESSTHAN", SWIG_From_int(static_cast< int >(FO_LESSTHAN)));
-  rb_define_const(mDjonwrapper, "FO_LESSEQUALTHAN", SWIG_From_int(static_cast< int >(FO_LESSEQUALTHAN)));
-  rb_define_const(mDjonwrapper, "FO_GREATERTHAN", SWIG_From_int(static_cast< int >(FO_GREATERTHAN)));
-  rb_define_const(mDjonwrapper, "FO_GREATEREQUALTHAN", SWIG_From_int(static_cast< int >(FO_GREATEREQUALTHAN)));
-  rb_define_const(mDjonwrapper, "ET_CONSTANT", SWIG_From_int(static_cast< int >(ET_CONSTANT)));
-  rb_define_const(mDjonwrapper, "ET_SIMPLE", SWIG_From_int(static_cast< int >(ET_SIMPLE)));
-  rb_define_const(mDjonwrapper, "ET_BINARY", SWIG_From_int(static_cast< int >(ET_BINARY)));
-  rb_define_const(mDjonwrapper, "ET_UNARY", SWIG_From_int(static_cast< int >(ET_UNARY)));
-  rb_define_module_function(mDjonwrapper, "parseFilterOperator", VALUEFUNC(_wrap_parseFilterOperator), -1);
+  rb_define_const(mDjondb, "FO_NONE", SWIG_From_int(static_cast< int >(FO_NONE)));
+  rb_define_const(mDjondb, "FO_TOKEN", SWIG_From_int(static_cast< int >(FO_TOKEN)));
+  rb_define_const(mDjondb, "FO_AND", SWIG_From_int(static_cast< int >(FO_AND)));
+  rb_define_const(mDjondb, "FO_OR", SWIG_From_int(static_cast< int >(FO_OR)));
+  rb_define_const(mDjondb, "FO_EQUALS", SWIG_From_int(static_cast< int >(FO_EQUALS)));
+  rb_define_const(mDjondb, "FO_NOT_EQUALS", SWIG_From_int(static_cast< int >(FO_NOT_EQUALS)));
+  rb_define_const(mDjondb, "FO_PARENTESIS_OPEN", SWIG_From_int(static_cast< int >(FO_PARENTESIS_OPEN)));
+  rb_define_const(mDjondb, "FO_PARENTESIS_CLOSE", SWIG_From_int(static_cast< int >(FO_PARENTESIS_CLOSE)));
+  rb_define_const(mDjondb, "FO_NOT", SWIG_From_int(static_cast< int >(FO_NOT)));
+  rb_define_const(mDjondb, "FO_LESSTHAN", SWIG_From_int(static_cast< int >(FO_LESSTHAN)));
+  rb_define_const(mDjondb, "FO_LESSEQUALTHAN", SWIG_From_int(static_cast< int >(FO_LESSEQUALTHAN)));
+  rb_define_const(mDjondb, "FO_GREATERTHAN", SWIG_From_int(static_cast< int >(FO_GREATERTHAN)));
+  rb_define_const(mDjondb, "FO_GREATEREQUALTHAN", SWIG_From_int(static_cast< int >(FO_GREATEREQUALTHAN)));
+  rb_define_const(mDjondb, "ET_CONSTANT", SWIG_From_int(static_cast< int >(ET_CONSTANT)));
+  rb_define_const(mDjondb, "ET_SIMPLE", SWIG_From_int(static_cast< int >(ET_SIMPLE)));
+  rb_define_const(mDjondb, "ET_BINARY", SWIG_From_int(static_cast< int >(ET_BINARY)));
+  rb_define_const(mDjondb, "ET_UNARY", SWIG_From_int(static_cast< int >(ET_UNARY)));
+  rb_define_module_function(mDjondb, "parseFilterOperator", VALUEFUNC(_wrap_parseFilterOperator), -1);
   
-  SwigClassParseException.klass = rb_define_class_under(mDjonwrapper, "ParseException", rb_eRuntimeError);
+  SwigClassParseException.klass = rb_define_class_under(mDjondb, "ParseException", rb_eRuntimeError);
   SWIG_TypeClientData(SWIGTYPE_p_ParseException, (void *) &SwigClassParseException);
   rb_define_alloc_func(SwigClassParseException.klass, _wrap_ParseException_allocate);
   rb_define_method(SwigClassParseException.klass, "initialize", VALUEFUNC(_wrap_new_ParseException), -1);
@@ -14680,11 +14680,11 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassParseException.mark = 0;
   SwigClassParseException.destroy = (void (*)(void *)) free_ParseException;
   SwigClassParseException.trackObjects = 0;
-  rb_define_module_function(mDjonwrapper, "bson_splitSelect", VALUEFUNC(_wrap_bson_splitSelect), -1);
-  rb_define_module_function(mDjonwrapper, "bson_subselect", VALUEFUNC(_wrap_bson_subselect), -1);
-  rb_define_const(mDjonwrapper, "SERVER_PORT", SWIG_From_int(static_cast< int >(1243)));
+  rb_define_module_function(mDjondb, "bson_splitSelect", VALUEFUNC(_wrap_bson_splitSelect), -1);
+  rb_define_module_function(mDjondb, "bson_subselect", VALUEFUNC(_wrap_bson_subselect), -1);
+  rb_define_const(mDjondb, "SERVER_PORT", SWIG_From_int(static_cast< int >(1243)));
   
-  SwigClassDjondbConnection.klass = rb_define_class_under(mDjonwrapper, "DjondbConnection", rb_cObject);
+  SwigClassDjondbConnection.klass = rb_define_class_under(mDjondb, "DjondbConnection", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_djondb__DjondbConnection, (void *) &SwigClassDjondbConnection);
   rb_define_alloc_func(SwigClassDjondbConnection.klass, _wrap_DjondbConnection_allocate);
   rb_define_method(SwigClassDjondbConnection.klass, "initialize", VALUEFUNC(_wrap_new_DjondbConnection), -1);
@@ -14705,7 +14705,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassDjondbConnection.destroy = (void (*)(void *)) free_djondb_DjondbConnection;
   SwigClassDjondbConnection.trackObjects = 0;
   
-  SwigClassConnectionReference.klass = rb_define_class_under(mDjonwrapper, "ConnectionReference", rb_cObject);
+  SwigClassConnectionReference.klass = rb_define_class_under(mDjondb, "ConnectionReference", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_djondb__ConnectionReference, (void *) &SwigClassConnectionReference);
   rb_define_alloc_func(SwigClassConnectionReference.klass, _wrap_ConnectionReference_allocate);
   rb_define_method(SwigClassConnectionReference.klass, "initialize", VALUEFUNC(_wrap_new_ConnectionReference), -1);
@@ -14717,7 +14717,7 @@ SWIGEXPORT void Init_djonwrapper(void) {
   SwigClassConnectionReference.destroy = (void (*)(void *)) free_djondb_ConnectionReference;
   SwigClassConnectionReference.trackObjects = 0;
   
-  SwigClassDjondbConnectionManager.klass = rb_define_class_under(mDjonwrapper, "DjondbConnectionManager", rb_cObject);
+  SwigClassDjondbConnectionManager.klass = rb_define_class_under(mDjondb, "DjondbConnectionManager", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_djondb__DjondbConnectionManager, (void *) &SwigClassDjondbConnectionManager);
   rb_define_alloc_func(SwigClassDjondbConnectionManager.klass, _wrap_DjondbConnectionManager_allocate);
   rb_define_method(SwigClassDjondbConnectionManager.klass, "initialize", VALUEFUNC(_wrap_new_DjondbConnectionManager), -1);
