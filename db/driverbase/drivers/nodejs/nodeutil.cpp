@@ -1,12 +1,12 @@
 /*
  * =====================================================================================
  *
- *       Filename:  bsonobj.cpp
+ *       Filename:  nodeutil.cpp
  *
  *    Description:  
  *
  *        Version:  1.0
- *        Created:  11/08/2012 11:18:12 PM
+ *        Created:  11/12/2012 08:41:23 PM
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -24,16 +24,8 @@
  * this program will be open sourced and all its derivated work will be too.
  * =====================================================================================
  */
+#include "nodeutil.h"
 
-#define BUILDING_NODE_EXTENSION
-#include <node.h>
-#include "bsonobj.h"
-
-using namespace v8;
-
-void InitAll(Handle<Object> target) {
-	  BSONObj::Init(target);
-}
-
-NODE_MODULE(bsonobj, InitAll)
+std::string ToCString(const v8::String::Utf8Value& value) {
+	return *value ? std::string(*value) : "<string conversion failed>";
 }

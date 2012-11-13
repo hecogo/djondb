@@ -27,13 +27,14 @@
 
 #define BUILDING_NODE_EXTENSION
 #include <node.h>
-#include "bsonobj.h"
+#include "wrapconnection.h"
+#include "wrapconnectionmanager.h"
 
 using namespace v8;
 
 void InitAll(Handle<Object> target) {
-	  BSONObj::Init(target);
+	  WrapConnection::Init(target);
+	  WrapConnectionManager::Init(target);
 }
 
-NODE_MODULE(bsonobj, InitAll)
-}
+NODE_MODULE(djondb, InitAll)

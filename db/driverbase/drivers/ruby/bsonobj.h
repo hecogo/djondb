@@ -1,8 +1,8 @@
 #ifndef BSONOBJ_H
 #define BSONOBJ_H
 
+#include "bsoncontent.h"
 #include "bsondefs.h"
-#include <node.h>
 #include <map>
 #include <string>
 #include <boost/shared_ptr.hpp>
@@ -57,6 +57,11 @@ class BSONObj
 		  bool operator ==(const BSONObj& obj) const;
 		  bool operator !=(const BSONObj& obj) const;
 
+    protected:
+	 private:
+		  void fillContent(std::string kkey, BSONTYPE ttype, void* vval);
+	 private:
+		  std::map<std::string, BSONContent* > _elements;
 };
 
 #endif // BSONOBJ_H
