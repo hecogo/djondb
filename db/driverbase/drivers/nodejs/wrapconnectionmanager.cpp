@@ -72,13 +72,9 @@ Handle<Value> WrapConnectionManager::getConnection(const v8::Arguments& args) {
 		con = DjondbConnectionManager::getConnection(host);
 	}
 
-	Handle<Object> result = WrapConnection::NewInstance(args);
-	v8::Handle<v8::Function> setConnection = v8::Handle<v8::Function>::Cast(result->Get(v8::String::New("setConnection")));
+	Handle<Object> result = WrapConnection::NewInstance(con);
 
-	scope.Close(setConnection->Call(JSON, 1, &object));
-	obj->setConnection(con);
-
-	return v8::Undefined();//scope.Close(result);
+	return scope.Close(result);
 }
 
 Handle<Value> WrapConnectionManager::releaseConnection(const v8::Arguments& args) {

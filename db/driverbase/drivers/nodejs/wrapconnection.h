@@ -10,7 +10,7 @@ class WrapConnection: public node::ObjectWrap
 {
 	public:
 		static void Init(v8::Handle<v8::Object> target);
-		static v8::Handle<v8::Object> NewInstance(const v8::Arguments& args);
+		static v8::Handle<v8::Object> NewInstance(djondb::DjondbConnection* con);
 
 		WrapConnection();
 		~WrapConnection();

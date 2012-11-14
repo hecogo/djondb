@@ -77,7 +77,7 @@ WrapConnection::~WrapConnection() {}
 
 void WrapConnection::Init(Handle<Object> target) {
 	//Prepare constructor template
-	Local<FunctionTemplate> tpl = FunctionTemplate::New();
+	Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
 	tpl->SetClassName(String::NewSymbol("WrapConnection"));
 	tpl->InstanceTemplate()->SetInternalFieldCount(1);
 	//Prototype
@@ -107,24 +107,31 @@ void WrapConnection::Init(Handle<Object> target) {
 	tpl->PrototypeTemplate()->Set(String::NewSymbol("host"),
 			FunctionTemplate::New(host)->GetFunction());
 
-	//target->Set(String::NewSymbol("WrapConnection"), constructor);
 	constructor = Persistent<Function>::New(tpl->GetFunction());
+	//target->Set(String::NewSymbol("WrapConnection"), constructor);
 }
 
 Handle<Value> WrapConnection::New(const Arguments& args) {
 	HandleScope scope;
 
 	WrapConnection* obj = new WrapConnection();
+	
+	Local<External> external = Local<External>::Cast(args[0]);
+
+	DjondbConnection* con = (DjondbConnection*)external->Value();
+	obj->setConnection(con);
 	obj->Wrap(args.This());
 
 	return args.This();
 }
 
-Handle<Object> WrapConnection::NewInstance(const Arguments& args) {
+Handle<Object> WrapConnection::NewInstance(DjondbConnection* con) {
 	HandleScope scope;
 
 	const unsigned argc = 1;
-	Handle<Value> argv[argc] = { args[0] };
+	Handle<External> external = External::New(con);
+
+	Handle<Value> argv[argc] = { external };
 	Local<Object> instance = constructor->NewInstance(argc, argv);
 
 	return scope.Close(instance);
