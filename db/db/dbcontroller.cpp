@@ -260,7 +260,7 @@ void DBController::deleteRecord(char* db, char* ns, const std::string& documentI
 
 	BSONObj indexBSON;
 	indexBSON.add("_id", documentId);
-	Index* index = impl->find(indexBSON);
+	Index* index = impl->find(&indexBSON);
 	if (index != NULL) {
 
 		// TODO check the revision id
@@ -290,7 +290,7 @@ void DBController::updateIndex(char* db, char* ns, BSONObj* bson, long filePos) 
 
 	BSONObj indexBSON;
 	indexBSON.add("_id", bson->getString("_id"));
-	Index* index = impl->find(indexBSON);
+	Index* index = impl->find(&indexBSON);
 
 	index->posData = filePos;
 

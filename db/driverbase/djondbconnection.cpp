@@ -132,7 +132,7 @@ bool DjondbConnection::shutdown() const {
 }
 
 bool DjondbConnection::insert(const std::string& db, const std::string& ns, const BSONObj& bson) {
-	if (_logger->isDebug()) _logger->debug(2, "Insert command. db: %s, ns: %s, bson: %s", db.c_str(), ns.c_str(), bson.toChar());
+	if (_logger->isDebug()) _logger->debug(2, "Insert command. db: %s, ns: %s", db.c_str(), ns.c_str());
 	BSONObj obj(bson);
 	InsertCommand cmd;
 	cmd.setDB(db);
@@ -162,7 +162,7 @@ bool DjondbConnection::insert(const std::string& db, const std::string& ns, cons
 }
 
 bool DjondbConnection::update(const std::string& db, const std::string& ns, const std::string& json) {
-	if (_logger->isDebug()) _logger->debug(2, "Update command. db: %s, ns: %s, json: %s", db.c_str(), ns.c_str(), json.c_str());
+	if (_logger->isDebug()) _logger->debug(2, "Update command. db: %s, ns: %s", db.c_str(), ns.c_str());
 	BSONObj* obj = BSONParser::parse(json);
 	bool result = update(db, ns, *obj);
 	delete obj;
@@ -170,7 +170,7 @@ bool DjondbConnection::update(const std::string& db, const std::string& ns, cons
 }
 
 bool DjondbConnection::update(const std::string& db, const std::string& ns, const BSONObj& obj) {
-	if (_logger->isDebug()) _logger->debug(2, "Update command. db: %s, ns: %s, bson: %s", db.c_str(), ns.c_str(), obj.toChar());
+	if (_logger->isDebug()) _logger->debug(2, "Update command. db: %s, ns: %s", db.c_str(), ns.c_str());
 	UpdateCommand cmd;
 	cmd.setBSON(obj);
 	cmd.setDB(db);

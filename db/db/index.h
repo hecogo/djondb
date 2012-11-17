@@ -24,7 +24,7 @@ class IndexAlgorithm {
 
 		virtual ~IndexAlgorithm() {};
 		virtual void add(const BSONObj& elem, std::string documentId, long filePos, long indexPos) = 0;
-		virtual Index* find(const BSONObj& elem) = 0;
+		virtual Index* find(BSONObj* const elem) = 0;
 		virtual void remove(const BSONObj& elem) = 0;
 		virtual std::list<Index*> find(FilterParser* parser) = 0;
 
