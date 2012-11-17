@@ -3412,7 +3412,7 @@ ZEND_NAMED_FUNCTION(_wrap_BSONObj_toChar) {
     }
   }
   if(!arg1) SWIG_PHP_Error(E_ERROR, "this pointer is NULL");
-  result = (char *)((BSONObj const *)arg1)->toChar();
+  result = (char *)(arg1)->toChar();
   {
     if(!result) {
       ZVAL_NULL(return_value);

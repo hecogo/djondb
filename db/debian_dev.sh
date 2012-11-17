@@ -1,5 +1,12 @@
 #!/bin/sh
 
+while getopts j:d: o
+   do case "$o" in
+		d)  DIR="$OPTARG";;
+		\?)  echo "Usage: $0 -d dist_dir" && exit 1;;
+	esac
+done
+
 ## find packages
 ## dpkg -S 
 
@@ -18,3 +25,8 @@ lintian djondb_dev.deb
 
 debfile="djondb_dev_`uname`_`uname -i`.deb"
 mv djondb_dev.deb $debfile
+
+if [ ! -z "${DIR}" ]; 
+then
+	cp $debfile $DIR
+fi

@@ -1384,7 +1384,7 @@ SWIGEXPORT jstring JNICALL Java_djondb_djonwrapperJNI_BSONObj_1toChar(JNIEnv *je
   (void)jcls;
   (void)jarg1_;
   arg1 = *(BSONObj **)&jarg1; 
-  result = (char *)((BSONObj const *)arg1)->toChar();
+  result = (char *)(arg1)->toChar();
   if (result) jresult = jenv->NewStringUTF((const char *)result);
   return jresult;
 }

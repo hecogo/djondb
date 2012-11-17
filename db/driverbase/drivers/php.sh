@@ -1,5 +1,12 @@
 #!/bin/sh
 
+while getopts d: o
+   do case "$o" in
+		d) DIR=$2;;
+		\?)  echo "Usage: $0 -d dist_dir" && exit 1;;
+	esac
+done
+
 sh update.sh
 
 rm -rf php
@@ -26,3 +33,8 @@ make
 zipfile="djondb_phpext_`uname`_`uname -m`.zip"
 
 zip $zipfile test.php modules/djonwrapper.so djonwrapper.php
+
+if [ ! -z "${DIR}" ]; 
+then
+	cp $zipfile $DIR
+fi
