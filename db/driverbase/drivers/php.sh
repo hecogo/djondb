@@ -1,6 +1,6 @@
 #!/bin/sh
 
-while getopts d: o
+while getopts j:d: o
    do case "$o" in
 		d) DIR=$2;;
 		\?)  echo "Usage: $0 -d dist_dir" && exit 1;;
