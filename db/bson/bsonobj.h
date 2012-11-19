@@ -5,7 +5,6 @@
 #include "bsondefs.h"
 #include <map>
 #include <string>
-#include <boost/shared_ptr.hpp>
 #include <string.h>
 #include "bsonarrayobj.h"
 
