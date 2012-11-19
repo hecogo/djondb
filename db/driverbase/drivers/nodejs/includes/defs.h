@@ -11,7 +11,7 @@
 #ifndef WINDOWS
 #include "config.h"
 #else
-#define VERSION "0.120121106"
+#define VERSION "0.120121118"
 #define PACKAGE_VERSION "0.1"
 #endif
 

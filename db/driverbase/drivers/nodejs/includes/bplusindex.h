@@ -7,8 +7,6 @@
 template <class K, class V>
 class PriorityCache;
 
-#include <boost/shared_ptr.hpp>
-
 typedef char* INDEXPOINTERTYPE;
 
 #define COMPAREKEYS(k1, k2) \

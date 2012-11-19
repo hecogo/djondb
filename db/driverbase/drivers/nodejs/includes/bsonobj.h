@@ -5,7 +5,6 @@
 #include "bsondefs.h"
 #include <map>
 #include <string>
-#include <boost/shared_ptr.hpp>
 #include <string.h>
 #include "bsonarrayobj.h"
 
@@ -45,7 +44,7 @@ class BSONObj
 
         BSONTYPE type(std::string) const;
 
-        char* toChar() const;
+        char* toChar();
 
 		  typedef std::map<std::string, BSONContent* >::iterator iterator;
 		  typedef std::map<std::string, BSONContent* >::const_iterator const_iterator;
@@ -62,6 +61,7 @@ class BSONObj
 		  void fillContent(std::string kkey, BSONTYPE ttype, void* vval);
 	 private:
 		  std::map<std::string, BSONContent* > _elements;
+		  char* _cBSON;
 };
 
 #endif // BSONOBJ_H
