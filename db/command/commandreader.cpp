@@ -26,6 +26,7 @@
 #include "showdbscommand.h"
 #include "bsoninputstream.h"
 #include "util.h"
+#include <assert.h>
 
 CommandReader::CommandReader(InputStream* is)
 {

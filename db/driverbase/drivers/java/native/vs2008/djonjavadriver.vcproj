@@ -61,8 +61,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="driverbase.lib Rpcrt4.lib Ws2_32.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib antlr3c.lib"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)/libs&quot;;&quot;$(SolutionDir)/../third_party/libs/$(PlatformName)&quot;"
+				AdditionalDependencies=" Rpcrt4.lib Ws2_32.lib driverbase.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib antlr3c.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\libs&quot;;&quot;$(SolutionDir)/../third_party/libs/$(PlatformName)&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>
@@ -132,8 +132,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="driverbase.lib Rpcrt4.lib Ws2_32.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib antlr3c.lib"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)/libs&quot;;&quot;$(SolutionDir)/../third_party/libs/$(PlatformName)&quot;"
+				AdditionalDependencies=" Rpcrt4.lib Ws2_32.lib driverbase.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib antlr3c.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\libs&quot;;&quot;$(SolutionDir)/../third_party/libs/$(PlatformName)&quot;"
 				GenerateDebugInformation="true"
 				TargetMachine="17"
 			/>
@@ -203,9 +203,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="driverbase.lib Rpcrt4.lib Ws2_32.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib antlr3c.lib"
+				AdditionalDependencies=" Rpcrt4.lib Ws2_32.lib driverbase.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib antlr3c.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)/libs&quot;;&quot;$(SolutionDir)/../third_party/libs/$(PlatformName)&quot;"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\libs&quot;;&quot;$(SolutionDir)/../third_party/libs/$(PlatformName)&quot;"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -278,8 +278,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="driverbase.lib Rpcrt4.lib Ws2_32.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib antlr3c.lib"
-				AdditionalLibraryDirectories="&quot;$(SolutionDir)/libs&quot;;&quot;$(SolutionDir)/../third_party/libs/$(PlatformName)&quot;"
+				AdditionalDependencies=" Rpcrt4.lib Ws2_32.lib driverbase.lib network.lib command.lib db.lib filesystem.lib cache.lib bson.lib util.lib antlr3c.lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)\libs&quot;;&quot;$(SolutionDir)/../third_party/libs/$(PlatformName)&quot;"
 				GenerateDebugInformation="true"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"

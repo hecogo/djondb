@@ -36,6 +36,7 @@
 #include <iostream>
 #include <sstream>
 #include <string.h>
+#include <assert.h>
 
 using namespace std;
 

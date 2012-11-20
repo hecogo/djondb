@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="cache"
 	ProjectGUID="{62FF06CD-7090-4A69-9CAE-21470F09B447}"
 	RootNamespace="cache"
@@ -83,8 +83,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\libs"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -205,8 +205,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
-			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\libs"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
