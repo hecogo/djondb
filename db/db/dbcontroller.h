@@ -13,6 +13,7 @@ class BSONObj;
 class Command;
 class Logger;
 class FilterParser;
+class Index;
 
 class DBController
 {
@@ -36,15 +37,16 @@ class DBController
 		  std::vector<std::string>* namespaces(const char* db) const;
 
     private:
-		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, const char* select, FilterParser* parser) throw (ParseException);
 		  Logger* _logger;
 		  bool _initialized;
 		  std::string _dataDir;
 
 	 private:
+		  std::vector<BSONObj*>* findFullScan(char* db, char* ns, const char* select, FilterParser* parser) throw (ParseException);
 		  void clearCache();
 		  long checkStructure(BSONObj* bson);
-		  void updateIndex(char* db, char* ns, BSONObj* bson, long filePos);
+		  void updateIndex(char* db, char* ns, Index* index, long filePos);
+		  Index* findIndex(char* db, char* ns, BSONObj* bson);
 		  void insertIndex(char* db, char* ns, BSONObj* bson, long filePos);
 		  void writeBSON(StreamType* stream, BSONObj* obj);
 };
