@@ -2033,7 +2033,7 @@ SWIGEXPORT char * SWIGSTDCALL CSharp_BSONObj_toChar(void * jarg1) {
   char *result = 0 ;
   
   arg1 = (BSONObj *)jarg1; 
-  result = (char *)((BSONObj const *)arg1)->toChar();
+  result = (char *)(arg1)->toChar();
   jresult = SWIG_csharp_string_callback((const char *)result); 
   return jresult;
 }
@@ -2790,7 +2790,6 @@ SWIGEXPORT void SWIGSTDCALL CSharp_delete_DjondbConnectionManager(void * jarg1) 
 
 SWIGEXPORT void * SWIGSTDCALL CSharp_DjondbConnectionManager_getConnection__SWIG_0(char * jarg1) {
   void * jresult ;
-  
   std::string arg1 ;
   djondb::DjondbConnection *result = 0 ;
   
