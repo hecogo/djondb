@@ -98,6 +98,8 @@ void WrapConnection::Init(Handle<Object> target) {
 			FunctionTemplate::New(find)->GetFunction());
 	tpl->PrototypeTemplate()->Set(String::NewSymbol("update"),
 			FunctionTemplate::New(update)->GetFunction());
+	tpl->PrototypeTemplate()->Set(String::NewSymbol("remove"),
+			FunctionTemplate::New(remove)->GetFunction());
 	tpl->PrototypeTemplate()->Set(String::NewSymbol("dropNamespace"),
 			FunctionTemplate::New(dropNamespace)->GetFunction());
 	tpl->PrototypeTemplate()->Set(String::NewSymbol("dbs"),
@@ -296,6 +298,27 @@ v8::Handle<v8::Value> WrapConnection::update(const v8::Arguments& args) {
 
 	WrapConnection* obj = ObjectWrap::Unwrap<WrapConnection>(args.This());
 	obj->_con->update(db, ns, json);
+
+	return v8::Undefined();
+}
+
+v8::Handle<v8::Value> WrapConnection::remove(const v8::Arguments& args) {
+	if (args.Length() < 4) {
+		return v8::ThrowException(v8::String::New("usage: db.remove(db, namespace, id, revision)"));
+	}
+
+	v8::HandleScope scope;
+	v8::String::Utf8Value str(args[0]);
+	std::string db = ToCString(str);
+	v8::String::Utf8Value str2(args[1]);
+	std::string ns = ToCString(str2);
+	v8::String::Utf8Value str3(args[2]);
+	std::string id = ToCString(str3);
+	v8::String::Utf8Value str4(args[3]);
+	std::string revision = ToCString(str4);
+
+	WrapConnection* obj = ObjectWrap::Unwrap<WrapConnection>(args.This());
+	obj->_con->remove(db, ns, id, revision);
 
 	return v8::Undefined();
 }

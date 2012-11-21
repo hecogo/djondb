@@ -264,7 +264,7 @@ void DBController::update(char* db, char* ns, BSONObj* obj) {
 	CacheManager::objectCache()->add(id, new BSONObj(*obj));
 }
 
-void DBController::deleteRecord(char* db, char* ns, const std::string& documentId, const std::string& revision) {
+void DBController::remove(char* db, char* ns, const std::string& documentId, const std::string& revision) {
 	if (_logger->isDebug()) _logger->debug(2, "DBController::update db: %s, ns: %s, documentId: %s, revision: %s", db, ns, documentId.c_str(), revision.c_str());
 	StreamType* streamData = StreamManager::getStreamManager()->open(std::string(db), std::string(ns), DATA_FTYPE);
 
@@ -292,13 +292,16 @@ void DBController::deleteRecord(char* db, char* ns, const std::string& documentI
 		BSONObj* obj = readBSON(out);
 		obj->add("_status", 2); // DELETED
 
+		// Get back to the record start
+		out->seek(index->posData);
 		writeBSON(out, obj);
 
+		// restores the last position
 		out->seek(currentPos);
 
 		std::string id = obj->getString("_id");
 
-		CacheManager::objectCache()->add(id, new BSONObj(*obj));
+		CacheManager::objectCache()->remove(id);
 	}
 }
 

@@ -25,6 +25,7 @@
 #include "dropnamespacecommand.h"
 #include "findcommand.h"
 #include "updatecommand.h"
+#include "removecommand.h"
 #include "shutdowncommand.h"
 #include "shownamespacescommand.h"
 #include "showdbscommand.h"
@@ -169,6 +170,20 @@ bool DjondbConnection::update(const std::string& db, const std::string& ns, cons
 	return result;
 }
 
+bool DjondbConnection::remove(const std::string& db, const std::string& ns, const std::string& id, const std::string& revision) {
+	if (_logger->isDebug()) _logger->debug(2, "Remove command. db: %s, ns: %s, id: %s, revision: %s", db.c_str(), ns.c_str(), id.c_str(), revision.c_str());
+	RemoveCommand cmd;
+	cmd.setDB(db);
+	cmd.setNameSpace(ns);
+	cmd.setId(id);
+	cmd.setRevision(revision);
+
+	_commandWriter->writeCommand(&cmd);
+	cmd.readResult(_inputStream);
+
+	return true;
+}
+
 bool DjondbConnection::update(const std::string& db, const std::string& ns, const BSONObj& obj) {
 	if (_logger->isDebug()) _logger->debug(2, "Update command. db: %s, ns: %s", db.c_str(), ns.c_str());
 	UpdateCommand cmd;
@@ -229,8 +244,11 @@ BSONObj* DjondbConnection::findByKey(const std::string& db, const std::string& n
 			throw "The result contains more than 1 result";
 		}
 	}
-	// creates a copy of the result before deleting the temporal objects
-	BSONObj* bsonresult = new BSONObj(*res);
+   BSONObj* bsonresult = NULL;
+	if (res != NULL) {
+		// creates a copy of the result before deleting the temporal objects
+		bsonresult = new BSONObj(*res);
+	}
 
 	delete result;
 	return bsonresult;

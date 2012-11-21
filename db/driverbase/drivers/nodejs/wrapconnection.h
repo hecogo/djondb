@@ -31,6 +31,7 @@ class WrapConnection: public node::ObjectWrap
 		static v8::Handle<v8::Value> findByKey(const v8::Arguments& args);
 		static v8::Handle<v8::Value> find(const v8::Arguments& args); 
 		static v8::Handle<v8::Value> update(const v8::Arguments& args);
+		static v8::Handle<v8::Value> remove(const v8::Arguments& args);
 
 		static v8::Handle<v8::Value> dropNamespace(const v8::Arguments& args);
 		static v8::Handle<v8::Value> dbs(const v8::Arguments& args);

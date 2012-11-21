@@ -24,6 +24,7 @@
 #include "shutdowncommand.h"
 #include "shownamespacescommand.h"
 #include "showdbscommand.h"
+#include "removecommand.h"
 #include "bsoninputstream.h"
 #include "util.h"
 #include <memory>
@@ -116,6 +117,24 @@ UpdateCommand* parseUpdate(InputStream* is)  {
     return command;
 }
 
+RemoveCommand* parseRemove(InputStream* is)  {
+    RemoveCommand* command = new RemoveCommand();
+    std::string* db = is->readString();
+    command->setDB(*db);
+    std::string* ns = is->readString();
+    command->setNameSpace(*ns);
+    std::string* id = is->readString();
+    command->setId(*id);
+    std::string* revision = is->readString();
+    command->setRevision(*revision);
+
+    delete ns;
+    delete db;
+    delete id;
+    delete revision;
+    return command;
+}
+
 FindCommand* parseFind(InputStream* is)  {
     FindCommand* command = new FindCommand();
     std::string* db = is->readString();
@@ -175,6 +194,9 @@ Command* CommandReader::readCommand() {
             break;
         case SHOWNAMESPACES: // Shownamepsaces
 				cmd = parseShownamespacesCommand(_stream);
+            break;
+        case REMOVE: // Remove
+				cmd = parseRemove(_stream);
             break;
         default:
             cout << "unknown command type " << type << endl;

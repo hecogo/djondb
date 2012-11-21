@@ -64,6 +64,7 @@ class TestDriverBaseSuite: public Test::Suite {
 			TEST_ADD(TestDriverBaseSuite::testInsert);
 			TEST_ADD(TestDriverBaseSuite::testInsertComplex);
 			TEST_ADD(TestDriverBaseSuite::testUpdate);
+			TEST_ADD(TestDriverBaseSuite::testRemove);
 			TEST_ADD(TestDriverBaseSuite::testFindByFilter);
 			TEST_ADD(TestDriverBaseSuite::testDbsNamespaces);
 
@@ -429,6 +430,36 @@ class TestDriverBaseSuite: public Test::Suite {
 			delete(log);
 		}
 
+		void testRemove() {
+			cout << "\ntestRemove\n" << endl;
+			
+			DjondbConnection* conn = DjondbConnectionManager::getConnection("localhost");
+
+			if (!conn->open()) {
+				cout << "\nCannot connect to localhost" << endl;
+				exit(0);
+			}
+
+			conn->dropNamespace("testdb", "deletens");
+
+			BSONObj obj;
+			std::string* id = uuid();
+			std::string* revision = uuid();
+			obj.add("_id", *id); 
+			obj.add("_revision", *revision); 
+
+			conn->insert("testdb", "deletens", obj);
+
+			conn->remove("testdb", "deletens", *id, *revision);
+
+			BSONObj* res = conn->findByKey("testdb", "deletend", *id);
+			TEST_ASSERT(res == NULL);
+
+			DjondbConnectionManager::releaseConnection(conn);
+
+			delete id;
+			delete revision;
+		}
 
 };
 
