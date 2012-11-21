@@ -103,6 +103,10 @@ public class DjondbConnection {
     return djonwrapperJNI.DjondbConnection_update__SWIG_1(swigCPtr, this, db, ns, BSONObj.getCPtr(bson), bson);
   }
 
+  public boolean remove(String db, String ns, String id, String revision) {
+    return djonwrapperJNI.DjondbConnection_remove(swigCPtr, this, db, ns, id, revision);
+  }
+
   public boolean dropNamespace(String db, String ns) {
     return djonwrapperJNI.DjondbConnection_dropNamespace(swigCPtr, this, db, ns);
   }
