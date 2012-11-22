@@ -1,4 +1,5 @@
 var addon = require('djondb');
+//var addon = require('./build/Release/djondb');
 
 console.log(addon);
 

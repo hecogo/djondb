@@ -7,6 +7,8 @@
 template <class K, class V>
 class PriorityCache;
 
+#include <boost/shared_ptr.hpp>
+
 typedef char* INDEXPOINTERTYPE;
 
 #define COMPAREKEYS(k1, k2) \
@@ -44,7 +46,7 @@ class BPlusIndex: public IndexAlgorithm
         virtual ~BPlusIndex();
 
         virtual void add(const BSONObj& elem, std::string documentId, long filePos, long indexPos);
-        virtual Index* find(const BSONObj& elem);
+        virtual Index* find(BSONObj* const elem);
         virtual void remove(const BSONObj& elem);
 		  virtual std::list<Index*> find(FilterParser* parser);
 

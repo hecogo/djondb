@@ -48,6 +48,7 @@ namespace djondb {
 				std::vector<BSONObj*>* find(const std::string& db, const std::string& ns, const std::string& filter) throw(ParseException);
             bool update(const std::string& db, const std::string& ns, const std::string& json);
             bool update(const std::string& db, const std::string& ns, const BSONObj& bson);
+            bool remove(const std::string& db, const std::string& ns, const std::string& id, const std::string& revision);
 
 				bool dropNamespace(const std::string& db, const std::string& ns);
 				std::vector<std::string>* dbs() const;
