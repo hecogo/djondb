@@ -460,7 +460,6 @@ std::vector<BSONObj*>* DBController::findFullScan(char* db, char* ns, const char
 			delete expresult;
 			if (match) {
 				result->push_back(obj->select(select));
-				break;
 			}
 		}
 		delete obj;
